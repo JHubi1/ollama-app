@@ -1,5 +1,6 @@
 @echo OFF
 cd /D "%~dp0"
+cd ..
 cls
 
 call flutter install
