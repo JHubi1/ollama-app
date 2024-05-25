@@ -1,6 +1,6 @@
 @echo OFF
 cd /D "%~dp0"
-cd .
+cd ..
 cls
 
 call flutter clean
