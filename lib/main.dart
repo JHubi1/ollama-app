@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 SharedPreferences? prefs;
 ThemeData? theme;
@@ -75,16 +78,16 @@ class _AppState extends State<App> {
                 systemNavigationBarColor:
                     (MediaQuery.of(context).platformBrightness ==
                             Brightness.light)
-                        ? themeDark!.colorScheme.background
-                        : theme!.colorScheme.background));
+                        ? (themeDark ?? ThemeData.dark()).colorScheme.background
+                        : (theme ?? ThemeData()).colorScheme.background));
           };
           // brightness changed function not run at first startup
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-              systemNavigationBarColor:
-                  (MediaQuery.of(context).platformBrightness ==
-                          Brightness.light)
-                      ? theme!.colorScheme.background
-                      : themeDark!.colorScheme.background));
+              systemNavigationBarColor: (MediaQuery.of(context)
+                          .platformBrightness ==
+                      Brightness.light)
+                  ? (theme ?? ThemeData()).colorScheme.background
+                  : (themeDark ?? ThemeData.dark()).colorScheme.background));
           setState(() {});
         }
       },
@@ -106,8 +109,10 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final List<types.Message> _messages = [];
+  List<types.Message> _messages = [];
   final _user = types.User(id: const Uuid().v4());
+
+  bool logoVisible = true;
 
   @override
   void initState() {
@@ -118,58 +123,234 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Row(children: [
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.menu_open_rounded)),
-          const SizedBox(width: 16),
-          Expanded(
-              child: InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(16),
-                              child: const Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [Text("data")]));
-                        });
-                  },
-                  splashFactory: NoSplash.splashFactory,
-                  highlightColor: Colors.transparent,
-                  enableFeedback: false,
-                  child: const SizedBox(
-                      height: 72,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Flexible(
-                                child: Text("<none>",
-                                    overflow: TextOverflow.fade,
-                                    style: TextStyle(
-                                        fontFamily: "monospace",
-                                        fontSize: 16))),
-                            SizedBox(width: 4),
-                            Icon(Icons.expand_more_rounded)
-                          ])))),
-          const SizedBox(width: 16),
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.restart_alt_rounded))
-        ])),
+          title: InkWell(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [Text("data")]));
+                    });
+              },
+              splashFactory: NoSplash.splashFactory,
+              highlightColor: Colors.transparent,
+              enableFeedback: false,
+              child: const SizedBox(
+                  height: 72,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Flexible(
+                            child: Text("<none>",
+                                overflow: TextOverflow.fade,
+                                style: TextStyle(
+                                    fontFamily: "monospace", fontSize: 16))),
+                        SizedBox(width: 4),
+                        Icon(Icons.expand_more_rounded)
+                      ]))),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  _messages = [];
+                  HapticFeedback.selectionClick();
+                  setState(() {});
+                },
+                icon: const Icon(Icons.restart_alt_rounded))
+          ],
+        ),
         body: SizedBox.expand(
             child: Chat(
                 messages: _messages,
-                onSendPressed: (p0) {},
+                emptyState: Center(
+                    child: VisibilityDetector(
+                        key: const Key("logoVisible"),
+                        onVisibilityChanged: (VisibilityInfo info) {
+                          logoVisible = info.visibleFraction > 0;
+                          setState(() {});
+                        },
+                        child: AnimatedOpacity(
+                            opacity: logoVisible ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 500),
+                            child: const ImageIcon(AssetImage("assets/logo512.png"),
+                                size: 44)))),
+                onSendPressed: (p0) {
+                  _messages.insert(
+                      0,
+                      types.TextMessage(
+                          author: _user, id: const Uuid().v4(), text: p0.text));
+                  setState(() {});
+                  HapticFeedback.selectionClick();
+                },
+                onMessageDoubleTap: (context, p1) {
+                  for (var i = 0; i < _messages.length; i++) {
+                    if (_messages[i].id == p1.id) {
+                      _messages.removeAt(i);
+                      break;
+                    }
+                  }
+                  setState(() {});
+                  HapticFeedback.selectionClick();
+                },
+                onAttachmentPressed: () {
+                  HapticFeedback.selectionClick();
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                      width: double.infinity,
+                                      child: OutlinedButton.icon(
+                                          onPressed: () async {
+                                            HapticFeedback.selectionClick();
+
+                                            Navigator.of(context).pop();
+                                            final result =
+                                                await ImagePicker().pickImage(
+                                              source: ImageSource.gallery,
+                                            );
+                                            if (result == null) return;
+
+                                            final bytes =
+                                                await result.readAsBytes();
+                                            final image =
+                                                await decodeImageFromList(
+                                                    bytes);
+
+                                            final message = types.ImageMessage(
+                                              author: _user,
+                                              createdAt: DateTime.now()
+                                                  .millisecondsSinceEpoch,
+                                              height: image.height.toDouble(),
+                                              id: const Uuid().v4(),
+                                              name: result.name,
+                                              size: bytes.length,
+                                              uri: result.path,
+                                              width: image.width.toDouble(),
+                                            );
+
+                                            _messages.insert(0, message);
+                                            setState(() {});
+                                            HapticFeedback.selectionClick();
+                                          },
+                                          icon: const Icon(Icons.image_rounded),
+                                          label: const Text("Upload Image"))),
+                                  const SizedBox(height: 8),
+                                  SizedBox(
+                                      width: double.infinity,
+                                      child: OutlinedButton.icon(
+                                          onPressed: () async {
+                                            HapticFeedback.selectionClick();
+
+                                            Navigator.of(context).pop();
+                                            final result = await FilePicker
+                                                .platform
+                                                .pickFiles(
+                                                    type: FileType.custom,
+                                                    allowedExtensions: ["pdf"]);
+                                            if (result == null ||
+                                                result.files.single.path ==
+                                                    null) return;
+
+                                            final message = types.FileMessage(
+                                              author: _user,
+                                              createdAt: DateTime.now()
+                                                  .millisecondsSinceEpoch,
+                                              id: const Uuid().v4(),
+                                              name: result.files.single.name,
+                                              size: result.files.single.size,
+                                              uri: result.files.single.path!,
+                                            );
+
+                                            _messages.insert(0, message);
+                                            setState(() {});
+                                            HapticFeedback.selectionClick();
+                                          },
+                                          icon: const Icon(
+                                              Icons.file_copy_rounded),
+                                          label: const Text("Upload File")))
+                                ]));
+                      });
+                },
+                l10n: const ChatL10nEn(),
+                inputOptions: const InputOptions(
+                    keyboardType: TextInputType.text,
+                    sendButtonVisibilityMode: SendButtonVisibilityMode.always),
                 user: _user,
-                theme: (MediaQuery.of(context).platformBrightness ==
-                        Brightness.light)
+                hideBackgroundOnEmojiMessages: false,
+                theme: (MediaQuery.of(context).platformBrightness == Brightness.light)
                     ? DefaultChatTheme(
-                        backgroundColor: theme!.colorScheme.background,
-                        primaryColor: theme!.colorScheme.primary)
+                        backgroundColor:
+                            (theme ?? ThemeData()).colorScheme.background,
+                        primaryColor:
+                            (theme ?? ThemeData()).colorScheme.primary,
+                        attachmentButtonIcon:
+                            const Icon(Icons.file_upload_rounded),
+                        sendButtonIcon: const Icon(Icons.send_rounded),
+                        inputBackgroundColor: (theme ?? ThemeData())
+                            .colorScheme
+                            .onBackground
+                            .withAlpha(10),
+                        inputTextColor:
+                            (theme ?? ThemeData()).colorScheme.onBackground,
+                        inputBorderRadius:
+                            const BorderRadius.all(Radius.circular(64)),
+                        inputPadding: const EdgeInsets.all(16),
+                        inputMargin: EdgeInsets.only(
+                            left: 8,
+                            right: 8,
+                            bottom:
+                                (MediaQuery.of(context).viewInsets.bottom == 0.0)
+                                    ? 0
+                                    : 8))
                     : DarkChatTheme(
-                        backgroundColor: themeDark!.colorScheme.background,
-                        primaryColor: themeDark!.colorScheme.primary))));
+                        backgroundColor:
+                            (themeDark ?? ThemeData.dark()).colorScheme.background,
+                        primaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(40),
+                        attachmentButtonIcon: const Icon(Icons.file_upload_rounded),
+                        sendButtonIcon: const Icon(Icons.send_rounded),
+                        inputBackgroundColor: (themeDark ?? ThemeData()).colorScheme.onBackground.withAlpha(40),
+                        inputTextColor: (themeDark ?? ThemeData()).colorScheme.onBackground,
+                        inputBorderRadius: const BorderRadius.all(Radius.circular(64)),
+                        inputPadding: const EdgeInsets.all(16),
+                        inputMargin: EdgeInsets.only(left: 8, right: 8, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0) ? 0 : 8)))),
+        drawer: NavigationDrawer(
+            onDestinationSelected: (value) {
+              if (value == 1) {
+                HapticFeedback.selectionClick();
+                Navigator.of(context).pop();
+                _messages = [];
+                setState(() {});
+              } else if (value == 2) {
+                HapticFeedback.selectionClick();
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Settings not implemented yet."),
+                    showCloseIcon: true));
+              }
+            },
+            selectedIndex: 1,
+            children: const [
+              NavigationDrawerDestination(
+                icon: ImageIcon(AssetImage("assets/logo512.png")),
+                label: Text("Ollama"),
+              ),
+              Divider(),
+              NavigationDrawerDestination(
+                  icon: Icon(Icons.add_rounded), label: Text("New Chat")),
+              NavigationDrawerDestination(
+                  icon: Icon(Icons.settings_rounded), label: Text("Settings"))
+            ]));
   }
 }
