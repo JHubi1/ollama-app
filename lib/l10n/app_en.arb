@@ -1,0 +1,38 @@
+{
+    "@@locale": "en",
+    "appTitle": "Ollama",
+    "@appTitle": {
+        "description": "Title of the application",
+        "context": "Visible in the side bar"
+    },
+    "optionSettings": "Settings",
+    "@optionSettings": {
+        "description": "Text displayed for settings option",
+        "context": "Visible in the side bar"
+    },
+    "optionNewChat": "New Chat",
+    "@optionNewChat": {
+        "description": "Text displayed for new chat option",
+        "context": "Visible in the side bar"
+    },
+    "noSelectedModel": "<selector>",
+    "@noSelectedModel": {
+        "description": "Text displayed when no model is selected",
+        "context": "Visible in model selector, above the chat viewF"
+    },
+    "uploadImage": "Upload Image",
+    "@uploadImage": {
+        "description": "Text displayed for image upload button",
+        "context": "Visible in attachment menu"
+    },
+    "uploadFile": "Upload File",
+    "@uploadFile": {
+        "description": "Text displayed for file upload button",
+        "context": "Visible in attachment menu"
+    },
+    "messageInputPlaceholder": "Message",
+    "@messageInputPlaceholder": {
+        "description": "Placeholder text for message input",
+        "context": "Visible in the chat view"
+    }
+}

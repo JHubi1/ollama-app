@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -97,7 +99,12 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: theme, darkTheme: themeDark, home: const MainApp());
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        title: "Ollama",
+        theme: theme,
+        darkTheme: themeDark,
+        home: const MainApp());
   }
 }
 
@@ -141,19 +148,20 @@ class _MainAppState extends State<MainApp> {
               splashFactory: NoSplash.splashFactory,
               highlightColor: Colors.transparent,
               enableFeedback: false,
-              child: const SizedBox(
+              child: SizedBox(
                   height: 72,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Flexible(
-                            child: Text("<none>",
+                            child: Text(
+                                AppLocalizations.of(context)!.noSelectedModel,
                                 overflow: TextOverflow.fade,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: "monospace", fontSize: 16))),
-                        SizedBox(width: 4),
-                        Icon(Icons.expand_more_rounded)
+                        const SizedBox(width: 4),
+                        const Icon(Icons.expand_more_rounded)
                       ]))),
           actions: [
             IconButton(
@@ -245,7 +253,9 @@ class _MainAppState extends State<MainApp> {
                                             HapticFeedback.selectionClick();
                                           },
                                           icon: const Icon(Icons.image_rounded),
-                                          label: const Text("Upload Image"))),
+                                          label: Text(
+                                              AppLocalizations.of(context)!
+                                                  .uploadImage))),
                                   const SizedBox(height: 8),
                                   SizedBox(
                                       width: double.infinity,
@@ -279,11 +289,15 @@ class _MainAppState extends State<MainApp> {
                                           },
                                           icon: const Icon(
                                               Icons.file_copy_rounded),
-                                          label: const Text("Upload File")))
+                                          label: Text(
+                                              AppLocalizations.of(context)!
+                                                  .uploadFile)))
                                 ]));
                       });
                 },
-                l10n: const ChatL10nEn(),
+                l10n: ChatL10nEn(
+                    inputPlaceholder:
+                        AppLocalizations.of(context)!.messageInputPlaceholder),
                 inputOptions: const InputOptions(
                     keyboardType: TextInputType.text,
                     sendButtonVisibilityMode: SendButtonVisibilityMode.always),
@@ -315,8 +329,7 @@ class _MainAppState extends State<MainApp> {
                                     ? 0
                                     : 8))
                     : DarkChatTheme(
-                        backgroundColor:
-                            (themeDark ?? ThemeData.dark()).colorScheme.background,
+                        backgroundColor: (themeDark ?? ThemeData.dark()).colorScheme.background,
                         primaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(40),
                         attachmentButtonIcon: const Icon(Icons.file_upload_rounded),
                         sendButtonIcon: const Icon(Icons.send_rounded),
@@ -341,16 +354,18 @@ class _MainAppState extends State<MainApp> {
               }
             },
             selectedIndex: 1,
-            children: const [
+            children: [
               NavigationDrawerDestination(
-                icon: ImageIcon(AssetImage("assets/logo512.png")),
-                label: Text("Ollama"),
+                icon: const ImageIcon(AssetImage("assets/logo512.png")),
+                label: Text(AppLocalizations.of(context)!.appTitle),
               ),
-              Divider(),
+              const Divider(),
               NavigationDrawerDestination(
-                  icon: Icon(Icons.add_rounded), label: Text("New Chat")),
+                  icon: const Icon(Icons.add_rounded),
+                  label: Text(AppLocalizations.of(context)!.optionNewChat)),
               NavigationDrawerDestination(
-                  icon: Icon(Icons.settings_rounded), label: Text("Settings"))
+                  icon: const Icon(Icons.settings_rounded),
+                  label: Text(AppLocalizations.of(context)!.optionSettings))
             ]));
   }
 }

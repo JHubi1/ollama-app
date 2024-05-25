@@ -16,6 +16,9 @@ dependencies:
   image_picker: ^1.1.1
   file_picker: ^8.0.3
   visibility_detector: ^0.4.0+2
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -24,5 +27,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/logo512.png
