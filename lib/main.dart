@@ -54,10 +54,8 @@ class _AppState extends State<App> {
             onSecondary: Colors.black,
             error: Colors.red,
             onError: Colors.white,
-            background: Colors.white,
-            onBackground: Colors.black,
             surface: Colors.white,
-            onSurface: Colors.black,
+            onSurface: Colors.black
           ));
           themeDark = ThemeData.from(
               colorScheme: const ColorScheme(
@@ -68,10 +66,8 @@ class _AppState extends State<App> {
             onSecondary: Colors.white,
             error: Colors.red,
             onError: Colors.black,
-            background: Colors.black,
-            onBackground: Colors.white,
             surface: Colors.black,
-            onSurface: Colors.white,
+            onSurface: Colors.white
           ));
           WidgetsBinding
               .instance.platformDispatcher.onPlatformBrightnessChanged = () {
@@ -80,16 +76,16 @@ class _AppState extends State<App> {
                 systemNavigationBarColor:
                     (MediaQuery.of(context).platformBrightness ==
                             Brightness.light)
-                        ? (themeDark ?? ThemeData.dark()).colorScheme.background
-                        : (theme ?? ThemeData()).colorScheme.background));
+                        ? (themeDark ?? ThemeData.dark()).colorScheme.surface
+                        : (theme ?? ThemeData()).colorScheme.surface));
           };
           // brightness changed function not run at first startup
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-              systemNavigationBarColor: (MediaQuery.of(context)
-                          .platformBrightness ==
-                      Brightness.light)
-                  ? (theme ?? ThemeData()).colorScheme.background
-                  : (themeDark ?? ThemeData.dark()).colorScheme.background));
+              systemNavigationBarColor:
+                  (MediaQuery.of(context).platformBrightness ==
+                          Brightness.light)
+                      ? (theme ?? ThemeData()).colorScheme.surface
+                      : (themeDark ?? ThemeData.dark()).colorScheme.surface));
           setState(() {});
         }
       },
@@ -306,7 +302,7 @@ class _MainAppState extends State<MainApp> {
                 theme: (MediaQuery.of(context).platformBrightness == Brightness.light)
                     ? DefaultChatTheme(
                         backgroundColor:
-                            (theme ?? ThemeData()).colorScheme.background,
+                            (theme ?? ThemeData()).colorScheme.surface,
                         primaryColor:
                             (theme ?? ThemeData()).colorScheme.primary,
                         attachmentButtonIcon:
@@ -314,27 +310,27 @@ class _MainAppState extends State<MainApp> {
                         sendButtonIcon: const Icon(Icons.send_rounded),
                         inputBackgroundColor: (theme ?? ThemeData())
                             .colorScheme
-                            .onBackground
+                            .onSurface
                             .withAlpha(10),
                         inputTextColor:
-                            (theme ?? ThemeData()).colorScheme.onBackground,
+                            (theme ?? ThemeData()).colorScheme.onSurface,
                         inputBorderRadius:
                             const BorderRadius.all(Radius.circular(64)),
                         inputPadding: const EdgeInsets.all(16),
                         inputMargin: EdgeInsets.only(
                             left: 8,
                             right: 8,
-                            bottom:
-                                (MediaQuery.of(context).viewInsets.bottom == 0.0)
-                                    ? 0
-                                    : 8))
+                            bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0)
+                                ? 0
+                                : 8))
                     : DarkChatTheme(
-                        backgroundColor: (themeDark ?? ThemeData.dark()).colorScheme.background,
+                        backgroundColor:
+                            (themeDark ?? ThemeData.dark()).colorScheme.surface,
                         primaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(40),
                         attachmentButtonIcon: const Icon(Icons.file_upload_rounded),
                         sendButtonIcon: const Icon(Icons.send_rounded),
-                        inputBackgroundColor: (themeDark ?? ThemeData()).colorScheme.onBackground.withAlpha(40),
-                        inputTextColor: (themeDark ?? ThemeData()).colorScheme.onBackground,
+                        inputBackgroundColor: (themeDark ?? ThemeData()).colorScheme.onSurface.withAlpha(40),
+                        inputTextColor: (themeDark ?? ThemeData()).colorScheme.onSurface,
                         inputBorderRadius: const BorderRadius.all(Radius.circular(64)),
                         inputPadding: const EdgeInsets.all(16),
                         inputMargin: EdgeInsets.only(left: 8, right: 8, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0) ? 0 : 8)))),
