@@ -15,11 +15,6 @@
         "description": "Text displayed for new chat option",
         "context": "Visible in the side bar"
     },
-    "noSelectedModel": "<selector>",
-    "@noSelectedModel": {
-        "description": "Text displayed when no model is selected",
-        "context": "Visible in model selector, above the chat viewF"
-    },
     "uploadImage": "Upload Image",
     "@uploadImage": {
         "description": "Text displayed for image upload button",
@@ -34,5 +29,45 @@
     "@messageInputPlaceholder": {
         "description": "Placeholder text for message input",
         "context": "Visible in the chat view"
+    },
+    "noModelSelected": "No model selected",
+    "@noModelSelected": {
+        "description": "Text displayed when no model is selected",
+        "context": "Visible in the chat view"
+    },
+    "hostDialogTitle": "Set Host",
+    "@hostDialogTitle": {
+        "description": "Title of the host dialog",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogDescription": "Enter the host of the Ollama server. This will be validated and can be changed in settings later.",
+    "@hostDialogDescription": {
+        "description": "Description of the host dialog",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogErrorInvalidHost": "The host could not be validated, please try again. Either it is not reachable or is not a valid Ollama server instance.",
+    "@hostDialogErrorInvalidHost": {
+        "description": "Error message displayed when the host is invalid",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogErrorInvalidUrl": "The URL is not valid. Try rechecking it.",
+    "@hostDialogErrorInvalidUrl": {
+        "description": "Error message displayed when the URL is invalid",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogSave": "Save Host",
+    "@hostDialogSave": {
+        "description": "Text displayed for save host button, should be capitalized",
+        "context": "Visible in the host dialog"
+    },
+    "noSelectedModel": "<selector>",
+    "@noSelectedModel": {
+        "description": "Text displayed when no model is selected",
+        "context": "Visible in the chat view, opens the model dialog when clicked"
+    },
+    "modelDialogAddModel": "Add Model",
+    "@modelDialogAddModel": {
+        "description": "Text displayed for add model button",
+        "context": "Visible in the model dialog"
     }
 }

@@ -1,4 +1,4 @@
-name: ollama
+name: ollama_app
 description: "A modern and easy-to-use client for Ollama"
 publish_to: 'none'
 version: 0.1.0
@@ -19,6 +19,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  http: ^1.2.1
+  dartx: ^1.2.0
+  ollama_dart: ^0.1.0+1
 
 dev_dependencies:
   flutter_test:

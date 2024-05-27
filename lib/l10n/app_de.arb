@@ -15,11 +15,6 @@
         "description": "Text displayed for new chat option",
         "context": "Visible in the side bar"
     },
-    "noSelectedModel": "<selektor>",
-    "@noSelectedModel": {
-        "description": "Text displayed when no model is selected",
-        "context": "Visible in model selector, above the chat viewF"
-    },
     "uploadImage": "Bild Hochladen",
     "@uploadImage": {
         "description": "Text displayed for image upload button",
@@ -34,5 +29,45 @@
     "@messageInputPlaceholder": {
         "description": "Placeholder text for message input",
         "context": "Visible in the chat view"
+    },
+    "noModelSelected": "Kein Modell ausgewählt",
+    "@noModelSelected": {
+        "description": "Text displayed when no model is selected",
+        "context": "Visible in the chat view"
+    },
+    "hostDialogTitle": "Host festlegen",
+    "@hostDialogTitle": {
+        "description": "Title of the host dialog",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogDescription": "Gebe den Host des Ollama-Servers ein. Dies wird validiert und kann später in den Einstellungen geändert werden.",
+    "@hostDialogDescription": {
+        "description": "Description of the host dialog",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogErrorInvalidHost": "Der Host konnte nicht validiert werden, bitte versuche es erneut. Entweder ist er nicht erreichbar oder es handelt sich nicht um eine gültige Ollama-Serverinstanz.",
+    "@hostDialogErrorInvalidHost": {
+        "description": "Error message displayed when the host is invalid",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogErrorInvalidUrl": "Die URL ist ungültig. Versuche, sie erneut zu überprüfen.",
+    "@hostDialogErrorInvalidUrl": {
+        "description": "Error message displayed when the URL is invalid",
+        "context": "Visible in the host dialog"
+    },
+    "hostDialogSave": "Host Speichern",
+    "@hostDialogSave": {
+        "description": "Text displayed for save host button, should be capitalized",
+        "context": "Visible in the host dialog"
+    },
+    "noSelectedModel": "<selektor>",
+    "@noSelectedModel": {
+        "description": "Text displayed when no model is selected",
+        "context": "Visible in the chat view, opens the model dialog when clicked"
+    },
+    "modelDialogAddModel": "Modell hinzufügen",
+    "@modelDialogAddModel": {
+        "description": "Text displayed for add model button",
+        "context": "Visible in the model dialog"
     }
 }
