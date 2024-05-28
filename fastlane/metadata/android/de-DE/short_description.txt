@@ -1,0 +1,1 @@
+Chatte mit einem Ollama-Server
