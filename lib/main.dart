@@ -481,7 +481,7 @@ class _MainAppState extends State<MainApp> {
                         backgroundColor:
                             (themeDark ?? ThemeData.dark()).colorScheme.surface,
                         primaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(40),
-                        attachmentButtonIcon: const Icon(Icons.file_upload_rounded),
+                        attachmentButtonIcon: const Icon(Icons.add_a_photo_rounded),
                         sendButtonIcon: const Icon(Icons.send_rounded),
                         inputBackgroundColor: (themeDark ?? ThemeData()).colorScheme.onSurface.withAlpha(40),
                         inputTextColor: (themeDark ?? ThemeData()).colorScheme.onSurface,
