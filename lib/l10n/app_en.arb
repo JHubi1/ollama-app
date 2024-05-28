@@ -15,14 +15,14 @@
         "description": "Text displayed for new chat option",
         "context": "Visible in the side bar"
     },
+    "takeImage": "Take Image",
+    "@takeImage": {
+        "description": "Text displayed for take image button",
+        "context": "Visible in attachment menu"
+    },
     "uploadImage": "Upload Image",
     "@uploadImage": {
         "description": "Text displayed for image upload button",
-        "context": "Visible in attachment menu"
-    },
-    "uploadFile": "Upload File",
-    "@uploadFile": {
-        "description": "Text displayed for file upload button",
         "context": "Visible in attachment menu"
     },
     "messageInputPlaceholder": "Message",

@@ -14,7 +14,6 @@ dependencies:
   uuid: ^4.4.0
   animated_text_kit: ^4.2.2
   image_picker: ^1.1.1
-  file_picker: ^8.0.3
   visibility_detector: ^0.4.0+2
   flutter_localizations:
     sdk: flutter

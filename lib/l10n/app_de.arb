@@ -15,14 +15,14 @@
         "description": "Text displayed for new chat option",
         "context": "Visible in the side bar"
     },
+    "takeImage": "Bild Aufnehmen",
+    "@takeImage": {
+        "description": "Text displayed for take image button",
+        "context": "Visible in attachment menu"
+    },
     "uploadImage": "Bild Hochladen",
     "@uploadImage": {
         "description": "Text displayed for image upload button",
-        "context": "Visible in attachment menu"
-    },
-    "uploadFile": "Datei Hochladen",
-    "@uploadFile": {
-        "description": "Text displayed for file upload button",
         "context": "Visible in attachment menu"
     },
     "messageInputPlaceholder": "Nachricht",
@@ -35,7 +35,7 @@
         "description": "Text displayed when no model is selected",
         "context": "Visible in the chat view"
     },
-    "hostDialogTitle": "Host festlegen",
+    "hostDialogTitle": "Host Festlegen",
     "@hostDialogTitle": {
         "description": "Title of the host dialog",
         "context": "Visible in the host dialog"

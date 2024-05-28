@@ -90,6 +90,8 @@ void setHost(BuildContext context, [String host = ""]) {
                           } else {
                             // ignore: use_build_context_synchronously
                             Navigator.of(context).pop();
+                            messages = [];
+                            setState(() {});
                             host = tmpHost;
                             prefs?.setString("host", host);
                           }
@@ -101,6 +103,7 @@ void setHost(BuildContext context, [String host = ""]) {
 
 void setModel(BuildContext context, Function setState) {
   List<String> models = [];
+  List<bool> modal = [];
   int usedIndex = -1;
   bool loaded = false;
   Function? setModalState;
@@ -108,6 +111,7 @@ void setModel(BuildContext context, Function setState) {
     var list = await llama.OllamaClient(baseUrl: "$host/api").listModels();
     for (var i = 0; i < list.models!.length; i++) {
       models.add(list.models![i].model!.split(":")[0]);
+      modal.add((list.models![i].details!.families ?? []).contains("clip"));
     }
     for (var i = 0; i < models.length; i++) {
       if (models[i] == model) {
@@ -130,12 +134,17 @@ void setModel(BuildContext context, Function setState) {
           return PopScope(
               canPop: loaded,
               onPopInvoked: (didPop) {
+                if (usedIndex >= 0 && models[usedIndex] != model) {
+                  messages = [];
+                }
                 model = (usedIndex >= 0) ? models[usedIndex] : null;
+                multimodal = (usedIndex >= 0) ? modal[usedIndex] : false;
                 if (model != null) {
                   prefs?.setString("model", model!);
                 } else {
                   prefs?.remove("model");
                 }
+                prefs?.setBool("multimodal", multimodal);
                 setState(() {});
               },
               child: SizedBox(
@@ -160,10 +169,6 @@ void setModel(BuildContext context, Function setState) {
                               padding:
                                   const EdgeInsets.only(left: 16, right: 16),
                               child: Container(
-                                  // height: MediaQuery.of(context)
-                                  //         .size
-                                  //         .height *
-                                  //     0.4,
                                   width: double.infinity,
                                   constraints: BoxConstraints(
                                       maxHeight:
@@ -180,6 +185,14 @@ void setModel(BuildContext context, Function setState) {
                                             return ChoiceChip(
                                               label: Text(models[index]),
                                               selected: usedIndex == index,
+                                              avatar: (recommendedModels
+                                                      .contains(models[index]))
+                                                  ? const Icon(
+                                                      Icons.star_rounded)
+                                                  : ((modal[index])
+                                                      ? const Icon(Icons
+                                                          .collections_rounded)
+                                                      : null),
                                               checkmarkColor: (usedIndex ==
                                                       index)
                                                   ? ((MediaQuery.of(context)
@@ -221,6 +234,7 @@ void setModel(BuildContext context, Function setState) {
                                                       .colorScheme
                                                       .primary,
                                               onSelected: (bool selected) {
+                                                if (!chatAllowed) return;
                                                 setLocalState(() {
                                                   usedIndex =
                                                       selected ? index : -1;
