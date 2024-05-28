@@ -8,6 +8,7 @@ A modern and easy-to-use client for Ollama. Have the greatest experience while k
 > Important: This app does not host a Ollama server on device, but rather connects to one and uses its api endpoint.
 
 - [Ollama App](#ollama-app)
+  - [Installation](#installation)
   - [Initial Setup](#initial-setup)
   - [Side Menu](#side-menu)
   - [Model Selector](#model-selector)
@@ -15,6 +16,10 @@ A modern and easy-to-use client for Ollama. Have the greatest experience while k
   - [Multilingual Interface](#multilingual-interface)
   - [Custom Builds](#custom-builds)
     - [Actually Building](#actually-building)
+
+## Installation
+
+You'll find the latest recommended version of the Ollama App under [the releases tab](https://github.com/JHubi1/ollama-app/releases). Download the APK and install it on your Android device. That's it, now proceed to [Initial Setup](#initial-setup).
 
 ## Initial Setup
 
