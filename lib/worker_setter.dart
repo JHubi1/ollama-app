@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
 
-void setHost(BuildContext context, [String host = ""]) {
+void setHost(BuildContext context) {
   bool loading = false;
   bool invalidHost = false;
   bool invalidUrl = false;
@@ -93,7 +93,7 @@ void setHost(BuildContext context, [String host = ""]) {
                             messages = [];
                             setState(() {});
                             host = tmpHost;
-                            prefs?.setString("host", host);
+                            prefs?.setString("host", host!);
                           }
                         },
                         child:
@@ -105,6 +105,7 @@ void setModel(BuildContext context, Function setState) {
   List<String> models = [];
   List<bool> modal = [];
   int usedIndex = -1;
+  int addIndex = -1;
   bool loaded = false;
   Function? setModalState;
   void load() async {
@@ -113,6 +114,10 @@ void setModel(BuildContext context, Function setState) {
       models.add(list.models![i].model!.split(":")[0]);
       modal.add((list.models![i].details!.families ?? []).contains("clip"));
     }
+    addIndex = models.length;
+    // ignore: use_build_context_synchronously
+    models.add(AppLocalizations.of(context)!.modelDialogAddModel);
+    modal.add(false);
     for (var i = 0; i < models.length; i++) {
       if (models[i] == model) {
         usedIndex = i;
@@ -147,55 +152,53 @@ void setModel(BuildContext context, Function setState) {
                 prefs?.setBool("multimodal", multimodal);
                 setState(() {});
               },
-              child: SizedBox(
+              child: Container(
                   width: double.infinity,
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
                   child: (!loaded)
-                      ? const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: LinearProgressIndicator())
+                      ? const LinearProgressIndicator()
                       : Column(mainAxisSize: MainAxisSize.min, children: [
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16, right: 16, top: 16),
-                              child: SizedBox(
-                                  width: double.infinity,
-                                  child: OutlinedButton.icon(
-                                      onPressed: () {},
-                                      label: Text(AppLocalizations.of(context)!
-                                          .modelDialogAddModel),
-                                      icon: const Icon(Icons.add_rounded)))),
-                          const Divider(),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 16, right: 16),
-                              child: Container(
-                                  width: double.infinity,
-                                  constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height *
-                                              0.4),
-                                  child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Wrap(
-                                        spacing: 5.0,
-                                        alignment: WrapAlignment.center,
-                                        children: List<Widget>.generate(
-                                          models.length,
-                                          (int index) {
-                                            return ChoiceChip(
-                                              label: Text(models[index]),
-                                              selected: usedIndex == index,
-                                              avatar: (recommendedModels
+                          Container(
+                              width: double.infinity,
+                              constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height * 0.4),
+                              child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Wrap(
+                                    spacing: 5.0,
+                                    alignment: WrapAlignment.center,
+                                    children: List<Widget>.generate(
+                                      models.length,
+                                      (int index) {
+                                        return ChoiceChip(
+                                          label: Text(models[index]),
+                                          selected: usedIndex == index,
+                                          avatar: (addIndex == index)
+                                              ? const Icon(Icons.add_rounded)
+                                              : ((recommendedModels
                                                       .contains(models[index]))
                                                   ? const Icon(
                                                       Icons.star_rounded)
                                                   : ((modal[index])
                                                       ? const Icon(Icons
                                                           .collections_rounded)
-                                                      : null),
-                                              checkmarkColor: (usedIndex ==
-                                                      index)
-                                                  ? ((MediaQuery.of(context)
+                                                      : null)),
+                                          checkmarkColor: (usedIndex == index)
+                                              ? ((MediaQuery.of(context)
+                                                          .platformBrightness ==
+                                                      Brightness.light)
+                                                  ? (theme ?? ThemeData())
+                                                      .colorScheme
+                                                      .secondary
+                                                  : (themeDark ??
+                                                          ThemeData.dark())
+                                                      .colorScheme
+                                                      .secondary)
+                                              : null,
+                                          labelStyle: (usedIndex == index)
+                                              ? TextStyle(
+                                                  color: (MediaQuery.of(context)
                                                               .platformBrightness ==
                                                           Brightness.light)
                                                       ? (theme ?? ThemeData())
@@ -205,45 +208,44 @@ void setModel(BuildContext context, Function setState) {
                                                               ThemeData.dark())
                                                           .colorScheme
                                                           .secondary)
-                                                  : null,
-                                              labelStyle: (usedIndex == index)
-                                                  ? TextStyle(
-                                                      color: (MediaQuery.of(
-                                                                      context)
-                                                                  .platformBrightness ==
-                                                              Brightness.light)
-                                                          ? (theme ??
-                                                                  ThemeData())
-                                                              .colorScheme
-                                                              .secondary
-                                                          : (themeDark ??
-                                                                  ThemeData
-                                                                      .dark())
-                                                              .colorScheme
-                                                              .secondary)
-                                                  : null,
-                                              selectedColor: (MediaQuery.of(
-                                                              context)
-                                                          .platformBrightness ==
-                                                      Brightness.light)
-                                                  ? (theme ?? ThemeData())
-                                                      .colorScheme
-                                                      .primary
-                                                  : (themeDark ??
-                                                          ThemeData.dark())
-                                                      .colorScheme
-                                                      .primary,
-                                              onSelected: (bool selected) {
-                                                if (!chatAllowed) return;
-                                                setLocalState(() {
-                                                  usedIndex =
-                                                      selected ? index : -1;
-                                                });
-                                              },
-                                            );
+                                              : null,
+                                          selectedColor: (MediaQuery.of(context)
+                                                      .platformBrightness ==
+                                                  Brightness.light)
+                                              ? (theme ?? ThemeData())
+                                                  .colorScheme
+                                                  .primary
+                                              : (themeDark ?? ThemeData.dark())
+                                                  .colorScheme
+                                                  .primary,
+                                          onSelected: (bool selected) {
+                                            if (addIndex == index) {
+                                              Navigator.of(context).pop();
+                                              showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 16,
+                                                                right: 16,
+                                                                top: 16),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .modelDialogAddSteps));
+                                                  });
+                                            }
+                                            if (!chatAllowed) return;
+                                            setLocalState(() {
+                                              usedIndex = selected ? index : -1;
+                                            });
                                           },
-                                        ).toList(),
-                                      ))))
+                                        );
+                                      },
+                                    ).toList(),
+                                  )))
                         ])));
         });
       });

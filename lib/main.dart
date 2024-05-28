@@ -391,7 +391,7 @@ class _MainAppState extends State<MainApp> {
                                                       .selectionClick();
                                                 },
                                                 icon: const Icon(
-                                                    Icons.file_copy_rounded),
+                                                    Icons.photo_camera_rounded),
                                                 label: Text(AppLocalizations.of(
                                                         context)!
                                                     .takeImage))),

@@ -69,5 +69,10 @@
     "@modelDialogAddModel": {
         "description": "Text displayed for add model button",
         "context": "Visible in the model dialog"
+    },
+    "modelDialogAddSteps": "To add a new model, visit ollama.com on your computer, look for a model you like, copy the command and paste it in a new terminal window. Wait for the download to complete, this can take a while. Once it is complete, reopen this selector and you'll find your newly added model.",
+    "@modelDialogAddSteps": {
+        "description": "Steps to add a new model",
+        "context": "Visible in the model dialog"
     }
 }
