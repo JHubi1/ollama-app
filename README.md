@@ -6,6 +6,7 @@ A modern and easy-to-use client for Ollama. Have the greatest experience while k
 |-|-|-|-|
 
 > Important: This app does not host a Ollama server on device, but rather connects to one and uses its api endpoint.
+> Don't know what Ollama is? Learn more at [ollama.com](https://ollama.com/).
 
 - [Ollama App](#ollama-app)
   - [Installation](#installation)
@@ -54,7 +55,7 @@ Models with an image-like icon next to them allow multimodal input. The one show
 
 The models with a star next to them are recommended models. They have been selected by me (hehe) to be listed as that. Read more under [Custom Builds](#custom-builds).
 
-The `Add Model` button does nothing at the moment, it just opens a dialog that lists steps on how to add a model to an instance. For safety reasons I didn't add the ability to add a model directly via name in the app.
+The `Add Model` button does nothing at the moment, it just opens a dialog that lists steps on how to add a model to an instance. For safety reasons, I didn't add the ability to add a model directly via name in the app.
 
 ## Multimodal Model Input
 
