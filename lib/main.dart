@@ -178,43 +178,47 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: InkWell(
-              onTap: () {
-                setModel(context, setState);
-              },
-              splashFactory: NoSplash.splashFactory,
-              highlightColor: Colors.transparent,
-              enableFeedback: false,
-              child: SizedBox(
-                  height: 72,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Flexible(
-                            child: Text(
-                                (model ??
-                                    AppLocalizations.of(context)!
-                                        .noSelectedModel),
-                                overflow: TextOverflow.fade,
-                                style: const TextStyle(
-                                    fontFamily: "monospace", fontSize: 16))),
-                        const SizedBox(width: 4),
-                        useModel
-                            ? const SizedBox.shrink()
-                            : const Icon(Icons.expand_more_rounded)
-                      ]))),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  HapticFeedback.selectionClick();
-                  if (!chatAllowed) return;
-                  messages = [];
-                  setState(() {});
+            title: InkWell(
+                onTap: () {
+                  setModel(context, setState);
                 },
-                icon: const Icon(Icons.restart_alt_rounded))
-          ],
-        ),
+                splashFactory: NoSplash.splashFactory,
+                highlightColor: Colors.transparent,
+                enableFeedback: false,
+                child: SizedBox(
+                    height: 72,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Flexible(
+                              child: Text(
+                                  (model ??
+                                      AppLocalizations.of(context)!
+                                          .noSelectedModel),
+                                  overflow: TextOverflow.fade,
+                                  style: const TextStyle(
+                                      fontFamily: "monospace", fontSize: 16))),
+                          const SizedBox(width: 4),
+                          useModel
+                              ? const SizedBox.shrink()
+                              : const Icon(Icons.expand_more_rounded)
+                        ]))),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    HapticFeedback.selectionClick();
+                    if (!chatAllowed) return;
+                    messages = [];
+                    setState(() {});
+                  },
+                  icon: const Icon(Icons.restart_alt_rounded))
+            ],
+            bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(1),
+                child: (!chatAllowed && model != null)
+                    ? const LinearProgressIndicator()
+                    : const SizedBox.shrink())),
         body: SizedBox.expand(
             child: Chat(
                 messages: messages,
@@ -478,8 +482,7 @@ class _MainAppState extends State<MainApp> {
                                 ? 0
                                 : 8))
                     : DarkChatTheme(
-                        backgroundColor:
-                            (themeDark ?? ThemeData.dark()).colorScheme.surface,
+                        backgroundColor: (themeDark ?? ThemeData.dark()).colorScheme.surface,
                         primaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(40),
                         attachmentButtonIcon: const Icon(Icons.add_a_photo_rounded),
                         sendButtonIcon: const Icon(Icons.send_rounded),
