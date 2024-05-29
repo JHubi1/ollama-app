@@ -80,7 +80,18 @@ void setHost(BuildContext context) {
                             return;
                           }
 
-                          var request = await http.get(url);
+                          http.Response request;
+                          try {
+                            request = await http.get(url).timeout(
+                                const Duration(seconds: 5), onTimeout: () {
+                              return http.Response('Error', 408);
+                            });
+                          } catch (e) {
+                            invalidHost = true;
+                            loading = false;
+                            setState(() {});
+                            return;
+                          }
                           if (request.statusCode != 200 ||
                               request.body != "Ollama is running") {
                             setState(() {
