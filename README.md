@@ -36,7 +36,7 @@ That's it, you can now just chat. Enter a message into the box at the bottom and
 
 ## Side Menu
 
-The button on the top left opens the menu. In it, you have two options for now: `New Chat` and `Settings`. The first option clears the chat (-> creates a new one), and the second one reopens the host dialog from the initial start of the app to adapt to changing hosts.
+The button on the top left opens the menu. In it, you have three options: `New Chat`, `Ask before Deletion` and `Set Host`. The first option clears the chat (-> creates a new one), the second one opens a new dialog that has a toggle you can toggle if you don't want to be asked or want to be asked again before deleting a chat, and the third option reopens the host dialog from the initial start of the app to adapt to changing hosts.
 
 ![side menu](assets/screenshots/other/s02.png)
 

@@ -209,7 +209,7 @@ class _MainAppState extends State<MainApp> {
                   onPressed: () {
                     HapticFeedback.selectionClick();
                     if (!chatAllowed) return;
-                    messages = [];
+                    deleteChat(context, setState);
                     setState(() {});
                   },
                   icon: const Icon(Icons.restart_alt_rounded))
@@ -497,9 +497,12 @@ class _MainAppState extends State<MainApp> {
                 HapticFeedback.selectionClick();
                 Navigator.of(context).pop();
                 if (!chatAllowed) return;
-                messages = [];
-                setState(() {});
+                deleteChat(context, setState);
               } else if (value == 2) {
+                HapticFeedback.selectionClick();
+                Navigator.of(context).pop();
+                setAskBeforeDeletion(context, setState);
+              } else if (value == 3) {
                 HapticFeedback.selectionClick();
                 Navigator.of(context).pop();
                 if (!chatAllowed) return;
@@ -517,11 +520,15 @@ class _MainAppState extends State<MainApp> {
               NavigationDrawerDestination(
                   icon: const Icon(Icons.add_rounded),
                   label: Text(AppLocalizations.of(context)!.optionNewChat)),
+              NavigationDrawerDestination(
+                  icon: const Icon(Icons.live_help_rounded),
+                  label:
+                      Text(AppLocalizations.of(context)!.optionSetAskDeletion)),
               (useHost)
                   ? const SizedBox.shrink()
                   : NavigationDrawerDestination(
-                      icon: const Icon(Icons.settings_rounded),
-                      label: Text(AppLocalizations.of(context)!.optionSettings))
+                      icon: const Icon(Icons.dns_rounded),
+                      label: Text(AppLocalizations.of(context)!.optionSetHost)),
             ]));
   }
 }

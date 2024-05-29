@@ -5,14 +5,19 @@
         "description": "Title of the application",
         "context": "Visible in the side bar"
     },
-    "optionSettings": "Einstellungen",
-    "@optionSettings": {
-        "description": "Text displayed for settings option",
-        "context": "Visible in the side bar"
-    },
     "optionNewChat": "Neuer Chat",
     "@optionNewChat": {
         "description": "Text displayed for new chat option",
+        "context": "Visible in the side bar"
+    },
+    "optionSetHost": "Host Setzen",
+    "@optionSetHost": {
+        "description": "Text displayed for set host option",
+        "context": "Visible in the side bar"
+    },
+    "optionSetAskDeletion": "Vor dem Löschen fragen",
+    "@optionSetAskDeletion": {
+        "description": "Text displayed for ask before deletion option",
         "context": "Visible in the side bar"
     },
     "takeImage": "Bild Aufnehmen",
@@ -35,7 +40,7 @@
         "description": "Text displayed when no model is selected",
         "context": "Visible in the chat view"
     },
-    "hostDialogTitle": "Host Festlegen",
+    "hostDialogTitle": "Host Setzen",
     "@hostDialogTitle": {
         "description": "Title of the host dialog",
         "context": "Visible in the host dialog"
@@ -60,6 +65,11 @@
         "description": "Text displayed for save host button, should be capitalized",
         "context": "Visible in the host dialog"
     },
+    "hostDialogCancel": "Abbrechen",
+    "@hostDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the host dialog"
+    },
     "noSelectedModel": "<selektor>",
     "@noSelectedModel": {
         "description": "Text displayed when no model is selected",
@@ -74,5 +84,30 @@
     "@modelDialogAddSteps": {
         "description": "Steps to add a new model",
         "context": "Visible in the model dialog"
+    },
+    "deleteDialogTitle": "Löschen Bestätigen",
+    "@deleteDialogTitle": {
+        "description": "Title of the delete dialog",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogDescription": "Bist du sicher, dass du fortfahren möchtest? Dies wird alle Erinnerungen dieses Chats löschen und kann nicht rückgängig gemacht werden.",
+    "@deleteDialogDescription": {
+        "description": "Description of the delete dialog",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogDelete": "Löschen",
+    "@deleteDialogDelete": {
+        "description": "Text displayed for delete button, should be capitalized",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogCancel": "Abbrechen",
+    "@deleteDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogAskAlways": "Jedesmal nachfragen",
+    "@deleteDialogAskAlways": {
+        "description": "Text displayed for ask me always again checkbox",
+        "context": "Visible in the delete dialog"
     }
 }

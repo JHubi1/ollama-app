@@ -5,14 +5,19 @@
         "description": "Title of the application",
         "context": "Visible in the side bar"
     },
-    "optionSettings": "Settings",
-    "@optionSettings": {
-        "description": "Text displayed for settings option",
-        "context": "Visible in the side bar"
-    },
     "optionNewChat": "New Chat",
     "@optionNewChat": {
         "description": "Text displayed for new chat option",
+        "context": "Visible in the side bar"
+    },
+    "optionSetHost": "Set Host",
+    "@optionSetHost": {
+        "description": "Text displayed for set host option",
+        "context": "Visible in the side bar"
+    },
+    "optionSetAskDeletion": "Ask before Deletion",
+    "@optionSetAskDeletion": {
+        "description": "Text displayed for ask before deletion option",
         "context": "Visible in the side bar"
     },
     "takeImage": "Take Image",
@@ -79,5 +84,30 @@
     "@modelDialogAddSteps": {
         "description": "Steps to add a new model",
         "context": "Visible in the model dialog"
+    },
+    "deleteDialogTitle": "Confirm Deletion",
+    "@deleteDialogTitle": {
+        "description": "Title of the delete dialog",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogDescription": "Are you sure you want to continue? This will wipe all memory of this chat and cannot be undone.",
+    "@deleteDialogDescription": {
+        "description": "Description of the delete dialog",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogDelete": "Delete",
+    "@deleteDialogDelete": {
+        "description": "Text displayed for delete button, should be capitalized",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogCancel": "Cancel",
+    "@deleteDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogAskAlways": "Ask me every time",
+    "@deleteDialogAskAlways": {
+        "description": "Text displayed for ask me always again checkbox",
+        "context": "Visible in the delete dialog"
     }
 }

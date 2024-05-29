@@ -52,6 +52,14 @@ void setHost(BuildContext context, [bool force = true]) {
                                       hintText: "http://example.com:8080"))
                             ]),
                   actions: [
+                    !force
+                        ? TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                                AppLocalizations.of(context)!.hostDialogCancel))
+                        : const SizedBox.shrink(),
                     TextButton(
                         onPressed: () async {
                           setState(() {
@@ -108,15 +116,7 @@ void setHost(BuildContext context, [bool force = true]) {
                           }
                         },
                         child:
-                            Text(AppLocalizations.of(context)!.hostDialogSave)),
-                    !force
-                        ? TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                                AppLocalizations.of(context)!.hostDialogCancel))
-                        : const SizedBox.shrink()
+                            Text(AppLocalizations.of(context)!.hostDialogSave))
                   ]))));
 }
 
@@ -266,6 +266,85 @@ void setModel(BuildContext context, Function setState) {
                                     ).toList(),
                                   )))
                         ])));
+        });
+      });
+}
+
+void deleteChat(BuildContext context, Function setState) {
+  if (prefs!.getBool("askBeforeDeletion") ?? true && messages.isNotEmpty) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setLocalState) {
+            return AlertDialog(
+                title: Text(AppLocalizations.of(context)!.deleteDialogTitle),
+                content: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text(AppLocalizations.of(context)!.deleteDialogDescription),
+                  Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(AppLocalizations.of(context)!
+                            .deleteDialogAskAlways),
+                        const Expanded(child: SizedBox()),
+                        Switch(
+                          value: prefs!.getBool("askBeforeDeletion") ?? true,
+                          onChanged: (value) {
+                            prefs!.setBool("askBeforeDeletion", value);
+                            setLocalState(() {});
+                          },
+                        )
+                      ])
+                ]),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                          AppLocalizations.of(context)!.deleteDialogCancel)),
+                  TextButton(
+                      onPressed: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.of(context).pop();
+                        messages = [];
+                        setState(() {});
+                      },
+                      child: Text(
+                          AppLocalizations.of(context)!.deleteDialogDelete))
+                ]);
+          });
+        });
+  } else {
+    messages = [];
+    setState(() {});
+  }
+}
+
+void setAskBeforeDeletion(BuildContext context, Function setState) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setLocalState) {
+          return Dialog(
+              child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(AppLocalizations.of(context)!
+                            .deleteDialogAskAlways),
+                        const Expanded(child: SizedBox()),
+                        Switch(
+                          value: prefs!.getBool("askBeforeDeletion") ?? true,
+                          onChanged: (value) {
+                            prefs!.setBool("askBeforeDeletion", value);
+                            setLocalState(() {});
+                          },
+                        )
+                      ])));
         });
       });
 }
