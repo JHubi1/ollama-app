@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
 
-void setHost(BuildContext context) {
+void setHost(BuildContext context, [bool force = true]) {
   bool loading = false;
   bool invalidHost = false;
   bool invalidUrl = false;
@@ -16,10 +16,10 @@ void setHost(BuildContext context) {
       TextEditingController(text: prefs?.getString("host") ?? "");
   showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: !force,
       builder: (context) => StatefulBuilder(
           builder: (context, setState) => PopScope(
-              canPop: false,
+              canPop: !force,
               child: AlertDialog(
                   title: Text(AppLocalizations.of(context)!.hostDialogTitle),
                   content: loading
@@ -108,7 +108,15 @@ void setHost(BuildContext context) {
                           }
                         },
                         child:
-                            Text(AppLocalizations.of(context)!.hostDialogSave))
+                            Text(AppLocalizations.of(context)!.hostDialogSave)),
+                    !force
+                        ? TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                                AppLocalizations.of(context)!.hostDialogCancel))
+                        : const SizedBox.shrink()
                   ]))));
 }
 

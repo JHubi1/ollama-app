@@ -60,6 +60,11 @@
         "description": "Text displayed for save host button, should be capitalized",
         "context": "Visible in the host dialog"
     },
+    "hostDialogCancel": "Cancel",
+    "@hostDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the host dialog"
+    },
     "noSelectedModel": "<selector>",
     "@noSelectedModel": {
         "description": "Text displayed when no model is selected",

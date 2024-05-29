@@ -503,7 +503,7 @@ class _MainAppState extends State<MainApp> {
                 HapticFeedback.selectionClick();
                 Navigator.of(context).pop();
                 if (!chatAllowed) return;
-                setHost(context);
+                setHost(context, false);
                 setState(() {});
               }
             },
