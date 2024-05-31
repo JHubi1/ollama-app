@@ -31,6 +31,8 @@ dependencies:
   url_launcher: ^6.2.6
   restart_app: ^1.2.1
   flutter_markdown: ^0.7.1
+  file_picker: ^8.0.3
+  pick_or_save: ^2.2.4
 
 dev_dependencies:
   flutter_test:

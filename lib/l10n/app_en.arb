@@ -145,6 +145,11 @@
         "description": "Title of the interface settings section",
         "context": "Visible in the settings view"
     },
+    "settingsTitleExport": "Export",
+    "@settingsTitleExport": {
+        "description": "Title of the export settings section",
+        "context": "Visible in the settings view"
+    },
     "settingsTitleContact": "Contact",
     "@settingsTitleContact": {
         "description": "Title of the contact settings section",
@@ -260,6 +265,41 @@
     "settingsBrightnessRestartCancel": "Cancel",
     "@settingsBrightnessRestartCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportChats": "Export chats",
+    "@settingsExportChats": {
+        "description": "Text displayed as description for export chats button",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChats": "Import chats",
+    "@settingsImportChats": {
+        "description": "Text displayed as description for import chats button",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsTitle": "Import",
+    "@settingsImportChatsTitle": {
+        "description": "Title of the import dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsDescription": "The following step will import the chats from the selected file. This will overwrite the current chats.\nDo you want to continue?",
+    "@settingsImportChatsDescription": {
+        "description": "Description of the import dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsImport": "Import and Erase",
+    "@settingsImportChatsImport": {
+        "description": "Text displayed for import button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsCancel": "Cancel",
+    "@settingsImportChatsCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsSuccess": "Chats imported successfully",
+    "@settingsImportChatsSuccess": {
+        "description": "Text displayed when chats are imported successfully",
         "context": "Visible in the settings view"
     },
     "settingsGithub": "GitHub",

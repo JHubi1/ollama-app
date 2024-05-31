@@ -145,6 +145,11 @@
         "description": "Title of the interface settings section",
         "context": "Visible in the settings view"
     },
+    "settingsTitleExport": "Exportieren",
+    "@settingsTitleExport": {
+        "description": "Title of the export settings section",
+        "context": "Visible in the settings view"
+    },
     "settingsTitleContact": "Kontakt",
     "@settingsTitleContact": {
         "description": "Title of the contact settings section",
@@ -260,6 +265,41 @@
     "settingsBrightnessRestartCancel": "Abbrechen",
     "@settingsBrightnessRestartCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportChats": "Chats exportieren",
+    "@settingsExportChats": {
+        "description": "Text displayed as description for export chats button",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChats": "Chats importieren",
+    "@settingsImportChats": {
+        "description": "Text displayed as description for import chats button",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsTitle": "Importieren",
+    "@settingsImportChatsTitle": {
+        "description": "Title of the import dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsDescription": "Der folgende Schritt importiert die Chats aus der ausgewählten Datei. Dadurch werden die aktuellen Chats überschrieben.\nMöchtest du fortfahren?",
+    "@settingsImportChatsDescription": {
+        "description": "Description of the import dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsImport": "Importieren und Löschen",
+    "@settingsImportChatsImport": {
+        "description": "Text displayed for import button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsCancel": "Abbrechen",
+    "@settingsImportChatsCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsSuccess": "Chats erfolgreich importiert",
+    "@settingsImportChatsSuccess": {
+        "description": "Text displayed when chats are imported successfully",
         "context": "Visible in the settings view"
     },
     "settingsGithub": "GitHub",

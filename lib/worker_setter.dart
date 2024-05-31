@@ -90,16 +90,20 @@ void setModel(BuildContext context, Function setState) {
                                         return ChoiceChip(
                                           label: Text(models[index]),
                                           selected: usedIndex == index,
-                                          avatar: (addIndex == index)
-                                              ? const Icon(Icons.add_rounded)
-                                              : ((recommendedModels
-                                                      .contains(models[index]))
+                                          avatar: (usedIndex == index)
+                                              ? null
+                                              : (addIndex == index)
                                                   ? const Icon(
-                                                      Icons.star_rounded)
-                                                  : ((modal[index])
-                                                      ? const Icon(Icons
-                                                          .collections_rounded)
-                                                      : null)),
+                                                      Icons.add_rounded)
+                                                  : ((recommendedModels
+                                                          .contains(
+                                                              models[index]))
+                                                      ? const Icon(
+                                                          Icons.star_rounded)
+                                                      : ((modal[index])
+                                                          ? const Icon(Icons
+                                                              .collections_rounded)
+                                                          : null)),
                                           checkmarkColor: (usedIndex == index)
                                               ? ((MediaQuery.of(context)
                                                           .platformBrightness ==

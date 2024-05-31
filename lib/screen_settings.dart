@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'main.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:dartx/dartx.dart';
@@ -10,6 +14,8 @@ import 'package:http/http.dart' as http;
 import 'package:simple_icons/simple_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:pick_or_save/pick_or_save.dart';
 
 class ScreenSettings extends StatefulWidget {
   const ScreenSettings({super.key});
@@ -398,6 +404,102 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                             });
                           });
                     }),
+                title(AppLocalizations.of(context)!.settingsTitleExport),
+                InkWell(
+                    onTap: () async {
+                      await PickOrSave().fileSaver(
+                          params: FileSaverParams(
+                        mimeTypesFilter: ["application/json"],
+                        saveFiles: [
+                          SaveFileInfo(
+                              fileData: utf8.encode(jsonEncode(
+                                  prefs!.getStringList("chats") ?? [])),
+                              fileName:
+                                  "ollama-export-${DateFormat('yyyy-MM-dd-H-m-s').format(DateTime.now())}.json")
+                        ],
+                      ));
+                    },
+                    child: Row(children: [
+                      const Icon(Icons.upload_rounded),
+                      const SizedBox(width: 16, height: 42),
+                      Expanded(
+                          child: Text(AppLocalizations.of(context)!
+                              .settingsExportChats))
+                    ])),
+                InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                title: Text(AppLocalizations.of(context)!
+                                    .settingsImportChatsTitle),
+                                content: Text(AppLocalizations.of(context)!
+                                    .settingsImportChatsDescription),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(AppLocalizations.of(context)!
+                                          .settingsImportChatsCancel)),
+                                  TextButton(
+                                      onPressed: () async {
+                                        FilePickerResult? result =
+                                            await FilePicker.platform.pickFiles(
+                                                type: FileType.custom,
+                                                allowedExtensions: ["json"]);
+                                        if (result == null) {
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.of(context).pop();
+                                          return;
+                                        }
+
+                                        File file =
+                                            File(result.files.single.path!);
+                                        var content = await file.readAsString();
+                                        List<dynamic> tmpHistory =
+                                            jsonDecode(content);
+                                        List<String> history = [];
+
+                                        for (var i = 0;
+                                            i < tmpHistory.length;
+                                            i++) {
+                                          history.add(tmpHistory[i]);
+                                        }
+
+                                        prefs!.setStringList("chats", history);
+
+                                        messages = [];
+                                        chatUuid = null;
+
+                                        setState(() {});
+
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.of(context).pop();
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.of(context).pop();
+                                        // ignore: use_build_context_synchronously
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(AppLocalizations
+                                                        // ignore: use_build_context_synchronously
+                                                        .of(context)!
+                                                    .settingsImportChatsSuccess),
+                                                showCloseIcon: true));
+                                      },
+                                      child: Text(AppLocalizations.of(context)!
+                                          .settingsImportChatsImport))
+                                ]);
+                          });
+                    },
+                    child: Row(children: [
+                      const Icon(Icons.download_rounded),
+                      const SizedBox(width: 16, height: 42),
+                      Expanded(
+                          child: Text(AppLocalizations.of(context)!
+                              .settingsImportChats))
+                    ])),
                 title(AppLocalizations.of(context)!.settingsTitleContact),
                 InkWell(
                     onTap: () {
