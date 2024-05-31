@@ -501,6 +501,9 @@ class _MainAppState extends State<MainApp> {
                                     color: Colors.grey[800],
                                     borderRadius: BorderRadius.circular(8),
                                   ),
+                                  code: const TextStyle(
+                                      color: Colors.black,
+                                      backgroundColor: Colors.white),
                                   codeblockDecoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(8)),
@@ -519,23 +522,50 @@ class _MainAppState extends State<MainApp> {
                                   tableBorder:
                                       TableBorder.all(color: Colors.white),
                                   tableBody: white)
-                              : MarkdownStyleSheet(
-                                  p: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                  blockquoteDecoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  codeblockDecoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  horizontalRuleDecoration: BoxDecoration(
-                                      border: Border(
-                                          top: BorderSide(
-                                              color: Colors.grey[200]!,
-                                              width: 1))))));
+                              : (Theme.of(context).brightness ==
+                                      Brightness.light)
+                                  ? MarkdownStyleSheet(
+                                      p: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                      blockquoteDecoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      code: const TextStyle(
+                                          color: Colors.white,
+                                          backgroundColor: Colors.black),
+                                      codeblockDecoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      horizontalRuleDecoration: BoxDecoration(
+                                          border: Border(
+                                              top: BorderSide(
+                                                  color: Colors.grey[200]!,
+                                                  width: 1))))
+                                  : MarkdownStyleSheet(
+                                      p: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                      blockquoteDecoration: BoxDecoration(
+                                        color: Colors.grey[800]!,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      code: const TextStyle(
+                                          color: Colors.black,
+                                          backgroundColor: Colors.white),
+                                      codeblockDecoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      horizontalRuleDecoration: BoxDecoration(
+                                          border: Border(
+                                              top: BorderSide(
+                                                  color: Colors.grey[200]!,
+                                                  width: 1))))));
                 },
                 disableImageGallery: true,
                 // keyboardDismissBehavior:
@@ -545,7 +575,9 @@ class _MainAppState extends State<MainApp> {
                         key: const Key("logoVisible"),
                         onVisibilityChanged: (VisibilityInfo info) {
                           logoVisible = info.visibleFraction > 0;
-                          setState(() {});
+                          try {
+                            setState(() {});
+                          } catch (_) {}
                         },
                         child: AnimatedOpacity(
                             opacity: logoVisible ? 1.0 : 0.0,
