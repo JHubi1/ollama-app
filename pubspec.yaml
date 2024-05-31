@@ -1,7 +1,7 @@
 name: ollama_app
 description: "A modern and easy-to-use client for Ollama"
 publish_to: 'none'
-version: 0.0.2
+version: 1.0.0
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
@@ -20,7 +20,17 @@ dependencies:
   intl: any
   http: ^1.2.1
   dartx: ^1.2.0
-  ollama_dart: ^0.1.0+1
+  ollama_dart:
+    git:
+      url: https://github.com/davidmigloz/langchain_dart.git
+      path: packages/ollama_dart
+      ref: ce2ef30c9a9a0dfe8f3059988b7007c94c45b9bd
+  smooth_page_indicator: ^1.1.0
+  transparent_image: ^2.0.1
+  simple_icons: ^10.1.3
+  url_launcher: ^6.2.6
+  restart_app: ^1.2.1
+  flutter_markdown: ^0.7.1
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +42,10 @@ flutter:
   generate: true
   assets:
     - assets/logo512.png
+    - assets/logo512error.png
+    - assets/welcome/1.png
+    - assets/welcome/2.png
+    - assets/welcome/3.png
+    - assets/welcome/1dark.png
+    - assets/welcome/2dark.png
+    - assets/welcome/3dark.png

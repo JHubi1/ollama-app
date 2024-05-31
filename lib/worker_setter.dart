@@ -1,127 +1,18 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'main.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
-
-void setHost(BuildContext context, [bool force = true]) {
-  bool loading = false;
-  bool invalidHost = false;
-  bool invalidUrl = false;
-  final hostInputController =
-      TextEditingController(text: prefs?.getString("host") ?? "");
-  showDialog(
-      context: context,
-      barrierDismissible: !force,
-      builder: (context) => StatefulBuilder(
-          builder: (context, setState) => PopScope(
-              canPop: !force,
-              child: AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.hostDialogTitle),
-                  content: loading
-                      ? const LinearProgressIndicator()
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                              Text(AppLocalizations.of(context)!
-                                  .hostDialogDescription),
-                              invalidHost
-                                  ? Text(
-                                      AppLocalizations.of(context)!
-                                          .hostDialogErrorInvalidHost,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold))
-                                  : const SizedBox.shrink(),
-                              invalidUrl
-                                  ? Text(
-                                      AppLocalizations.of(context)!
-                                          .hostDialogErrorInvalidUrl,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold))
-                                  : const SizedBox.shrink(),
-                              const SizedBox(height: 8),
-                              TextField(
-                                  controller: hostInputController,
-                                  autofocus: true,
-                                  decoration: const InputDecoration(
-                                      hintText: "http://example.com:8080"))
-                            ]),
-                  actions: [
-                    !force
-                        ? TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                                AppLocalizations.of(context)!.hostDialogCancel))
-                        : const SizedBox.shrink(),
-                    TextButton(
-                        onPressed: () async {
-                          setState(() {
-                            loading = true;
-                            invalidUrl = false;
-                            invalidHost = false;
-                          });
-                          var tmpHost = hostInputController.text
-                              .trim()
-                              .removeSuffix("/")
-                              .trim();
-
-                          if (tmpHost.isEmpty) {
-                            setState(() {
-                              loading = false;
-                            });
-                            return;
-                          }
-
-                          var url = Uri.parse(tmpHost);
-                          if (!url.isAbsolute) {
-                            setState(() {
-                              invalidUrl = true;
-                              loading = false;
-                            });
-                            return;
-                          }
-
-                          http.Response request;
-                          try {
-                            request = await http.get(url).timeout(
-                                const Duration(seconds: 5), onTimeout: () {
-                              return http.Response('Error', 408);
-                            });
-                          } catch (e) {
-                            invalidHost = true;
-                            loading = false;
-                            setState(() {});
-                            return;
-                          }
-                          if (request.statusCode != 200 ||
-                              request.body != "Ollama is running") {
-                            setState(() {
-                              invalidHost = true;
-                              loading = false;
-                            });
-                          } else {
-                            // ignore: use_build_context_synchronously
-                            Navigator.of(context).pop();
-                            messages = [];
-                            setState(() {});
-                            host = tmpHost;
-                            prefs?.setString("host", host!);
-                          }
-                        },
-                        child:
-                            Text(AppLocalizations.of(context)!.hostDialogSave))
-                  ]))));
-}
+// ignore: depend_on_referenced_packages
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:uuid/uuid.dart';
 
 void setModel(BuildContext context, Function setState) {
   List<String> models = [];
+  List<String> modelsReal = [];
   List<bool> modal = [];
   int usedIndex = -1;
   int addIndex = -1;
@@ -131,14 +22,15 @@ void setModel(BuildContext context, Function setState) {
     var list = await llama.OllamaClient(baseUrl: "$host/api").listModels();
     for (var i = 0; i < list.models!.length; i++) {
       models.add(list.models![i].model!.split(":")[0]);
+      modelsReal.add(list.models![i].model!);
       modal.add((list.models![i].details!.families ?? []).contains("clip"));
     }
     addIndex = models.length;
     // ignore: use_build_context_synchronously
     models.add(AppLocalizations.of(context)!.modelDialogAddModel);
     modal.add(false);
-    for (var i = 0; i < models.length; i++) {
-      if (models[i] == model) {
+    for (var i = 0; i < modelsReal.length; i++) {
+      if (modelsReal[i] == model) {
         usedIndex = i;
       }
     }
@@ -158,10 +50,13 @@ void setModel(BuildContext context, Function setState) {
           return PopScope(
               canPop: loaded,
               onPopInvoked: (didPop) {
-                if (usedIndex >= 0 && models[usedIndex] != model) {
+                if (!loaded) return;
+                if (usedIndex >= 0 &&
+                    modelsReal[usedIndex] != model &&
+                    (prefs!.getBool("resetOnModelSelect") ?? true)) {
                   messages = [];
                 }
-                model = (usedIndex >= 0) ? models[usedIndex] : null;
+                model = (usedIndex >= 0) ? modelsReal[usedIndex] : null;
                 multimodal = (usedIndex >= 0) ? modal[usedIndex] : false;
                 if (model != null) {
                   prefs?.setString("model", model!);
@@ -240,21 +135,13 @@ void setModel(BuildContext context, Function setState) {
                                           onSelected: (bool selected) {
                                             if (addIndex == index) {
                                               Navigator.of(context).pop();
-                                              showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                left: 16,
-                                                                right: 16,
-                                                                top: 16),
-                                                        child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .modelDialogAddSteps));
-                                                  });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .modelDialogAddSteps),
+                                                      showCloseIcon: true));
                                             }
                                             if (!chatAllowed) return;
                                             setLocalState(() {
@@ -270,81 +157,217 @@ void setModel(BuildContext context, Function setState) {
       });
 }
 
-void deleteChat(BuildContext context, Function setState) {
-  if (prefs!.getBool("askBeforeDeletion") ?? true && messages.isNotEmpty) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setLocalState) {
-            return AlertDialog(
-                title: Text(AppLocalizations.of(context)!.deleteDialogTitle),
-                content: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text(AppLocalizations.of(context)!.deleteDialogDescription),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(AppLocalizations.of(context)!
-                            .deleteDialogAskAlways),
-                        const Expanded(child: SizedBox()),
-                        Switch(
-                          value: prefs!.getBool("askBeforeDeletion") ?? true,
-                          onChanged: (value) {
-                            prefs!.setBool("askBeforeDeletion", value);
-                            setLocalState(() {});
-                          },
-                        )
-                      ])
-                ]),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                          AppLocalizations.of(context)!.deleteDialogCancel)),
-                  TextButton(
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        Navigator.of(context).pop();
-                        messages = [];
-                        setState(() {});
-                      },
-                      child: Text(
-                          AppLocalizations.of(context)!.deleteDialogDelete))
-                ]);
-          });
-        });
-  } else {
-    messages = [];
-    setState(() {});
+void saveChat(String uuid, Function setState) {
+  int index = -1;
+  for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
+    if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == uuid) {
+      index = i;
+    }
   }
+  if (index == -1) return;
+  List<Map<String, String>> history = [];
+  for (var i = 0; i < messages.length; i++) {
+    history.add({
+      "role": (messages[i].author == user) ? "user" : "assistant",
+      "content": jsonDecode(jsonEncode(messages[i]))["text"]
+    });
+  }
+  if (messages.isEmpty && uuid == chatUuid) {
+    for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
+      if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
+          chatUuid) {
+        List<String> tmp = prefs!.getStringList("chats")!;
+        tmp.removeAt(i);
+        prefs!.setStringList("chats", tmp);
+        chatUuid = null;
+        return;
+      }
+    }
+  }
+  if (jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"]
+          .length >=
+      1) {
+    if (jsonDecode(jsonDecode((prefs!.getStringList("chats") ?? [])[index])[
+            "messages"])[0]["role"] ==
+        "system") {
+      history.add({
+        "role": "system",
+        "content": jsonDecode(jsonDecode(
+                (prefs!.getStringList("chats") ?? [])[index])["messages"])[0]
+            ["content"]
+      });
+    }
+  } else {
+    var system = prefs?.getString("system") ?? "You are a helpful assistant";
+    if (prefs!.getBool("noMarkdown") ?? false) {
+      system +=
+          " You must not use markdown or any other formatting language in any way!";
+    }
+    history.add({"role": "system", "content": system});
+  }
+  history = history.reversed.toList();
+  List<String> tmp = prefs!.getStringList("chats") ?? [];
+  tmp.removeAt(index);
+  tmp.insert(
+      0,
+      jsonEncode({
+        "title":
+            jsonDecode((prefs!.getStringList("chats") ?? [])[index])["title"],
+        "uuid": uuid,
+        "model": model,
+        "messages": jsonEncode(history)
+      }));
+  prefs!.setStringList("chats", tmp);
+  setState(() {});
 }
 
-void setAskBeforeDeletion(BuildContext context, Function setState) {
-  showDialog(
+void loadChat(String uuid, Function setState) {
+  int index = -1;
+  for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
+    if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == uuid) {
+      index = i;
+    }
+  }
+  if (index == -1) return;
+  messages = [];
+  model = null;
+  setState(() {});
+  var history = jsonDecode(
+      jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"]);
+  for (var i = 0; i < history.length; i++) {
+    if (history[i]["role"] != "system") {
+      messages.insert(
+          0,
+          types.TextMessage(
+              author: (history[i]["role"] == "user") ? user : assistant,
+              id: const Uuid().v4(),
+              text: history[i]["content"]));
+    }
+  }
+  model = jsonDecode((prefs!.getStringList("chats") ?? [])[index])["model"];
+  setState(() {});
+}
+
+Future<String> prompt(BuildContext context,
+    {String description = "",
+    String value = "",
+    String title = "",
+    bool force = false,
+    String? valueIfCanceled,
+    TextInputType keyboard = TextInputType.text,
+    Icon? prefixIcon,
+    int maxLines = 1,
+    String? uuid}) async {
+  var returnText = (valueIfCanceled != null) ? valueIfCanceled : value;
+  final TextEditingController controller = TextEditingController(text: value);
+  bool loading = false;
+  await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(builder: (context, setLocalState) {
-          return Dialog(
-              child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
+          return PopScope(
+              child: Container(
+                  padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 16,
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  width: double.infinity,
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(AppLocalizations.of(context)!
-                            .deleteDialogAskAlways),
-                        const Expanded(child: SizedBox()),
-                        Switch(
-                          value: prefs!.getBool("askBeforeDeletion") ?? true,
-                          onChanged: (value) {
-                            prefs!.setBool("askBeforeDeletion", value);
-                            setLocalState(() {});
-                          },
-                        )
+                        (title != "")
+                            ? Text(title,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold))
+                            : const SizedBox.shrink(),
+                        (title != "")
+                            ? const Divider()
+                            : const SizedBox.shrink(),
+                        (description != "")
+                            ? Text(description)
+                            : const SizedBox.shrink(),
+                        const SizedBox(height: 8),
+                        TextField(
+                            controller: controller,
+                            autofocus: true,
+                            keyboardType: keyboard,
+                            maxLines: maxLines,
+                            decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      returnText = controller.text;
+                                      Navigator.of(context).pop();
+                                    },
+                                    icon: const Icon(Icons.save_rounded)),
+                                prefixIcon: (title ==
+                                            AppLocalizations.of(context)!
+                                                .dialogEnterNewTitle &&
+                                        uuid != null)
+                                    ? IconButton(
+                                        onPressed: () async {
+                                          setLocalState(() {
+                                            loading = true;
+                                          });
+                                          for (var i = 0;
+                                              i <
+                                                  (prefs!.getStringList(
+                                                              "chats") ??
+                                                          [])
+                                                      .length;
+                                              i++) {
+                                            if (jsonDecode((prefs!
+                                                        .getStringList(
+                                                            "chats") ??
+                                                    [])[i])["uuid"] ==
+                                                uuid) {
+                                              try {
+                                                var history = jsonDecode(
+                                                    jsonDecode((prefs!
+                                                            .getStringList(
+                                                                "chats") ??
+                                                        [])[i])["messages"]);
+
+                                                final generated =
+                                                    await llama.OllamaClient(
+                                                            baseUrl:
+                                                                "$host/api")
+                                                        .generateCompletion(
+                                                  request: llama
+                                                      .GenerateCompletionRequest(
+                                                    model: model!,
+                                                    prompt:
+                                                        "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
+                                                  ),
+                                                );
+                                                var title = generated.response!
+                                                    .replaceAll("*", "")
+                                                    .replaceAll("_", "");
+                                                controller.text = title;
+                                                setLocalState(() {
+                                                  loading = false;
+                                                });
+                                              } catch (_) {}
+                                              break;
+                                            }
+                                          }
+                                        },
+                                        icon: const Icon(
+                                            Icons.auto_awesome_rounded))
+                                    : prefixIcon)),
+                        SizedBox(
+                            height: 3,
+                            child: (loading)
+                                ? const LinearProgressIndicator()
+                                : const SizedBox.shrink()),
+                        (MediaQuery.of(context).viewInsets.bottom != 0)
+                            ? const SizedBox(height: 16)
+                            : const SizedBox.shrink()
                       ])));
         });
       });
+  return returnText;
 }

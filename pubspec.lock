@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.2"
+  args:
+    dependency: transitive
+    description:
+      name: args
+      sha256: "7cf60b9f0cc88203c5a190b4cd62a99feea42759a7fa695010eb5de1c0b2252a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
   async:
     dependency: transitive
     description:
@@ -227,6 +235,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_markdown:
+    dependency: "direct main"
+    description:
+      name: flutter_markdown
+      sha256: "9921f9deda326f8a885e202b1e35237eadfc1345239a0f6f0f1ff287e047547f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.1"
   flutter_parsed_text:
     dependency: transitive
     description:
@@ -405,6 +421,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  markdown:
+    dependency: transitive
+    description:
+      name: markdown
+      sha256: ef2a1298144e3f985cc736b22e0ccdaf188b5b3970648f2d9dc13efd1d9df051
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.2.2"
   matcher:
     dependency: transitive
     description:
@@ -440,10 +464,11 @@ packages:
   ollama_dart:
     dependency: "direct main"
     description:
-      name: ollama_dart
-      sha256: "5e83b6b77785e7dbc454ff70ab14883e6cc1e6157c8df4e84da77845bc074df9"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/ollama_dart"
+      ref: ce2ef30c9a9a0dfe8f3059988b7007c94c45b9bd
+      resolved-ref: ce2ef30c9a9a0dfe8f3059988b7007c94c45b9bd
+      url: "https://github.com/davidmigloz/langchain_dart.git"
+    source: git
     version: "0.1.0+1"
   path:
     dependency: transitive
@@ -501,6 +526,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  restart_app:
+    dependency: "direct main"
+    description:
+      name: restart_app
+      sha256: b37daeb1c02fcab30e19d9e30b6fdd215bd53577efd927042eb77cf6f09daadb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   scroll_to_index:
     dependency: transitive
     description:
@@ -565,11 +598,27 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  simple_icons:
+    dependency: "direct main"
+    description:
+      name: simple_icons
+      sha256: "30067d70a9d72923fbc80e142e17fa46085dfa970e66bc4bede3be4819d05901"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.1.3"
   sky_engine:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_page_indicator:
+    dependency: "direct main"
+    description:
+      name: smooth_page_indicator
+      sha256: "725bc638d5e79df0c84658e1291449996943f93bacbc2cec49963dbbab48d8ae"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   source_span:
     dependency: transitive
     description:
@@ -634,6 +683,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  transparent_image:
+    dependency: "direct main"
+    description:
+      name: transparent_image
+      sha256: e8991d955a2094e197ca24c645efec2faf4285772a4746126ca12875e54ca02f
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   typed_data:
     dependency: transitive
     description:
@@ -643,7 +700,7 @@ packages:
     source: hosted
     version: "1.3.2"
   url_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher
       sha256: "6ce1e04375be4eed30548f10a315826fd933c1e493206eab82eed01f438c8d2e"

@@ -10,15 +10,45 @@
         "description": "Text displayed for new chat option",
         "context": "Visible in the side bar"
     },
-    "optionSetHost": "Set Host",
-    "@optionSetHost": {
-        "description": "Text displayed for set host option",
+    "optionSettings": "Settings",
+    "@optionSettings": {
+        "description": "Text displayed for settings option",
         "context": "Visible in the side bar"
     },
-    "optionSetAskDeletion": "Ask before Deletion",
-    "@optionSetAskDeletion": {
-        "description": "Text displayed for ask before deletion option",
+    "optionNoChatFound": "No chats found",
+    "@optionNoChatFound": {
+        "description": "Text displayed when no chats are found",
         "context": "Visible in the side bar"
+    },
+    "tipPrefix": "Tip: ",
+    "@tipPrefix": {
+        "description": "Prefix for tips",
+        "context": "Visible in the sidebar"
+    },
+    "tip0": "Edit messages by long taping on them",
+    "@tip0": {
+        "description": "First tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip1": "Delete messages by double tapping on them",
+    "@tip1": {
+        "description": "Second tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip2": "You can change the theme in settings",
+    "@tip2": {
+        "description": "Third tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip3": "Select a multimodal model to input images",
+    "@tip3": {
+        "description": "Fourth tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip4": "Chats are automatically saved",
+    "@tip4": {
+        "description": "Fifth tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
     },
     "takeImage": "Take Image",
     "@takeImage": {
@@ -30,6 +60,11 @@
         "description": "Text displayed for image upload button",
         "context": "Visible in attachment menu"
     },
+    "notAValidImage": "Not a valid image",
+    "@notAValidImage": {
+        "description": "Text displayed when an image is not valid",
+        "context": "Visible in the chat view"
+    },
     "messageInputPlaceholder": "Message",
     "@messageInputPlaceholder": {
         "description": "Placeholder text for message input",
@@ -40,57 +75,37 @@
         "description": "Text displayed when no model is selected",
         "context": "Visible in the chat view"
     },
-    "hostDialogTitle": "Set Host",
-    "@hostDialogTitle": {
-        "description": "Title of the host dialog",
-        "context": "Visible in the host dialog"
-    },
-    "hostDialogDescription": "Enter the host of the Ollama server. This will be validated and can be changed in settings later.",
-    "@hostDialogDescription": {
-        "description": "Description of the host dialog",
-        "context": "Visible in the host dialog"
-    },
-    "hostDialogErrorInvalidHost": "The host could not be validated, please try again. Either it is not reachable or is not a valid Ollama server instance.",
-    "@hostDialogErrorInvalidHost": {
-        "description": "Error message displayed when the host is invalid",
-        "context": "Visible in the host dialog"
-    },
-    "hostDialogErrorInvalidUrl": "The URL is not valid. Try rechecking it.",
-    "@hostDialogErrorInvalidUrl": {
-        "description": "Error message displayed when the URL is invalid",
-        "context": "Visible in the host dialog"
-    },
-    "hostDialogSave": "Save Host",
-    "@hostDialogSave": {
-        "description": "Text displayed for save host button, should be capitalized",
-        "context": "Visible in the host dialog"
-    },
-    "hostDialogCancel": "Cancel",
-    "@hostDialogCancel": {
-        "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the host dialog"
+    "noHostSelected": "No host selected, open setting to set one",
+    "@noSelectedHost": {
+        "description": "Text displayed when no host is selected",
+        "context": "Visible in the chat view, opens the settings dialog when clicked"
     },
     "noSelectedModel": "<selector>",
     "@noSelectedModel": {
         "description": "Text displayed when no model is selected",
         "context": "Visible in the chat view, opens the model dialog when clicked"
     },
-    "modelDialogAddModel": "Add Model",
+    "newChatTitle": "Unnamed Chat",
+    "@newChatTitle": {
+        "description": "Title of a new chat",
+        "context": "Visible in the new chat dialog"
+    },
+    "modelDialogAddModel": "Add",
     "@modelDialogAddModel": {
         "description": "Text displayed for add model button",
         "context": "Visible in the model dialog"
     },
-    "modelDialogAddSteps": "To add a new model, visit ollama.com on your computer, look for a model you like, copy the command and paste it in a new terminal window. Wait for the download to complete, this can take a while. Once it is complete, reopen this selector and you'll find your newly added model.",
+    "modelDialogAddSteps": "Adding models is not supported. Go to your host pc and add models there.",
     "@modelDialogAddSteps": {
         "description": "Steps to add a new model",
         "context": "Visible in the model dialog"
     },
-    "deleteDialogTitle": "Confirm Deletion",
+    "deleteDialogTitle": "Delete Chat",
     "@deleteDialogTitle": {
         "description": "Title of the delete dialog",
         "context": "Visible in the delete dialog"
     },
-    "deleteDialogDescription": "Are you sure you want to continue? This will wipe all memory of this chat and cannot be undone.",
+    "deleteDialogDescription": "Are you sure you want to continue? This will wipe all memory of this chat and cannot be undone.\nTo disable this dialog, visit the settings.",
     "@deleteDialogDescription": {
         "description": "Description of the delete dialog",
         "context": "Visible in the delete dialog"
@@ -105,9 +120,156 @@
         "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the delete dialog"
     },
-    "deleteDialogAskAlways": "Ask me every time",
-    "@deleteDialogAskAlways": {
-        "description": "Text displayed for ask me always again checkbox",
-        "context": "Visible in the delete dialog"
+    "dialogEnterNewTitle": "Enter new title",
+    "@dialogEnterNewTitle": {
+        "description": "Text displayed as description for new title input",
+        "context": "Visible in the rename dialog"
+    },
+    "dialogEditMessageTitle": "Edit Message",
+    "@dialogEditMessageTitle": {
+        "description": "Title of the edit message dialog",
+        "context": "Visible in the edit message dialog"
+    },
+    "settingsTitleBehavior": "Behavior",
+    "@settingsTitleBehavior": {
+        "description": "Title of the behavior settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTitleInterface": "Interface",
+    "@settingsTitleInterface": {
+        "description": "Title of the interface settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTitleContact": "Contact",
+    "@settingsTitleContact": {
+        "description": "Title of the contact settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsHost": "Host",
+    "@settingsHost": {
+        "description": "Text displayed as description for host input",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostValid": "Valid Host",
+    "@settingsHostValid": {
+        "description": "Text displayed when the host is valid",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostChecking": "Checking Host",
+    "@settingsHostChecking": {
+        "description": "Text displayed when the host is being checked",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} other{Request Failed}}",
+    "@settingsHostInvalid": {
+        "description": "Text displayed when the host is invalid",
+        "context": "Visible in the settings view",
+        "placeholders": {
+          "type": {
+            "type": "String",
+            "description": "Type of the issue, either 'url' or 'other' (preferably 'host')"
+          }
+        }
+    },
+    "settingsHostInvalidDetailed": "{type, select, url{The URL you entered is invalid. It isn't an a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}",
+    "@settingsHostInvalidDetailed": {
+        "description": "Text displayed when the host is invalid",
+        "context": "Visible in the settings view",
+        "placeholders": {
+          "type": {
+            "type": "String",
+            "description": "Type of the issue, either 'url' or 'other' (preferably 'host')"
+          }
+        }
+    },
+    "settingsSystemMessage": "System message",
+    "@settingsSystemMessage": {
+        "description": "Text displayed as description for system message input",
+        "context": "Visible in the settings view"
+    },
+    "settingsDisableMarkdown": "Disable markdown",
+    "@settingsDisableMarkdown": {
+        "description": "Text displayed as description for disable markdown toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsBehaviorNotUpdatedForOlderChats": "Behavior settings are not updated for older chats. Start a new one to apply the changes.",
+    "@settingsBehaviorNotUpdatedForOlderChats": {
+        "description": "Text displayed when behavior settings are not updated for older chats",
+        "context": "Visible in the settings view"
+    },
+    "settingsGenerateTitles": "Generate titles",
+    "@settingsGenerateTitles": {
+        "description": "Text displayed as description for generate titles toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsAskBeforeDelete": "Ask before chat deletion",
+    "@settingsAskBeforeDelete": {
+        "description": "Text displayed as description for ask before deletion toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsResetOnModelChange": "Reset on model change",
+    "@settingsResetOnModelChange": {
+        "description": "Text displayed as description for reset on model change toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsEnableEditing": "Enable editing of messages",
+    "@settingsEnableEditing": {
+        "description": "Text displayed as description for enable editing toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsShowTips": "Show tips in sidebar",
+    "@settingsShowTips": {
+        "description": "Text displayed as description for show tips toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessSystem": "System",
+    "@settingsBrightnessSystem": {
+        "description": "Text displayed as description for system brightness option",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessLight": "Light",
+    "@settingsBrightnessLight": {
+        "description": "Text displayed as description for light brightness option",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessDark": "Dark",
+    "@settingsBrightnessDark": {
+        "description": "Text displayed as description for dark brightness option",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessRestartTitle": "Restart Required",
+    "@settingsBrightnessRestartTitle": {
+        "description": "Title of the restart required dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessRestartDescription": "Changing the theme requires a restart.\nDo you want to restart now or cancel the action?",
+    "@settingsBrightnessRestartDescription": {
+        "description": "Description of the restart required dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessRestartRestart": "Restart",
+    "@settingsBrightnessRestartRestart": {
+        "description": "Text displayed for restart button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessRestartCancel": "Cancel",
+    "@settingsBrightnessRestartCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsGithub": "GitHub",
+    "@settingsGithub": {
+        "description": "Text displayed as description for GitHub button",
+        "context": "Visible in the settings view"
+    },
+    "settingsReportIssue": "Report Issue",
+    "@settingsReportIssue": {
+        "description": "Text displayed as description for report issue button",
+        "context": "Visible in the settings view"
+    },
+    "settingsMainDeveloper": "Main Developer",
+    "@settingsMainDeveloper": {
+        "description": "Text displayed as description for main developer button",
+        "context": "Visible in the settings view"
     }
 }
