@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'main.dart';
 
+import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -157,7 +159,7 @@ void setModel(BuildContext context, Function setState) {
       });
 }
 
-void saveChat(String uuid, Function setState) {
+void saveChat(String uuid, Function setState) async {
   int index = -1;
   for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
     if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == uuid) {
@@ -167,10 +169,24 @@ void saveChat(String uuid, Function setState) {
   if (index == -1) return;
   List<Map<String, String>> history = [];
   for (var i = 0; i < messages.length; i++) {
-    history.add({
-      "role": (messages[i].author == user) ? "user" : "assistant",
-      "content": jsonDecode(jsonEncode(messages[i]))["text"]
-    });
+    if ((jsonDecode(jsonEncode(messages[i])) as Map).containsKey("text")) {
+      history.add({
+        "role": (messages[i].author == user) ? "user" : "assistant",
+        "content": jsonDecode(jsonEncode(messages[i]))["text"]
+      });
+    } else {
+      var uri = jsonDecode(jsonEncode(messages[i]))["uri"] as String;
+      String content = (uri.startsWith("data:image/png;base64,"))
+          ? uri.removePrefix("data:image/png;base64,")
+          : base64.encode(await File(uri).readAsBytes());
+      history.add({
+        "role": (messages[i].author == user) ? "user" : "assistant",
+        "type": "image",
+        "name": (messages[i] as types.ImageMessage).name,
+        "size": (messages[i] as types.ImageMessage).size.toString(),
+        "content": content
+      });
+    }
   }
   if (messages.isEmpty && uuid == chatUuid) {
     for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
@@ -236,12 +252,24 @@ void loadChat(String uuid, Function setState) {
       jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"]);
   for (var i = 0; i < history.length; i++) {
     if (history[i]["role"] != "system") {
-      messages.insert(
-          0,
-          types.TextMessage(
-              author: (history[i]["role"] == "user") ? user : assistant,
-              id: const Uuid().v4(),
-              text: history[i]["content"]));
+      if ((history[i] as Map).containsKey("type") &&
+          history[i]["type"] == "image") {
+        messages.insert(
+            0,
+            types.ImageMessage(
+                author: (history[i]["role"] == "user") ? user : assistant,
+                id: const Uuid().v4(),
+                name: history[i]["name"],
+                size: int.parse(history[i]["size"]),
+                uri: "data:image/png;base64,${history[i]["content"]}"));
+      } else {
+        messages.insert(
+            0,
+            types.TextMessage(
+                author: (history[i]["role"] == "user") ? user : assistant,
+                id: const Uuid().v4(),
+                text: history[i]["content"]));
+      }
     }
   }
   model = jsonDecode((prefs!.getStringList("chats") ?? [])[index])["model"];
@@ -325,11 +353,29 @@ Future<String> prompt(BuildContext context,
                                                     [])[i])["uuid"] ==
                                                 uuid) {
                                               try {
-                                                var history = jsonDecode(
-                                                    jsonDecode((prefs!
-                                                            .getStringList(
-                                                                "chats") ??
+                                                List history = [];
+                                                var tmp = jsonDecode(jsonDecode(
+                                                    (prefs!.getStringList(
+                                                            "chats") ??
                                                         [])[i])["messages"]);
+                                                for (var j = 0;
+                                                    j < tmp.length;
+                                                    j++) {
+                                                  if (tmp[j]["text"] == null) {
+                                                    continue;
+                                                  }
+                                                  history.add(tmp[j]["text"]);
+                                                }
+                                                if (history.isEmpty) {
+                                                  controller
+                                                      .text = AppLocalizations
+                                                          .of(context)!
+                                                      .imageOnlyConversation;
+                                                  setLocalState(() {
+                                                    loading = false;
+                                                  });
+                                                  return;
+                                                }
 
                                                 final generated =
                                                     await llama.OllamaClient(
@@ -345,7 +391,8 @@ Future<String> prompt(BuildContext context,
                                                 );
                                                 var title = generated.response!
                                                     .replaceAll("*", "")
-                                                    .replaceAll("_", "");
+                                                    .replaceAll("_", "")
+                                                    .trim();
                                                 controller.text = title;
                                                 setLocalState(() {
                                                   loading = false;

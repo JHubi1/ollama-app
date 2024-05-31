@@ -567,6 +567,11 @@ class _MainAppState extends State<MainApp> {
                                                   color: Colors.grey[200]!,
                                                   width: 1))))));
                 },
+                imageMessageBuilder: (p0, {required messageWidth}) {
+                  return SizedBox(
+                      width: 160.0,
+                      child: MarkdownBody(data: "![${p0.name}](${p0.uri})"));
+                },
                 disableImageGallery: true,
                 // keyboardDismissBehavior:
                 //     ScrollViewKeyboardDismissBehavior.onDrag,
@@ -641,9 +646,14 @@ class _MainAppState extends State<MainApp> {
                           content: jsonDecode(jsonEncode(messages[i]))["text"],
                           images: (images.isNotEmpty) ? images : null));
                     } else {
-                      images.add(base64.encode(
-                          await File(jsonDecode(jsonEncode(messages[i]))["uri"])
-                              .readAsBytes()));
+                      var uri =
+                          jsonDecode(jsonEncode(messages[i]))["uri"] as String;
+                      String content =
+                          (uri.startsWith("data:image/png;base64,"))
+                              ? uri.removePrefix("data:image/png;base64,")
+                              : base64.encode(await File(uri).readAsBytes());
+                      uri = uri.removePrefix("data:image/png;base64,");
+                      images.add(content);
                     }
                   }
 
@@ -757,6 +767,10 @@ class _MainAppState extends State<MainApp> {
                     void setTitle() async {
                       List<Map<String, String>> history = [];
                       for (var i = 0; i < messages.length; i++) {
+                        if (jsonDecode(jsonEncode(messages[i]))["text"] ==
+                            null) {
+                          continue;
+                        }
                         history.add({
                           "role": (messages[i].author == user)
                               ? "user"
@@ -776,7 +790,8 @@ class _MainAppState extends State<MainApp> {
                         );
                         var title = generated.response!
                             .replaceAll("*", "")
-                            .replaceAll("_", "");
+                            .replaceAll("_", "")
+                            .trim();
                         var tmp = (prefs!.getStringList("chats") ?? []);
                         for (var i = 0; i < tmp.length; i++) {
                           if (jsonDecode((prefs!.getStringList("chats") ??

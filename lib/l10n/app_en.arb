@@ -65,6 +65,11 @@
         "description": "Text displayed when an image is not valid",
         "context": "Visible in the chat view"
     },
+    "imageOnlyConversation": "Image Only Conversation",
+    "@imageOnlyConversation": {
+        "description": "Title, if 'Generate Title' is executed on a conversation with no text messages",
+        "context": "Visible in the chat view"
+    },
     "messageInputPlaceholder": "Message",
     "@messageInputPlaceholder": {
         "description": "Placeholder text for message input",

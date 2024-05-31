@@ -30,7 +30,7 @@
         "description": "First tip displayed in the sidebar",
         "context": "Visible in the sidebar"
     },
-    "tip1": "Löschen Sie Nachrichten durch Doppeltippen",
+    "tip1": "Lösche Nachrichten durch Doppeltippen",
     "@tip1": {
         "description": "Second tip displayed in the sidebar",
         "context": "Visible in the sidebar"
@@ -63,6 +63,11 @@
     "notAValidImage": "Kein gültiges Bild",
     "@notAValidImage": {
         "description": "Text displayed when an image is not valid",
+        "context": "Visible in the chat view"
+    },
+    "imageOnlyConversation": "Nur Bild Unterhaltung",
+    "@imageOnlyConversation": {
+        "description": "Title, if 'Generate Title' is executed on a conversation with no text messages",
         "context": "Visible in the chat view"
     },
     "messageInputPlaceholder": "Nachricht",
