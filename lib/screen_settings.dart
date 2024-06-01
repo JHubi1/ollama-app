@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'main.dart';
-import 'package:intl/intl.dart';
+import 'package:ollama_app/worker_setter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:dartx/dartx.dart';
@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:pick_or_save/pick_or_save.dart';
+import 'package:intl/intl.dart';
 
 class ScreenSettings extends StatefulWidget {
   const ScreenSettings({super.key});
@@ -49,7 +50,11 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     http.Response request;
     try {
       request = await http
-          .get(Uri.parse(tmpHost))
+          .get(
+        Uri.parse(tmpHost),
+        headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
+            .cast<String, String>(),
+      )
           .timeout(const Duration(seconds: 5), onTimeout: () {
         return http.Response("Error", 408);
       });
@@ -165,6 +170,29 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                     decoration: InputDecoration(
                         labelText: AppLocalizations.of(context)!.settingsHost,
                         hintText: "http://localhost:11434",
+                        prefixIcon: IconButton(
+                            onPressed: () async {
+                              HapticFeedback.selectionClick();
+                              String tmp = await prompt(context,
+                                  placeholder:
+                                      "{\"Authorization\": \"Bearer ...\"}",
+                                  title: AppLocalizations.of(context)!
+                                      .settingsHostHeaderTitle,
+                                  value: (prefs!.getString("hostHeaders") ??
+                                      ""), validator: (content) async {
+                                try {
+                                  var tmp = jsonDecode(content);
+                                  tmp as Map<String, dynamic>;
+                                  return true;
+                                } catch (_) {
+                                  return false;
+                                }
+                              },
+                                  validatorError: AppLocalizations.of(context)!
+                                      .settingsHostHeaderInvalid);
+                              prefs!.setString("hostHeaders", tmp);
+                            },
+                            icon: const Icon(Icons.add_rounded)),
                         suffixIcon: useHost
                             ? const SizedBox.shrink()
                             : (hostLoading

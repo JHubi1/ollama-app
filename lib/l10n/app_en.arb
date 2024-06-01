@@ -130,7 +130,7 @@
         "description": "Text displayed as description for new title input",
         "context": "Visible in the rename dialog"
     },
-    "dialogEditMessageTitle": "Edit Message",
+    "dialogEditMessageTitle": "Edit message",
     "@dialogEditMessageTitle": {
         "description": "Title of the edit message dialog",
         "context": "Visible in the edit message dialog"
@@ -180,6 +180,16 @@
             "description": "Type of the issue, either 'url' or 'other' (preferably 'host')"
           }
         }
+    },
+    "settingsHostHeaderTitle": "Set host header",
+    "@settingsHostHeader": {
+        "description": "Text displayed as description for host header input",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostHeaderInvalid": "The entered text isn't a valid header JSON object",
+    "@settingsHostHeaderInvalid": {
+        "description": "Text displayed when the host header is invalid",
+        "context": "Visible in the settings view"
     },
     "settingsHostInvalidDetailed": "{type, select, url{The URL you entered is invalid. It isn't an a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}",
     "@settingsHostInvalidDetailed": {

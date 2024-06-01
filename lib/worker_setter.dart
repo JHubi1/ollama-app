@@ -21,7 +21,12 @@ void setModel(BuildContext context, Function setState) {
   bool loaded = false;
   Function? setModalState;
   void load() async {
-    var list = await llama.OllamaClient(baseUrl: "$host/api").listModels();
+    var list = await llama.OllamaClient(
+            headers:
+                (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
+                    .cast<String, String>(),
+            baseUrl: "$host/api")
+        .listModels();
     for (var i = 0; i < list.models!.length; i++) {
       models.add(list.models![i].model!.split(":")[0]);
       modelsReal.add(list.models![i].model!);
@@ -284,15 +289,18 @@ Future<String> prompt(BuildContext context,
     {String description = "",
     String value = "",
     String title = "",
-    bool force = false,
     String? valueIfCanceled,
     TextInputType keyboard = TextInputType.text,
     Icon? prefixIcon,
     int maxLines = 1,
-    String? uuid}) async {
+    String? uuid,
+    Future<bool> Function(String content)? validator,
+    String? validatorError,
+    String? placeholder}) async {
   var returnText = (valueIfCanceled != null) ? valueIfCanceled : value;
   final TextEditingController controller = TextEditingController(text: value);
   bool loading = false;
+  String? error;
   await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -329,9 +337,25 @@ Future<String> prompt(BuildContext context,
                             maxLines: maxLines,
                             decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
+                                hintText: placeholder,
+                                errorText: error,
                                 suffixIcon: IconButton(
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      if (validator != null) {
+                                        setLocalState(() {
+                                          error = null;
+                                        });
+                                        bool valid =
+                                            await validator(controller.text);
+                                        if (!valid) {
+                                          setLocalState(() {
+                                            error = validatorError;
+                                          });
+                                          return;
+                                        }
+                                      }
                                       returnText = controller.text;
+                                      // ignore: use_build_context_synchronously
                                       Navigator.of(context).pop();
                                     },
                                     icon: const Icon(Icons.save_rounded)),
@@ -381,11 +405,15 @@ Future<String> prompt(BuildContext context,
                                                   return;
                                                 }
 
-                                                final generated =
-                                                    await llama.OllamaClient(
-                                                            baseUrl:
-                                                                "$host/api")
-                                                        .generateCompletion(
+                                                final generated = await llama.OllamaClient(
+                                                        headers: (jsonDecode(prefs!
+                                                                    .getString(
+                                                                        "hostHeaders") ??
+                                                                "{}") as Map)
+                                                            .cast<String,
+                                                                String>(),
+                                                        baseUrl: "$host/api")
+                                                    .generateCompletion(
                                                   request: llama
                                                       .GenerateCompletionRequest(
                                                     model: model!,

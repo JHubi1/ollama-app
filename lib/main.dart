@@ -674,8 +674,12 @@ class _MainAppState extends State<MainApp> {
                   chatAllowed = false;
 
                   String newId = const Uuid().v4();
-                  llama.OllamaClient client =
-                      llama.OllamaClient(baseUrl: "$host/api");
+                  llama.OllamaClient client = llama.OllamaClient(
+                      headers:
+                          (jsonDecode(prefs!.getString("hostHeaders") ?? "{}")
+                                  as Map)
+                              .cast<String, String>(),
+                      baseUrl: "$host/api");
 
                   try {
                     if ((prefs!.getString("requestType") ?? "stream") ==
@@ -1242,7 +1246,6 @@ class _MainAppState extends State<MainApp> {
                                   title: AppLocalizations.of(context)!
                                       .dialogEnterNewTitle,
                                   value: oldTitle,
-                                  force: false,
                                   uuid: jsonDecode(item)["uuid"]);
                               var tmp = (prefs!.getStringList("chats") ?? []);
                               for (var i = 0; i < tmp.length; i++) {
