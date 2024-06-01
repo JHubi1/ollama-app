@@ -1,7 +1,8 @@
 name: ollama_app
 description: "A modern and easy-to-use client for Ollama"
 publish_to: 'none'
-version: 1.0.0
+version: 1.0.1
+versionCode: 101
 
 environment:
   sdk: '>=3.3.4 <4.0.0'

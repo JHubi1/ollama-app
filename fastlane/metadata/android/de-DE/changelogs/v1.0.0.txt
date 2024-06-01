@@ -1,9 +1,0 @@
-- Einstellungen hinzugefügt
-- Begrüßungsdialog hinzugefügt
-- Hinzugefügte benutzerdefinierte Systemnachricht
-- Markdown in Nachrichten hinzugefügt
-- Gestreamte Antworten hinzugefügt
-- Vollständig überarbeitetes UI-Konzept
-- Unterstützung für Mehrfachchats
-- Konversationstitel hinzugefügt
-- Fehler behoben, wenn die Modellversion nicht `latest` ist
