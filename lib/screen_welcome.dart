@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 import 'main.dart';
 
@@ -8,6 +7,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ScreenWelcome extends StatefulWidget {
+  const ScreenWelcome({super.key});
+
   @override
   State<ScreenWelcome> createState() => _ScreenWelcomeState();
 }

@@ -21,28 +21,41 @@ void setModel(BuildContext context, Function setState) {
   bool loaded = false;
   Function? setModalState;
   void load() async {
-    var list = await llama.OllamaClient(
-            headers:
-                (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-                    .cast<String, String>(),
-            baseUrl: "$host/api")
-        .listModels();
-    for (var i = 0; i < list.models!.length; i++) {
-      models.add(list.models![i].model!.split(":")[0]);
-      modelsReal.add(list.models![i].model!);
-      modal.add((list.models![i].details!.families ?? []).contains("clip"));
-    }
-    addIndex = models.length;
-    // ignore: use_build_context_synchronously
-    models.add(AppLocalizations.of(context)!.modelDialogAddModel);
-    modal.add(false);
-    for (var i = 0; i < modelsReal.length; i++) {
-      if (modelsReal[i] == model) {
-        usedIndex = i;
+    try {
+      var list = await llama.OllamaClient(
+              headers:
+                  (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
+                      .cast<String, String>(),
+              baseUrl: "$host/api")
+          .listModels()
+          .timeout(const Duration(seconds: 5));
+      for (var i = 0; i < list.models!.length; i++) {
+        models.add(list.models![i].model!.split(":")[0]);
+        modelsReal.add(list.models![i].model!);
+        modal.add((list.models![i].details!.families ?? []).contains("clip"));
       }
+      addIndex = models.length;
+      // ignore: use_build_context_synchronously
+      models.add(AppLocalizations.of(context)!.modelDialogAddModel);
+      modal.add(false);
+      for (var i = 0; i < modelsReal.length; i++) {
+        if (modelsReal[i] == model) {
+          usedIndex = i;
+        }
+      }
+      loaded = true;
+      setModalState!(() {});
+    } catch (_) {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          // ignore: use_build_context_synchronously
+          content: Text(
+              // ignore: use_build_context_synchronously
+              AppLocalizations.of(context)!.settingsHostInvalid("timeout")),
+          showCloseIcon: true));
     }
-    loaded = true;
-    setModalState!(() {});
   }
 
   load();
@@ -75,7 +88,15 @@ void setModel(BuildContext context, Function setState) {
               },
               child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                  padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 16,
+                      bottom: (Platform.isWindows ||
+                              Platform.isLinux ||
+                              Platform.isMacOS)
+                          ? 16
+                          : 0),
                   child: (!loaded)
                       ? const LinearProgressIndicator()
                       : Column(mainAxisSize: MainAxisSize.min, children: [
@@ -88,6 +109,7 @@ void setModel(BuildContext context, Function setState) {
                                   scrollDirection: Axis.vertical,
                                   child: Wrap(
                                     spacing: 5.0,
+                                    runSpacing: 5.0,
                                     alignment: WrapAlignment.center,
                                     children: List<Widget>.generate(
                                       models.length,
@@ -312,7 +334,11 @@ Future<String> prompt(BuildContext context,
                       left: 16,
                       right: 16,
                       top: 16,
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                      bottom: (Platform.isWindows ||
+                              Platform.isLinux ||
+                              Platform.isMacOS)
+                          ? 16
+                          : MediaQuery.of(context).viewInsets.bottom),
                   width: double.infinity,
                   child: Column(
                       mainAxisSize: MainAxisSize.min,
