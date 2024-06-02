@@ -68,9 +68,8 @@ void main() {
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     doWhenWindowReady(() {
-      const initialSize = Size(600, 450);
-      appWindow.minSize = initialSize;
-      appWindow.size = initialSize;
+      appWindow.minSize = const Size(600, 450);
+      appWindow.size = const Size(1200, 650);
       appWindow.alignment = Alignment.center;
       appWindow.show();
     });
