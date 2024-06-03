@@ -429,6 +429,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                     prefs!.setBool("tips", value);
                     setState(() {});
                   }),
+                  toggle(AppLocalizations.of(context)!.settingsShowModelTags,
+                      (prefs!.getBool("modelTags") ?? false), (value) {
+                    HapticFeedback.selectionClick();
+                    prefs!.setBool("modelTags", value);
+                    setState(() {});
+                  }),
                   const SizedBox(height: 16),
                   SegmentedButton(
                       segments: [

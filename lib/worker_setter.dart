@@ -37,6 +37,8 @@ void setModel(BuildContext context, Function setState) {
       addIndex = models.length;
       // ignore: use_build_context_synchronously
       models.add(AppLocalizations.of(context)!.modelDialogAddModel);
+      // ignore: use_build_context_synchronously
+      modelsReal.add(AppLocalizations.of(context)!.modelDialogAddModel);
       modal.add(false);
       for (var i = 0; i < modelsReal.length; i++) {
         if (modelsReal[i] == model) {
@@ -116,7 +118,11 @@ void setModel(BuildContext context, Function setState) {
                                       models.length,
                                       (int index) {
                                         return ChoiceChip(
-                                          label: Text(models[index]),
+                                          label: Text(
+                                              (prefs!.getBool("modelTags") ??
+                                                      false)
+                                                  ? modelsReal[index]
+                                                  : models[index]),
                                           selected: usedIndex == index,
                                           avatar: (usedIndex == index)
                                               ? null

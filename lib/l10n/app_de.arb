@@ -181,6 +181,16 @@
             }
         }
     },
+    "settingsHostHeaderTitle": "Host-Header festlegen",
+    "@settingsHostHeader": {
+        "description": "Text displayed as description for host header input",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostHeaderInvalid": "Der eingegebene Text ist kein gültiges Header-JSON-Objekt",
+    "@settingsHostHeaderInvalid": {
+        "description": "Text displayed when the host header is invalid",
+        "context": "Visible in the settings view"
+    },
     "settingsHostInvalidDetailed": "{type, select, url{Die eingegebene URL ist ungültig. Es handelt sich nicht um ein standardisiertes URL-Format.} other{Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.}}",
     "@settingsHostInvalidDetailed": {
         "description": "Text displayed when the host is invalid",
@@ -230,6 +240,11 @@
     "settingsShowTips": "Tipps in der Seitenleiste anzeigen",
     "@settingsShowTips": {
         "description": "Text displayed as description for show tips toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsShowModelTags": "Model-Tags anzeigen",
+    "@settingsShowModelTags": {
+        "description": "Text displayed as description for show model tags toggle",
         "context": "Visible in the settings view"
     },
     "settingsBrightnessSystem": "System",

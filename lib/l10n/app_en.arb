@@ -242,6 +242,11 @@
         "description": "Text displayed as description for show tips toggle",
         "context": "Visible in the settings view"
     },
+    "settingsShowModelTags": "Show model tags",
+    "@settingsShowModelTags": {
+        "description": "Text displayed as description for show model tags toggle",
+        "context": "Visible in the settings view"
+    },
     "settingsBrightnessSystem": "System",
     "@settingsBrightnessSystem": {
         "description": "Text displayed as description for system brightness option",
