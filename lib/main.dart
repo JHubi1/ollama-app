@@ -171,6 +171,7 @@ class _MainAppState extends State<MainApp> {
   bool menuVisible = false;
 
   int tipId = Random().nextInt(5);
+  bool sendable = false;
 
   List<Widget> sidebar(BuildContext context, Function setState) {
     return List.from([
@@ -1147,6 +1148,9 @@ class _MainAppState extends State<MainApp> {
                                 }
                               }
                               if (chatAllowed) return;
+                              if (text.trim() == "") {
+                                throw Exception();
+                              }
                               messages.insert(
                                   0,
                                   types.TextMessage(
@@ -1168,6 +1172,9 @@ class _MainAppState extends State<MainApp> {
                                 )
                                 .timeout(const Duration(seconds: 15));
                             if (chatAllowed) return;
+                            if (request.message!.content.trim() == "") {
+                              throw Exception();
+                            }
                             messages.insert(
                                 0,
                                 types.TextMessage(
@@ -1496,10 +1503,16 @@ class _MainAppState extends State<MainApp> {
                       l10n: ChatL10nEn(
                           inputPlaceholder: AppLocalizations.of(context)!
                               .messageInputPlaceholder),
-                      inputOptions: const InputOptions(
+                      inputOptions: InputOptions(
                           keyboardType: TextInputType.multiline,
-                          sendButtonVisibilityMode:
-                              SendButtonVisibilityMode.always),
+                          onTextChanged: (p0) {
+                            setState(() {
+                              sendable = p0.trim().isNotEmpty;
+                            });
+                          },
+                          sendButtonVisibilityMode: (sendable)
+                              ? SendButtonVisibilityMode.always
+                              : SendButtonVisibilityMode.hidden),
                       user: user,
                       hideBackgroundOnEmojiMessages: false,
                       theme: (Theme.of(context).brightness == Brightness.light)

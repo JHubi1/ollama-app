@@ -170,7 +170,7 @@
         "description": "Text displayed when the host is being checked",
         "context": "Visible in the settings view"
     },
-    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} other{Request Failed}}",
+    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request Failed. Server issues} other{Request Failed}}",
     "@settingsHostInvalid": {
         "description": "Text displayed when the host is invalid",
         "context": "Visible in the settings view",
