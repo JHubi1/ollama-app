@@ -1523,7 +1523,14 @@ class _MainAppState extends State<MainApp> {
                                   (theme ?? ThemeData()).colorScheme.primary,
                               attachmentButtonIcon:
                                   const Icon(Icons.add_a_photo_rounded),
-                              sendButtonIcon: const Icon(Icons.send_rounded),
+                              sendButtonIcon: const SizedBox(
+                                height: 24,
+                                child: CircleAvatar(
+                                    backgroundColor: Colors.black,
+                                    radius: 12,
+                                    child: Icon(Icons.arrow_upward_rounded)),
+                              ),
+                              sendButtonMargin: EdgeInsets.zero,
                               inputBackgroundColor: (theme ?? ThemeData())
                                   .colorScheme
                                   .onSurface
