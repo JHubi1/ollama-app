@@ -1326,6 +1326,7 @@ class _MainAppState extends State<MainApp> {
                               ? 10
                               : ((text.length >= 50) ? 5 : 3),
                         );
+                        if (input == "") return;
 
                         messages[index] = types.TextMessage(
                           author: p1.author,
