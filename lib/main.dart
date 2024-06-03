@@ -1032,6 +1032,9 @@ class _MainAppState extends State<MainApp> {
                                       size: 44)))),
                       onSendPressed: (p0) async {
                         HapticFeedback.selectionClick();
+                        setState(() {
+                          sendable = false;
+                        });
 
                         if (host == null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
