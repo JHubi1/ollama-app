@@ -170,6 +170,8 @@ class _MainAppState extends State<MainApp> {
   bool logoVisible = true;
   bool menuVisible = false;
 
+  int tipId = Random().nextInt(5);
+
   List<Widget> sidebar(BuildContext context, Function setState) {
     return List.from([
       ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
@@ -282,7 +284,9 @@ class _MainAppState extends State<MainApp> {
               child: InkWell(
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
-                  onTap: () {},
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                  },
                   child: Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
                       child: Row(children: [
@@ -302,7 +306,6 @@ class _MainAppState extends State<MainApp> {
                         const SizedBox(width: 16),
                       ]))))),
       Builder(builder: (context) {
-        int tipId = Random().nextInt(5);
         String tip = (tipId == 0)
             ? AppLocalizations.of(context)!.tip0
             : (tipId == 1)
@@ -318,25 +321,36 @@ class _MainAppState extends State<MainApp> {
             ? const SizedBox.shrink()
             : (Padding(
                 padding: const EdgeInsets.only(left: 12, right: 12),
-                child: Padding(
-                    padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    child: Row(children: [
-                      const Padding(
-                          padding: EdgeInsets.only(left: 16, right: 12),
-                          child: Icon(Icons.tips_and_updates_rounded,
-                              color: Colors.grey)),
-                      Expanded(
-                        child: Text(
-                            AppLocalizations.of(context)!.tipPrefix + tip,
-                            softWrap: true,
-                            maxLines: 3,
-                            overflow: TextOverflow.fade,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500,
+                child: InkWell(
+                  splashFactory: NoSplash.splashFactory,
+                  highlightColor: Colors.transparent,
+                  enableFeedback: false,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    setState(() {
+                      tipId = Random().nextInt(5);
+                    });
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
+                      child: Row(children: [
+                        const Padding(
+                            padding: EdgeInsets.only(left: 16, right: 12),
+                            child: Icon(Icons.tips_and_updates_rounded,
                                 color: Colors.grey)),
-                      ),
-                      const SizedBox(width: 16),
-                    ]))));
+                        Expanded(
+                          child: Text(
+                              AppLocalizations.of(context)!.tipPrefix + tip,
+                              softWrap: true,
+                              maxLines: 3,
+                              overflow: TextOverflow.fade,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey)),
+                        ),
+                        const SizedBox(width: 16),
+                      ])),
+                )));
       }),
     ])
       ..addAll((prefs?.getStringList("chats") ?? []).map((item) {
