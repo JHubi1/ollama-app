@@ -77,6 +77,7 @@ void setModel(BuildContext context, Function setState) {
                   messages = [];
                 }
                 model = (usedIndex >= 0) ? modelsReal[usedIndex] : null;
+                chatAllowed = !(model == null);
                 multimodal = (usedIndex >= 0) ? modal[usedIndex] : false;
                 if (model != null) {
                   prefs?.setString("model", model!);
@@ -176,7 +177,9 @@ void setModel(BuildContext context, Function setState) {
                                                               .modelDialogAddSteps),
                                                       showCloseIcon: true));
                                             }
-                                            if (!chatAllowed) return;
+                                            if (!chatAllowed && model != null) {
+                                              return;
+                                            }
                                             setLocalState(() {
                                               usedIndex = selected ? index : -1;
                                             });
