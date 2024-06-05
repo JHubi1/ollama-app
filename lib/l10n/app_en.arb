@@ -343,14 +343,39 @@
           }
         }
     },
-    "settingsUpdateRateLimit": "API rate limit exceeded. Not able to check for updates",
+    "settingsUpdateRateLimit": "Can't check, API rate limit exceeded",
     "@settingsUpdateRateLimit": {
         "description": "Text displayed when the API rate limit is exceeded",
         "context": "Visible in the settings view"
     },
-    "settingsUpdateIssue": "An issue occurred while checking for updates. Click to retry",
+    "settingsUpdateIssue": "An issue occurred",
     "@settingsUpdateIssue": {
         "description": "Text displayed when an issue occurs while checking for updates",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogTitle": "New version available",
+    "@settingsUpdateDialogTitle": {
+        "description": "Title of the update dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogDescription": "A new version of Ollama is available. Do you want to download and install it now?",
+    "@settingsUpdateDialogDescription": {
+        "description": "Description of the update dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateChangeLog": "Change Log",
+    "@settingsUpdateChangeLog": {
+        "description": "Text displayed as description for change log button",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogUpdate": "Update",
+    "@settingsUpdateDialogUpdate": {
+        "description": "Text displayed for update button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogCancel": "Cancel",
+    "@settingsUpdateDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the settings view"
     },
     "settingsCheckForUpdates": "Check for update on settings open",
