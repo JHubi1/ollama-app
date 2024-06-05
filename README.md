@@ -24,7 +24,7 @@ You'll find the latest recommended version of the Ollama App under [the releases
 
 Alternatively, you can also download the app from any of the following stores:
 
-[![get from IzzyOnDroid](assets/stores/IzzyOnDroid.png)](https://apt.izzysoft.de/fdroid/index/apk/com.freakurl.apps.ollama/)
+[<img src="assets/stores/IzzyOnDroid.png" width="215" style="padding: 5px" />](https://apt.izzysoft.de/fdroid/index/apk/com.freakurl.apps.ollama/)
 
 ## Initial Setup
 
