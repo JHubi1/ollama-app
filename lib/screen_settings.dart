@@ -110,7 +110,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       "com.machiav3lli.fdroid",
       "nya.kitsunyan.foxydroid"
     ];
-    if ((await InstallReferrer.referrer ==
+    if ((await InstallReferrer.referrer !=
             InstallationAppReferrer.androidManually) &&
         !(installerApps
             .contains((await InstallReferrer.app).packageName ?? ""))) {
