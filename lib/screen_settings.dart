@@ -304,6 +304,10 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                       controller: hostInputController,
                       keyboardType: TextInputType.url,
                       readOnly: useHost,
+                      onSubmitted: (value) {
+                        HapticFeedback.selectionClick();
+                        checkHost();
+                      },
                       decoration: InputDecoration(
                           labelText: AppLocalizations.of(context)!.settingsHost,
                           hintText: "http://localhost:11434",
