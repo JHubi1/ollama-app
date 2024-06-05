@@ -1,0 +1,5 @@
+- Added toggle to enable tags in model selector
+- Fixed tips being buggy
+- Edited messages now have to have a content
+- The send button isn't shown constantly anymore
+- The send button has a new design

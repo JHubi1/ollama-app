@@ -1,9 +1,0 @@
-- Added settings
-- Added welcome dialog
-- Added custom system message
-- Added markdown in messages
-- Added streamed responses
-- Completely reworked UI concept
-- Multi chat support
-- Added conversation titles
-- Fixed bug when model version is not `latest`
