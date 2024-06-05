@@ -16,6 +16,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:install_referrer/install_referrer.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:version/version.dart';
 
 class ScreenSettings extends StatefulWidget {
   const ScreenSettings({super.key});
@@ -68,7 +71,6 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     }
     if ((request.statusCode == 200 && request.body == "Ollama is running") ||
         (Uri.parse(tmpHost).toString() == fixedHost)) {
-      // messages = [];
       setState(() {
         hostLoading = false;
         host = tmpHost;
@@ -91,10 +93,102 @@ class _ScreenSettingsState extends State<ScreenSettings> {
 
   final repoUrl = "https://github.com/JHubi1/ollama-app";
 
+  bool updateChecked = false;
+  bool updateLoading = false;
+  String updateStatus = "ok";
+  String? updateUrl;
+  String? latestVersion;
+  String? currentVersion;
+  Future<bool> updatesSupported([bool takeAction = false]) async {
+    bool returnValue = true;
+    var installerApps = [
+      "org.fdroid.fdroid",
+      "org.gdroid.gdroid",
+      "eu.bubu1.fdroidclassic",
+      "in.sunilpaulmathew.izzyondroid",
+      "com.looker.droidify",
+      "com.machiav3lli.fdroid",
+      "nya.kitsunyan.foxydroid"
+    ];
+    if ((await InstallReferrer.referrer ==
+            InstallationAppReferrer.androidManually) &&
+        !(installerApps
+            .contains((await InstallReferrer.app).packageName ?? ""))) {
+      returnValue = false;
+    }
+    if (!repoUrl.startsWith("https://github.com")) {
+      returnValue = false;
+    }
+
+    if (!returnValue && takeAction) {
+      setState(() {
+        updateStatus = "notAvailable";
+        updateLoading = false;
+      });
+    }
+    return returnValue;
+  }
+
+  void checkUpdate() async {
+    setState(() {
+      updateChecked = true;
+      updateLoading = true;
+    });
+
+    if (!await updatesSupported()) {
+      setState(() {
+        updateStatus = "notAvailable";
+        updateLoading = false;
+      });
+      return;
+    }
+
+    var repo = repoUrl.split("/");
+
+    currentVersion = (await PackageInfo.fromPlatform()).version;
+    // currentVersion = "1.0.0";
+
+    String? version;
+    try {
+      var request = await http
+          .get(Uri.parse(
+              "https://api.github.com/repos/${repo[3]}/${repo[4]}/tags"))
+          .timeout(const Duration(seconds: 5));
+      if (request.statusCode == 403) {
+        setState(() {
+          updateStatus = "rateLimit";
+          updateLoading = false;
+        });
+        return;
+      }
+      version = jsonDecode(request.body)[0]["name"];
+    } catch (_) {
+      setState(() {
+        updateStatus = "error";
+        updateLoading = false;
+      });
+      return;
+    }
+
+    latestVersion = version;
+    updateUrl = "$repoUrl/releases/tag/$latestVersion";
+    updateStatus = "ok";
+
+    setState(() {
+      updateLoading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+
     checkHost();
+    updatesSupported(true);
+    if (prefs!.getBool("checkUpdateOnSettingsOpen") ?? false) {
+      checkUpdate();
+    }
   }
 
   @override
@@ -153,73 +247,54 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     return PopScope(
       canPop: !hostLoading,
       onPopInvoked: (didPop) {
+        settingsOpen = false;
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: WindowBorder(
         color: Theme.of(context).colorScheme.surface,
         child: Scaffold(
             appBar: AppBar(
-                title: Row(children: [
-                  Text(AppLocalizations.of(context)!.optionSettings),
-                  Expanded(child: SizedBox(height: 200, child: MoveWindow()))
-                ]),
-                actions:
-                    (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                        ? [
-                            SizedBox(
-                                height: 200,
-                                child: WindowTitleBarBox(
-                                    child: Row(
-                                  children: [
-                                    // Expanded(child: MoveWindow()),
-                                    SizedBox(
-                                        height: 200,
-                                        child: MinimizeWindowButton(
-                                            animate: true,
-                                            colors: WindowButtonColors(
-                                                iconNormal: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary))),
-                                    SizedBox(
-                                        height: 72,
-                                        child: MaximizeWindowButton(
-                                            animate: true,
-                                            colors: WindowButtonColors(
-                                                iconNormal: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary))),
-                                    SizedBox(
-                                        height: 72,
-                                        child: CloseWindowButton(
-                                            animate: true,
-                                            colors: WindowButtonColors(
-                                                iconNormal: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary))),
-                                  ],
-                                )))
-                          ]
-                        : null,
-                leading: (Navigator.of(context).canPop())
-                    ? null
-                    : IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () {
-                          if (hostLoading) return;
-                          Navigator.of(context).pushReplacement(
-                              // PageRouteBuilder(
-                              //     pageBuilder: (context, animation,
-                              //             secondaryAnimation) =>
-                              //         const MainApp(),
-                              //     // transitionDuration: const Duration(seconds: 1),
-                              //     transitionsBuilder: (context, animation,
-                              //         secondaryAnimation, child) {
-                              //       return FadeTransition(
-                              //           opacity: animation, child: child);
-                              //     })
-                              MaterialPageRoute(
-                                  builder: (context) => const MainApp()));
-                        })),
+              title: Row(children: [
+                Text(AppLocalizations.of(context)!.optionSettings),
+                Expanded(child: SizedBox(height: 200, child: MoveWindow()))
+              ]),
+              actions:
+                  (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+                      ? [
+                          SizedBox(
+                              height: 200,
+                              child: WindowTitleBarBox(
+                                  child: Row(
+                                children: [
+                                  SizedBox(
+                                      height: 200,
+                                      child: MinimizeWindowButton(
+                                          animate: true,
+                                          colors: WindowButtonColors(
+                                              iconNormal: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary))),
+                                  SizedBox(
+                                      height: 72,
+                                      child: MaximizeWindowButton(
+                                          animate: true,
+                                          colors: WindowButtonColors(
+                                              iconNormal: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary))),
+                                  SizedBox(
+                                      height: 72,
+                                      child: CloseWindowButton(
+                                          animate: true,
+                                          colors: WindowButtonColors(
+                                              iconNormal: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary))),
+                                ],
+                              )))
+                        ]
+                      : null,
+            ),
             body: Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: ListView(children: [
@@ -619,6 +694,77 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                 .settingsImportChats))
                       ])),
                   title(AppLocalizations.of(context)!.settingsTitleContact),
+                  (updateStatus == "notAvailable")
+                      ? const SizedBox.shrink()
+                      : InkWell(
+                          onTap: () {
+                            if (updateLoading) return;
+                            if ((Version.parse(latestVersion ?? "1.0.0") >
+                                    Version.parse(currentVersion ?? "2.0.0")) &&
+                                (updateStatus == "ok")) {
+                              launchUrl(
+                                  mode: LaunchMode.inAppBrowserView,
+                                  Uri.parse(updateUrl!));
+                            } else {
+                              checkUpdate();
+                              return;
+                            }
+                          },
+                          child: Row(children: [
+                            updateLoading
+                                ? SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: Transform.scale(
+                                        scale: 0.5,
+                                        child:
+                                            const CircularProgressIndicator()),
+                                  )
+                                : Icon((updateStatus != "ok")
+                                    ? Icons.warning_rounded
+                                    : (Version.parse(latestVersion ?? "1.0.0") >
+                                            Version.parse(
+                                                currentVersion ?? "2.0.0"))
+                                        ? Icons.info_outline_rounded
+                                        : Icons.update_rounded),
+                            const SizedBox(width: 16, height: 42),
+                            Expanded(
+                                child: Text(!updateChecked
+                                    ? AppLocalizations.of(context)!
+                                        .settingsUpdateCheck
+                                    : updateLoading
+                                        ? AppLocalizations.of(context)!
+                                            .settingsUpdateChecking
+                                        : (updateStatus == "rateLimit")
+                                            ? AppLocalizations.of(context)!
+                                                .settingsUpdateRateLimit
+                                            : (updateStatus != "ok")
+                                                ? AppLocalizations.of(context)!
+                                                    .settingsUpdateIssue
+                                                : (Version.parse(
+                                                            latestVersion ??
+                                                                "1.0.0") >
+                                                        Version.parse(
+                                                            currentVersion ??
+                                                                "2.0.0"))
+                                                    ? AppLocalizations.of(
+                                                            context)!
+                                                        .settingsUpdateAvailable(
+                                                            latestVersion!)
+                                                    : AppLocalizations.of(
+                                                            context)!
+                                                        .settingsUpdateLatest))
+                          ])),
+                  (updateStatus == "notAvailable")
+                      ? const SizedBox.shrink()
+                      : toggle(
+                          AppLocalizations.of(context)!.settingsCheckForUpdates,
+                          (prefs!.getBool("checkUpdateOnSettingsOpen") ??
+                              false), (value) {
+                          HapticFeedback.selectionClick();
+                          prefs!.setBool("checkUpdateOnSettingsOpen", value);
+                          setState(() {});
+                        }),
                   InkWell(
                       onTap: () {
                         launchUrl(

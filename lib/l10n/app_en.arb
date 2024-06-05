@@ -317,6 +317,47 @@
         "description": "Text displayed when chats are imported successfully",
         "context": "Visible in the settings view"
     },
+    "settingsUpdateCheck": "Check for updates",
+    "@settingsUpdateCheck": {
+        "description": "Text displayed as description for check for updates button",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateChecking": "Checking for updates ...",
+    "@settingsUpdateChecking": {
+        "description": "Text displayed while looking for updates",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateLatest": "You are on the latest version",
+    "@settingsUpdateLatest": {
+        "description": "Text displayed when the app is up to date",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateAvailable": "Update available (v{version})",
+    "@settingsUpdateAvailable": {
+        "description": "Text displayed when an update is available",
+        "context": "Visible in the settings view",
+        "placeholders": {
+          "version": {
+            "type": "String",
+            "description": "Version number of the available update"
+          }
+        }
+    },
+    "settingsUpdateRateLimit": "API rate limit exceeded. Not able to check for updates",
+    "@settingsUpdateRateLimit": {
+        "description": "Text displayed when the API rate limit is exceeded",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateIssue": "An issue occurred while checking for updates. Click to retry",
+    "@settingsUpdateIssue": {
+        "description": "Text displayed when an issue occurs while checking for updates",
+        "context": "Visible in the settings view"
+    },
+    "settingsCheckForUpdates": "Check for update on settings open",
+    "@settingsCheckForUpdates": {
+        "description": "Text displayed as description for check for updates toggle",
+        "context": "Visible in the settings view"
+    },
     "settingsGithub": "GitHub",
     "@settingsGithub": {
         "description": "Text displayed as description for GitHub button",

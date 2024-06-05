@@ -64,6 +64,8 @@ bool chatAllowed = true;
 final user = types.User(id: const Uuid().v4());
 final assistant = types.User(id: const Uuid().v4());
 
+bool settingsOpen = false;
+
 void main() {
   runApp(const App());
 
@@ -92,7 +94,9 @@ class _AppState extends State<App> {
     super.initState();
 
     void load() async {
+      try {
       await FlutterDisplayMode.setHighRefreshRate();
+      } catch (_) {}
       SharedPreferences.setPrefix("ollama.");
       SharedPreferences tmp = await SharedPreferences.getInstance();
       setState(() {
@@ -215,7 +219,12 @@ class _MainAppState extends State<MainApp> {
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   onTap: () {
                     HapticFeedback.selectionClick();
-                    Navigator.of(context).pop();
+                    if (!(Platform.isWindows ||
+                            Platform.isLinux ||
+                            Platform.isMacOS) &&
+                        MediaQuery.of(context).size.width <= 1000) {
+                      Navigator.of(context).pop();
+                    }
                     if (!chatAllowed) return;
                     chatUuid = null;
                     messages = [];
@@ -246,9 +255,14 @@ class _MainAppState extends State<MainApp> {
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   onTap: () {
                     HapticFeedback.selectionClick();
-                    Navigator.of(context).pop();
+                    if (!(Platform.isWindows ||
+                            Platform.isLinux ||
+                            Platform.isMacOS) &&
+                        MediaQuery.of(context).size.width <= 1000) {
+                      Navigator.of(context).pop();
+                    }
                     setState(() {
-                      logoVisible = false;
+                      settingsOpen = true;
                     });
                     Navigator.push(
                         context,
@@ -328,6 +342,7 @@ class _MainAppState extends State<MainApp> {
                   splashFactory: NoSplash.splashFactory,
                   highlightColor: Colors.transparent,
                   enableFeedback: false,
+                  hoverColor: Colors.transparent,
                   onTap: () {
                     HapticFeedback.selectionClick();
                     setState(() {
@@ -422,7 +437,12 @@ class _MainAppState extends State<MainApp> {
               if (chatUuid == jsonDecode(item)["uuid"]) {
                 messages = [];
                 chatUuid = null;
-                Navigator.of(context).pop();
+                if (!(Platform.isWindows ||
+                        Platform.isLinux ||
+                        Platform.isMacOS) &&
+                    MediaQuery.of(context).size.width <= 1000) {
+                  Navigator.of(context).pop();
+                }
               }
               setState(() {});
             },
@@ -433,7 +453,12 @@ class _MainAppState extends State<MainApp> {
                         borderRadius: BorderRadius.all(Radius.circular(50))),
                     onTap: () {
                       HapticFeedback.selectionClick();
-                      Navigator.of(context).pop();
+                      if (!(Platform.isWindows ||
+                              Platform.isLinux ||
+                              Platform.isMacOS) &&
+                          MediaQuery.of(context).size.width <= 1000) {
+                        Navigator.of(context).pop();
+                      }
                       if (!chatAllowed) return;
                       loadChat(jsonDecode(item)["uuid"], setState);
                       chatUuid = jsonDecode(item)["uuid"];
@@ -609,6 +634,7 @@ class _MainAppState extends State<MainApp> {
         splashFactory: NoSplash.splashFactory,
         highlightColor: Colors.transparent,
         enableFeedback: false,
+        hoverColor: Colors.transparent,
         child: SizedBox(
             height: 200,
             child: Row(
@@ -787,7 +813,20 @@ class _MainAppState extends State<MainApp> {
                   preferredSize: const Size.fromHeight(1),
                   child: (!chatAllowed && model != null)
                       ? const LinearProgressIndicator()
-                      : const SizedBox.shrink()),
+                      : ((Platform.isWindows ||
+                                  Platform.isLinux ||
+                                  Platform.isMacOS) &&
+                              MediaQuery.of(context).size.width >= 1000)
+                          ? AnimatedOpacity(
+                              opacity: menuVisible ? 1.0 : 0.0,
+                              duration: const Duration(milliseconds: 500),
+                              child: Divider(
+                                  height: 2,
+                                  color: (Theme.of(context).brightness ==
+                                          Brightness.light)
+                                      ? Colors.grey[400]
+                                      : Colors.grey[900]))
+                          : const SizedBox.shrink()),
               leading: ((Platform.isWindows ||
                           Platform.isLinux ||
                           Platform.isMacOS) &&
@@ -806,6 +845,7 @@ class _MainAppState extends State<MainApp> {
                           child: VisibilityDetector(
                               key: const Key("menuVisible"),
                               onVisibilityChanged: (VisibilityInfo info) {
+                                if (settingsOpen) return;
                                 menuVisible = info.visibleFraction > 0;
                                 try {
                                   setState(() {});
@@ -819,11 +859,15 @@ class _MainAppState extends State<MainApp> {
                   : const SizedBox.shrink(),
               ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
                       MediaQuery.of(context).size.width >= 1000)
-                  ? VerticalDivider(
-                      width: 2,
-                      color: (Theme.of(context).brightness == Brightness.light)
-                          ? Colors.grey[400]
-                          : Colors.grey[900])
+                  ? AnimatedOpacity(
+                      opacity: menuVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 500),
+                      child: VerticalDivider(
+                          width: 2,
+                          color:
+                              (Theme.of(context).brightness == Brightness.light)
+                                  ? Colors.grey[400]
+                                  : Colors.grey[900]))
                   : const SizedBox.shrink(),
               Expanded(
                   child: Chat(
@@ -1021,6 +1065,7 @@ class _MainAppState extends State<MainApp> {
                           child: VisibilityDetector(
                               key: const Key("logoVisible"),
                               onVisibilityChanged: (VisibilityInfo info) {
+                                if (settingsOpen) return;
                                 logoVisible = info.visibleFraction > 0;
                                 try {
                                   setState(() {});
@@ -1515,9 +1560,13 @@ class _MainAppState extends State<MainApp> {
                               sendable = p0.trim().isNotEmpty;
                             });
                           },
-                          sendButtonVisibilityMode: (sendable)
+                          sendButtonVisibilityMode: (Platform.isWindows ||
+                                  Platform.isLinux ||
+                                  Platform.isMacOS)
                               ? SendButtonVisibilityMode.always
-                              : SendButtonVisibilityMode.hidden),
+                              : (sendable)
+                                  ? SendButtonVisibilityMode.always
+                                  : SendButtonVisibilityMode.hidden),
                       user: user,
                       hideBackgroundOnEmojiMessages: false,
                       theme: (Theme.of(context).brightness == Brightness.light)
@@ -1585,6 +1634,10 @@ class _MainAppState extends State<MainApp> {
                                   : 440))),
             ],
           ),
+          drawerEdgeDragWidth:
+              (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+                  ? null
+                  : MediaQuery.of(context).size.width,
           drawer: Builder(builder: (context) {
             if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
                 MediaQuery.of(context).size.width >= 1000) {
