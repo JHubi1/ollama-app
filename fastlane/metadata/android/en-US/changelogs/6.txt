@@ -1,0 +1,4 @@
+- Fixed framerate issues on some devices
+- Added update dialog
+- Extended sidebar drag space
+- Added updater

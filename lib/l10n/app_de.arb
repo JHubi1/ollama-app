@@ -317,6 +317,72 @@
         "description": "Text displayed when chats are imported successfully",
         "context": "Visible in the settings view"
     },
+    "settingsUpdateCheck": "Nach Updates suchen",
+    "@settingsUpdateCheck": {
+        "description": "Text displayed as description for check for updates button",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateChecking": "Suchen nach Updates ...",
+    "@settingsUpdateChecking": {
+        "description": "Text displayed while looking for updates",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateLatest": "Du verwendest die neueste Version",
+    "@settingsUpdateLatest": {
+        "description": "Text displayed when the app is up to date",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateAvailable": "Update verfügbar (v{version})",
+    "@settingsUpdateAvailable": {
+        "description": "Text displayed when an update is available",
+        "context": "Visible in the settings view",
+        "placeholders": {
+            "version": {
+                "type": "String",
+                "description": "Version number of the available update"
+            }
+        }
+    },
+    "settingsUpdateRateLimit": "Kann nicht überprüfen, API-Anforderungslimit",
+    "@settingsUpdateRateLimit": {
+        "description": "Text displayed when the API rate limit is exceeded",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateIssue": "Ein Problem ist aufgetreten",
+    "@settingsUpdateIssue": {
+        "description": "Text displayed when an issue occurs while checking for updates",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogTitle": "Neue Version verfügbar",
+    "@settingsUpdateDialogTitle": {
+        "description": "Title of the update dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogDescription": "Eine neue Version von Ollama ist verfügbar. Möchtest du sie jetzt herunterladen und installieren?",
+    "@settingsUpdateDialogDescription": {
+        "description": "Description of the update dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateChangeLog": "Versionshinweise",
+    "@settingsUpdateChangeLog": {
+        "description": "Text displayed as description for change log button",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogUpdate": "Aktualisieren",
+    "@settingsUpdateDialogUpdate": {
+        "description": "Text displayed for update button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogCancel": "Abbrechen",
+    "@settingsUpdateDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsCheckForUpdates": "Beim Einstellungs-Öffnen Updates suchen",
+    "@settingsCheckForUpdates": {
+        "description": "Text displayed as description for check for updates toggle",
+        "context": "Visible in the settings view"
+    },
     "settingsGithub": "GitHub",
     "@settingsGithub": {
         "description": "Text displayed as description for GitHub button",
