@@ -33,6 +33,7 @@ dependencies:
   flutter_markdown: ^0.7.1
   file_picker: ^8.0.3
   bitsdojo_window: ^0.1.6
+  flutter_displaymode: ^0.6.0
 
 dev_dependencies:
   flutter_test:

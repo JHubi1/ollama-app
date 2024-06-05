@@ -27,6 +27,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 // ignore: depend_on_referenced_packages
 import 'package:markdown/markdown.dart' as md;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 // client configuration
 
@@ -91,6 +92,7 @@ class _AppState extends State<App> {
     super.initState();
 
     void load() async {
+      await FlutterDisplayMode.setHighRefreshRate();
       SharedPreferences.setPrefix("ollama.");
       SharedPreferences tmp = await SharedPreferences.getInstance();
       setState(() {
