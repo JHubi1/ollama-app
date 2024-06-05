@@ -22,6 +22,10 @@ A modern and easy-to-use client for Ollama. Have the greatest experience while k
 
 You'll find the latest recommended version of the Ollama App under [the releases tab](https://github.com/JHubi1/ollama-app/releases). Download the APK and install it on your Android device. That's it, now proceed to [Initial Setup](#initial-setup).
 
+Alternatively, you can also download the app from any of the following stores:
+
+[![get from IzzyOnDroid](assets/stores/IzzyOnDroid.png)](https://apt.izzysoft.de/fdroid/index/apk/com.freakurl.apps.ollama/)
+
 ## Initial Setup
 
 After installing the app and opening it for the first time, you'll encounter this popup:
