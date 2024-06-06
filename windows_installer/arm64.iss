@@ -7,7 +7,7 @@
 #define AppPublisher "JHubi1"
 #define AppURL "https://jhubi1.com"
 #define AppExeName "ollama.exe"
-#define AppArchitectures "x64"
+#define AppArchitectures "arm64"
 
 [Setup]   
 SourceDir=..
