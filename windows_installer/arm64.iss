@@ -11,28 +11,40 @@
 
 [Setup]   
 SourceDir=..
+ArchitecturesAllowed={#AppArchitectures}
+
 AppId={{4ACF8C84-5D9B-455C-9FED-93D29E2F71DC}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} v{#AppVersion}
 AppPublisher={#AppPublisher}
 AppPublisherURL={#AppURL}
-ArchitecturesAllowed={#AppArchitectures}
+SetupIconFile=windows\runner\resources\app_icon.ico
+AppCopyright=© 2024 {#AppPublisher}
+
+UninstallDisplayIcon={app}\{#AppExeName}
+UninstallDisplayName={#AppName}
+
+DefaultDirName={autopf}\OllamaApp
+OutputDir=build\windows\{#AppArchitectures}\runner
+OutputBaseFilename=ollama-v{#AppVersion}-{#AppArchitectures}
+
 AppSupportURL=https://github.com/JHubi1/ollama-app/issues
 AppUpdatesURL=https://github.com/JHubi1/ollama-app/releases
-DefaultDirName={autopf}\OllamaApp
-DisableProgramGroupPage=yes
+
 LicenseFile=windows_installer\docs\license.txt
 InfoBeforeFile=windows_installer\docs\before.txt
 InfoAfterFile=windows_installer\docs\after.txt
-; Uncomment the following line to run in non administrative install mode (install for current user only.)
-;PrivilegesRequired=lowest
+
+WizardImageFile=assets\OllamaAppBanner.bmp
+
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=build\windows\{#AppArchitectures}\runner
-OutputBaseFilename=ollama-v{#AppVersion}-{#AppArchitectures}
-SetupIconFile=windows\runner\resources\app_icon.ico
 ;Password=enterPasswordInCaseOfSecretBuild
 ;Encryption=yes
+
+DisableWelcomePage=no
+DisableProgramGroupPage=yes
+
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

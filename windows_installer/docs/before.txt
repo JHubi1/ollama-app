@@ -1,0 +1,6 @@
+Information: This is not a working application by itself! You have to have an instance of Ollama running in the background. Find out more at: https://ollama.com
+
+This software is developed as a FOSS project. That means it is provided for free and the source code is openly accessible in an open code versioning software, most commonly git.
+The repository of this application can be found here: https://github.com/JHubi1/ollama-app
+
+Have fun using this program. ~ JHubi1
