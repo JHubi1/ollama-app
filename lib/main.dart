@@ -95,7 +95,7 @@ class _AppState extends State<App> {
 
     void load() async {
       try {
-      await FlutterDisplayMode.setHighRefreshRate();
+        await FlutterDisplayMode.setHighRefreshRate();
       } catch (_) {}
       SharedPreferences.setPrefix("ollama.");
       SharedPreferences tmp = await SharedPreferences.getInstance();
@@ -1577,14 +1577,17 @@ class _MainAppState extends State<MainApp> {
                                   (theme ?? ThemeData()).colorScheme.primary,
                               attachmentButtonIcon:
                                   const Icon(Icons.add_a_photo_rounded),
-                              sendButtonIcon: const SizedBox(
+                              sendButtonIcon: SizedBox(
                                 height: 24,
                                 child: CircleAvatar(
-                                    backgroundColor: Colors.black,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
                                     radius: 12,
-                                    child: Icon(Icons.arrow_upward_rounded)),
+                                    child:
+                                        const Icon(Icons.arrow_upward_rounded)),
                               ),
                               sendButtonMargin: EdgeInsets.zero,
+                              attachmentButtonMargin: EdgeInsets.zero,
                               inputBackgroundColor: (theme ?? ThemeData())
                                   .colorScheme
                                   .onSurface
@@ -1619,7 +1622,17 @@ class _MainAppState extends State<MainApp> {
                               primaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(40),
                               secondaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(20),
                               attachmentButtonIcon: const Icon(Icons.add_a_photo_rounded),
-                              sendButtonIcon: const Icon(Icons.send_rounded),
+                              sendButtonIcon: SizedBox(
+                                height: 24,
+                                child: CircleAvatar(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    radius: 12,
+                                    child:
+                                        const Icon(Icons.arrow_upward_rounded)),
+                              ),
+                              sendButtonMargin: EdgeInsets.zero,
+                              attachmentButtonMargin: EdgeInsets.zero,
                               inputBackgroundColor: (themeDark ?? ThemeData()).colorScheme.onSurface.withAlpha(40),
                               inputTextColor: (themeDark ?? ThemeData()).colorScheme.onSurface,
                               inputBorderRadius: const BorderRadius.all(Radius.circular(64)),
