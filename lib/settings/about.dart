@@ -91,18 +91,6 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                         null),
                     (updateStatus == "notAvailable")
                         ? const SizedBox.shrink()
-                        : toggle(
-                            context,
-                            AppLocalizations.of(context)!
-                                .settingsCheckForUpdates,
-                            (prefs!.getBool("checkUpdateOnSettingsOpen") ??
-                                false), (value) {
-                            selectionHaptic();
-                            prefs!.setBool("checkUpdateOnSettingsOpen", value);
-                            setState(() {});
-                          }),
-                    (updateStatus == "notAvailable")
-                        ? const SizedBox.shrink()
                         : button(
                             (!updateChecked
                                 ? AppLocalizations.of(context)!
@@ -143,6 +131,18 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                               checkUpdate(setState);
                               return;
                             }
+                          }),
+                    (updateStatus == "notAvailable")
+                        ? const SizedBox.shrink()
+                        : toggle(
+                            context,
+                            AppLocalizations.of(context)!
+                                .settingsCheckForUpdates,
+                            (prefs!.getBool("checkUpdateOnSettingsOpen") ??
+                                false), (value) {
+                            selectionHaptic();
+                            prefs!.setBool("checkUpdateOnSettingsOpen", value);
+                            setState(() {});
                           }),
                     titleDivider(),
                     button(AppLocalizations.of(context)!.settingsGithub,

@@ -378,11 +378,6 @@
         "description": "Warning displayed for export and import options",
         "context": "Visible in the settings view"
     },
-    "settingsCheckForUpdates": "Check for updates on open",
-    "@settingsCheckForUpdates": {
-        "description": "Text displayed as description for check for updates toggle",
-        "context": "Visible in the settings view"
-    },
     "settingsUpdateCheck": "Check for updates",
     "@settingsUpdateCheck": {
         "description": "Text displayed as description for check for updates button",
@@ -442,6 +437,11 @@
     "settingsUpdateDialogCancel": "Cancel",
     "@settingsUpdateDialogCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsCheckForUpdates": "Check for updates on open",
+    "@settingsCheckForUpdates": {
+        "description": "Text displayed as description for check for updates toggle",
         "context": "Visible in the settings view"
     },
     "settingsGithub": "GitHub",
