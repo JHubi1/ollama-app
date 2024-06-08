@@ -267,7 +267,7 @@
         "description": "Text displayed as description for enable haptic feedback toggle",
         "context": "Visible in the settings view"
     },
-    "settingsMaximizeOnStart": "Maximize on start",
+    "settingsMaximizeOnStart": "Start maximized",
     "@settingsMaximizeOnStart": {
         "description": "Text displayed as description for maximize on start toggle",
         "context": "Visible in the settings view"

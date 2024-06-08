@@ -232,6 +232,16 @@
         "description": "Text displayed as description for reset on model change toggle",
         "context": "Visible in the settings view"
     },
+    "settingsRequestTypeStream": "Stream",
+    "@settingsRequestTypeStream": {
+        "description": "Text displayed as description for stream request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
+    "settingsRequestTypeRequest": "Request",
+    "@settingsRequestTypeRequest": {
+        "description": "Text displayed as description for request request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
     "settingsGenerateTitles": "Titel generieren",
     "@settingsGenerateTitles": {
         "description": "Text displayed as description for generate titles toggle",
@@ -252,14 +262,14 @@
         "description": "Text displayed as description for show tips toggle",
         "context": "Visible in the settings view"
     },
-    "settingsRequestTypeStream": "Stream",
-    "@settingsRequestTypeStream": {
-        "description": "Text displayed as description for stream request type. Do not translate if not required!",
+    "settingsEnableHapticFeedback": "Haptisches Feedback aktivieren",
+    "@settingsEnableHapticFeedback": {
+        "description": "Text displayed as description for enable haptic feedback toggle",
         "context": "Visible in the settings view"
     },
-    "settingsRequestTypeRequest": "Request",
-    "@settingsRequestTypeRequest": {
-        "description": "Text displayed as description for request request type. Do not translate if not required!",
+    "settingsMaximizeOnStart": "Maximiert starten",
+    "@settingsMaximizeOnStart": {
+        "description": "Text displayed as description for maximize on start toggle",
         "context": "Visible in the settings view"
     },
     "settingsBrightnessSystem": "System",
