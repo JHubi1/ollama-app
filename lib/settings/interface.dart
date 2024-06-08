@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../main.dart';
+import '../worker/haptic.dart';
 import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -76,7 +77,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                         context,
                         AppLocalizations.of(context)!.settingsShowModelTags,
                         (prefs!.getBool("modelTags") ?? false), (value) {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       prefs!.setBool("modelTags", value);
                       setState(() {});
                     }),
@@ -86,42 +87,8 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             .settingsResetOnModelChange,
                         (prefs!.getBool("resetOnModelSelect") ?? true),
                         (value) {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       prefs!.setBool("resetOnModelSelect", value);
-                      setState(() {});
-                    }),
-                    titleDivider(),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsGenerateTitles,
-                        (prefs!.getBool("generateTitles") ?? true), (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("generateTitles", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsEnableEditing,
-                        (prefs!.getBool("enableEditing") ?? true), (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("enableEditing", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsAskBeforeDelete,
-                        (prefs!.getBool("askBeforeDeletion") ?? false),
-                        (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("askBeforeDeletion", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsShowTips,
-                        (prefs!.getBool("tips") ?? true), (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("tips", value);
                       setState(() {});
                     }),
                     titleDivider(bottom: 20),
@@ -142,11 +109,67 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           prefs!.getString("requestType") ?? "stream"
                         },
                         onSelectionChanged: (p0) {
-                          HapticFeedback.selectionClick();
+                          selectionHaptic();
                           setState(() {
                             prefs!.setString("requestType", p0.elementAt(0));
                           });
                         }),
+                    const SizedBox(height: 16),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsGenerateTitles,
+                        (prefs!.getBool("generateTitles") ?? true), (value) {
+                      selectionHaptic();
+                      prefs!.setBool("generateTitles", value);
+                      setState(() {});
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsEnableEditing,
+                        (prefs!.getBool("enableEditing") ?? true), (value) {
+                      selectionHaptic();
+                      prefs!.setBool("enableEditing", value);
+                      setState(() {});
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsAskBeforeDelete,
+                        (prefs!.getBool("askBeforeDeletion") ?? false),
+                        (value) {
+                      selectionHaptic();
+                      prefs!.setBool("askBeforeDeletion", value);
+                      setState(() {});
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsShowTips,
+                        (prefs!.getBool("tips") ?? true), (value) {
+                      selectionHaptic();
+                      prefs!.setBool("tips", value);
+                      setState(() {});
+                    }),
+                    titleDivider(),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!
+                            .settingsEnableHapticFeedback,
+                        (prefs!.getBool("enableHaptic") ?? true), (value) {
+                      prefs!.setBool("enableHaptic", value);
+                      selectionHaptic();
+                      setState(() {});
+                    }),
+                    (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+                        ? toggle(
+                            context,
+                            AppLocalizations.of(context)!
+                                .settingsMaximizeOnStart,
+                            (prefs!.getBool("maximizeOnStart") ?? false),
+                            (value) {
+                            selectionHaptic();
+                            prefs!.setBool("maximizeOnStart", value);
+                            setState(() {});
+                          })
+                        : const SizedBox.shrink(),
                     const SizedBox(height: 16),
                     SegmentedButton(
                         segments: [
@@ -170,7 +193,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           prefs!.getString("brightness") ?? "system"
                         },
                         onSelectionChanged: (p0) {
-                          HapticFeedback.selectionClick();
+                          selectionHaptic();
                           var tmp = prefs!.getString("brightness") ?? "system";
                           prefs!.setString("brightness", p0.elementAt(0));
                           setState(() {});

@@ -2,9 +2,9 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../main.dart';
+import '../worker/haptic.dart';
 import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -75,7 +75,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                     // const SizedBox(height: 16),
                     button(AppLocalizations.of(context)!.settingsExportChats,
                         Icons.upload_rounded, () async {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       var path = await FilePicker.platform.saveFile(
                           type: FileType.custom,
                           allowedExtensions: ["json"],
@@ -83,7 +83,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                               "ollama-export-${DateFormat('yyyy-MM-dd-H-m-s').format(DateTime.now())}.json",
                           bytes: utf8.encode(
                               jsonEncode(prefs!.getStringList("chats") ?? [])));
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       if (path == null) return;
                       if (Platform.isWindows ||
                           Platform.isLinux ||
@@ -94,7 +94,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                     }),
                     button(AppLocalizations.of(context)!.settingsImportChats,
                         Icons.download_rounded, () {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       showDialog(
                           context: context,
                           builder: (context) {
@@ -106,14 +106,14 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                                 actions: [
                                   TextButton(
                                       onPressed: () {
-                                        HapticFeedback.selectionClick();
+                                        selectionHaptic();
                                         Navigator.of(context).pop();
                                       },
                                       child: Text(AppLocalizations.of(context)!
                                           .settingsImportChatsCancel)),
                                   TextButton(
                                       onPressed: () async {
-                                        HapticFeedback.selectionClick();
+                                        selectionHaptic();
                                         FilePickerResult? result =
                                             await FilePicker.platform.pickFiles(
                                                 type: FileType.custom,

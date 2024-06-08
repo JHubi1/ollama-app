@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'main.dart';
-import 'package:ollama_app/worker_setter.dart';
+import 'worker/haptic.dart';
+import 'package:ollama_app/worker/setter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'settings/behavior.dart';
@@ -166,7 +166,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
         hostLoading = false;
       });
     }
-    HapticFeedback.selectionClick();
+    selectionHaptic();
   }
 
   @override
@@ -247,7 +247,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               keyboardType: TextInputType.url,
                               readOnly: useHost,
                               onSubmitted: (value) {
-                                HapticFeedback.selectionClick();
+                                selectionHaptic();
                                 checkHost();
                               },
                               decoration: InputDecoration(
@@ -256,7 +256,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                   hintText: "http://localhost:11434",
                                   prefixIcon: IconButton(
                                       onPressed: () async {
-                                        HapticFeedback.selectionClick();
+                                        selectionHaptic();
                                         String tmp = await prompt(context,
                                             placeholder:
                                                 "{\"Authorization\": \"Bearer ...\"}",
@@ -290,7 +290,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                   const CircularProgressIndicator())
                                           : IconButton(
                                               onPressed: () {
-                                                HapticFeedback.selectionClick();
+                                                selectionHaptic();
                                                 checkHost();
                                               },
                                               icon: const Icon(
@@ -300,7 +300,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                   error: (hostInvalidHost || hostInvalidUrl)
                                       ? InkWell(
                                           onTap: () {
-                                            HapticFeedback.selectionClick();
+                                            selectionHaptic();
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     content: Text(AppLocalizations
@@ -331,7 +331,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                       : null,
                                   helper: InkWell(
                                       onTap: () {
-                                        HapticFeedback.selectionClick();
+                                        selectionHaptic();
                                       },
                                       highlightColor: Colors.transparent,
                                       splashFactory: NoSplash.splashFactory,
@@ -371,7 +371,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               AppLocalizations.of(context)!
                                   .settingsTitleBehavior,
                               Icons.psychology_rounded, () {
-                            HapticFeedback.selectionClick();
+                            selectionHaptic();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -382,7 +382,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               AppLocalizations.of(context)!
                                   .settingsTitleInterface,
                               Icons.web_asset_rounded, () {
-                            HapticFeedback.selectionClick();
+                            selectionHaptic();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -392,7 +392,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           button(
                               AppLocalizations.of(context)!.settingsTitleExport,
                               Icons.share_rounded, () {
-                            HapticFeedback.selectionClick();
+                            selectionHaptic();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -402,7 +402,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           button(
                               AppLocalizations.of(context)!.settingsTitleAbout,
                               Icons.help_rounded, () {
-                            HapticFeedback.selectionClick();
+                            selectionHaptic();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

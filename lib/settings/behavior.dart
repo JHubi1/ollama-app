@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../main.dart';
+import '../worker/haptic.dart';
 import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -89,7 +89,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                             hintText: "You are a helpful assistant",
                             suffixIcon: IconButton(
                               onPressed: () {
-                                HapticFeedback.selectionClick();
+                                selectionHaptic();
                                 prefs?.setString(
                                     "system",
                                     (systemInputController.text.isNotEmpty)
@@ -104,7 +104,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                         context,
                         AppLocalizations.of(context)!.settingsDisableMarkdown,
                         (prefs!.getBool("noMarkdown") ?? false), (value) {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       prefs!.setBool("noMarkdown", value);
                       setState(() {});
                     })

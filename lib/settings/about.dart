@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../main.dart';
 import '../screen_settings.dart';
-import '../worker_update.dart';
+import '../worker/haptic.dart';
+import '../worker/update.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -97,7 +97,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                                 .settingsCheckForUpdates,
                             (prefs!.getBool("checkUpdateOnSettingsOpen") ??
                                 false), (value) {
-                            HapticFeedback.selectionClick();
+                            selectionHaptic();
                             prefs!.setBool("checkUpdateOnSettingsOpen", value);
                             setState(() {});
                           }),
@@ -134,7 +134,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                                     ? Icons.info_outline_rounded
                                     : Icons.update_rounded), () {
                             if (updateLoading) return;
-                            HapticFeedback.selectionClick();
+                            selectionHaptic();
                             if ((Version.parse(latestVersion ?? "1.0.0") >
                                     Version.parse(currentVersion ?? "2.0.0")) &&
                                 (updateStatus == "ok")) {
@@ -147,21 +147,21 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                     titleDivider(),
                     button(AppLocalizations.of(context)!.settingsGithub,
                         SimpleIcons.github, () {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       launchUrl(
                           mode: LaunchMode.inAppBrowserView,
                           Uri.parse(repoUrl));
                     }),
                     button(AppLocalizations.of(context)!.settingsReportIssue,
                         Icons.report_rounded, () {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       launchUrl(
                           mode: LaunchMode.inAppBrowserView,
                           Uri.parse("$repoUrl/issues"));
                     }),
                     button(AppLocalizations.of(context)!.settingsMainDeveloper,
                         Icons.developer_board_rounded, () {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       launchUrl(
                           mode: LaunchMode.inAppBrowserView,
                           Uri.parse(

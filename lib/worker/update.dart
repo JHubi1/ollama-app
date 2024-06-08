@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
+import 'haptic.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:http/http.dart' as http;
@@ -132,14 +132,14 @@ void updateDialog(BuildContext context, Function title) {
             actions: [
               TextButton(
                   onPressed: () {
-                    HapticFeedback.selectionClick();
+                    selectionHaptic();
                     Navigator.of(context).pop();
                   },
                   child: Text(AppLocalizations.of(context)!
                       .settingsUpdateDialogCancel)),
               TextButton(
                   onPressed: () {
-                    HapticFeedback.selectionClick();
+                    selectionHaptic();
                     Navigator.of(context).pop();
                     launchUrl(
                         mode: LaunchMode.inAppBrowserView,

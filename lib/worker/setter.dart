@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'main.dart';
+import 'haptic.dart';
+import '../main.dart';
 
 import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
@@ -63,7 +63,7 @@ void setModel(BuildContext context, Function setState) {
   load();
 
   if (useModel) return;
-  HapticFeedback.selectionClick();
+  selectionHaptic();
 
   var content = StatefulBuilder(builder: (context, setLocalState) {
     setModalState = setLocalState;

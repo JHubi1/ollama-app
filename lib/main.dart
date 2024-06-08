@@ -11,7 +11,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'screen_settings.dart';
 import 'screen_welcome.dart';
-import 'worker_setter.dart';
+import 'worker/setter.dart';
+import 'worker/haptic.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
@@ -74,6 +75,9 @@ void main() {
       appWindow.minSize = const Size(600, 450);
       appWindow.size = const Size(1200, 650);
       appWindow.alignment = Alignment.center;
+      if (prefs!.getBool("maximizeOnStart") ?? false) {
+        appWindow.maximize();
+      }
       appWindow.show();
     });
   }
@@ -218,7 +222,7 @@ class _MainAppState extends State<MainApp> {
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    selectionHaptic();
                     if (!(Platform.isWindows ||
                             Platform.isLinux ||
                             Platform.isMacOS) &&
@@ -254,7 +258,7 @@ class _MainAppState extends State<MainApp> {
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    selectionHaptic();
                     if (!(Platform.isWindows ||
                             Platform.isLinux ||
                             Platform.isMacOS) &&
@@ -302,7 +306,7 @@ class _MainAppState extends State<MainApp> {
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    selectionHaptic();
                   },
                   child: Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
@@ -344,7 +348,7 @@ class _MainAppState extends State<MainApp> {
                   enableFeedback: false,
                   hoverColor: Colors.transparent,
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    selectionHaptic();
                     setState(() {
                       tipId = Random().nextInt(5);
                     });
@@ -398,7 +402,7 @@ class _MainAppState extends State<MainApp> {
                             actions: [
                               TextButton(
                                   onPressed: () {
-                                    HapticFeedback.selectionClick();
+                                    selectionHaptic();
                                     Navigator.of(context).pop();
                                     returnValue = false;
                                   },
@@ -406,7 +410,7 @@ class _MainAppState extends State<MainApp> {
                                       .deleteDialogCancel)),
                               TextButton(
                                   onPressed: () {
-                                    HapticFeedback.selectionClick();
+                                    selectionHaptic();
                                     Navigator.of(context).pop();
                                     returnValue = true;
                                   },
@@ -421,7 +425,7 @@ class _MainAppState extends State<MainApp> {
               return returnValue;
             },
             onDismissed: (direction) {
-              HapticFeedback.selectionClick();
+              selectionHaptic();
               for (var i = 0;
                   i < (prefs!.getStringList("chats") ?? []).length;
                   i++) {
@@ -452,7 +456,7 @@ class _MainAppState extends State<MainApp> {
                     customBorder: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(50))),
                     onTap: () {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       if (!(Platform.isWindows ||
                               Platform.isLinux ||
                               Platform.isMacOS) &&
@@ -464,7 +468,7 @@ class _MainAppState extends State<MainApp> {
                       chatUuid = jsonDecode(item)["uuid"];
                     },
                     onLongPress: () async {
-                      HapticFeedback.selectionClick();
+                      selectionHaptic();
                       if (!chatAllowed) return;
                       if (!allowSettings) return;
                       String oldTitle = jsonDecode(item)["title"];
@@ -717,7 +721,7 @@ class _MainAppState extends State<MainApp> {
                       const SizedBox(width: 4),
                       IconButton(
                           onPressed: () {
-                            HapticFeedback.selectionClick();
+                            selectionHaptic();
                             if (!chatAllowed) return;
 
                             if (prefs!.getBool("askBeforeDeletion") ??
@@ -881,7 +885,7 @@ class _MainAppState extends State<MainApp> {
                             child: MarkdownBody(
                                 data: p0.text,
                                 onTapLink: (text, href, title) async {
-                                  HapticFeedback.selectionClick();
+                                  selectionHaptic();
                                   try {
                                     var url = Uri.parse(href!);
                                     if (await canLaunchUrl(url)) {
@@ -918,7 +922,7 @@ class _MainAppState extends State<MainApp> {
                                             (context, error, stackTrace) {
                                       return InkWell(
                                           onTap: () {
-                                            HapticFeedback.selectionClick();
+                                            selectionHaptic();
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     content: Text(
@@ -947,7 +951,7 @@ class _MainAppState extends State<MainApp> {
                                   } else {
                                     return InkWell(
                                         onTap: () {
-                                          HapticFeedback.selectionClick();
+                                          selectionHaptic();
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                                   content: Text(
@@ -1078,7 +1082,7 @@ class _MainAppState extends State<MainApp> {
                                       AssetImage("assets/logo512.png"),
                                       size: 44)))),
                       onSendPressed: (p0) async {
-                        HapticFeedback.selectionClick();
+                        selectionHaptic();
                         setState(() {
                           sendable = false;
                         });
@@ -1208,7 +1212,7 @@ class _MainAppState extends State<MainApp> {
                                       id: newId,
                                       text: text));
                               setState(() {});
-                              HapticFeedback.lightImpact();
+                              lightHaptic();
                             }
                           } else {
                             llama.GenerateChatCompletionResponse request;
@@ -1232,7 +1236,7 @@ class _MainAppState extends State<MainApp> {
                                     id: newId,
                                     text: request.message!.content));
                             setState(() {});
-                            HapticFeedback.lightImpact();
+                            lightHaptic();
                           }
                         } catch (e) {
                           for (var i = 0; i < messages.length; i++) {
@@ -1324,7 +1328,7 @@ class _MainAppState extends State<MainApp> {
                         chatAllowed = true;
                       },
                       onMessageDoubleTap: (context, p1) {
-                        HapticFeedback.selectionClick();
+                        selectionHaptic();
                         if (!chatAllowed) return;
                         if (p1.author == assistant) return;
                         for (var i = 0; i < messages.length; i++) {
@@ -1357,7 +1361,7 @@ class _MainAppState extends State<MainApp> {
                         setState(() {});
                       },
                       onMessageLongPress: (context, p1) async {
-                        HapticFeedback.selectionClick();
+                        selectionHaptic();
 
                         if (!(prefs!.getBool("enableEditing") ?? true)) {
                           return;
@@ -1396,12 +1400,12 @@ class _MainAppState extends State<MainApp> {
                       onAttachmentPressed: (!multimodal)
                           ? null
                           : () {
-                              HapticFeedback.selectionClick();
+                              selectionHaptic();
                               if (!chatAllowed || model == null) return;
                               if (Platform.isWindows ||
                                   Platform.isLinux ||
                                   Platform.isMacOS) {
-                                HapticFeedback.selectionClick();
+                                selectionHaptic();
 
                                 FilePicker.platform
                                     .pickFiles(type: FileType.image)
@@ -1423,7 +1427,7 @@ class _MainAppState extends State<MainApp> {
                                               "data:image/png;base64,$encoded"));
 
                                   setState(() {});
-                                  HapticFeedback.selectionClick();
+                                  selectionHaptic();
                                 });
 
                                 return;
