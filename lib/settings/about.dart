@@ -166,10 +166,10 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                           mode: LaunchMode.inAppBrowserView,
                           Uri.parse(
                               repoUrl.substring(0, repoUrl.lastIndexOf('/'))));
-                    })
+                    }),
+                    const SizedBox(height: 16)
                   ]),
-                ),
-                const SizedBox(height: 16)
+                )
               ]))),
     );
   }

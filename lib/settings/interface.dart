@@ -250,9 +250,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                 });
                               });
                         }),
-                  ]),
-                ),
                 const SizedBox(height: 16)
+                  ]),
+                )
               ]))),
     );
   }
