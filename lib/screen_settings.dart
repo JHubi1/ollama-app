@@ -29,7 +29,7 @@ Widget toggle(BuildContext context, String text, bool value,
       onChanged(!value);
     },
     child: Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      padding: const EdgeInsets.only(top: 4, bottom: 4),
       child: Stack(children: [
         Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 12),
