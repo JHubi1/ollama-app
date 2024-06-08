@@ -1185,14 +1185,13 @@ class _MainAppState extends State<MainApp> {
                             final stream = client
                                 .generateChatCompletionStream(
                                   request: llama.GenerateChatCompletionRequest(
-                                    model: model!,
-                                    messages: history,
-                                    keepAlive: int.parse(prefs!
-                                                      .getString("keepAlive") ??
-                                                  "300")
-                                  ),
+                                      model: model!,
+                                      messages: history,
+                                      keepAlive: int.parse(
+                                          prefs!.getString("keepAlive") ??
+                                              "300")),
                                 )
-                                .timeout(const Duration(seconds: 15));
+                                .timeout(const Duration(seconds: 30));
 
                             String text = "";
                             await for (final res in stream) {
@@ -1221,14 +1220,13 @@ class _MainAppState extends State<MainApp> {
                             request = await client
                                 .generateChatCompletion(
                                   request: llama.GenerateChatCompletionRequest(
-                                    model: model!,
-                                    messages: history,
-                                    keepAlive: int.parse(prefs!
-                                                      .getString("keepAlive") ??
-                                                  "300")
-                                  ),
+                                      model: model!,
+                                      messages: history,
+                                      keepAlive: int.parse(
+                                          prefs!.getString("keepAlive") ??
+                                              "300")),
                                 )
-                                .timeout(const Duration(seconds: 15));
+                                .timeout(const Duration(seconds: 30));
                             if (chatAllowed) return;
                             if (request.message!.content.trim() == "") {
                               throw Exception();
@@ -1297,17 +1295,20 @@ class _MainAppState extends State<MainApp> {
                             history = history.reversed.toList();
 
                             try {
-                              final generated = await client.generateCompletion(
-                                request: llama.GenerateCompletionRequest(
-                                  model: model!,
-                                  prompt:
-                                      "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
-                                    keepAlive: int.parse(prefs!
-                                                      .getString("keepAlive") ??
-                                                  "300")
-                                ),
-                              );
+                              final generated = await client
+                                  .generateCompletion(
+                                    request: llama.GenerateCompletionRequest(
+                                        model: model!,
+                                        prompt:
+                                            "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
+                                        keepAlive: int.parse(
+                                            prefs!.getString("keepAlive") ??
+                                                "300")),
+                                  )
+                                  .timeout(const Duration(seconds: 10));
                               var title = generated.response!
+                                  .replaceAll("\"", "")
+                                  .replaceAll("'", "")
                                   .replaceAll("*", "")
                                   .replaceAll("_", "")
                                   .trim();

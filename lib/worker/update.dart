@@ -35,13 +35,12 @@ Future<bool> updatesSupported(Function setState,
   ];
   if (!(Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     if ((await InstallReferrer.referrer !=
-            InstallationAppReferrer.androidManually) &&
-        !(installerApps
+            InstallationAppReferrer.androidManually) ||
+        (installerApps
             .contains((await InstallReferrer.app).packageName ?? ""))) {
       returnValue = false;
       if (await InstallReferrer.referrer ==
-              InstallationAppReferrer.androidDebug ||
-          await InstallReferrer.referrer == InstallationAppReferrer.iosDebug) {
+          InstallationAppReferrer.androidDebug) {
         returnValue = true;
       }
     }
@@ -60,54 +59,61 @@ Future<bool> updatesSupported(Function setState,
 }
 
 void checkUpdate(Function setState) async {
-  setState(() {
-    updateChecked = true;
-    updateLoading = true;
-  });
-
-  if (!await updatesSupported(setState)) {
-    setState(() {
-      updateStatus = "notAvailable";
-      updateLoading = false;
-    });
-    return;
-  }
-
-  var repo = repoUrl.split("/");
-
-  currentVersion = (await PackageInfo.fromPlatform()).version;
-  // currentVersion = "1.0.0";
-
-  String? version;
   try {
-    var request = await http
-        .get(Uri.parse(
-            "https://api.github.com/repos/${repo[3]}/${repo[4]}/releases"))
-        .timeout(const Duration(seconds: 5));
-    if (request.statusCode == 403) {
+    setState(() {
+      updateChecked = true;
+      updateLoading = true;
+    });
+
+    if (!await updatesSupported(setState)) {
       setState(() {
-        updateStatus = "rateLimit";
+        updateStatus = "notAvailable";
         updateLoading = false;
       });
       return;
     }
-    version = jsonDecode(request.body)[0]["tag_name"];
-    updateChangeLog = jsonDecode(request.body)[0]["body"];
-    updateUrl = jsonDecode(request.body)[0]["html_url"];
-  } catch (_) {
+
+    var repo = repoUrl.split("/");
+
+    currentVersion = (await PackageInfo.fromPlatform()).version;
+    // currentVersion = "1.0.0";
+
+    String? version;
+    try {
+      var request = await http
+          .get(Uri.parse(
+              "https://api.github.com/repos/${repo[3]}/${repo[4]}/releases"))
+          .timeout(const Duration(seconds: 5));
+      if (request.statusCode == 403) {
+        setState(() {
+          updateStatus = "rateLimit";
+          updateLoading = false;
+        });
+        return;
+      }
+      version = jsonDecode(request.body)[0]["tag_name"];
+      updateChangeLog = jsonDecode(request.body)[0]["body"];
+      updateUrl = jsonDecode(request.body)[0]["html_url"];
+    } catch (_) {
+      setState(() {
+        updateStatus = "error";
+        updateLoading = false;
+      });
+      return;
+    }
+
+    latestVersion = version;
+    updateStatus = "ok";
+
+    setState(() {
+      updateLoading = false;
+    });
+  } catch (e) {
     setState(() {
       updateStatus = "error";
       updateLoading = false;
     });
-    return;
   }
-
-  latestVersion = version;
-  updateStatus = "ok";
-
-  setState(() {
-    updateLoading = false;
-  });
 }
 
 void updateDialog(BuildContext context, Function title) {

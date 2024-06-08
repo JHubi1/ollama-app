@@ -458,10 +458,11 @@ Future<String> prompt(BuildContext context,
                                                 for (var j = 0;
                                                     j < tmp.length;
                                                     j++) {
-                                                  if (tmp[j]["text"] == null) {
+                                                  if (tmp[j]["type"] != null) {
                                                     continue;
                                                   }
-                                                  history.add(tmp[j]["text"]);
+                                                  history
+                                                      .add(tmp[j]["content"]);
                                                 }
                                                 if (history.isEmpty) {
                                                   controller
@@ -482,18 +483,22 @@ Future<String> prompt(BuildContext context,
                                                           "{}") as Map)
                                                       .cast<String, String>(),
                                                   baseUrl: "$host/api",
-                                                ).generateCompletion(
-                                                  request: llama
-                                                      .GenerateCompletionRequest(
-                                                          model: model!,
-                                                          prompt:
-                                                              "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
-                                                          keepAlive: int.parse(
-                                                              prefs!.getString(
-                                                                      "keepAlive") ??
-                                                                  "300")),
-                                                );
+                                                )
+                                                        .generateCompletion(
+                                                          request: llama.GenerateCompletionRequest(
+                                                              model: model!,
+                                                              prompt:
+                                                                  "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
+                                                              keepAlive: int.parse(
+                                                                  prefs!.getString(
+                                                                          "keepAlive") ??
+                                                                      "300")),
+                                                        )
+                                                        .timeout(const Duration(
+                                                            seconds: 10));
                                                 var title = generated.response!
+                                                    .replaceAll("\"", "")
+                                                    .replaceAll("'", "")
                                                     .replaceAll("*", "")
                                                     .replaceAll("_", "")
                                                     .trim();
@@ -501,7 +506,22 @@ Future<String> prompt(BuildContext context,
                                                 setLocalState(() {
                                                   loading = false;
                                                 });
-                                              } catch (_) {}
+                                              } catch (_) {
+                                                try {
+                                                  setLocalState(() {
+                                                    loading = false;
+                                                  });
+                                                  // ignore: use_build_context_synchronously
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(AppLocalizations.of(
+                                                                  // ignore: use_build_context_synchronously
+                                                                  context)!
+                                                              .settingsHostInvalid(
+                                                                  "timeout")),
+                                                          showCloseIcon: true));
+                                                } catch (_) {}
+                                              }
                                               break;
                                             }
                                           }
