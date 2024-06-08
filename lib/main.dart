@@ -1187,7 +1187,9 @@ class _MainAppState extends State<MainApp> {
                                   request: llama.GenerateChatCompletionRequest(
                                     model: model!,
                                     messages: history,
-                                    keepAlive: 1,
+                                    keepAlive: int.parse(prefs!
+                                                      .getString("keepAlive") ??
+                                                  "300")
                                   ),
                                 )
                                 .timeout(const Duration(seconds: 15));
@@ -1221,7 +1223,9 @@ class _MainAppState extends State<MainApp> {
                                   request: llama.GenerateChatCompletionRequest(
                                     model: model!,
                                     messages: history,
-                                    keepAlive: 1,
+                                    keepAlive: int.parse(prefs!
+                                                      .getString("keepAlive") ??
+                                                  "300")
                                   ),
                                 )
                                 .timeout(const Duration(seconds: 15));
@@ -1298,6 +1302,9 @@ class _MainAppState extends State<MainApp> {
                                   model: model!,
                                   prompt:
                                       "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
+                                    keepAlive: int.parse(prefs!
+                                                      .getString("keepAlive") ??
+                                                  "300")
                                 ),
                               );
                               var title = generated.response!

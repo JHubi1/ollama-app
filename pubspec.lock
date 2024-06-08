@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  duration_picker:
+    dependency: "direct main"
+    description:
+      name: duration_picker
+      sha256: e505a749c93f3218aa4194d339e5d5480d927df23a81f075b5282511f6ac11ab
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   equatable:
     dependency: transitive
     description:

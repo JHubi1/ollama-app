@@ -37,6 +37,7 @@ dependencies:
   package_info_plus: ^8.0.0
   version: ^3.0.2
   flutter_displaymode: ^0.6.0
+  duration_picker: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -262,6 +262,32 @@
         "description": "Text displayed as description for show tips toggle",
         "context": "Visible in the settings view"
     },
+    "settingsKeepModelLoadedAlways": "Keep model always loaded",
+    "@settingsKeepModelLoadedAlways": {
+        "description": "Text displayed as description for keep model loaded always toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsKeepModelLoadedNever": "Don't keep model loaded",
+    "@settingsKeepModelLoadedNever": {
+        "description": "Text displayed as description for don't keep model loaded toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsKeepModelLoadedFor": "Set specific time to keep model loaded",
+    "@settingsKeepModelLoadedFor": {
+        "description": "Text displayed as description for keep model loaded for toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsKeepModelLoadedSet": "Keep model loaded for {minutes} minutes",
+    "@settingsKeepModelLoadedSet": {
+        "description": "Text displayed as description for keep model loaded for set time toggle",
+        "context": "Visible in the settings view",
+        "placeholders": {
+          "minutes": {
+            "type": "String",
+            "description": "Minutes the model should be kept loaded"
+          }
+        }
+    },
     "settingsEnableHapticFeedback": "Enable haptic feedback",
     "@settingsEnableHapticFeedback": {
         "description": "Text displayed as description for enable haptic feedback toggle",

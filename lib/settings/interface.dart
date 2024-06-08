@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:duration_picker/duration_picker.dart';
 
 class ScreenSettingsInterface extends StatefulWidget {
   const ScreenSettingsInterface({super.key});
@@ -152,6 +153,124 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                     toggle(
                         context,
                         AppLocalizations.of(context)!
+                            .settingsKeepModelLoadedAlways,
+                        int.parse(prefs!.getString("keepAlive") ?? "300") == -1,
+                        (value) {
+                      setState(() {
+                        if (value) {
+                          prefs!.setString("keepAlive", "-1");
+                        } else {
+                          prefs!.setString("keepAlive", "300");
+                        }
+                      });
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!
+                            .settingsKeepModelLoadedNever,
+                        int.parse(prefs!.getString("keepAlive") ?? "300") == 0,
+                        (value) {
+                      setState(() {
+                        if (value) {
+                          prefs!.setString("keepAlive", "0");
+                        } else {
+                          prefs!.setString("keepAlive", "300");
+                        }
+                      });
+                    }),
+                    button(
+                        (int.parse(prefs!.getString("keepAlive") ?? "300") > 0)
+                            ? AppLocalizations.of(context)!
+                                .settingsKeepModelLoadedSet((int.parse(
+                                            prefs!.getString("keepAlive") ??
+                                                "300") ~/
+                                        60)
+                                    .toString())
+                            : AppLocalizations.of(context)!
+                                .settingsKeepModelLoadedFor,
+                        Icons.snooze_rounded, () async {
+                      bool loaded = false;
+                      await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                                alignment: (Platform.isWindows ||
+                                        Platform.isLinux ||
+                                        Platform.isMacOS)
+                                    ? null
+                                    : Alignment.bottomRight,
+                                child: StatefulBuilder(
+                                    builder: (context, setLocalState) {
+                                  if (int.parse(prefs!.getString("keepAlive") ??
+                                              "0") <=
+                                          0 &&
+                                      loaded == false) {
+                                    prefs!.setString("keepAlive", "0");
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((timeStamp) {
+                                      setLocalState(() {});
+                                      void load() async {
+                                        try {
+                                          while (int.parse(prefs!
+                                                  .getString("keepAlive")!) <
+                                              300) {
+                                            await Future.delayed(const Duration(
+                                                milliseconds: 5));
+                                            prefs!.setString(
+                                                "keepAlive",
+                                                (int.parse(prefs!.getString(
+                                                            "keepAlive")!) +
+                                                        30)
+                                                    .toString());
+                                            setLocalState(() {});
+                                            setState(() {});
+                                          }
+                                          prefs!.setString("keepAlive", "300");
+                                          loaded = true;
+                                        } catch (_) {
+                                          prefs!.setString("keepAlive", "300");
+                                          loaded = true;
+                                        }
+                                      }
+
+                                      load();
+                                    });
+                                  } else {
+                                    loaded = true;
+                                  }
+                                  return Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Theme(
+                                      data: ThemeData.from(
+                                          colorScheme: ColorScheme.fromSeed(
+                                              seedColor: Colors.black)),
+                                      child: DurationPicker(
+                                          duration: Duration(
+                                              seconds: int.parse(prefs!
+                                                      .getString("keepAlive") ??
+                                                  "300")),
+                                          baseUnit: BaseUnit.minute,
+                                          lowerBound:
+                                              const Duration(minutes: 1),
+                                          upperBound:
+                                              const Duration(minutes: 60),
+                                          onChange: (value) {
+                                            if (!loaded) return;
+                                            if (value.inSeconds == 0) return;
+                                            prefs!.setString("keepAlive",
+                                                value.inSeconds.toString());
+                                            setLocalState(() {});
+                                            setState(() {});
+                                          }),
+                                    ),
+                                  );
+                                }));
+                          });
+                    }),
+                    titleDivider(),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!
                             .settingsEnableHapticFeedback,
                         (prefs!.getBool("enableHaptic") ?? true), (value) {
                       prefs!.setBool("enableHaptic", value);
@@ -170,7 +289,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             setState(() {});
                           })
                         : const SizedBox.shrink(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     SegmentedButton(
                         segments: [
                           ButtonSegment(
@@ -250,7 +369,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                 });
                               });
                         }),
-                const SizedBox(height: 16)
+                    const SizedBox(height: 16)
                   ]),
                 )
               ]))),
