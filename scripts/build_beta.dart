@@ -20,7 +20,9 @@ void main() async {
       .readAsLines()
       .then((lines) => lines.firstWhere((line) => line.contains('version')));
   var version = versionLine.split(':').last.trim().split('+').first.trim();
-  print("Building Ollama App v$version - this may take a while");
+  var versionCode = versionLine.split(':').last.trim().split('+')[1].trim();
+  print(
+      "Building Ollama App v$version (build $versionCode) - this may take a while");
 
   print('----------');
 
