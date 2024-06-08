@@ -135,10 +135,22 @@ void setModel(BuildContext context, Function setState) {
                                 models.length,
                                 (int index) {
                                   return ChoiceChip(
-                                    label: Text(
-                                        (prefs!.getBool("modelTags") ?? false)
-                                            ? modelsReal[index]
-                                            : models[index]),
+                                    label: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(models[index]),
+                                          ((prefs!.getBool("modelTags") ??
+                                                      false) &&
+                                                  modelsReal[index]
+                                                          .split(":")
+                                                          .length >
+                                                      1)
+                                              ? Text(
+                                                  ":${modelsReal[index].split(":")[1]}",
+                                                  style: const TextStyle(
+                                                      color: Colors.grey))
+                                              : const SizedBox.shrink()
+                                        ]),
                                     selected: usedIndex == index,
                                     avatar: (usedIndex == index)
                                         ? null
