@@ -84,6 +84,11 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                 Expanded(
                   child: ListView(children: [
                     // const SizedBox(height: 16),
+                    button(
+                        AppLocalizations.of(context)!
+                            .settingsVersion(currentVersion ?? "0.0.1"),
+                        Icons.verified_rounded,
+                        null),
                     (updateStatus == "notAvailable")
                         ? const SizedBox.shrink()
                         : button(
@@ -160,7 +165,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                           mode: LaunchMode.inAppBrowserView,
                           Uri.parse(
                               repoUrl.substring(0, repoUrl.lastIndexOf('/'))));
-                    }),
+                    })
                   ]),
                 ),
                 const SizedBox(height: 16)

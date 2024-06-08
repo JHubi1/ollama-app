@@ -422,5 +422,16 @@
     "@settingsMainDeveloper": {
         "description": "Text displayed as description for main developer button",
         "context": "Visible in the settings view"
+    },
+    "settingsVersion": "Ollama App v{version}",
+    "@settingsVersion": {
+        "description": "Text displayed as description for version",
+        "context": "Visible in the settings view",
+        "placeholders": {
+          "version": {
+            "type": "String",
+            "description": "Version number of the app"
+          }
+        }
     }
 }
