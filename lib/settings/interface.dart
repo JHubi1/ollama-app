@@ -71,6 +71,82 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
               child: Column(children: [
                 Expanded(
                   child: ListView(children: [
+                    // const SizedBox(height: 16),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsShowModelTags,
+                        (prefs!.getBool("modelTags") ?? false), (value) {
+                      HapticFeedback.selectionClick();
+                      prefs!.setBool("modelTags", value);
+                      setState(() {});
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!
+                            .settingsResetOnModelChange,
+                        (prefs!.getBool("resetOnModelSelect") ?? true),
+                        (value) {
+                      HapticFeedback.selectionClick();
+                      prefs!.setBool("resetOnModelSelect", value);
+                      setState(() {});
+                    }),
+                    titleDivider(),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsGenerateTitles,
+                        (prefs!.getBool("generateTitles") ?? true), (value) {
+                      HapticFeedback.selectionClick();
+                      prefs!.setBool("generateTitles", value);
+                      setState(() {});
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsEnableEditing,
+                        (prefs!.getBool("enableEditing") ?? true), (value) {
+                      HapticFeedback.selectionClick();
+                      prefs!.setBool("enableEditing", value);
+                      setState(() {});
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsAskBeforeDelete,
+                        (prefs!.getBool("askBeforeDeletion") ?? false),
+                        (value) {
+                      HapticFeedback.selectionClick();
+                      prefs!.setBool("askBeforeDeletion", value);
+                      setState(() {});
+                    }),
+                    toggle(
+                        context,
+                        AppLocalizations.of(context)!.settingsShowTips,
+                        (prefs!.getBool("tips") ?? true), (value) {
+                      HapticFeedback.selectionClick();
+                      prefs!.setBool("tips", value);
+                      setState(() {});
+                    }),
+                    titleDivider(bottom: 20),
+                    SegmentedButton(
+                        segments: [
+                          ButtonSegment(
+                              value: "stream",
+                              label: Text(AppLocalizations.of(context)!
+                                  .settingsRequestTypeStream),
+                              icon: const Icon(Icons.stream_rounded)),
+                          ButtonSegment(
+                              value: "request",
+                              label: Text(AppLocalizations.of(context)!
+                                  .settingsRequestTypeRequest),
+                              icon: const Icon(Icons.send_rounded))
+                        ],
+                        selected: {
+                          prefs!.getString("requestType") ?? "stream"
+                        },
+                        onSelectionChanged: (p0) {
+                          HapticFeedback.selectionClick();
+                          setState(() {
+                            prefs!.setString("requestType", p0.elementAt(0));
+                          });
+                        }),
                     const SizedBox(height: 16),
                     SegmentedButton(
                         segments: [
@@ -151,81 +227,6 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                 });
                               });
                         }),
-                    const SizedBox(height: 16),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsGenerateTitles,
-                        (prefs!.getBool("generateTitles") ?? true), (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("generateTitles", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsAskBeforeDelete,
-                        (prefs!.getBool("askBeforeDeletion") ?? false),
-                        (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("askBeforeDeletion", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!
-                            .settingsResetOnModelChange,
-                        (prefs!.getBool("resetOnModelSelect") ?? true),
-                        (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("resetOnModelSelect", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsEnableEditing,
-                        (prefs!.getBool("enableEditing") ?? true), (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("enableEditing", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsShowTips,
-                        (prefs!.getBool("tips") ?? true), (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("tips", value);
-                      setState(() {});
-                    }),
-                    toggle(
-                        context,
-                        AppLocalizations.of(context)!.settingsShowModelTags,
-                        (prefs!.getBool("modelTags") ?? false), (value) {
-                      HapticFeedback.selectionClick();
-                      prefs!.setBool("modelTags", value);
-                      setState(() {});
-                    }),
-                    const SizedBox(height: 16),
-                    SegmentedButton(
-                        segments: [
-                          ButtonSegment(
-                              value: "stream",
-                              label: Text(AppLocalizations.of(context)!
-                                  .settingsRequestTypeStream),
-                              icon: const Icon(Icons.stream_rounded)),
-                          ButtonSegment(
-                              value: "request",
-                              label: Text(AppLocalizations.of(context)!
-                                  .settingsRequestTypeRequest),
-                              icon: const Icon(Icons.send_rounded))
-                        ],
-                        selected: {
-                          prefs!.getString("requestType") ?? "stream"
-                        },
-                        onSelectionChanged: (p0) {
-                          HapticFeedback.selectionClick();
-                          setState(() {
-                            prefs!.setString("requestType", p0.elementAt(0));
-                          });
-                        })
                   ]),
                 ),
                 const SizedBox(height: 16)

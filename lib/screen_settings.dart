@@ -21,36 +21,45 @@ Widget toggle(BuildContext context, String text, bool value,
     Function(bool value) onChanged) {
   var space = "⁣"; // Invisible character: U+2063
   var spacePlus = "    $space";
-  return Padding(
-    padding: const EdgeInsets.only(top: 4, bottom: 4),
-    child: Stack(children: [
-      Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 12),
-          child: Divider(
+  return InkWell(
+    splashFactory: NoSplash.splashFactory,
+    highlightColor: Colors.transparent,
+    hoverColor: Colors.transparent,
+    onTap: () {
+      onChanged(!value);
+    },
+    child: Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      child: Stack(children: [
+        Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 12),
+            child: Divider(
+                color: (Theme.of(context).brightness == Brightness.light)
+                    ? Colors.grey[300]
+                    : Colors.grey[900])),
+        Row(mainAxisSize: MainAxisSize.max, children: [
+          Expanded(
+              child: Text(text + spacePlus,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                      backgroundColor:
+                          (Theme.of(context).brightness == Brightness.light)
+                              ? (theme ?? ThemeData()).colorScheme.surface
+                              : (themeDark ?? ThemeData.dark())
+                                  .colorScheme
+                                  .surface))),
+          Container(
+              padding: const EdgeInsets.only(left: 16),
               color: (Theme.of(context).brightness == Brightness.light)
-                  ? Colors.grey[300]
-                  : Colors.grey[900])),
-      Row(mainAxisSize: MainAxisSize.max, children: [
-        Expanded(
-            child: Text(text + spacePlus,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                    backgroundColor:
-                        (Theme.of(context).brightness == Brightness.light)
-                            ? (theme ?? ThemeData()).colorScheme.surface
-                            : (themeDark ?? ThemeData.dark())
-                                .colorScheme
-                                .surface))),
-        Container(
-            padding: const EdgeInsets.only(left: 16),
-            color: (Theme.of(context).brightness == Brightness.light)
-                ? (theme ?? ThemeData()).colorScheme.surface
-                : (themeDark ?? ThemeData.dark()).colorScheme.surface,
-            child: SizedBox(
-                height: 40, child: Switch(value: value, onChanged: onChanged)))
+                  ? (theme ?? ThemeData()).colorScheme.surface
+                  : (themeDark ?? ThemeData.dark()).colorScheme.surface,
+              child: SizedBox(
+                  height: 40,
+                  child: Switch(value: value, onChanged: onChanged)))
+        ]),
       ]),
-    ]),
+    ),
   );
 }
 
@@ -64,6 +73,17 @@ Widget title(String text, {double top = 16, double bottom = 16}) {
             child: Text(text)),
         const Expanded(child: Divider())
       ]));
+}
+
+Widget titleDivider({double top = 16, double bottom = 16}) {
+  return Padding(
+      padding: EdgeInsets.only(left: 8, right: 8, top: top, bottom: bottom),
+      child: const Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(child: Divider()),
+        ],
+      ));
 }
 
 Widget button(String text, IconData icon, void Function()? onPressed,
@@ -346,15 +366,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                             "monospace"))
                                               ],
                                             )))),
-                          const Padding(
-                              padding: EdgeInsets.only(
-                                  left: 8, right: 8, top: 16, bottom: 4),
-                              child: Divider()),
+                          titleDivider(bottom: 4),
                           button(
                               AppLocalizations.of(context)!
                                   .settingsTitleBehavior,
                               Icons.psychology_rounded, () {
-                                HapticFeedback.selectionClick();
+                            HapticFeedback.selectionClick();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -365,7 +382,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               AppLocalizations.of(context)!
                                   .settingsTitleInterface,
                               Icons.web_asset_rounded, () {
-                                HapticFeedback.selectionClick();
+                            HapticFeedback.selectionClick();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -375,7 +392,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           button(
                               AppLocalizations.of(context)!.settingsTitleExport,
                               Icons.share_rounded, () {
-                                HapticFeedback.selectionClick();
+                            HapticFeedback.selectionClick();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -385,7 +402,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           button(
                               AppLocalizations.of(context)!.settingsTitleAbout,
                               Icons.help_rounded, () {
-                                HapticFeedback.selectionClick();
+                            HapticFeedback.selectionClick();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

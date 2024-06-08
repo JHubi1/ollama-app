@@ -222,6 +222,46 @@
         "description": "Text displayed when behavior settings are not updated for older chats",
         "context": "Visible in the settings view"
     },
+    "settingsShowModelTags": "Show model tags",
+    "@settingsShowModelTags": {
+        "description": "Text displayed as description for show model tags toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsResetOnModelChange": "Reset on model change",
+    "@settingsResetOnModelChange": {
+        "description": "Text displayed as description for reset on model change toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsGenerateTitles": "Generate titles",
+    "@settingsGenerateTitles": {
+        "description": "Text displayed as description for generate titles toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsEnableEditing": "Enable editing of messages",
+    "@settingsEnableEditing": {
+        "description": "Text displayed as description for enable editing toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsAskBeforeDelete": "Ask before chat deletion",
+    "@settingsAskBeforeDelete": {
+        "description": "Text displayed as description for ask before deletion toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsShowTips": "Show tips in sidebar",
+    "@settingsShowTips": {
+        "description": "Text displayed as description for show tips toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsRequestTypeStream": "Stream",
+    "@settingsRequestTypeStream": {
+        "description": "Text displayed as description for stream request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
+    "settingsRequestTypeRequest": "Request",
+    "@settingsRequestTypeRequest": {
+        "description": "Text displayed as description for request request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
     "settingsBrightnessSystem": "System",
     "@settingsBrightnessSystem": {
         "description": "Text displayed as description for system brightness option",
@@ -255,46 +295,6 @@
     "settingsBrightnessRestartCancel": "Cancel",
     "@settingsBrightnessRestartCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the settings view"
-    },
-    "settingsGenerateTitles": "Generate titles",
-    "@settingsGenerateTitles": {
-        "description": "Text displayed as description for generate titles toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsAskBeforeDelete": "Ask before chat deletion",
-    "@settingsAskBeforeDelete": {
-        "description": "Text displayed as description for ask before deletion toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsResetOnModelChange": "Reset on model change",
-    "@settingsResetOnModelChange": {
-        "description": "Text displayed as description for reset on model change toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsEnableEditing": "Enable editing of messages",
-    "@settingsEnableEditing": {
-        "description": "Text displayed as description for enable editing toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsShowTips": "Show tips in sidebar",
-    "@settingsShowTips": {
-        "description": "Text displayed as description for show tips toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsShowModelTags": "Show model tags",
-    "@settingsShowModelTags": {
-        "description": "Text displayed as description for show model tags toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsRequestTypeStream": "Stream",
-    "@settingsRequestTypeStream": {
-        "description": "Text displayed as description for stream request type. Do not translate if not required!",
-        "context": "Visible in the settings view"
-    },
-    "settingsRequestTypeRequest": "Request",
-    "@settingsRequestTypeRequest": {
-        "description": "Text displayed as description for request request type. Do not translate if not required!",
         "context": "Visible in the settings view"
     },
     "settingsExportChats": "Export chats",
@@ -340,6 +340,11 @@
     "settingsExportWarning": "Multiple chat histories won't be merged! You'll loose your current chat history if you import a new one",
     "@settingsExportWarning": {
         "description": "Warning displayed for export and import options",
+        "context": "Visible in the settings view"
+    },
+    "settingsCheckForUpdates": "Check for updates on open",
+    "@settingsCheckForUpdates": {
+        "description": "Text displayed as description for check for updates toggle",
         "context": "Visible in the settings view"
     },
     "settingsUpdateCheck": "Check for updates",
@@ -401,11 +406,6 @@
     "settingsUpdateDialogCancel": "Cancel",
     "@settingsUpdateDialogCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the settings view"
-    },
-    "settingsCheckForUpdates": "Check for updates",
-    "@settingsCheckForUpdates": {
-        "description": "Text displayed as description for check for updates toggle",
         "context": "Visible in the settings view"
     },
     "settingsGithub": "GitHub",
