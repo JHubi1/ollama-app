@@ -23,6 +23,10 @@ String? currentVersion;
 String? updateChangeLog;
 Future<bool> updatesSupported(Function setState,
     [bool takeAction = false]) async {
+  var tmp = (await PackageInfo.fromPlatform()).version;
+  setState(() {
+    currentVersion = tmp;
+  });
   bool returnValue = true;
   var installerApps = [
     "org.fdroid.fdroid",
