@@ -150,9 +150,14 @@
         "description": "Title of the export settings section",
         "context": "Visible in the settings view"
     },
-    "settingsTitleContact": "Kontakt",
-    "@settingsTitleContact": {
-        "description": "Title of the contact settings section",
+    "settingsTitleAbout": "Über",
+    "@settingsTitleAbout": {
+        "description": "Title of the about settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsSavedAutomatically": "Einstellungen werden automatisch gespeichert",
+    "@settingsSavedAutomatically": {
+        "description": "Text displayed when settings are saved automatically",
         "context": "Visible in the settings view"
     },
     "settingsHost": "Host",
@@ -212,39 +217,9 @@
         "description": "Text displayed as description for disable markdown toggle",
         "context": "Visible in the settings view"
     },
-    "settingsBehaviorNotUpdatedForOlderChats": "Verhaltenseinstellungen werden nicht für ältere Chats aktualisiert. Starte einen neuen, um die Änderungen anzuwenden.",
+    "settingsBehaviorNotUpdatedForOlderChats": "Verhaltenseinstellungen werden nicht für ältere Chats aktualisiert",
     "@settingsBehaviorNotUpdatedForOlderChats": {
         "description": "Text displayed when behavior settings are not updated for older chats",
-        "context": "Visible in the settings view"
-    },
-    "settingsGenerateTitles": "Titel generieren",
-    "@settingsGenerateTitles": {
-        "description": "Text displayed as description for generate titles toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsAskBeforeDelete": "Vor Löschung des Chats fragen",
-    "@settingsAskBeforeDelete": {
-        "description": "Text displayed as description for ask before deletion toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsResetOnModelChange": "Zurücksetzen bei Modelländerung",
-    "@settingsResetOnModelChange": {
-        "description": "Text displayed as description for reset on model change toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsEnableEditing": "Nachrichtenbearbeitung aktivieren",
-    "@settingsEnableEditing": {
-        "description": "Text displayed as description for enable editing toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsShowTips": "Tipps in der Seitenleiste anzeigen",
-    "@settingsShowTips": {
-        "description": "Text displayed as description for show tips toggle",
-        "context": "Visible in the settings view"
-    },
-    "settingsShowModelTags": "Model-Tags anzeigen",
-    "@settingsShowModelTags": {
-        "description": "Text displayed as description for show model tags toggle",
         "context": "Visible in the settings view"
     },
     "settingsBrightnessSystem": "System",
@@ -282,6 +257,46 @@
         "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the settings view"
     },
+    "settingsGenerateTitles": "Titel generieren",
+    "@settingsGenerateTitles": {
+        "description": "Text displayed as description for generate titles toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsAskBeforeDelete": "Vor Löschung des Chats fragen",
+    "@settingsAskBeforeDelete": {
+        "description": "Text displayed as description for ask before deletion toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsResetOnModelChange": "Zurücksetzen bei Modelländerung",
+    "@settingsResetOnModelChange": {
+        "description": "Text displayed as description for reset on model change toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsEnableEditing": "Nachrichtenbearbeitung aktivieren",
+    "@settingsEnableEditing": {
+        "description": "Text displayed as description for enable editing toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsShowTips": "Tipps in der Seitenleiste anzeigen",
+    "@settingsShowTips": {
+        "description": "Text displayed as description for show tips toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsShowModelTags": "Model-Tags anzeigen",
+    "@settingsShowModelTags": {
+        "description": "Text displayed as description for show model tags toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsRequestTypeStream": "Stream",
+    "@settingsRequestTypeStream": {
+        "description": "Text displayed as description for stream request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
+    "settingsRequestTypeRequest": "Request",
+    "@settingsRequestTypeRequest": {
+        "description": "Text displayed as description for request request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
     "settingsExportChats": "Chats exportieren",
     "@settingsExportChats": {
         "description": "Text displayed as description for export chats button",
@@ -297,7 +312,7 @@
         "description": "Title of the import dialog",
         "context": "Visible in the settings view"
     },
-    "settingsImportChatsDescription": "Der folgende Schritt importiert die Chats aus der ausgewählten Datei. Dadurch werden die aktuellen Chats überschrieben.\nMöchtest du fortfahren?",
+    "settingsImportChatsDescription": "Der folgende Schritt importiert die Chats aus der ausgewählten Datei. Dadurch werden alle aktuell verfügbaren Chats überschrieben.\nMöchtest du fortfahren?",
     "@settingsImportChatsDescription": {
         "description": "Description of the import dialog",
         "context": "Visible in the settings view"
@@ -315,6 +330,16 @@
     "settingsImportChatsSuccess": "Chats erfolgreich importiert",
     "@settingsImportChatsSuccess": {
         "description": "Text displayed when chats are imported successfully",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportInfo": "Diese Optionen ermöglichen es dir, deinen Chat-Verlauf zu exportieren und zu importieren. Dies kann nützlich sein, wenn du deinen Chat-Verlauf auf ein anderes Gerät übertragen oder deinen Chat-Verlauf sichern möchtest",
+    "@settingsExportInfo": {
+        "description": "Information displayed for export and import options",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportWarning": "Mehrere Chatverläufe werden nicht zusammengeführt! Du verlierst deinen aktuellen Chatverlauf, wenn du einen neuen importierst",
+    "@settingsExportWarning": {
+        "description": "Warning displayed for export and import options",
         "context": "Visible in the settings view"
     },
     "settingsUpdateCheck": "Nach Updates suchen",
@@ -378,7 +403,7 @@
         "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the settings view"
     },
-    "settingsCheckForUpdates": "Beim Einstellungs-Öffnen Updates suchen",
+    "settingsCheckForUpdates": "Nach Updates suchen",
     "@settingsCheckForUpdates": {
         "description": "Text displayed as description for check for updates toggle",
         "context": "Visible in the settings view"

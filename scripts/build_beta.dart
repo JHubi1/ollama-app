@@ -75,6 +75,8 @@ void main() async {
 
     await copyFile('build\\app\\outputs\\flutter-apk\\app-release.apk',
         'build\\.output\\ollama.apk');
+    await copyFile('build\\app\\outputs\\flutter-apk\\app-release.apk.sha1',
+        'build\\.output\\ollama.apk.sha1');
     await copyFile('build\\windows\\x64\\runner\\ollama-v$version-x64.exe',
         'build\\.output\\ollama-v$version-x64.exe');
     print('- done');

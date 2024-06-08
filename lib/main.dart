@@ -1359,7 +1359,7 @@ class _MainAppState extends State<MainApp> {
                       onMessageLongPress: (context, p1) async {
                         HapticFeedback.selectionClick();
 
-                        if (!(prefs!.getBool("enableEditing") ?? false)) {
+                        if (!(prefs!.getBool("enableEditing") ?? true)) {
                           return;
                         }
 
