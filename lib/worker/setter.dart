@@ -60,10 +60,10 @@ void setModel(BuildContext context, Function setState) {
     }
   }
 
-  load();
-
   if (useModel) return;
   selectionHaptic();
+
+  load();
 
   var content = StatefulBuilder(builder: (context, setLocalState) {
     setModalState = setLocalState;
@@ -75,6 +75,7 @@ void setModel(BuildContext context, Function setState) {
               modelsReal[usedIndex] != model &&
               (prefs!.getBool("resetOnModelSelect") ?? true)) {
             messages = [];
+            chatUuid = null;
           }
           model = (usedIndex >= 0) ? modelsReal[usedIndex] : null;
           chatAllowed = !(model == null);
