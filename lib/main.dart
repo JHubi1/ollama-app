@@ -349,9 +349,11 @@ class _MainAppState extends State<MainApp> {
                   hoverColor: Colors.transparent,
                   onTap: () {
                     selectionHaptic();
-                    setState(() {
+                    var tmpTip = tipId;
+                    while (tmpTip == tipId) {
                       tipId = Random().nextInt(5);
-                    });
+                    }
+                    setState(() {});
                   },
                   child: Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
