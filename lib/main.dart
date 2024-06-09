@@ -229,7 +229,7 @@ class _MainAppState extends State<MainApp> {
                         MediaQuery.of(context).size.width <= 1000) {
                       Navigator.of(context).pop();
                     }
-                    if (!chatAllowed) return;
+                    if (!chatAllowed && model != null) return;
                     chatUuid = null;
                     messages = [];
                     setState(() {});
