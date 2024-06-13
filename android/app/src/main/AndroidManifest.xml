@@ -50,6 +50,20 @@
             <data android:scheme="https"/>
         </intent>
         <!-- check if url is valid end -->
+        <!-- voice mode -->
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+        <intent>  
+            <action android:name="android.intent.action.TTS_SERVICE" />  
+        </intent>
+        <!-- voice mode end-->
     </queries>
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- voice mode -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <!-- voice mode end -->
 </manifest>

@@ -145,6 +145,11 @@
         "description": "Title of the interface settings section",
         "context": "Visible in the settings view"
     },
+    "settingsTitleVoice": "Voice",
+    "@settingsTitleVoice": {
+        "description": "Title of the voice settings section. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
     "settingsTitleExport": "Export",
     "@settingsTitleExport": {
         "description": "Title of the export settings section",
@@ -158,6 +163,36 @@
     "settingsSavedAutomatically": "Settings are saved automatically",
     "@settingsSavedAutomatically": {
         "description": "Text displayed when settings are saved automatically",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalAlpha": "alpha",
+    "@settingsExperimentalAlpha": {
+        "description": "Text displayed when a feature is in alpha",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalAlphaDescription": "This feature is in alpha and may not work as intended or expected.\nCritical issues and/or permanent critical damage to device and/or used services cannot be ruled out.\nUse at your own risk. No liability on the part of the app author.",
+    "@settingsExperimentalAlphaDescription": {
+        "description": "Description of the alpha feature",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalAlphaFeature": "Alpha feature, hold to learn more",
+    "@settingsExperimentalAlphaFeature": {
+        "description": "Text displayed when a feature is in alpha",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalBeta": "beta",
+    "@settingsExperimentalBeta": {
+        "description": "Text displayed when a feature is in beta",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalBetaDescription": "This feature is in beta and may not work intended or expected.\nLess severe issues may or may not occur. Damage shouldn't be critical.\nUse at your own risk.",
+    "@settingsExperimentalBetaDescription": {
+        "description": "Description of the beta feature",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalBetaFeature": "Beta feature, hold to learn more",
+    "@settingsExperimentalBetaFeature": {
+        "description": "Text displayed when a feature is in beta",
         "context": "Visible in the settings view"
     },
     "settingsHost": "Host",
@@ -331,6 +366,41 @@
     "settingsBrightnessRestartCancel": "Cancel",
     "@settingsBrightnessRestartCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoicePermissionLoading": "Loading voice permissions ...",
+    "@settingsVoicePermissionLoading": {
+        "description": "Text displayed while loading voice permissions",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoicePermissionNot": "Permissions not granted",
+    "@settingsVoicePermissionNot": {
+        "description": "Text displayed when voice permissions are not granted",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceNotSupported": "Voice mode not supported",
+    "@settingsVoiceNotSupported": {
+        "description": "Text displayed when voice mode is not supported",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceEnable": "Enable voice mode",
+    "@settingsVoiceEnable": {
+        "description": "Text displayed as description for enable voice mode toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceNoLanguage": "No language selected",
+    "@settingsVoiceNoLanguage": {
+        "description": "Text displayed when no language is selected",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceLimitLanguage": "Limit to selected language",
+    "@settingsVoiceLimitLanguage": {
+        "description": "Text displayed as description for limit language toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoicePunctuation": "Enable AI punctuation",
+    "@settingsVoicePunctuation": {
+        "description": "Text displayed as description for enable AI punctuation toggle",
         "context": "Visible in the settings view"
     },
     "settingsExportChats": "Export chats",

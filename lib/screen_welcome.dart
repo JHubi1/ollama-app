@@ -106,13 +106,50 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
                   curve: Curves.easeInOut);
             } else {
               prefs!.setBool("welcomeFinished", true);
+
+              WidgetsBinding.instance.platformDispatcher
+                  .onPlatformBrightnessChanged = () {
+                SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                    systemNavigationBarColor:
+                        (prefs!.getString("brightness") ?? "system") == "system"
+                            ? ((MediaQuery.of(context).platformBrightness ==
+                                    Brightness.light)
+                                ? (themeDark ?? ThemeData.dark())
+                                    .colorScheme
+                                    .surface
+                                : (theme ?? ThemeData()).colorScheme.surface)
+                            : (prefs!.getString("brightness") == "dark"
+                                ? (themeDark ?? ThemeData()).colorScheme.surface
+                                : (theme ?? ThemeData.dark())
+                                    .colorScheme
+                                    .surface),
+                    systemNavigationBarIconBrightness:
+                        (((prefs!.getString("brightness") ?? "system") ==
+                                        "system" &&
+                                    MediaQuery.of(context).platformBrightness ==
+                                        Brightness.dark) ||
+                                prefs!.getString("brightness") == "light")
+                            ? Brightness.dark
+                            : Brightness.light));
+              };
               SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                   systemNavigationBarColor:
-                      (Theme.of(context).brightness == Brightness.light)
-                          ? (theme ?? ThemeData()).colorScheme.surface
-                          : (themeDark ?? ThemeData.dark()).colorScheme.surface,
+                      (prefs!.getString("brightness") ?? "system") == "system"
+                          ? ((MediaQuery.of(context).platformBrightness ==
+                                  Brightness.light)
+                              ? (theme ?? ThemeData.dark()).colorScheme.surface
+                              : (themeDark ?? ThemeData()).colorScheme.surface)
+                          : (prefs!.getString("brightness") == "dark"
+                              ? (themeDark ?? ThemeData()).colorScheme.surface
+                              : (theme ?? ThemeData.dark())
+                                  .colorScheme
+                                  .surface),
                   systemNavigationBarIconBrightness:
-                      (Theme.of(context).brightness == Brightness.light)
+                      (((prefs!.getString("brightness") ?? "system") ==
+                                      "system" &&
+                                  MediaQuery.of(context).platformBrightness ==
+                                      Brightness.light) ||
+                              prefs!.getString("brightness") == "light")
                           ? Brightness.dark
                           : Brightness.light));
               Navigator.pushReplacement(context,

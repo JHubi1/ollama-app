@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'settings/behavior.dart';
 import 'settings/interface.dart';
+import 'settings/voice.dart';
 import 'settings/export.dart';
 import 'settings/about.dart';
 
@@ -18,7 +19,11 @@ import 'package:http/http.dart' as http;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 Widget toggle(BuildContext context, String text, bool value,
-    Function(bool value) onChanged) {
+    Function(bool value) onChanged,
+    {bool disabled = false,
+    void Function()? onDisabledTap,
+    void Function()? onLongTap,
+    void Function()? onDoubleTap}) {
   var space = "⁣"; // Invisible character: U+2063
   var spacePlus = "    $space";
   return InkWell(
@@ -26,8 +31,17 @@ Widget toggle(BuildContext context, String text, bool value,
     highlightColor: Colors.transparent,
     hoverColor: Colors.transparent,
     onTap: () {
-      onChanged(!value);
+      if (disabled) {
+        selectionHaptic();
+        if (onDisabledTap != null) {
+          onDisabledTap();
+        }
+      } else {
+        onChanged(!value);
+      }
     },
+    onLongPress: onLongTap,
+    onDoubleTap: onDoubleTap,
     child: Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 4),
       child: Stack(children: [
@@ -43,6 +57,7 @@ Widget toggle(BuildContext context, String text, bool value,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: TextStyle(
+                      color: disabled ? Colors.grey : null,
                       backgroundColor:
                           (Theme.of(context).brightness == Brightness.light)
                               ? (theme ?? ThemeData()).colorScheme.surface
@@ -56,7 +71,22 @@ Widget toggle(BuildContext context, String text, bool value,
                   : (themeDark ?? ThemeData.dark()).colorScheme.surface,
               child: SizedBox(
                   height: 40,
-                  child: Switch(value: value, onChanged: onChanged)))
+                  child: Switch(
+                      value: value,
+                      onChanged: disabled
+                          ? (p0) {
+                              selectionHaptic();
+                              if (onDisabledTap != null) {
+                                onDisabledTap();
+                              }
+                            }
+                          : onChanged,
+                      trackOutlineColor: disabled
+                          ? const WidgetStatePropertyAll(Colors.grey)
+                          : null,
+                      thumbColor: disabled
+                          ? const WidgetStatePropertyAll(Colors.grey)
+                          : null)))
         ]),
       ]),
     ),
@@ -86,17 +116,36 @@ Widget titleDivider({double top = 16, double bottom = 16}) {
       ));
 }
 
-Widget button(String text, IconData icon, void Function()? onPressed,
-    {Color? color}) {
+Widget button(String text, IconData? icon, void Function()? onPressed,
+    {Color? color,
+    bool disabled = false,
+    void Function()? onDisabledTap,
+    void Function()? onLongTap,
+    void Function()? onDoubleTap}) {
   return InkWell(
-      onTap: onPressed,
+      onTap: disabled
+          ? () {
+              selectionHaptic();
+              if (onDisabledTap != null) {
+                onDisabledTap();
+              }
+            }
+          : onPressed,
+      onLongPress: onLongTap,
+      onDoubleTap: onDoubleTap,
       borderRadius: BorderRadius.circular(8),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(children: [
-          Icon(icon, color: color),
-          const SizedBox(width: 16, height: 42),
-          Expanded(child: Text(text, style: TextStyle(color: color)))
+          (icon != null)
+              ? Icon(icon, color: disabled ? Colors.grey : color)
+              : const SizedBox.shrink(),
+          (icon != null)
+              ? const SizedBox(width: 16, height: 42)
+              : const SizedBox.shrink(),
+          Expanded(
+              child: Text(text,
+                  style: TextStyle(color: disabled ? Colors.grey : color)))
         ]),
       ));
 }
@@ -389,6 +438,21 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                     builder: (context) =>
                                         const ScreenSettingsInterface()));
                           }),
+                          (!(Platform.isWindows ||
+                                  Platform.isLinux ||
+                                  Platform.isMacOS))
+                              ? button(
+                                  AppLocalizations.of(context)!
+                                      .settingsTitleVoice,
+                                  Icons.headphones_rounded, () {
+                                  selectionHaptic();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ScreenSettingsVoice()));
+                                })
+                              : const SizedBox.shrink(),
                           button(
                               AppLocalizations.of(context)!.settingsTitleExport,
                               Icons.share_rounded, () {

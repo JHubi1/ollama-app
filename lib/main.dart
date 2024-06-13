@@ -10,9 +10,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'screen_settings.dart';
+import 'screen_voice.dart';
 import 'screen_welcome.dart';
 import 'worker/setter.dart';
 import 'worker/haptic.dart';
+import 'worker/sender.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
@@ -22,13 +24,14 @@ import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 // import 'package:http/http.dart' as http;
-import 'package:ollama_dart/ollama_dart.dart' as llama;
-import 'package:dartx/dartx.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 // ignore: depend_on_referenced_packages
 import 'package:markdown/markdown.dart' as md;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // client configuration
 
@@ -66,6 +69,15 @@ final user = types.User(id: const Uuid().v4());
 final assistant = types.User(id: const Uuid().v4());
 
 bool settingsOpen = false;
+bool logoVisible = true;
+bool menuVisible = false;
+bool sendable = false;
+
+SpeechToText speech = SpeechToText();
+FlutterTts voice = FlutterTts();
+bool voiceSupported = false;
+
+Function? setMainState;
 
 void main() {
   runApp(const App());
@@ -101,6 +113,12 @@ class _AppState extends State<App> {
       try {
         await FlutterDisplayMode.setHighRefreshRate();
       } catch (_) {}
+
+      if ((await Permission.bluetoothConnect.isGranted) &&
+          (await Permission.microphone.isGranted)) {
+        voiceSupported = await speech.initialize();
+      }
+
       SharedPreferences.setPrefix("ollama.");
       SharedPreferences tmp = await SharedPreferences.getInstance();
       setState(() {
@@ -177,11 +195,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  bool logoVisible = true;
-  bool menuVisible = false;
-
   int tipId = Random().nextInt(5);
-  bool sendable = false;
 
   List<Widget> sidebar(BuildContext context, Function setState) {
     return List.from([
@@ -747,18 +761,14 @@ class _MainAppState extends State<MainApp> {
                                               ]),
                                           actions: [
                                             TextButton(
-                                                onPressed: () {
-                                                  HapticFeedback
-                                                      .selectionClick();
+                                                onPressed: () {selectionHaptic();
                                                   Navigator.of(context).pop();
                                                 },
                                                 child: Text(AppLocalizations.of(
                                                         context)!
                                                     .deleteDialogCancel)),
                                             TextButton(
-                                                onPressed: () {
-                                                  HapticFeedback
-                                                      .selectionClick();
+                                                onPressed: () {selectionHaptic();
                                                   Navigator.of(context).pop();
 
                                                   for (var i = 0;
@@ -1083,259 +1093,8 @@ class _MainAppState extends State<MainApp> {
                                   child: const ImageIcon(
                                       AssetImage("assets/logo512.png"),
                                       size: 44)))),
-                      onSendPressed: (p0) async {
-                        selectionHaptic();
-                        setState(() {
-                          sendable = false;
-                        });
-
-                        if (host == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                  AppLocalizations.of(context)!.noHostSelected),
-                              showCloseIcon: true));
-                          return;
-                        }
-
-                        if (!chatAllowed || model == null) {
-                          if (model == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)!
-                                    .noModelSelected),
-                                showCloseIcon: true));
-                          }
-                          return;
-                        }
-
-                        bool newChat = false;
-                        if (chatUuid == null) {
-                          newChat = true;
-                          chatUuid = const Uuid().v4();
-                          prefs!.setStringList(
-                              "chats",
-                              (prefs!.getStringList("chats") ?? []).append([
-                                jsonEncode({
-                                  "title": AppLocalizations.of(context)!
-                                      .newChatTitle,
-                                  "uuid": chatUuid,
-                                  "messages": []
-                                })
-                              ]).toList());
-                        }
-
-                        var system = prefs?.getString("system") ??
-                            "You are a helpful assistant";
-                        if (prefs!.getBool("noMarkdown") ?? false) {
-                          system +=
-                              " You must not use markdown or any other formatting language in any way!";
-                        }
-
-                        List<llama.Message> history = [
-                          llama.Message(
-                              role: llama.MessageRole.system, content: system)
-                        ];
-                        List<String> images = [];
-                        for (var i = 0; i < messages.length; i++) {
-                          if (jsonDecode(jsonEncode(messages[i]))["text"] !=
-                              null) {
-                            history.add(llama.Message(
-                                role: (messages[i].author.id == user.id)
-                                    ? llama.MessageRole.user
-                                    : llama.MessageRole.system,
-                                content:
-                                    jsonDecode(jsonEncode(messages[i]))["text"],
-                                images: (images.isNotEmpty) ? images : null));
-                          } else {
-                            var uri = jsonDecode(jsonEncode(messages[i]))["uri"]
-                                as String;
-                            String content = (uri
-                                    .startsWith("data:image/png;base64,"))
-                                ? uri.removePrefix("data:image/png;base64,")
-                                : base64.encode(await File(uri).readAsBytes());
-                            uri = uri.removePrefix("data:image/png;base64,");
-                            images.add(content);
-                          }
-                        }
-
-                        history.add(llama.Message(
-                            role: llama.MessageRole.user,
-                            content: p0.text.trim(),
-                            images: (images.isNotEmpty) ? images : null));
-                        messages.insert(
-                            0,
-                            types.TextMessage(
-                                author: user,
-                                id: const Uuid().v4(),
-                                text: p0.text.trim()));
-
-                        saveChat(chatUuid!, setState);
-
-                        setState(() {});
-                        chatAllowed = false;
-
-                        String newId = const Uuid().v4();
-                        llama.OllamaClient client = llama.OllamaClient(
-                            headers: (jsonDecode(
-                                        prefs!.getString("hostHeaders") ?? "{}")
-                                    as Map)
-                                .cast<String, String>(),
-                            baseUrl: "$host/api");
-
-                        try {
-                          if ((prefs!.getString("requestType") ?? "stream") ==
-                              "stream") {
-                            final stream = client
-                                .generateChatCompletionStream(
-                                  request: llama.GenerateChatCompletionRequest(
-                                      model: model!,
-                                      messages: history,
-                                      keepAlive: int.parse(
-                                          prefs!.getString("keepAlive") ??
-                                              "300")),
-                                )
-                                .timeout(const Duration(seconds: 30));
-
-                            String text = "";
-                            await for (final res in stream) {
-                              text += (res.message?.content ?? "");
-                              for (var i = 0; i < messages.length; i++) {
-                                if (messages[i].id == newId) {
-                                  messages.removeAt(i);
-                                  break;
-                                }
-                              }
-                              if (chatAllowed) return;
-                              if (text.trim() == "") {
-                                throw Exception();
-                              }
-                              messages.insert(
-                                  0,
-                                  types.TextMessage(
-                                      author: assistant,
-                                      id: newId,
-                                      text: text));
-                              setState(() {});
-                              lightHaptic();
-                            }
-                          } else {
-                            llama.GenerateChatCompletionResponse request;
-                            request = await client
-                                .generateChatCompletion(
-                                  request: llama.GenerateChatCompletionRequest(
-                                      model: model!,
-                                      messages: history,
-                                      keepAlive: int.parse(
-                                          prefs!.getString("keepAlive") ??
-                                              "300")),
-                                )
-                                .timeout(const Duration(seconds: 30));
-                            if (chatAllowed) return;
-                            if (request.message!.content.trim() == "") {
-                              throw Exception();
-                            }
-                            messages.insert(
-                                0,
-                                types.TextMessage(
-                                    author: assistant,
-                                    id: newId,
-                                    text: request.message!.content));
-                            setState(() {});
-                            lightHaptic();
-                          }
-                        } catch (e) {
-                          for (var i = 0; i < messages.length; i++) {
-                            if (messages[i].id == newId) {
-                              messages.removeAt(i);
-                              break;
-                            }
-                          }
-                          setState(() {
-                            chatAllowed = true;
-                            messages.removeAt(0);
-                            if (messages.isEmpty) {
-                              var tmp = (prefs!.getStringList("chats") ?? []);
-                              chatUuid = null;
-                              for (var i = 0; i < tmp.length; i++) {
-                                if (jsonDecode((prefs!.getStringList("chats") ??
-                                        [])[i])["uuid"] ==
-                                    chatUuid) {
-                                  tmp.removeAt(i);
-                                  prefs!.setStringList("chats", tmp);
-                                  break;
-                                }
-                              }
-                            }
-                          });
-                          // ignore: use_build_context_synchronously
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              // ignore: use_build_context_synchronously
-                              content: Text(AppLocalizations.of(context)!
-                                  .settingsHostInvalid("timeout")),
-                              showCloseIcon: true));
-                          return;
-                        }
-
-                        saveChat(chatUuid!, setState);
-
-                        if (newChat &&
-                            (prefs!.getBool("generateTitles") ?? true)) {
-                          void setTitle() async {
-                            List<Map<String, String>> history = [];
-                            for (var i = 0; i < messages.length; i++) {
-                              if (jsonDecode(jsonEncode(messages[i]))["text"] ==
-                                  null) {
-                                continue;
-                              }
-                              history.add({
-                                "role": (messages[i].author == user)
-                                    ? "user"
-                                    : "assistant",
-                                "content":
-                                    jsonDecode(jsonEncode(messages[i]))["text"]
-                              });
-                            }
-                            history = history.reversed.toList();
-
-                            try {
-                              final generated = await client
-                                  .generateCompletion(
-                                    request: llama.GenerateCompletionRequest(
-                                        model: model!,
-                                        prompt:
-                                            "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
-                                        keepAlive: int.parse(
-                                            prefs!.getString("keepAlive") ??
-                                                "300")),
-                                  )
-                                  .timeout(const Duration(seconds: 10));
-                              var title = generated.response!
-                                  .replaceAll("\"", "")
-                                  .replaceAll("'", "")
-                                  .replaceAll("*", "")
-                                  .replaceAll("_", "")
-                                  .trim();
-                              var tmp = (prefs!.getStringList("chats") ?? []);
-                              for (var i = 0; i < tmp.length; i++) {
-                                if (jsonDecode((prefs!.getStringList("chats") ??
-                                        [])[i])["uuid"] ==
-                                    chatUuid) {
-                                  var tmp2 = jsonDecode(tmp[i]);
-                                  tmp2["title"] = title;
-                                  tmp[i] = jsonEncode(tmp2);
-                                  break;
-                                }
-                              }
-                              prefs!.setStringList("chats", tmp);
-                            } catch (_) {}
-
-                            setState(() {});
-                          }
-
-                          setTitle();
-                        }
-
-                        setState(() {});
-                        chatAllowed = true;
+                      onSendPressed: (p0) {
+                        send(p0.text, context, setState);
                       },
                       onMessageDoubleTap: (context, p1) {
                         selectionHaptic();
@@ -1408,7 +1167,20 @@ class _MainAppState extends State<MainApp> {
                         setState(() {});
                       },
                       onAttachmentPressed: (!multimodal)
-                          ? null
+                          ? (prefs?.getBool("voiceModeEnabled") ?? false)
+                              ? (model != null)
+                                  ? () {
+                                      selectionHaptic();
+                                      setMainState = setState;
+                                      settingsOpen = true;
+                                      logoVisible = false;
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ScreenVoice()));
+                                    }
+                                  : null
+                              : null
                           : () {
                               selectionHaptic();
                               if (!chatAllowed || model == null) return;
@@ -1455,9 +1227,28 @@ class _MainAppState extends State<MainApp> {
                                               SizedBox(
                                                   width: double.infinity,
                                                   child: OutlinedButton.icon(
-                                                      onPressed: () async {
-                                                        HapticFeedback
-                                                            .selectionClick();
+                                                      onPressed: () async {selectionHaptic();
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        setMainState = setState;
+                                                        settingsOpen = true;
+                                                        logoVisible = false;
+                                                        Navigator.of(context).push(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        const ScreenVoice()));
+                                                      },
+                                                      icon: const Icon(Icons
+                                                          .headphones_rounded),
+                                                      label: Text(AppLocalizations
+                                                              .of(context)!
+                                                          .settingsTitleVoice))),
+                                              const SizedBox(height: 8),
+                                              SizedBox(
+                                                  width: double.infinity,
+                                                  child: OutlinedButton.icon(
+                                                      onPressed: () async {selectionHaptic();
 
                                                         Navigator.of(context)
                                                             .pop();
@@ -1497,8 +1288,7 @@ class _MainAppState extends State<MainApp> {
                                                         messages.insert(
                                                             0, message);
                                                         setState(() {});
-                                                        HapticFeedback
-                                                            .selectionClick();
+                                                        selectionHaptic();
                                                       },
                                                       icon: const Icon(Icons
                                                           .photo_camera_rounded),
@@ -1510,9 +1300,7 @@ class _MainAppState extends State<MainApp> {
                                               SizedBox(
                                                   width: double.infinity,
                                                   child: OutlinedButton.icon(
-                                                      onPressed: () async {
-                                                        HapticFeedback
-                                                            .selectionClick();
+                                                      onPressed: () async {selectionHaptic();
 
                                                         Navigator.of(context)
                                                             .pop();
@@ -1552,8 +1340,7 @@ class _MainAppState extends State<MainApp> {
                                                         messages.insert(
                                                             0, message);
                                                         setState(() {});
-                                                        HapticFeedback
-                                                            .selectionClick();
+                                                        selectionHaptic();
                                                       },
                                                       icon: const Icon(
                                                           Icons.image_rounded),
@@ -1589,8 +1376,12 @@ class _MainAppState extends State<MainApp> {
                                   (theme ?? ThemeData()).colorScheme.surface,
                               primaryColor:
                                   (theme ?? ThemeData()).colorScheme.primary,
-                              attachmentButtonIcon:
-                                  const Icon(Icons.add_a_photo_rounded),
+                              attachmentButtonIcon: !multimodal
+                                  ? (prefs?.getBool("voiceModeEnabled") ??
+                                          false)
+                                      ? const Icon(Icons.headphones_rounded)
+                                      : null
+                                  : const Icon(Icons.add_a_photo_rounded),
                               sendButtonIcon: SizedBox(
                                 height: 24,
                                 child: CircleAvatar(
@@ -1635,7 +1426,11 @@ class _MainAppState extends State<MainApp> {
                               backgroundColor: (themeDark ?? ThemeData.dark()).colorScheme.surface,
                               primaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(40),
                               secondaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(20),
-                              attachmentButtonIcon: const Icon(Icons.add_a_photo_rounded),
+                              attachmentButtonIcon: !multimodal
+                                  ? (prefs?.getBool("voiceModeEnabled") ?? false)
+                                      ? const Icon(Icons.headphones_rounded)
+                                      : null
+                                  : const Icon(Icons.add_a_photo_rounded),
                               sendButtonIcon: SizedBox(
                                 height: 24,
                                 child: CircleAvatar(

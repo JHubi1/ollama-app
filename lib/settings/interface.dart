@@ -340,8 +340,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
-                                                  HapticFeedback
-                                                      .selectionClick();
+                                                  selectionHaptic();
                                                   Navigator.of(context).pop();
                                                 },
                                                 child: Text(AppLocalizations.of(
@@ -349,8 +348,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                                     .settingsBrightnessRestartCancel)),
                                             TextButton(
                                                 onPressed: () async {
-                                                  HapticFeedback
-                                                      .selectionClick();
+                                                  selectionHaptic();
                                                   await prefs!.setString(
                                                       "brightness",
                                                       p0.elementAt(0));

@@ -18,5 +18,7 @@ void heavyHaptic() {
 
 void selectionHaptic() {
   if (!(prefs!.getBool("enableHaptic") ?? true)) return;
-  HapticFeedback.selectionClick();
+  // same name but for better experience, change behavior
+  HapticFeedback.lightImpact();
+  // HapticFeedback.selectionClick();
 }

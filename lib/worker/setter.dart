@@ -198,6 +198,7 @@ void setModel(BuildContext context, Function setState) {
                                             .colorScheme
                                             .primary,
                                     onSelected: (bool selected) {
+                                      selectionHaptic();
                                       if (addIndex == index) {
                                         Navigator.of(context).pop();
                                         ScaffoldMessenger.of(context)
