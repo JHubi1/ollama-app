@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../main.dart';
 import '../worker/haptic.dart';
@@ -364,6 +363,72 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                                         context)!
                                                     .settingsBrightnessRestartRestart))
                                           ]));
+                                });
+                              });
+                        }),
+                    const SizedBox(height: 8),
+                    SegmentedButton(
+                        segments: [
+                          ButtonSegment(
+                              value: "device",
+                              label: Text(AppLocalizations.of(context)!
+                                  .settingsThemeDevice),
+                              icon: const Icon(Icons.devices_rounded)),
+                          ButtonSegment(
+                              value: "ollama",
+                              label: Text(AppLocalizations.of(context)!
+                                  .settingsThemeOllama),
+                              icon: const ImageIcon(
+                                  AssetImage("assets/logo512.png")))
+                        ],
+                        selected: {
+                          (prefs?.getBool("useDeviceTheme") ?? false)
+                              ? "device"
+                              : "ollama"
+                        },
+                        onSelectionChanged: (p0) {
+                          selectionHaptic();
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                    builder: (context, setLocalState) {
+                                  return AlertDialog(
+                                      title: Text(AppLocalizations.of(context)!
+                                          .settingsThemeRestartTitle),
+                                      content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(AppLocalizations.of(context)!
+                                                .settingsThemeRestartDescription),
+                                          ]),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              selectionHaptic();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(AppLocalizations.of(
+                                                    context)!
+                                                .settingsThemeRestartCancel)),
+                                        TextButton(
+                                            onPressed: () async {
+                                              selectionHaptic();
+                                              await prefs!.setBool(
+                                                  "useDeviceTheme",
+                                                  p0.elementAt(0) == "device");
+                                              if (Platform.isWindows ||
+                                                  Platform.isLinux ||
+                                                  Platform.isMacOS) {
+                                                exit(0);
+                                              } else {
+                                                Restart.restartApp();
+                                              }
+                                            },
+                                            child: Text(AppLocalizations.of(
+                                                    context)!
+                                                .settingsThemeRestartRestart))
+                                      ]);
                                 });
                               });
                         }),

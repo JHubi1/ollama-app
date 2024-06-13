@@ -17,6 +17,7 @@ import 'settings/about.dart';
 import 'package:dartx/dartx.dart';
 import 'package:http/http.dart' as http;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 Widget toggle(BuildContext context, String text, bool value,
     Function(bool value) onChanged,
@@ -81,11 +82,22 @@ Widget toggle(BuildContext context, String text, bool value,
                               }
                             }
                           : onChanged,
+                      activeTrackColor: disabled
+                          ? Theme.of(context).colorScheme.primary.withAlpha(50)
+                          : null,
                       trackOutlineColor: disabled
-                          ? const WidgetStatePropertyAll(Colors.grey)
+                          ? WidgetStatePropertyAll(Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(150)
+                              .harmonizeWith(
+                                  Theme.of(context).colorScheme.primary))
                           : null,
                       thumbColor: disabled
-                          ? const WidgetStatePropertyAll(Colors.grey)
+                          ? WidgetStatePropertyAll(Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(150))
                           : null)))
         ]),
       ]),
@@ -364,8 +376,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                           splashFactory: NoSplash.splashFactory,
                                           child: Row(
                                             children: [
-                                              const Icon(Icons.error_rounded,
-                                                  color: Colors.red),
+                                              Icon(Icons.error_rounded,
+                                                  color: Colors.red
+                                                      .harmonizeWith(
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .primary)),
                                               const SizedBox(width: 8),
                                               Text(
                                                   AppLocalizations.of(context)!
@@ -373,8 +389,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                           hostInvalidHost
                                                               ? "host"
                                                               : "url"),
-                                                  style: const TextStyle(
-                                                      color: Colors.red))
+                                                  style: TextStyle(
+                                                      color: Colors.red
+                                                          .harmonizeWith(
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary)))
                                             ],
                                           ))
                                       : null,
@@ -402,15 +422,24 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                             )
                                           : Row(
                                               children: [
-                                                const Icon(Icons.check_rounded,
-                                                    color: Colors.green),
+                                                Icon(Icons.check_rounded,
+                                                    color: Colors.green
+                                                        .harmonizeWith(
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .primary)),
                                                 const SizedBox(width: 8),
                                                 Text(
                                                     AppLocalizations.of(
                                                             context)!
                                                         .settingsHostValid,
-                                                    style: const TextStyle(
-                                                        color: Colors.green,
+                                                    style: TextStyle(
+                                                        color: Colors.green
+                                                            .harmonizeWith(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary),
                                                         fontFamily:
                                                             "monospace"))
                                               ],
@@ -481,7 +510,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               .settingsSavedAutomatically,
                           Icons.info_rounded,
                           null,
-                          color: Colors.grey)
+                          color: Colors.grey.harmonizeWith(
+                              Theme.of(context).colorScheme.primary))
                     ])))));
   }
 }

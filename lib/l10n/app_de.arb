@@ -368,6 +368,36 @@
         "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the settings view"
     },
+    "settingsThemeDevice": "Gerät",
+    "@settingsThemeDevice": {
+        "description": "Text displayed as description for device theme option",
+        "context": "Visible in the settings view"
+    },
+    "settingsThemeOllama": "Ollama",
+    "@settingsThemeOllama": {
+        "description": "Text displayed as description for Ollama theme option",
+        "context": "Visible in the settings view"
+    },
+    "settingsThemeRestartTitle": "Neustart Erforderlich",
+    "@settingsThemeRestartTitle": {
+        "description": "Title of the restart required dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsThemeRestartDescription": "Das Ändern des Themas erfordert einen Neustart.\nMöchtest du jetzt neu starten oder die Aktion abbrechen?",
+    "@settingsThemeRestartDescription": {
+        "description": "Description of the restart required dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsThemeRestartRestart": "Neustarten",
+    "@settingsThemeRestartRestart": {
+        "description": "Text displayed for restart button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsThemeRestartCancel": "Abbrechen",
+    "@settingsThemeRestartCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
     "settingsVoicePermissionLoading": "Lade Sprachberechtigungen ...",
     "@settingsVoicePermissionLoading": {
         "description": "Text displayed while loading voice permissions",

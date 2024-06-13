@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 class ScreenSettingsVoice extends StatefulWidget {
   const ScreenSettingsVoice({super.key});
@@ -329,7 +330,9 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                         .settingsExperimentalBetaFeature,
                     Icons.warning_rounded,
                     null,
-                    color: Colors.orange, onLongTap: () {
+                    color: Colors.orange
+                        .harmonizeWith(Theme.of(context).colorScheme.primary),
+                    onLongTap: () {
                   selectionHaptic();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(AppLocalizations.of(context)!

@@ -164,7 +164,10 @@ void setModel(BuildContext context, Function setState) {
                                                     ? const Icon(Icons
                                                         .collections_rounded)
                                                     : null)),
-                                    checkmarkColor: (usedIndex == index)
+                                    checkmarkColor: (usedIndex == index &&
+                                            !(prefs?.getBool(
+                                                    "useDeviceTheme") ??
+                                                false))
                                         ? ((MediaQuery.of(context)
                                                     .platformBrightness ==
                                                 Brightness.light)
@@ -175,7 +178,10 @@ void setModel(BuildContext context, Function setState) {
                                                 .colorScheme
                                                 .secondary)
                                         : null,
-                                    labelStyle: (usedIndex == index)
+                                    labelStyle: (usedIndex == index &&
+                                            !(prefs?.getBool(
+                                                    "useDeviceTheme") ??
+                                                false))
                                         ? TextStyle(
                                             color: (MediaQuery.of(context)
                                                         .platformBrightness ==
@@ -188,15 +194,19 @@ void setModel(BuildContext context, Function setState) {
                                                     .colorScheme
                                                     .secondary)
                                         : null,
-                                    selectedColor: (MediaQuery.of(context)
-                                                .platformBrightness ==
-                                            Brightness.light)
-                                        ? (theme ?? ThemeData())
-                                            .colorScheme
-                                            .primary
-                                        : (themeDark ?? ThemeData.dark())
-                                            .colorScheme
-                                            .primary,
+                                    selectedColor: (prefs
+                                                ?.getBool("useDeviceTheme") ??
+                                            false)
+                                        ? null
+                                        : (MediaQuery.of(context)
+                                                    .platformBrightness ==
+                                                Brightness.light)
+                                            ? (theme ?? ThemeData())
+                                                .colorScheme
+                                                .primary
+                                            : (themeDark ?? ThemeData.dark())
+                                                .colorScheme
+                                                .primary,
                                     onSelected: (bool selected) {
                                       selectionHaptic();
                                       if (addIndex == index) {

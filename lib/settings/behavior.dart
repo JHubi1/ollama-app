@@ -8,6 +8,7 @@ import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 class ScreenSettingsBehavior extends StatefulWidget {
   const ScreenSettingsBehavior({super.key});
@@ -116,7 +117,8 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                         .settingsBehaviorNotUpdatedForOlderChats,
                     Icons.info_rounded,
                     null,
-                    color: Colors.grey)
+                    color: Colors.grey
+                        .harmonizeWith(Theme.of(context).colorScheme.primary))
               ]))),
     );
   }

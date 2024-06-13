@@ -32,6 +32,7 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 // client configuration
 
@@ -127,63 +128,109 @@ class _AppState extends State<App> {
     }
 
     load();
-
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        if (!(prefs?.getBool("useDeviceTheme") ?? false)) {
-          theme = ThemeData.from(
-              colorScheme: const ColorScheme(
-                  brightness: Brightness.light,
-                  primary: Colors.black,
-                  onPrimary: Colors.white,
-                  secondary: Colors.white,
-                  onSecondary: Colors.black,
-                  error: Colors.red,
-                  onError: Colors.white,
-                  surface: Colors.white,
-                  onSurface: Colors.black));
-          themeDark = ThemeData.from(
-              colorScheme: const ColorScheme(
-                  brightness: Brightness.dark,
-                  primary: Colors.white,
-                  onPrimary: Colors.black,
-                  secondary: Colors.black,
-                  onSecondary: Colors.white,
-                  error: Colors.red,
-                  onError: Colors.black,
-                  surface: Colors.black,
-                  onSurface: Colors.white));
-          setState(() {});
-        }
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localeListResolutionCallback: (deviceLocales, supportedLocales) {
-          if (deviceLocales != null) {
-            for (final locale in deviceLocales) {
-              var newLocale = Locale(locale.languageCode);
-              if (supportedLocales.contains(newLocale)) {
-                return locale;
+    return DynamicColorBuilder(
+        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      if ((prefs?.getBool("useDeviceTheme") ?? false) &&
+          lightDynamic != null &&
+          darkDynamic != null) {
+        theme = ThemeData.from(colorScheme: lightDynamic);
+        themeDark = ThemeData.from(colorScheme: darkDynamic);
+      } else {
+        theme = ThemeData.from(
+            colorScheme: const ColorScheme(
+                brightness: Brightness.light,
+                primary: Colors.black,
+                onPrimary: Colors.white,
+                secondary: Colors.white,
+                onSecondary: Colors.black,
+                error: Colors.red,
+                onError: Colors.white,
+                surface: Colors.white,
+                onSurface: Colors.black));
+        themeDark = ThemeData.from(
+            colorScheme: const ColorScheme(
+                brightness: Brightness.dark,
+                primary: Colors.white,
+                onPrimary: Colors.black,
+                secondary: Colors.black,
+                onSecondary: Colors.white,
+                error: Colors.red,
+                onError: Colors.black,
+                surface: Colors.black,
+                onSurface: Colors.white));
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+            () {
+          // invert colors used, because brightness not updated yet
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+              systemNavigationBarColor:
+                  (prefs?.getString("brightness") ?? "system") == "system"
+                      ? ((MediaQuery.of(context).platformBrightness ==
+                              Brightness.light)
+                          ? (themeDark ?? ThemeData.dark()).colorScheme.surface
+                          : (theme ?? ThemeData()).colorScheme.surface)
+                      : (prefs?.getString("brightness") == "dark"
+                          ? (themeDark ?? ThemeData()).colorScheme.surface
+                          : (theme ?? ThemeData.dark()).colorScheme.surface),
+              systemNavigationBarIconBrightness:
+                  (((prefs?.getString("brightness") ?? "system") == "system" &&
+                              MediaQuery.of(context).platformBrightness ==
+                                  Brightness.dark) ||
+                          prefs?.getString("brightness") == "light")
+                      ? Brightness.dark
+                      : Brightness.light));
+        };
+
+        // brightness changed function not run at first startup
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+            systemNavigationBarColor:
+                (prefs?.getString("brightness") ?? "system") == "system"
+                    ? ((MediaQuery.of(context).platformBrightness ==
+                            Brightness.light)
+                        ? (theme ?? ThemeData.dark()).colorScheme.surface
+                        : (themeDark ?? ThemeData()).colorScheme.surface)
+                    : (prefs?.getString("brightness") == "dark"
+                        ? (themeDark ?? ThemeData()).colorScheme.surface
+                        : (theme ?? ThemeData.dark()).colorScheme.surface),
+            systemNavigationBarIconBrightness:
+                (((prefs?.getString("brightness") ?? "system") == "system" &&
+                            MediaQuery.of(context).platformBrightness ==
+                                Brightness.light) ||
+                        prefs?.getString("brightness") == "light")
+                    ? Brightness.dark
+                    : Brightness.light));
+      });
+
+      return MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localeListResolutionCallback: (deviceLocales, supportedLocales) {
+            if (deviceLocales != null) {
+              for (final locale in deviceLocales) {
+                var newLocale = Locale(locale.languageCode);
+                if (supportedLocales.contains(newLocale)) {
+                  return locale;
+                }
               }
             }
-          }
-          return const Locale("en");
-        },
-        title: "Ollama",
-        theme: theme,
-        darkTheme: themeDark,
-        themeMode: ((prefs?.getString("brightness") ?? "system") == "system")
-            ? ThemeMode.system
-            : ((prefs!.getString("brightness") == "dark")
-                ? ThemeMode.dark
-                : ThemeMode.light),
-        home: const MainApp());
+            return const Locale("en");
+          },
+          title: "Ollama",
+          theme: theme,
+          darkTheme: themeDark,
+          themeMode: ((prefs?.getString("brightness") ?? "system") == "system")
+              ? ThemeMode.system
+              : ((prefs!.getString("brightness") == "dark")
+                  ? ThemeMode.dark
+                  : ThemeMode.light),
+          home: const MainApp());
+    });
   }
 }
 
@@ -541,54 +588,6 @@ class _MainAppState extends State<MainApp> {
                   }));
         }
 
-        void setBrightness() {
-          WidgetsBinding
-              .instance.platformDispatcher.onPlatformBrightnessChanged = () {
-            // invert colors used, because brightness not updated yet
-            SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                systemNavigationBarColor:
-                    (prefs!.getString("brightness") ?? "system") == "system"
-                        ? ((MediaQuery.of(context).platformBrightness ==
-                                Brightness.light)
-                            ? (themeDark ?? ThemeData.dark())
-                                .colorScheme
-                                .surface
-                            : (theme ?? ThemeData()).colorScheme.surface)
-                        : (prefs!.getString("brightness") == "dark"
-                            ? (themeDark ?? ThemeData()).colorScheme.surface
-                            : (theme ?? ThemeData.dark()).colorScheme.surface),
-                systemNavigationBarIconBrightness:
-                    (((prefs!.getString("brightness") ?? "system") ==
-                                    "system" &&
-                                MediaQuery.of(context).platformBrightness ==
-                                    Brightness.dark) ||
-                            prefs!.getString("brightness") == "light")
-                        ? Brightness.dark
-                        : Brightness.light));
-          };
-
-          // brightness changed function not run at first startup
-          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-              systemNavigationBarColor:
-                  (prefs!.getString("brightness") ?? "system") == "system"
-                      ? ((MediaQuery.of(context).platformBrightness ==
-                              Brightness.light)
-                          ? (theme ?? ThemeData.dark()).colorScheme.surface
-                          : (themeDark ?? ThemeData()).colorScheme.surface)
-                      : (prefs!.getString("brightness") == "dark"
-                          ? (themeDark ?? ThemeData()).colorScheme.surface
-                          : (theme ?? ThemeData.dark()).colorScheme.surface),
-              systemNavigationBarIconBrightness:
-                  (((prefs!.getString("brightness") ?? "system") == "system" &&
-                              MediaQuery.of(context).platformBrightness ==
-                                  Brightness.light) ||
-                          prefs!.getString("brightness") == "light")
-                      ? Brightness.dark
-                      : Brightness.light));
-        }
-
-        setBrightness();
-
         // prefs!.remove("welcomeFinished");
         if (!(prefs!.getBool("welcomeFinished") ?? false) && allowSettings) {
           // ignore: use_build_context_synchronously
@@ -761,14 +760,16 @@ class _MainAppState extends State<MainApp> {
                                               ]),
                                           actions: [
                                             TextButton(
-                                                onPressed: () {selectionHaptic();
+                                                onPressed: () {
+                                                  selectionHaptic();
                                                   Navigator.of(context).pop();
                                                 },
                                                 child: Text(AppLocalizations.of(
                                                         context)!
                                                     .deleteDialogCancel)),
                                             TextButton(
-                                                onPressed: () {selectionHaptic();
+                                                onPressed: () {
+                                                  selectionHaptic();
                                                   Navigator.of(context).pop();
 
                                                   for (var i = 0;
@@ -1227,7 +1228,8 @@ class _MainAppState extends State<MainApp> {
                                               SizedBox(
                                                   width: double.infinity,
                                                   child: OutlinedButton.icon(
-                                                      onPressed: () async {selectionHaptic();
+                                                      onPressed: () async {
+                                                        selectionHaptic();
                                                         Navigator.of(context)
                                                             .pop();
                                                         setMainState = setState;
@@ -1248,7 +1250,8 @@ class _MainAppState extends State<MainApp> {
                                               SizedBox(
                                                   width: double.infinity,
                                                   child: OutlinedButton.icon(
-                                                      onPressed: () async {selectionHaptic();
+                                                      onPressed: () async {
+                                                        selectionHaptic();
 
                                                         Navigator.of(context)
                                                             .pop();
@@ -1300,7 +1303,8 @@ class _MainAppState extends State<MainApp> {
                                               SizedBox(
                                                   width: double.infinity,
                                                   child: OutlinedButton.icon(
-                                                      onPressed: () async {selectionHaptic();
+                                                      onPressed: () async {
+                                                        selectionHaptic();
 
                                                         Navigator.of(context)
                                                             .pop();
@@ -1379,17 +1383,26 @@ class _MainAppState extends State<MainApp> {
                               attachmentButtonIcon: !multimodal
                                   ? (prefs?.getBool("voiceModeEnabled") ??
                                           false)
-                                      ? const Icon(Icons.headphones_rounded)
+                                      ? Icon(Icons.headphones_rounded,
+                                          color:
+                                              Theme.of(context).iconTheme.color)
                                       : null
-                                  : const Icon(Icons.add_a_photo_rounded),
+                                  : Icon(Icons.add_a_photo_rounded,
+                                      color: Theme.of(context).iconTheme.color),
                               sendButtonIcon: SizedBox(
                                 height: 24,
                                 child: CircleAvatar(
                                     backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).iconTheme.color,
                                     radius: 12,
-                                    child:
-                                        const Icon(Icons.arrow_upward_rounded)),
+                                    child: Icon(Icons.arrow_upward_rounded,
+                                        color:
+                                            (prefs?.getBool("useDeviceTheme") ??
+                                                    false)
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .surface
+                                                : null)),
                               ),
                               sendButtonMargin: EdgeInsets.zero,
                               attachmentButtonMargin: EdgeInsets.zero,
@@ -1414,8 +1427,7 @@ class _MainAppState extends State<MainApp> {
                                               Platform.isMacOS))
                                       ? 0
                                       : 8),
-                              messageMaxWidth: (MediaQuery.of(context).size.width >=
-                                      1000)
+                              messageMaxWidth: (MediaQuery.of(context).size.width >= 1000)
                                   ? (MediaQuery.of(context).size.width >= 1600)
                                       ? (MediaQuery.of(context).size.width >= 2200)
                                           ? 1900
@@ -1428,17 +1440,23 @@ class _MainAppState extends State<MainApp> {
                               secondaryColor: (themeDark ?? ThemeData.dark()).colorScheme.primary.withAlpha(20),
                               attachmentButtonIcon: !multimodal
                                   ? (prefs?.getBool("voiceModeEnabled") ?? false)
-                                      ? const Icon(Icons.headphones_rounded)
+                                      ? Icon(Icons.headphones_rounded, color: Theme.of(context).iconTheme.color)
                                       : null
-                                  : const Icon(Icons.add_a_photo_rounded),
+                                  : Icon(Icons.add_a_photo_rounded, color: Theme.of(context).iconTheme.color),
                               sendButtonIcon: SizedBox(
                                 height: 24,
                                 child: CircleAvatar(
                                     backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).iconTheme.color,
                                     radius: 12,
-                                    child:
-                                        const Icon(Icons.arrow_upward_rounded)),
+                                    child: Icon(Icons.arrow_upward_rounded,
+                                        color:
+                                            (prefs?.getBool("useDeviceTheme") ??
+                                                    false)
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .surface
+                                                : null)),
                               ),
                               sendButtonMargin: EdgeInsets.zero,
                               attachmentButtonMargin: EdgeInsets.zero,

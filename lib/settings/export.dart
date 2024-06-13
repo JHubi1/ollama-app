@@ -11,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 class ScreenSettingsExport extends StatefulWidget {
   const ScreenSettingsExport({super.key});
@@ -169,10 +170,12 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                 const SizedBox(height: 16),
                 button(AppLocalizations.of(context)!.settingsExportInfo,
                     Icons.info_rounded, null,
-                    color: Colors.grey),
+                    color: Colors.grey
+                        .harmonizeWith(Theme.of(context).colorScheme.primary)),
                 button(AppLocalizations.of(context)!.settingsExportWarning,
                     Icons.warning_rounded, null,
-                    color: Colors.orange)
+                    color: Colors.orange
+                        .harmonizeWith(Theme.of(context).colorScheme.primary))
               ]))),
     );
   }
