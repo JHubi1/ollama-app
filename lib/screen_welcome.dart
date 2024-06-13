@@ -21,7 +21,8 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Future.delayed(const Duration(milliseconds: 10));
       WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
           () {
         // invert colors used, because brightness not updated yet
