@@ -118,6 +118,9 @@ class _AppState extends State<App> {
       if ((await Permission.bluetoothConnect.isGranted) &&
           (await Permission.microphone.isGranted)) {
         voiceSupported = await speech.initialize();
+      } else {
+        prefs!.setBool("voiceModeEnabled", false);
+        voiceSupported = false;
       }
 
       SharedPreferences.setPrefix("ollama.");
@@ -1225,28 +1228,44 @@ class _MainAppState extends State<MainApp> {
                                         child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              SizedBox(
-                                                  width: double.infinity,
-                                                  child: OutlinedButton.icon(
-                                                      onPressed: () async {
-                                                        selectionHaptic();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setMainState = setState;
-                                                        settingsOpen = true;
-                                                        logoVisible = false;
-                                                        Navigator.of(context).push(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        const ScreenVoice()));
-                                                      },
-                                                      icon: const Icon(Icons
-                                                          .headphones_rounded),
-                                                      label: Text(AppLocalizations
-                                                              .of(context)!
-                                                          .settingsTitleVoice))),
-                                              const SizedBox(height: 8),
+                                              (prefs?.getBool(
+                                                          "voiceModeEnabled") ??
+                                                      false)
+                                                  ? SizedBox(
+                                                      width: double.infinity,
+                                                      child:
+                                                          OutlinedButton.icon(
+                                                              onPressed:
+                                                                  () async {
+                                                                selectionHaptic();
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                setMainState =
+                                                                    setState;
+                                                                settingsOpen =
+                                                                    true;
+                                                                logoVisible =
+                                                                    false;
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .push(MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                const ScreenVoice()));
+                                                              },
+                                                              icon: const Icon(Icons
+                                                                  .headphones_rounded),
+                                                              label: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .settingsTitleVoice)))
+                                                  : const SizedBox.shrink(),
+                                              (prefs?.getBool(
+                                                          "voiceModeEnabled") ??
+                                                      false)
+                                                  ? const SizedBox(height: 8)
+                                                  : const SizedBox.shrink(),
                                               SizedBox(
                                                   width: double.infinity,
                                                   child: OutlinedButton.icon(

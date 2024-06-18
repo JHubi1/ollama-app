@@ -86,7 +86,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                     // const SizedBox(height: 16),
                     button(
                         AppLocalizations.of(context)!
-                            .settingsVersion(currentVersion ?? "0.0.1"),
+                            .settingsVersion(currentVersion ?? ""),
                         Icons.verified_rounded,
                         null),
                     (updateStatus == "notAvailable")
