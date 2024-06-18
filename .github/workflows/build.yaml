@@ -1,4 +1,4 @@
-name: Build Script
+name: Build app
 on:
   workflow_dispatch:
     inputs:
