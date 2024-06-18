@@ -100,7 +100,7 @@ jobs:
         with:
           merge-multiple: true
       - name: Generating timestamp
-        run: echo "timestamp=$EPOCHSECONDS"$'\n\norigin={{ github.repository }}\nhost={{ github.server_url }}\nowner={{ github.repository_owner }}\n\nworkflow={{ github.workflow }}\nrun_id={{ github.run_id }}\nrun_number={{ github.run_number }}' > manifest.yaml
+        run: echo "timestamp=$EPOCHSECONDS"$'\n\norigin=${{ github.repository }}\nhost=${{ github.server_url }}\nowner=${{ github.repository_owner }}\n\nworkflow=${{ github.workflow }}\nrun_id=${{ github.run_id }}\nrun_number=${{ github.run_number }}' > manifest.yaml
       - name: Bundling files
         uses: actions/upload-artifact@v4
         with:
