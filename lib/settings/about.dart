@@ -84,7 +84,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
               child: Column(children: [
                 Expanded(
                   child: ListView(children: [
-                    // const SizedBox(height: 16),
+                    // const SizedBox(height: 8),
                     button(
                         AppLocalizations.of(context)!
                             .settingsVersion(currentVersion ?? ""),

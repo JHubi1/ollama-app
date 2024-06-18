@@ -137,12 +137,9 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
         builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-      if ((prefs?.getBool("useDeviceTheme") ?? false) &&
-          lightDynamic != null &&
-          darkDynamic != null) {
-        theme = ThemeData.from(colorScheme: lightDynamic);
-        themeDark = ThemeData.from(colorScheme: darkDynamic);
-      } else {
+      if (!(prefs?.getBool("useDeviceTheme") ?? false) ||
+          lightDynamic == null ||
+          darkDynamic == null) {
         theme = ThemeData.from(
             colorScheme: const ColorScheme(
                 brightness: Brightness.light,
@@ -165,6 +162,9 @@ class _AppState extends State<App> {
                 onError: Colors.black,
                 surface: Colors.black,
                 onSurface: Colors.white));
+      } else {
+        theme = ThemeData.from(colorScheme: lightDynamic);
+        themeDark = ThemeData.from(colorScheme: darkDynamic);
       }
 
       WidgetsBinding.instance.addPostFrameCallback((_) {

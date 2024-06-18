@@ -72,7 +72,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
               child: Column(children: [
                 Expanded(
                   child: ListView(children: [
-                    // const SizedBox(height: 16),
+                    // const SizedBox(height: 8),
                     toggle(
                         context,
                         AppLocalizations.of(context)!.settingsShowModelTags,

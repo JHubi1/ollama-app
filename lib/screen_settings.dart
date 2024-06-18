@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 import 'worker/haptic.dart';
+import 'worker/update.dart';
 import 'package:ollama_app/worker/setter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -89,9 +90,7 @@ Widget toggle(BuildContext context, String text, bool value,
                           ? WidgetStatePropertyAll(Theme.of(context)
                               .colorScheme
                               .primary
-                              .withAlpha(150)
-                              .harmonizeWith(
-                                  Theme.of(context).colorScheme.primary))
+                              .withAlpha(150))
                           : null,
                       thumbColor: disabled
                           ? WidgetStatePropertyAll(Theme.of(context)
@@ -235,6 +234,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
     checkHost();
+    updatesSupported(setState, true);
   }
 
   @override
@@ -302,7 +302,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                     child: Column(children: [
                       Expanded(
                         child: ListView(children: [
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 8),
                           TextField(
                               controller: hostInputController,
                               keyboardType: TextInputType.url,
@@ -377,11 +377,9 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                           child: Row(
                                             children: [
                                               Icon(Icons.error_rounded,
-                                                  color: Colors.red
-                                                      .harmonizeWith(
-                                                          Theme.of(context)
-                                                              .colorScheme
-                                                              .primary)),
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .error),
                                               const SizedBox(width: 8),
                                               Text(
                                                   AppLocalizations.of(context)!
@@ -390,11 +388,9 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                               ? "host"
                                                               : "url"),
                                                   style: TextStyle(
-                                                      color: Colors.red
-                                                          .harmonizeWith(
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary)))
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .error))
                                             ],
                                           ))
                                       : null,
@@ -504,7 +500,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           })
                         ]),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       button(
                           AppLocalizations.of(context)!
                               .settingsSavedAutomatically,

@@ -56,7 +56,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
               child: Column(children: [
                 Expanded(
                   child: ListView(children: [
-                    // const SizedBox(height: 16),
+                    // const SizedBox(height: 8),
                     ((prefs!.getBool("voiceModeEnabled") ?? false) ||
                             permissionLoading ||
                             (permissionBluetooth &&
@@ -324,7 +324,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                             !(prefs!.getBool("voiceModeEnabled") ?? false)))
                   ]),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 button(
                     AppLocalizations.of(context)!
                         .settingsExperimentalBetaFeature,

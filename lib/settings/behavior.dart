@@ -79,7 +79,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
               child: Column(children: [
                 Expanded(
                   child: ListView(children: [
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     TextField(
                         controller: systemInputController,
                         keyboardType: TextInputType.multiline,
@@ -111,7 +111,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                     })
                   ]),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 button(
                     AppLocalizations.of(context)!
                         .settingsBehaviorNotUpdatedForOlderChats,

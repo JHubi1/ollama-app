@@ -73,7 +73,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
               child: Column(children: [
                 Expanded(
                   child: ListView(children: [
-                    // const SizedBox(height: 16),
+                    // const SizedBox(height: 8),
                     button(AppLocalizations.of(context)!.settingsExportChats,
                         Icons.upload_rounded, () async {
                       selectionHaptic();
@@ -167,7 +167,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                     })
                   ]),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 button(AppLocalizations.of(context)!.settingsExportInfo,
                     Icons.info_rounded, null,
                     color: Colors.grey

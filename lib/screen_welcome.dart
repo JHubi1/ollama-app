@@ -49,6 +49,7 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           systemNavigationBarColor:
               (prefs!.getString("brightness") ?? "system") == "system"
+                  // ignore: use_build_context_synchronously
                   ? ((MediaQuery.of(context).platformBrightness ==
                           Brightness.light)
                       ? Colors.grey[100]
@@ -58,6 +59,7 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
                       : Colors.grey[100]),
           systemNavigationBarIconBrightness:
               (((prefs!.getString("brightness") ?? "system") == "system" &&
+                          // ignore: use_build_context_synchronously
                           MediaQuery.of(context).platformBrightness ==
                               Brightness.light) ||
                       prefs!.getString("brightness") == "light")
