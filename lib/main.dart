@@ -115,6 +115,12 @@ class _AppState extends State<App> {
         await FlutterDisplayMode.setHighRefreshRate();
       } catch (_) {}
 
+      SharedPreferences.setPrefix("ollama.");
+      SharedPreferences tmp = await SharedPreferences.getInstance();
+      setState(() {
+        prefs = tmp;
+      });
+
       if ((await Permission.bluetoothConnect.isGranted) &&
           (await Permission.microphone.isGranted)) {
         voiceSupported = await speech.initialize();
@@ -122,12 +128,6 @@ class _AppState extends State<App> {
         prefs!.setBool("voiceModeEnabled", false);
         voiceSupported = false;
       }
-
-      SharedPreferences.setPrefix("ollama.");
-      SharedPreferences tmp = await SharedPreferences.getInstance();
-      setState(() {
-        prefs = tmp;
-      });
     }
 
     load();

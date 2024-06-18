@@ -8,6 +8,7 @@ import 'package:ollama_app/worker/setter.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:datetime_loop/datetime_loop.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 import 'main.dart';
 import 'worker/sender.dart';
@@ -190,6 +191,71 @@ class _ScreenVoiceState extends State<ScreenVoice> {
         var tmp = aiText;
         tmp.replaceAll("-", ".");
         tmp.replaceAll("*", ".");
+
+        // var volume = await VolumeController().getVolume();
+        // var voicesTmp1 = await voice.getLanguages;
+        // var voices = jsonEncode(voicesTmp1);
+        // var isVoiceAvailable = (await voice.isLanguageAvailable(
+        //         (prefs!.getString("voiceLanguage") ?? "en_US")
+        //             .replaceAll("_", "-")))
+        //     .toString();
+        // var voices2Tmp1 = await speech.locales();
+        // var voices2Tmp2 = [];
+        // for (var voice in voices2Tmp1) {
+        //   voices2Tmp2.add(voice.localeId.replaceAll("_", "-"));
+        // }
+        // var voices2 = jsonEncode(voices2Tmp2);
+        // await showDialog(
+        //     // ignore: use_build_context_synchronously
+        //     context: context,
+        //     builder: (context) {
+        //       return Dialog.fullscreen(
+        //           child: ListView(children: [
+        //         const Row(
+        //             crossAxisAlignment: CrossAxisAlignment.center,
+        //             mainAxisSize: MainAxisSize.max,
+        //             children: [
+        //               Expanded(child: Divider(color: Colors.red)),
+        //               SizedBox(width: 8),
+        //               Text("START", style: TextStyle(color: Colors.red)),
+        //               SizedBox(width: 8),
+        //               Expanded(child: Divider(color: Colors.red))
+        //             ]),
+        //         Text((prefs!.getString("voiceLanguage") ?? "en_US")
+        //             .replaceAll("_", "-")),
+        //         const Divider(),
+        //         Text(volume.toString()),
+        //         const Divider(),
+        //         Text(voices),
+        //         const Divider(),
+        //         Text(voicesTmp1
+        //             .contains((prefs!.getString("voiceLanguage") ?? "en_US")
+        //                 .replaceAll("_", "-"))
+        //             .toString()),
+        //         const Divider(),
+        //         Text(isVoiceAvailable),
+        //         const Divider(),
+        //         Text(voices2),
+        //         const Divider(),
+        //         Text(voices2Tmp2
+        //             .contains((prefs!.getString("voiceLanguage") ?? "en_US")
+        //                 .replaceAll("_", "-"))
+        //             .toString()),
+        //         const Divider(),
+        //         Text(speech.isAvailable.toString()),
+        //         const Row(
+        //             crossAxisAlignment: CrossAxisAlignment.center,
+        //             mainAxisSize: MainAxisSize.max,
+        //             children: [
+        //               Expanded(child: Divider(color: Colors.red)),
+        //               SizedBox(width: 8),
+        //               Text("END", style: TextStyle(color: Colors.red)),
+        //               SizedBox(width: 8),
+        //               Expanded(child: Divider(color: Colors.red))
+        //             ])
+        //       ]));
+        //     });
+
         voice.speak(tmp);
       }
     },
