@@ -338,7 +338,11 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                         },
                                             validatorError:
                                                 AppLocalizations.of(context)!
-                                                    .settingsHostHeaderInvalid);
+                                                    .settingsHostHeaderInvalid,
+                                            prefill: !((prefs!.getString(
+                                                        "hostHeaders") ??
+                                                    {}) ==
+                                                "{}"));
                                         prefs!.setString("hostHeaders", tmp);
                                       },
                                       icon: const Icon(Icons.add_rounded)),

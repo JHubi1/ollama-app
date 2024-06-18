@@ -373,9 +373,11 @@ Future<String> prompt(BuildContext context,
     String? uuid,
     Future<bool> Function(String content)? validator,
     String? validatorError,
-    String? placeholder}) async {
+    String? placeholder,
+    bool prefill = true}) async {
   var returnText = (valueIfCanceled != null) ? valueIfCanceled : value;
-  final TextEditingController controller = TextEditingController(text: value);
+  final TextEditingController controller =
+      TextEditingController(text: prefill ? value : "");
   bool loading = false;
   String? error;
   await showModalBottomSheet(
