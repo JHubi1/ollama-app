@@ -26,6 +26,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
     updatesSupported(setState, true);
+    setState(() {});
     if (prefs!.getBool("checkUpdateOnSettingsOpen") ?? false) {
       checkUpdate(setState);
     }

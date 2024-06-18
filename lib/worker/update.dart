@@ -43,10 +43,10 @@ Future<bool> updatesSupported(Function setState,
         (installerApps
             .contains((await InstallReferrer.app).packageName ?? ""))) {
       returnValue = false;
-      if (await InstallReferrer.referrer ==
-          InstallationAppReferrer.androidDebug) {
-        returnValue = true;
-      }
+      // if (await InstallReferrer.referrer ==
+      //     InstallationAppReferrer.androidDebug) {
+      //   returnValue = true;
+      // }
     }
     if (!repoUrl.startsWith("https://github.com")) {
       returnValue = false;
@@ -114,7 +114,7 @@ void checkUpdate(Function setState) async {
     });
   } catch (e) {
     setState(() {
-      updateStatus = "error";
+      updateStatus = "notAvailable";
       updateLoading = false;
     });
   }
