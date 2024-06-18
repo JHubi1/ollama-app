@@ -43,10 +43,10 @@ Future<bool> updatesSupported(Function setState,
         (installerApps
             .contains((await InstallReferrer.app).packageName ?? ""))) {
       returnValue = false;
-      if (await InstallReferrer.referrer ==
-          InstallationAppReferrer.androidDebug) {
-        returnValue = true;
-      }
+      // if (await InstallReferrer.referrer ==
+      //     InstallationAppReferrer.androidDebug) {
+      //   returnValue = true;
+      // }
     }
     if (!repoUrl.startsWith("https://github.com")) {
       returnValue = false;
@@ -80,7 +80,7 @@ void checkUpdate(Function setState) async {
     var repo = repoUrl.split("/");
 
     currentVersion = (await PackageInfo.fromPlatform()).version;
-    currentVersion = "1.0.0";
+    // currentVersion = "1.0.0";
 
     String? version;
     try {
