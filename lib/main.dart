@@ -15,6 +15,7 @@ import 'screen_welcome.dart';
 import 'worker/setter.dart';
 import 'worker/haptic.dart';
 import 'worker/sender.dart';
+import 'worker/desktop.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
@@ -83,7 +84,7 @@ Function? setMainState;
 void main() {
   runApp(const App());
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (desktopFeature()) {
     doWhenWindowReady(() {
       appWindow.minSize = const Size(600, 450);
       appWindow.size = const Size(1200, 650);
@@ -121,10 +122,15 @@ class _AppState extends State<App> {
         prefs = tmp;
       });
 
-      if ((await Permission.bluetoothConnect.isGranted) &&
-          (await Permission.microphone.isGranted)) {
-        voiceSupported = await speech.initialize();
-      } else {
+      try {
+        if ((await Permission.bluetoothConnect.isGranted) &&
+            (await Permission.microphone.isGranted)) {
+          voiceSupported = await speech.initialize();
+        } else {
+          prefs!.setBool("voiceModeEnabled", false);
+          voiceSupported = false;
+        }
+      } catch (_) {
         prefs!.setBool("voiceModeEnabled", false);
         voiceSupported = false;
       }
@@ -248,12 +254,14 @@ class _MainAppState extends State<MainApp> {
   int tipId = Random().nextInt(5);
 
   List<Widget> sidebar(BuildContext context, Function setState) {
+    var padding = EdgeInsets.only(
+        left: desktopLayoutRequired(context) ? 17 : 12,
+        right: desktopLayoutRequired(context) ? 17 : 12);
     return List.from([
-      ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-              MediaQuery.of(context).size.width >= 1000)
+      desktopLayout(context)
           ? const SizedBox.shrink()
           : (Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: padding,
               child: InkWell(
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
@@ -273,24 +281,20 @@ class _MainAppState extends State<MainApp> {
                         ),
                         const SizedBox(width: 16),
                       ]))))),
-      ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-              MediaQuery.of(context).size.width >= 1000)
+      desktopLayout(context)
           ? const SizedBox.shrink()
           : (!allowMultipleChats && !allowSettings)
               ? const SizedBox.shrink()
               : const Divider(),
       (allowMultipleChats)
           ? (Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: padding,
               child: InkWell(
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   onTap: () {
                     selectionHaptic();
-                    if (!(Platform.isWindows ||
-                            Platform.isLinux ||
-                            Platform.isMacOS) &&
-                        MediaQuery.of(context).size.width <= 1000) {
+                    if (!desktopLayout(context)) {
                       Navigator.of(context).pop();
                     }
                     if (!chatAllowed && model != null) return;
@@ -317,16 +321,13 @@ class _MainAppState extends State<MainApp> {
           : const SizedBox.shrink(),
       (allowSettings)
           ? (Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: padding,
               child: InkWell(
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   onTap: () {
                     selectionHaptic();
-                    if (!(Platform.isWindows ||
-                            Platform.isLinux ||
-                            Platform.isMacOS) &&
-                        MediaQuery.of(context).size.width <= 1000) {
+                    if (!desktopLayout(context)) {
                       Navigator.of(context).pop();
                     }
                     setState(() {
@@ -355,17 +356,15 @@ class _MainAppState extends State<MainApp> {
                       ])))))
           : const SizedBox.shrink(),
       Divider(
-          color:
-              ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-                      MediaQuery.of(context).size.width >= 1000)
-                  ? (Theme.of(context).brightness == Brightness.light)
-                      ? Colors.grey[400]
-                      : Colors.grey[900]
-                  : null),
+          color: desktopLayout(context)
+              ? (Theme.of(context).brightness == Brightness.light)
+                  ? Colors.grey[400]
+                  : Colors.grey[900]
+              : null),
       ((prefs?.getStringList("chats") ?? []).isNotEmpty)
           ? const SizedBox.shrink()
           : (Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: padding,
               child: InkWell(
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
@@ -405,7 +404,7 @@ class _MainAppState extends State<MainApp> {
                 !allowSettings)
             ? const SizedBox.shrink()
             : (Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12),
+                padding: padding,
                 child: InkWell(
                   splashFactory: NoSplash.splashFactory,
                   highlightColor: Colors.transparent,
@@ -507,26 +506,20 @@ class _MainAppState extends State<MainApp> {
               if (chatUuid == jsonDecode(item)["uuid"]) {
                 messages = [];
                 chatUuid = null;
-                if (!(Platform.isWindows ||
-                        Platform.isLinux ||
-                        Platform.isMacOS) &&
-                    MediaQuery.of(context).size.width <= 1000) {
+                if (!desktopLayout(context)) {
                   Navigator.of(context).pop();
                 }
               }
               setState(() {});
             },
             child: Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12),
+                padding: padding,
                 child: InkWell(
                     customBorder: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(50))),
                     onTap: () {
                       selectionHaptic();
-                      if (!(Platform.isWindows ||
-                              Platform.isLinux ||
-                              Platform.isMacOS) &&
-                          MediaQuery.of(context).size.width <= 1000) {
+                      if (!desktopFeature()) {
                         Navigator.of(context).pop();
                       }
                       if (!chatAllowed) return;
@@ -681,165 +674,113 @@ class _MainAppState extends State<MainApp> {
       child: Scaffold(
           appBar: AppBar(
               title: Row(
-                children: [
-                  (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                      ? SizedBox(width: 85, height: 200, child: MoveWindow())
-                      : const SizedBox.shrink(),
-                  (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                      ? Expanded(
-                          child: SizedBox(height: 200, child: MoveWindow()))
-                      : const SizedBox.shrink(),
-                  (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                      ? selector
-                      : Expanded(child: selector),
-                  (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                      ? Expanded(
-                          child: SizedBox(height: 200, child: MoveWindow()))
-                      : const SizedBox.shrink(),
-                ],
+                children: desktopFeature()
+                    ? [
+                        SizedBox(width: 85, height: 200, child: MoveWindow()),
+                        Expanded(
+                            child: SizedBox(height: 200, child: MoveWindow())),
+                        selector,
+                        Expanded(
+                            child: SizedBox(height: 200, child: MoveWindow()))
+                      ]
+                    : [Expanded(child: selector)],
               ),
-              actions: (Platform.isWindows ||
-                      Platform.isLinux ||
-                      Platform.isMacOS)
-                  ? [
-                      SizedBox(
-                          height: 200,
-                          child: WindowTitleBarBox(
-                              child: Row(
-                            children: [
-                              // Expanded(child: MoveWindow()),
-                              SizedBox(
-                                  height: 200,
-                                  child: MinimizeWindowButton(
-                                      animate: true,
-                                      colors: WindowButtonColors(
-                                          iconNormal: Theme.of(context)
-                                              .colorScheme
-                                              .primary))),
-                              SizedBox(
-                                  height: 72,
-                                  child: MaximizeWindowButton(
-                                      animate: true,
-                                      colors: WindowButtonColors(
-                                          iconNormal: Theme.of(context)
-                                              .colorScheme
-                                              .primary))),
-                              SizedBox(
-                                  height: 72,
-                                  child: CloseWindowButton(
-                                      animate: true,
-                                      colors: WindowButtonColors(
-                                          iconNormal: Theme.of(context)
-                                              .colorScheme
-                                              .primary))),
-                            ],
-                          )))
-                    ]
-                  : [
-                      const SizedBox(width: 4),
-                      IconButton(
-                          onPressed: () {
-                            selectionHaptic();
-                            if (!chatAllowed) return;
+              actions: desktopControlsActions(context, [
+                const SizedBox(width: 4),
+                IconButton(
+                    onPressed: () {
+                      selectionHaptic();
+                      if (!chatAllowed) return;
 
-                            if (prefs!.getBool("askBeforeDeletion") ??
-                                // ignore: dead_code
-                                false && messages.isNotEmpty) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return StatefulBuilder(
-                                        builder: (context, setLocalState) {
-                                      return AlertDialog(
-                                          title: Text(
+                      if (prefs!.getBool("askBeforeDeletion") ??
+                          // ignore: dead_code
+                          false && messages.isNotEmpty) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return StatefulBuilder(
+                                  builder: (context, setLocalState) {
+                                return AlertDialog(
+                                    title: Text(AppLocalizations.of(context)!
+                                        .deleteDialogTitle),
+                                    content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(AppLocalizations.of(context)!
+                                              .deleteDialogDescription),
+                                        ]),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            selectionHaptic();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
                                               AppLocalizations.of(context)!
-                                                  .deleteDialogTitle),
-                                          content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(AppLocalizations.of(
-                                                        context)!
-                                                    .deleteDialogDescription),
-                                              ]),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  selectionHaptic();
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .deleteDialogCancel)),
-                                            TextButton(
-                                                onPressed: () {
-                                                  selectionHaptic();
-                                                  Navigator.of(context).pop();
+                                                  .deleteDialogCancel)),
+                                      TextButton(
+                                          onPressed: () {
+                                            selectionHaptic();
+                                            Navigator.of(context).pop();
 
-                                                  for (var i = 0;
-                                                      i <
-                                                          (prefs!.getStringList(
-                                                                      "chats") ??
-                                                                  [])
-                                                              .length;
-                                                      i++) {
-                                                    if (jsonDecode((prefs!
-                                                                .getStringList(
-                                                                    "chats") ??
-                                                            [])[i])["uuid"] ==
-                                                        chatUuid) {
-                                                      List<String> tmp = prefs!
+                                            for (var i = 0;
+                                                i <
+                                                    (prefs!.getStringList(
+                                                                "chats") ??
+                                                            [])
+                                                        .length;
+                                                i++) {
+                                              if (jsonDecode((prefs!
                                                           .getStringList(
-                                                              "chats")!;
-                                                      tmp.removeAt(i);
-                                                      prefs!.setStringList(
-                                                          "chats", tmp);
-                                                      break;
-                                                    }
-                                                  }
-                                                  messages = [];
-                                                  chatUuid = null;
-                                                  setState(() {});
-                                                },
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .deleteDialogDelete))
-                                          ]);
-                                    });
-                                  });
-                            } else {
-                              for (var i = 0;
-                                  i <
-                                      (prefs!.getStringList("chats") ?? [])
-                                          .length;
-                                  i++) {
-                                if (jsonDecode((prefs!.getStringList("chats") ??
-                                        [])[i])["uuid"] ==
-                                    chatUuid) {
-                                  List<String> tmp =
-                                      prefs!.getStringList("chats")!;
-                                  tmp.removeAt(i);
-                                  prefs!.setStringList("chats", tmp);
-                                  break;
-                                }
-                              }
-                              messages = [];
-                              chatUuid = null;
-                            }
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.restart_alt_rounded))
-                    ],
+                                                              "chats") ??
+                                                      [])[i])["uuid"] ==
+                                                  chatUuid) {
+                                                List<String> tmp = prefs!
+                                                    .getStringList("chats")!;
+                                                tmp.removeAt(i);
+                                                prefs!.setStringList(
+                                                    "chats", tmp);
+                                                break;
+                                              }
+                                            }
+                                            messages = [];
+                                            chatUuid = null;
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .deleteDialogDelete))
+                                    ]);
+                              });
+                            });
+                      } else {
+                        for (var i = 0;
+                            i < (prefs!.getStringList("chats") ?? []).length;
+                            i++) {
+                          if (jsonDecode((prefs!.getStringList("chats") ??
+                                  [])[i])["uuid"] ==
+                              chatUuid) {
+                            List<String> tmp = prefs!.getStringList("chats")!;
+                            tmp.removeAt(i);
+                            prefs!.setStringList("chats", tmp);
+                            break;
+                          }
+                        }
+                        messages = [];
+                        chatUuid = null;
+                      }
+                      setState(() {});
+                    },
+                    icon: const Icon(Icons.restart_alt_rounded))
+              ]),
               bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(1),
                   child: (!chatAllowed && model != null)
                       ? const LinearProgressIndicator()
-                      : ((Platform.isWindows ||
-                                  Platform.isLinux ||
-                                  Platform.isMacOS) &&
-                              MediaQuery.of(context).size.width >= 1000)
+                      : desktopLayout(context)
                           ? AnimatedOpacity(
                               opacity: menuVisible ? 1.0 : 0.0,
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 300),
                               child: Divider(
                                   height: 2,
                                   color: (Theme.of(context).brightness ==
@@ -847,41 +788,33 @@ class _MainAppState extends State<MainApp> {
                                       ? Colors.grey[400]
                                       : Colors.grey[900]))
                           : const SizedBox.shrink()),
-              leading: ((Platform.isWindows ||
-                          Platform.isLinux ||
-                          Platform.isMacOS) &&
-                      MediaQuery.of(context).size.width >= 1000)
-                  ? const SizedBox()
-                  : null),
+              leading:
+                  desktopLayoutRequired(context) ? const SizedBox() : null),
           body: Row(
             children: [
-              ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-                      MediaQuery.of(context).size.width >= 1000)
+              desktopLayoutRequired(context)
                   ? SizedBox(
                       width: 304,
                       height: double.infinity,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: VisibilityDetector(
-                              key: const Key("menuVisible"),
-                              onVisibilityChanged: (VisibilityInfo info) {
-                                if (settingsOpen) return;
-                                menuVisible = info.visibleFraction > 0;
-                                try {
-                                  setState(() {});
-                                } catch (_) {}
-                              },
-                              child: AnimatedOpacity(
-                                  opacity: menuVisible ? 1.0 : 0.0,
-                                  duration: const Duration(milliseconds: 500),
-                                  child: ListView(
-                                      children: sidebar(context, setState))))))
+                      child: VisibilityDetector(
+                          key: const Key("menuVisible"),
+                          onVisibilityChanged: (VisibilityInfo info) {
+                            if (settingsOpen) return;
+                            menuVisible = info.visibleFraction > 0;
+                            try {
+                              setState(() {});
+                            } catch (_) {}
+                          },
+                          child: AnimatedOpacity(
+                              opacity: menuVisible ? 1.0 : 0.0,
+                              duration: const Duration(milliseconds: 300),
+                              child: ListView(
+                                  children: sidebar(context, setState)))))
                   : const SizedBox.shrink(),
-              ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-                      MediaQuery.of(context).size.width >= 1000)
+              desktopLayout(context)
                   ? AnimatedOpacity(
                       opacity: menuVisible ? 1.0 : 0.0,
-                      duration: const Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 300),
                       child: VerticalDivider(
                           width: 2,
                           color:
@@ -1069,12 +1002,7 @@ class _MainAppState extends State<MainApp> {
                       },
                       imageMessageBuilder: (p0, {required messageWidth}) {
                         return SizedBox(
-                            width: ((Platform.isWindows ||
-                                        Platform.isLinux ||
-                                        Platform.isMacOS) &&
-                                    MediaQuery.of(context).size.width >= 1000)
-                                ? 360.0
-                                : 160.0,
+                            width: desktopLayout(context) ? 360.0 : 160.0,
                             child:
                                 MarkdownBody(data: "![${p0.name}](${p0.uri})"));
                       },
@@ -1188,11 +1116,7 @@ class _MainAppState extends State<MainApp> {
                           : () {
                               selectionHaptic();
                               if (!chatAllowed || model == null) return;
-                              if (Platform.isWindows ||
-                                  Platform.isLinux ||
-                                  Platform.isMacOS) {
-                                selectionHaptic();
-
+                              if (desktopFeature()) {
                                 FilePicker.platform
                                     .pickFiles(type: FileType.image)
                                     .then((value) async {
@@ -1213,7 +1137,6 @@ class _MainAppState extends State<MainApp> {
                                               "data:image/png;base64,$encoded"));
 
                                   setState(() {});
-                                  selectionHaptic();
                                 });
 
                                 return;
@@ -1384,9 +1307,7 @@ class _MainAppState extends State<MainApp> {
                               sendable = p0.trim().isNotEmpty;
                             });
                           },
-                          sendButtonVisibilityMode: (Platform.isWindows ||
-                                  Platform.isLinux ||
-                                  Platform.isMacOS)
+                          sendButtonVisibilityMode: desktopFeature()
                               ? SendButtonVisibilityMode.always
                               : (sendable)
                                   ? SendButtonVisibilityMode.always
@@ -1441,12 +1362,11 @@ class _MainAppState extends State<MainApp> {
                                                   .viewInsets
                                                   .bottom ==
                                               0.0 &&
-                                          !(Platform.isWindows ||
-                                              Platform.isLinux ||
-                                              Platform.isMacOS))
+                                          !desktopFeature())
                                       ? 0
                                       : 8),
-                              messageMaxWidth: (MediaQuery.of(context).size.width >= 1000)
+                              messageMaxWidth: (MediaQuery.of(context).size.width >=
+                                      1000)
                                   ? (MediaQuery.of(context).size.width >= 1600)
                                       ? (MediaQuery.of(context).size.width >= 2200)
                                           ? 1900
@@ -1483,7 +1403,7 @@ class _MainAppState extends State<MainApp> {
                               inputTextColor: (themeDark ?? ThemeData()).colorScheme.onSurface,
                               inputBorderRadius: const BorderRadius.all(Radius.circular(64)),
                               inputPadding: const EdgeInsets.all(16),
-                              inputMargin: EdgeInsets.only(left: 8, right: 8, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !(Platform.isWindows || Platform.isLinux || Platform.isMacOS)) ? 0 : 8),
+                              inputMargin: EdgeInsets.only(left: 8, right: 8, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 0 : 8),
                               messageMaxWidth: (MediaQuery.of(context).size.width >= 1000)
                                   ? (MediaQuery.of(context).size.width >= 1600)
                                       ? (MediaQuery.of(context).size.width >= 2200)
@@ -1494,12 +1414,9 @@ class _MainAppState extends State<MainApp> {
             ],
           ),
           drawerEdgeDragWidth:
-              (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                  ? null
-                  : MediaQuery.of(context).size.width,
+              desktopLayout(context) ? null : MediaQuery.of(context).size.width,
           drawer: Builder(builder: (context) {
-            if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-                MediaQuery.of(context).size.width >= 1000) {
+            if (desktopLayoutRequired(context)) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (Navigator.of(context).canPop()) {
                   Navigator.of(context).pop();

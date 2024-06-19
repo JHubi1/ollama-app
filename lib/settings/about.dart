@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../main.dart';
 import '../screen_settings.dart';
 import '../worker/haptic.dart';
 import '../worker/update.dart';
+import '../worker/desktop.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -43,41 +42,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
               Expanded(child: SizedBox(height: 200, child: MoveWindow()))
             ]),
             actions:
-                (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                    ? [
-                        SizedBox(
-                            height: 200,
-                            child: WindowTitleBarBox(
-                                child: Row(
-                              children: [
-                                SizedBox(
-                                    height: 200,
-                                    child: MinimizeWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                                SizedBox(
-                                    height: 72,
-                                    child: MaximizeWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                                SizedBox(
-                                    height: 72,
-                                    child: CloseWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                              ],
-                            )))
-                      ]
-                    : null,
+                desktopControlsActions(context)
           ),
           body: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),

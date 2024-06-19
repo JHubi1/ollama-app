@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ollama_app/worker/desktop.dart';
 
 import 'haptic.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -37,7 +38,7 @@ Future<bool> updatesSupported(Function setState,
     "com.machiav3lli.fdroid",
     "nya.kitsunyan.foxydroid"
   ];
-  if (!(Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+  if (!desktopFeature()) {
     if ((await InstallReferrer.referrer !=
             InstallationAppReferrer.androidManually) ||
         (installerApps

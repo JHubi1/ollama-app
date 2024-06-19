@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'main.dart';
 import 'worker/haptic.dart';
 import 'worker/update.dart';
+import 'worker/desktop.dart';
 import 'package:ollama_app/worker/setter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -255,48 +255,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
             color: Theme.of(context).colorScheme.surface,
             child: Scaffold(
                 appBar: AppBar(
-                  title: Row(children: [
-                    Text(AppLocalizations.of(context)!.optionSettings),
-                    Expanded(child: SizedBox(height: 200, child: MoveWindow()))
-                  ]),
-                  actions: (Platform.isWindows ||
-                          Platform.isLinux ||
-                          Platform.isMacOS)
-                      ? [
-                          SizedBox(
-                              height: 200,
-                              child: WindowTitleBarBox(
-                                  child: Row(
-                                children: [
-                                  SizedBox(
-                                      height: 200,
-                                      child: MinimizeWindowButton(
-                                          animate: true,
-                                          colors: WindowButtonColors(
-                                              iconNormal: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary))),
-                                  SizedBox(
-                                      height: 72,
-                                      child: MaximizeWindowButton(
-                                          animate: true,
-                                          colors: WindowButtonColors(
-                                              iconNormal: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary))),
-                                  SizedBox(
-                                      height: 72,
-                                      child: CloseWindowButton(
-                                          animate: true,
-                                          colors: WindowButtonColors(
-                                              iconNormal: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary))),
-                                ],
-                              )))
-                        ]
-                      : null,
-                ),
+                    title: Row(children: [
+                      Text(AppLocalizations.of(context)!.optionSettings),
+                      Expanded(
+                          child: SizedBox(height: 200, child: MoveWindow()))
+                    ]),
+                    actions: desktopControlsActions(context)),
                 body: Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Column(children: [
@@ -467,9 +431,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                     builder: (context) =>
                                         const ScreenSettingsInterface()));
                           }),
-                          (!(Platform.isWindows ||
-                                  Platform.isLinux ||
-                                  Platform.isMacOS))
+                          (!desktopFeature())
                               ? button(
                                   AppLocalizations.of(context)!
                                       .settingsTitleVoice,

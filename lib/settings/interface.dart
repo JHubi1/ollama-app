@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 import '../worker/haptic.dart';
+import '../worker/desktop.dart';
 import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -31,41 +32,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
               Expanded(child: SizedBox(height: 200, child: MoveWindow()))
             ]),
             actions:
-                (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                    ? [
-                        SizedBox(
-                            height: 200,
-                            child: WindowTitleBarBox(
-                                child: Row(
-                              children: [
-                                SizedBox(
-                                    height: 200,
-                                    child: MinimizeWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                                SizedBox(
-                                    height: 72,
-                                    child: MaximizeWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                                SizedBox(
-                                    height: 72,
-                                    child: CloseWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                              ],
-                            )))
-                      ]
-                    : null,
+                desktopControlsActions(context)
           ),
           body: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
@@ -193,9 +160,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           context: context,
                           builder: (context) {
                             return Dialog(
-                                alignment: (Platform.isWindows ||
-                                        Platform.isLinux ||
-                                        Platform.isMacOS)
+                                alignment: desktopLayout(context)
                                     ? null
                                     : Alignment.bottomRight,
                                 child: StatefulBuilder(
@@ -279,7 +244,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       selectionHaptic();
                       setState(() {});
                     }),
-                    (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+                    desktopFeature()
                         ? toggle(
                             context,
                             AppLocalizations.of(context)!
@@ -354,9 +319,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                                   await prefs!.setString(
                                                       "brightness",
                                                       p0.elementAt(0));
-                                                  if (Platform.isWindows ||
-                                                      Platform.isLinux ||
-                                                      Platform.isMacOS) {
+                                                  if (desktopFeature()) {
                                                     exit(0);
                                                   } else {
                                                     Restart.restartApp();
@@ -420,9 +383,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                               await prefs!.setBool(
                                                   "useDeviceTheme",
                                                   p0.elementAt(0) == "device");
-                                              if (Platform.isWindows ||
-                                                  Platform.isLinux ||
-                                                  Platform.isMacOS) {
+                                              if (desktopFeature()) {
                                                 exit(0);
                                               } else {
                                                 Restart.restartApp();

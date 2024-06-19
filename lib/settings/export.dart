@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 import '../worker/haptic.dart';
+import '../worker/desktop.dart';
 import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -32,41 +33,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
               Expanded(child: SizedBox(height: 200, child: MoveWindow()))
             ]),
             actions:
-                (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                    ? [
-                        SizedBox(
-                            height: 200,
-                            child: WindowTitleBarBox(
-                                child: Row(
-                              children: [
-                                SizedBox(
-                                    height: 200,
-                                    child: MinimizeWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                                SizedBox(
-                                    height: 72,
-                                    child: MaximizeWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                                SizedBox(
-                                    height: 72,
-                                    child: CloseWindowButton(
-                                        animate: true,
-                                        colors: WindowButtonColors(
-                                            iconNormal: Theme.of(context)
-                                                .colorScheme
-                                                .primary))),
-                              ],
-                            )))
-                      ]
-                    : null,
+                desktopControlsActions(context)
           ),
           body: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
@@ -86,9 +53,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                               jsonEncode(prefs!.getStringList("chats") ?? [])));
                       selectionHaptic();
                       if (path == null) return;
-                      if (Platform.isWindows ||
-                          Platform.isLinux ||
-                          Platform.isMacOS) {
+                      if (desktopFeature()) {
                         File(path).writeAsString(
                             jsonEncode(prefs!.getStringList("chats") ?? []));
                       }

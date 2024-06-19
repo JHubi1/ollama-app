@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ollama_app/worker/desktop.dart';
 import 'haptic.dart';
 import '../main.dart';
 
@@ -89,45 +90,28 @@ void setModel(BuildContext context, Function setState) {
           setState(() {});
         },
         child: Container(
-            width:
-                ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-                        MediaQuery.of(context).size.width >= 1000)
-                    ? null
-                    : double.infinity,
+            width: desktopLayout(context) ? null : double.infinity,
             padding: EdgeInsets.only(
                 left: 16,
                 right: 16,
                 top: 16,
-                bottom:
-                    (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-                        ? 16
-                        : 0),
+                bottom: desktopLayout(context) ? 16 : 0),
             child: (!loaded)
-                ? const LinearProgressIndicator()
+                ? SizedBox(
+                    width: desktopLayout(context) ? 300 : double.infinity,
+                    child: const LinearProgressIndicator())
                 : Column(mainAxisSize: MainAxisSize.min, children: [
                     Container(
-                        width: ((Platform.isWindows ||
-                                    Platform.isLinux ||
-                                    Platform.isMacOS) &&
-                                MediaQuery.of(context).size.width >= 1000)
-                            ? 300
-                            : double.infinity,
+                        width: desktopLayout(context) ? 300 : double.infinity,
                         constraints: BoxConstraints(
                             maxHeight:
                                 MediaQuery.of(context).size.height * 0.4),
                         child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             child: Wrap(
-                              spacing: ((Platform.isWindows ||
-                                          Platform.isLinux ||
-                                          Platform.isMacOS) &&
-                                      MediaQuery.of(context).size.width >= 1000)
-                                  ? 10.0
-                                  : 5.0,
-                              runSpacing: (Platform.isWindows ||
-                                      Platform.isLinux ||
-                                      Platform.isMacOS)
-                                  ? (MediaQuery.of(context).size.width >= 1000)
+                              spacing: desktopLayout(context) ? 10.0 : 5.0,
+                              runSpacing: desktopFeature()
+                                  ? desktopLayoutRequired(context)
                                       ? 10.0
                                       : 5.0
                                   : 0.0,
@@ -233,8 +217,7 @@ void setModel(BuildContext context, Function setState) {
                   ])));
   });
 
-  if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-      MediaQuery.of(context).size.width >= 1000) {
+  if (desktopLayout(context)) {
     showDialog(
         context: context,
         builder: (context) {
@@ -391,9 +374,7 @@ Future<String> prompt(BuildContext context,
                       left: 16,
                       right: 16,
                       top: 16,
-                      bottom: (Platform.isWindows ||
-                              Platform.isLinux ||
-                              Platform.isMacOS)
+                      bottom: desktopFeature()
                           ? 16
                           : MediaQuery.of(context).viewInsets.bottom),
                   width: double.infinity,

@@ -172,24 +172,12 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                           setState(() {});
                                         },
                                         child: Container(
-                                            width: ((Platform.isWindows ||
-                                                        Platform.isLinux ||
-                                                        Platform.isMacOS) &&
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width >=
-                                                        1000)
-                                                ? null
-                                                : double.infinity,
-                                            padding: EdgeInsets.only(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.only(
                                                 left: 16,
                                                 right: 16,
                                                 top: 16,
-                                                bottom: (Platform.isWindows ||
-                                                        Platform.isLinux ||
-                                                        Platform.isMacOS)
-                                                    ? 16
-                                                    : 0),
+                                                bottom: 0),
                                             child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
@@ -219,25 +207,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                                               scrollDirection:
                                                                   Axis.vertical,
                                                               child: Wrap(
-                                                                spacing: ((Platform.isWindows ||
-                                                                            Platform
-                                                                                .isLinux ||
-                                                                            Platform
-                                                                                .isMacOS) &&
-                                                                        MediaQuery.of(context).size.width >=
-                                                                            1000)
-                                                                    ? 10.0
-                                                                    : 5.0,
-                                                                runSpacing: (Platform.isWindows ||
-                                                                        Platform
-                                                                            .isLinux ||
-                                                                        Platform
-                                                                            .isMacOS)
-                                                                    ? (MediaQuery.of(context).size.width >=
-                                                                            1000)
-                                                                        ? 10.0
-                                                                        : 5.0
-                                                                    : 0.0,
+                                                                spacing: 5.0,
                                                                 alignment:
                                                                     WrapAlignment
                                                                         .center,
