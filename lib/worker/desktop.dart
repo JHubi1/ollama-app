@@ -5,28 +5,23 @@ import 'package:flutter/foundation.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-bool desktopFeature() {
-  return (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+bool desktopFeature({bool web = false}) {
+  return (Platform.isWindows ||
+      Platform.isLinux ||
+      Platform.isMacOS ||
+      (web ? kIsWeb : false));
 }
 
-bool desktopWebFeature() {
-  return (Platform.isWindows || Platform.isLinux || Platform.isMacOS || kIsWeb);
+bool desktopLayout(BuildContext context,
+    {bool web = false, double? value, double valueCap = 1000}) {
+  value ??= MediaQuery.of(context).size.width;
+  return (desktopFeature(web: web) || value >= valueCap);
 }
 
-bool desktopLayout(BuildContext context) {
-  return (desktopFeature() || MediaQuery.of(context).size.width >= 1000);
-}
-
-bool desktopLayoutRequired(BuildContext context) {
-  return (desktopFeature() && MediaQuery.of(context).size.width >= 1000);
-}
-
-bool desktopWebLayout(BuildContext context) {
-  return (desktopWebFeature() || MediaQuery.of(context).size.width >= 1000);
-}
-
-bool desktopWebLayoutRequired(BuildContext context) {
-  return (desktopWebFeature() && MediaQuery.of(context).size.width >= 1000);
+bool desktopLayoutRequired(BuildContext context,
+    {bool web = false, double? value, double valueCap = 1000}) {
+  value ??= MediaQuery.of(context).size.width;
+  return (desktopFeature(web: web) && value >= valueCap);
 }
 
 Widget desktopControls(BuildContext context) {
