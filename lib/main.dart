@@ -1022,8 +1022,7 @@ class _MainAppState extends State<MainApp> {
                               child: AnimatedOpacity(
                                   opacity: logoVisible ? 1.0 : 0.0,
                                   duration: const Duration(milliseconds: 500),
-                                  child: const ImageIcon(
-                                      AssetImage("assets/logo512.png"),
+                                  child: const ImageIcon(AssetImage("assets/logo512.png"),
                                       size: 44)))),
                       onSendPressed: (p0) {
                         send(p0.text, context, setState);
@@ -1299,7 +1298,11 @@ class _MainAppState extends State<MainApp> {
                             },
                       l10n: ChatL10nEn(
                           inputPlaceholder: AppLocalizations.of(context)!
-                              .messageInputPlaceholder),
+                              .messageInputPlaceholder,
+                          attachmentButtonAccessibilityLabel:
+                              AppLocalizations.of(context)!.tooltipAttachment,
+                          sendButtonAccessibilityLabel:
+                              AppLocalizations.of(context)!.tooltipSend),
                       inputOptions: InputOptions(
                           keyboardType: TextInputType.multiline,
                           onTextChanged: (p0) {
@@ -1355,18 +1358,8 @@ class _MainAppState extends State<MainApp> {
                               inputBorderRadius:
                                   const BorderRadius.all(Radius.circular(64)),
                               inputPadding: const EdgeInsets.all(16),
-                              inputMargin: EdgeInsets.only(
-                                  left: 8,
-                                  right: 8,
-                                  bottom: (MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom ==
-                                              0.0 &&
-                                          !desktopFeature())
-                                      ? 0
-                                      : 8),
-                              messageMaxWidth: (MediaQuery.of(context).size.width >=
-                                      1000)
+                              inputMargin: EdgeInsets.only(left: 8, right: 8, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 0 : 8),
+                              messageMaxWidth: (MediaQuery.of(context).size.width >= 1000)
                                   ? (MediaQuery.of(context).size.width >= 1600)
                                       ? (MediaQuery.of(context).size.width >= 2200)
                                           ? 1900

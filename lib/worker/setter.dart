@@ -404,6 +404,8 @@ Future<String> prompt(BuildContext context,
                                 hintText: placeholder,
                                 errorText: error,
                                 suffixIcon: IconButton(
+                                    tooltip: AppLocalizations.of(context)!
+                                        .tooltipSave,
                                     onPressed: () async {
                                       if (validator != null) {
                                         setLocalState(() {
@@ -428,6 +430,8 @@ Future<String> prompt(BuildContext context,
                                                 .dialogEnterNewTitle &&
                                         uuid != null)
                                     ? IconButton(
+                                        tooltip: AppLocalizations.of(context)!
+                                            .tooltipLetAIThink,
                                         onPressed: () async {
                                           setLocalState(() {
                                             loading = true;

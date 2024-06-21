@@ -75,6 +75,31 @@
         "description": "Placeholder text for message input",
         "context": "Visible in the chat view"
     },
+    "tooltipAttachment": "Add attachment",
+    "@tooltipAttachment": {
+        "description": "Tooltip for attachment button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipSend": "Send",
+    "@tooltipSend": {
+        "description": "Tooltip for send button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipSave": "Save",
+    "@tooltipSave": {
+        "description": "Tooltip for save button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipLetAIThink": "Let AI think",
+    "@tooltipLetAIThink": {
+        "description": "Tooltip for let AI think button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipAddHostHeaders": "Add host headers",
+    "@tooltipAddHostHeaders": {
+        "description": "Tooltip for add host headers button",
+        "context": "Visible in settings view"
+    },
     "noModelSelected": "No model selected",
     "@noModelSelected": {
         "description": "Text displayed when no model is selected",

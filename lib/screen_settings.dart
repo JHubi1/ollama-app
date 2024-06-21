@@ -280,6 +280,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                       .settingsHost,
                                   hintText: "http://localhost:11434",
                                   prefixIcon: IconButton(
+                                      tooltip: AppLocalizations.of(context)!
+                                          .tooltipAddHostHeaders,
                                       onPressed: () async {
                                         selectionHaptic();
                                         String tmp = await prompt(context,
@@ -318,6 +320,9 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                               child:
                                                   const CircularProgressIndicator())
                                           : IconButton(
+                                              tooltip:
+                                                  AppLocalizations.of(context)!
+                                                      .tooltipSave,
                                               onPressed: () {
                                                 selectionHaptic();
                                                 checkHost();

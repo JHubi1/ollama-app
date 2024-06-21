@@ -32,13 +32,11 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
       color: Theme.of(context).colorScheme.surface,
       child: Scaffold(
           appBar: AppBar(
-            title: Row(children: [
-              Text(AppLocalizations.of(context)!.settingsTitleBehavior),
-              Expanded(child: SizedBox(height: 200, child: MoveWindow()))
-            ]),
-            actions:
-                desktopControlsActions(context)
-          ),
+              title: Row(children: [
+                Text(AppLocalizations.of(context)!.settingsTitleBehavior),
+                Expanded(child: SizedBox(height: 200, child: MoveWindow()))
+              ]),
+              actions: desktopControlsActions(context)),
           body: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Column(children: [
@@ -54,6 +52,8 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                                 .settingsSystemMessage,
                             hintText: "You are a helpful assistant",
                             suffixIcon: IconButton(
+                              tooltip:
+                                  AppLocalizations.of(context)!.tooltipSave,
                               onPressed: () {
                                 selectionHaptic();
                                 prefs?.setString(
