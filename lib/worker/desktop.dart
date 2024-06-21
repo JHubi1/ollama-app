@@ -24,6 +24,12 @@ bool desktopLayoutRequired(BuildContext context,
   return (desktopFeature(web: web) && value >= valueCap);
 }
 
+bool desktopLayoutNotRequired(BuildContext context,
+    {bool web = false, double? value, double valueCap = 1000}) {
+  value ??= MediaQuery.of(context).size.width;
+  return (value >= valueCap);
+}
+
 Widget desktopControls(BuildContext context) {
   return SizedBox(
       height: 200,

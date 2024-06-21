@@ -71,6 +71,7 @@ final user = types.User(id: const Uuid().v4());
 final assistant = types.User(id: const Uuid().v4());
 
 bool settingsOpen = false;
+bool desktopTitleVisible = true;
 bool logoVisible = true;
 bool menuVisible = false;
 bool sendable = false;
@@ -504,7 +505,7 @@ class _MainAppState extends State<MainApp> {
               if (chatUuid == jsonDecode(item)["uuid"]) {
                 messages = [];
                 chatUuid = null;
-                if (!desktopLayout(context)) {
+                if (!desktopLayoutRequired(context)) {
                   Navigator.of(context).pop();
                 }
               }
@@ -517,10 +518,11 @@ class _MainAppState extends State<MainApp> {
                         borderRadius: BorderRadius.all(Radius.circular(50))),
                     onTap: () {
                       selectionHaptic();
-                      if (!desktopFeature()) {
+                      if (!desktopLayoutRequired(context)) {
                         Navigator.of(context).pop();
                       }
                       if (!chatAllowed) return;
+                      if (chatUuid == jsonDecode(item)["uuid"]) return;
                       loadChat(jsonDecode(item)["uuid"], setState);
                       chatUuid = jsonDecode(item)["uuid"];
                     },
@@ -671,18 +673,52 @@ class _MainAppState extends State<MainApp> {
       color: Theme.of(context).colorScheme.surface,
       child: Scaffold(
           appBar: AppBar(
+              titleSpacing: 0,
               title: Row(
-                children: desktopFeature()
-                    ? [
-                        SizedBox(width: 85, height: 200, child: MoveWindow()),
-                        Expanded(
-                            child: SizedBox(height: 200, child: MoveWindow())),
-                        selector,
-                        Expanded(
-                            child: SizedBox(height: 200, child: MoveWindow()))
-                      ]
-                    : [Expanded(child: selector)],
-              ),
+                  children: desktopFeature()
+                      ? desktopLayoutRequired(context)
+                          ? [
+                              // bottom left tile
+                              SizedBox(
+                                  width: 304, height: 200, child: MoveWindow()),
+                              SizedBox(
+                                  height: 200,
+                                  child: AnimatedOpacity(
+                                      opacity: menuVisible ? 1.0 : 0.0,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      child: VerticalDivider(
+                                          width: 2,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withAlpha(20)))),
+                              AnimatedOpacity(
+                                opacity: desktopTitleVisible ? 1.0 : 0.0,
+                                duration: desktopTitleVisible
+                                    ? const Duration(milliseconds: 300)
+                                    : const Duration(milliseconds: 0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: selector,
+                                ),
+                              ),
+                              Expanded(
+                                  child: SizedBox(
+                                      height: 200, child: MoveWindow()))
+                            ]
+                          : [
+                              SizedBox(
+                                  width: 90, height: 200, child: MoveWindow()),
+                              Expanded(
+                                  child: SizedBox(
+                                      height: 200, child: MoveWindow())),
+                              selector,
+                              Expanded(
+                                  child: SizedBox(
+                                      height: 200, child: MoveWindow()))
+                            ]
+                      : [Expanded(child: selector)]),
               actions: desktopControlsActions(context, [
                 const SizedBox(width: 4),
                 IconButton(
@@ -786,8 +822,7 @@ class _MainAppState extends State<MainApp> {
                                       .onSurface
                                       .withAlpha(20)))
                           : const SizedBox.shrink()),
-              leading:
-                  desktopLayoutRequired(context) ? const SizedBox() : null),
+              automaticallyImplyLeading: !desktopLayoutRequired(context)),
           body: Row(
             children: [
               desktopLayoutRequired(context)

@@ -21,6 +21,8 @@ void setModel(BuildContext context, Function setState) {
   int addIndex = -1;
   bool loaded = false;
   Function? setModalState;
+  desktopTitleVisible = false;
+  setState(() {});
   void load() async {
     try {
       var list = await llama.OllamaClient(
@@ -49,6 +51,9 @@ void setModel(BuildContext context, Function setState) {
       loaded = true;
       setModalState!(() {});
     } catch (_) {
+      setState(() {
+        desktopTitleVisible = true;
+      });
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
       // ignore: use_build_context_synchronously
@@ -87,7 +92,9 @@ void setModel(BuildContext context, Function setState) {
             prefs?.remove("model");
           }
           prefs?.setBool("multimodal", multimodal);
-          setState(() {});
+          setState(() {
+            desktopTitleVisible = true;
+          });
         },
         child: Container(
             width: desktopLayout(context) ? null : double.infinity,
@@ -111,7 +118,7 @@ void setModel(BuildContext context, Function setState) {
                             child: Wrap(
                               spacing: desktopLayout(context) ? 10.0 : 5.0,
                               runSpacing: desktopFeature()
-                                  ? desktopLayoutRequired(context)
+                                  ? desktopFeature()
                                       ? 10.0
                                       : 5.0
                                   : 0.0,
@@ -217,11 +224,20 @@ void setModel(BuildContext context, Function setState) {
                   ])));
   });
 
-  if (desktopLayout(context)) {
+  if (desktopFeature()) {
     showDialog(
         context: context,
         builder: (context) {
-          return Dialog(alignment: Alignment.topCenter, child: content);
+          return Transform.translate(
+            offset: desktopLayoutRequired(context)
+                ? const Offset(289, 0)
+                : const Offset(0, 0),
+            child: Dialog(
+                alignment: desktopLayoutRequired(context)
+                    ? Alignment.topLeft
+                    : Alignment.topCenter,
+                child: content),
+          );
         });
   } else {
     showModalBottomSheet(context: context, builder: (context) => content);
