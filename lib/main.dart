@@ -357,9 +357,7 @@ class _MainAppState extends State<MainApp> {
           : const SizedBox.shrink(),
       Divider(
           color: desktopLayout(context)
-              ? (Theme.of(context).brightness == Brightness.light)
-                  ? Colors.grey[400]
-                  : Colors.grey[900]
+              ? Theme.of(context).colorScheme.onSurface.withAlpha(20)
               : null),
       ((prefs?.getStringList("chats") ?? []).isNotEmpty)
           ? const SizedBox.shrink()
@@ -783,10 +781,10 @@ class _MainAppState extends State<MainApp> {
                               duration: const Duration(milliseconds: 300),
                               child: Divider(
                                   height: 2,
-                                  color: (Theme.of(context).brightness ==
-                                          Brightness.light)
-                                      ? Colors.grey[400]
-                                      : Colors.grey[900]))
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withAlpha(20)))
                           : const SizedBox.shrink()),
               leading:
                   desktopLayoutRequired(context) ? const SizedBox() : null),
@@ -817,10 +815,10 @@ class _MainAppState extends State<MainApp> {
                       duration: const Duration(milliseconds: 300),
                       child: VerticalDivider(
                           width: 2,
-                          color:
-                              (Theme.of(context).brightness == Brightness.light)
-                                  ? Colors.grey[400]
-                                  : Colors.grey[900]))
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withAlpha(20)))
                   : const SizedBox.shrink(),
               Expanded(
                 child: Center(
@@ -862,8 +860,8 @@ class _MainAppState extends State<MainApp> {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     content: Text(
-                                                        // ignore: use_build_context_synchronously
                                                         AppLocalizations.of(
+                                                                // ignore: use_build_context_synchronously
                                                                 context)!
                                                             .settingsHostInvalid(
                                                                 "url")),
