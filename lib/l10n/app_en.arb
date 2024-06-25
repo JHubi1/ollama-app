@@ -287,6 +287,11 @@
         "description": "Text displayed as description for show model tags toggle",
         "context": "Visible in the settings view"
     },
+    "settingsPreloadModels": "Preload models",
+    "@settingsPreloadModels": {
+        "description": "Text displayed as description for preload models toggle",
+        "context": "Visible in the settings view"
+    },
     "settingsResetOnModelChange": "Reset on model change",
     "@settingsResetOnModelChange": {
         "description": "Text displayed as description for reset on model change toggle",

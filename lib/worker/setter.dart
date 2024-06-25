@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,6 +13,7 @@ import 'package:ollama_dart/ollama_dart.dart' as llama;
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 void setModel(BuildContext context, Function setState) {
   List<String> models = [];
@@ -31,7 +33,7 @@ void setModel(BuildContext context, Function setState) {
                       .cast<String, String>(),
               baseUrl: "$host/api")
           .listModels()
-          .timeout(const Duration(seconds: 5));
+          .timeout(const Duration(seconds: 10));
       for (var i = 0; i < list.models!.length; i++) {
         models.add(list.models![i].model!.split(":")[0]);
         modelsReal.add(list.models![i].model!);
@@ -74,14 +76,21 @@ void setModel(BuildContext context, Function setState) {
   var content = StatefulBuilder(builder: (context, setLocalState) {
     setModalState = setLocalState;
     return PopScope(
-        canPop: loaded,
-        onPopInvoked: (didPop) {
+        canPop: false,
+        onPopInvoked: (didPop) async {
           if (!loaded) return;
-          if (usedIndex >= 0 &&
-              modelsReal[usedIndex] != model &&
-              (prefs!.getBool("resetOnModelSelect") ?? true)) {
-            messages = [];
-            chatUuid = null;
+          loaded = false;
+          if (usedIndex >= 0 && modelsReal[usedIndex] != model) {
+            if (prefs!.getBool("resetOnModelSelect") ?? true) {
+              messages = [];
+              chatUuid = null;
+            }
+          } else {
+            setState(() {
+              desktopTitleVisible = true;
+            });
+            Navigator.of(context).pop();
+            return;
           }
           model = (usedIndex >= 0) ? modelsReal[usedIndex] : null;
           chatAllowed = !(model == null);
@@ -92,9 +101,50 @@ void setModel(BuildContext context, Function setState) {
             prefs?.remove("model");
           }
           prefs?.setBool("multimodal", multimodal);
-          setState(() {
-            desktopTitleVisible = true;
-          });
+
+          if (model != null &&
+              int.parse(prefs!.getString("keepAlive") ?? "300") != 0 && (prefs!.getBool("preloadModel") ?? true)) {
+            setLocalState(() {});
+            try {
+              // don't use llama client, package doesn't support just loading without content
+              await http
+                  .post(
+                    Uri.parse("$host/api/generate"),
+                    headers: {
+                      "Content-Type": "application/json",
+                      ...(jsonDecode(prefs!.getString("hostHeaders") ?? "{}")
+                          as Map)
+                    }.cast<String, String>(),
+                    body: jsonEncode({
+                      "model": model!,
+                      "keep_alive":
+                          int.parse(prefs!.getString("keepAlive") ?? "300")
+                    }),
+                  )
+                  .timeout(const Duration(seconds: 15));
+            } catch (_) {
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  // ignore: use_build_context_synchronously
+                  content: Text(AppLocalizations.of(context)!
+                      .settingsHostInvalid("timeout")),
+                  showCloseIcon: true));
+              setState(() {
+                model = null;
+                chatAllowed = false;
+              });
+            }
+            setState(() {
+              desktopTitleVisible = true;
+            });
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pop();
+          } else {
+            setState(() {
+              desktopTitleVisible = true;
+            });
+            Navigator.of(context).pop();
+          }
         },
         child: Container(
             width: desktopLayout(context) ? null : double.infinity,
