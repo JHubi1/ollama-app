@@ -277,26 +277,25 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                                                           : (voiceLanguageOptionsAvailable.contains(languageOptionIds.elementAt(index)))
                                                                               ? const Icon(Icons.spatial_tracking_rounded)
                                                                               : null,
-                                                                      checkmarkColor: (usedIndex ==
-                                                                              index)
+                                                                      checkmarkColor: (usedIndex == index &&
+                                                                              !(prefs?.getBool("useDeviceTheme") ??
+                                                                                  false))
                                                                           ? ((MediaQuery.of(context).platformBrightness == Brightness.light)
                                                                               ? (theme ?? ThemeData()).colorScheme.secondary
                                                                               : (themeDark ?? ThemeData.dark()).colorScheme.secondary)
                                                                           : null,
-                                                                      labelStyle: (usedIndex ==
-                                                                              index)
+                                                                      labelStyle: (usedIndex == index &&
+                                                                              !(prefs?.getBool("useDeviceTheme") ??
+                                                                                  false))
                                                                           ? TextStyle(
                                                                               color: (MediaQuery.of(context).platformBrightness == Brightness.light) ? (theme ?? ThemeData()).colorScheme.secondary : (themeDark ?? ThemeData.dark()).colorScheme.secondary)
                                                                           : null,
-                                                                      selectedColor: (MediaQuery.of(context).platformBrightness ==
-                                                                              Brightness
-                                                                                  .light)
-                                                                          ? (theme ?? ThemeData())
-                                                                              .colorScheme
-                                                                              .primary
-                                                                          : (themeDark ?? ThemeData.dark())
-                                                                              .colorScheme
-                                                                              .primary,
+                                                                      selectedColor: (prefs?.getBool("useDeviceTheme") ??
+                                                                              false)
+                                                                          ? null
+                                                                          : (MediaQuery.of(context).platformBrightness == Brightness.light)
+                                                                              ? (theme ?? ThemeData()).colorScheme.primary
+                                                                              : (themeDark ?? ThemeData.dark()).colorScheme.primary,
                                                                       onSelected:
                                                                           (bool
                                                                               selected) {
