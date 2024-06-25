@@ -433,9 +433,20 @@
         "description": "Text displayed while loading voice permissions",
         "context": "Visible in the settings view"
     },
+    "settingsVoiceTtsNotSupported": "Text-to-speech not supported",
+    "@settingsVoiceTtsNotSupported": {
+        "description": "Text displayed when text-to-speech is not supported",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceTtsNotSupportedDescription": "Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to reenable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.",
     "settingsVoicePermissionNot": "Permissions not granted",
     "@settingsVoicePermissionNot": {
         "description": "Text displayed when voice permissions are not granted",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceNotEnabled": "Voice mode not enabled",
+    "@settingsVoiceNotEnabled": {
+        "description": "Text displayed when voice mode is not enabled",
         "context": "Visible in the settings view"
     },
     "settingsVoiceNotSupported": "Voice mode not supported",
