@@ -32,7 +32,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
 
   bool dialogMustLoad = true;
 
-  void load() async {
+  Future<void> load() async {
     var tmp = await speech.locales();
     languageOptionIds = tmp.map((e) => e.localeId);
     languageOptions = tmp.map((e) => e.name);
@@ -103,16 +103,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                                 .settingsVoiceNotSupported,
                             Icons.info_rounded, () {
                             if (permissionLoading) return;
-                            if (!voiceLanguageOptions.contains(
-                                (prefs!.getString("voiceLanguage") ??
-                                    "en_US"))) {
-                              selectionHaptic();
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(AppLocalizations.of(context)!
-                                      .settingsVoiceTtsNotSupportedDescription),
-                                  showCloseIcon: true));
-                            } else if (!(permissionBluetooth &&
-                                permissionRecord)) {
+                            if (!(permissionBluetooth && permissionRecord)) {
                               void load() async {
                                 try {
                                   if (await Permission
@@ -144,6 +135,14 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                               }
 
                               load();
+                            } else if (!voiceLanguageOptions.contains(
+                                (prefs!.getString("voiceLanguage") ??
+                                    "en_US"))) {
+                              selectionHaptic();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(AppLocalizations.of(context)!
+                                      .settingsVoiceTtsNotSupportedDescription),
+                                  showCloseIcon: true));
                             }
                           }),
                     toggle(
@@ -184,6 +183,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                     setModalState = setLocalState;
 
                                     void loadSelected() async {
+                                      await load();
                                       if ((prefs!.getString("voiceLanguage") ??
                                               "") !=
                                           "") {
@@ -204,7 +204,6 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                     }
 
                                     if (dialogMustLoad) {
-                                      load();
                                       loadSelected();
                                       dialogMustLoad = false;
                                     }
