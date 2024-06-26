@@ -1,0 +1,25 @@
+{
+  "de": [
+    "settingsDescriptionBehavior",
+    "settingsDescriptionInterface",
+    "settingsDescriptionVoice",
+    "settingsDescriptionExport",
+    "settingsDescriptionAbout",
+    "settingsPreloadModels",
+    "settingsVoiceTtsNotSupported",
+    "settingsVoiceTtsNotSupportedDescription",
+    "settingsVoiceNotEnabled"
+  ],
+
+  "zh": [
+    "settingsDescriptionBehavior",
+    "settingsDescriptionInterface",
+    "settingsDescriptionVoice",
+    "settingsDescriptionExport",
+    "settingsDescriptionAbout",
+    "settingsPreloadModels",
+    "settingsVoiceTtsNotSupported",
+    "settingsVoiceTtsNotSupportedDescription",
+    "settingsVoiceNotEnabled"
+  ]
+}
