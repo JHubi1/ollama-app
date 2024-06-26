@@ -97,7 +97,11 @@ Widget toggle(BuildContext context, String text, bool value,
                               .colorScheme
                               .primary
                               .withAlpha(150))
-                          : null)))
+                          : !(prefs?.getBool("useDeviceTheme") ?? false) &&
+                                  value
+                              ? WidgetStatePropertyAll(
+                                  Theme.of(context).colorScheme.secondary)
+                              : null)))
         ]),
       ]),
     ),
