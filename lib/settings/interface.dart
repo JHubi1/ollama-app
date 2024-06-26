@@ -64,7 +64,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       prefs!.setBool("resetOnModelSelect", value);
                       setState(() {});
                     }),
-                    titleDivider(bottom: 20),
+                    titleDivider(
+                        bottom: desktopLayoutNotRequired(context) ? 38 : 20,
+                        context: context),
                     SegmentedButton(
                         segments: [
                           ButtonSegment(
@@ -121,7 +123,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       prefs!.setBool("tips", value);
                       setState(() {});
                     }),
-                    titleDivider(),
+                    titleDivider(context: context),
                     toggle(
                         context,
                         AppLocalizations.of(context)!
@@ -240,7 +242,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                 }));
                           });
                     }),
-                    titleDivider(),
+                    titleDivider(context: context),
                     toggle(
                         context,
                         AppLocalizations.of(context)!

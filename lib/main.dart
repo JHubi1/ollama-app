@@ -259,7 +259,8 @@ class _MainAppState extends State<MainApp> {
         left: desktopLayoutRequired(context) ? 17 : 12,
         right: desktopLayoutRequired(context) ? 17 : 12);
     return List.from([
-      desktopLayout(context)
+      desktopFeature() ? const SizedBox(height: 8) : const SizedBox.shrink(),
+      desktopLayoutNotRequired(context)
           ? const SizedBox.shrink()
           : (Padding(
               padding: padding,
@@ -282,11 +283,14 @@ class _MainAppState extends State<MainApp> {
                         ),
                         const SizedBox(width: 16),
                       ]))))),
-      desktopLayout(context)
+      desktopLayoutNotRequired(context)
           ? const SizedBox.shrink()
           : (!allowMultipleChats && !allowSettings)
               ? const SizedBox.shrink()
-              : const Divider(),
+              : Divider(
+                  color: desktopLayout(context)
+                      ? Theme.of(context).colorScheme.onSurface.withAlpha(20)
+                      : null),
       (allowMultipleChats)
           ? (Padding(
               padding: padding,
@@ -1513,7 +1517,7 @@ class _MainAppState extends State<MainApp> {
           drawerEdgeDragWidth:
               desktopLayout(context) ? null : MediaQuery.of(context).size.width,
           drawer: Builder(builder: (context) {
-            if (desktopLayoutRequired(context)) {
+            if (desktopLayoutRequired(context) && !settingsOpen) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (Navigator.of(context).canPop()) {
                   Navigator.of(context).pop();

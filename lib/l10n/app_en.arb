@@ -165,9 +165,19 @@
         "description": "Title of the behavior settings section",
         "context": "Visible in the settings view"
     },
+    "settingsDescriptionBehavior": "Change the behavior of the AI to your liking.",
+    "@settingsDescriptionBehavior": {
+        "description": "Description of the behavior settings section",
+        "context": "Visible in the settings view"
+    },
     "settingsTitleInterface": "Interface",
     "@settingsTitleInterface": {
         "description": "Title of the interface settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsDescriptionInterface": "Edit how Ollama App looks and behaves.",
+    "@settingsDescriptionInterface": {
+        "description": "Description of the interface settings section",
         "context": "Visible in the settings view"
     },
     "settingsTitleVoice": "Voice",
@@ -175,14 +185,29 @@
         "description": "Title of the voice settings section. Do not translate if not required!",
         "context": "Visible in the settings view"
     },
+    "settingsDescriptionVoice": "Enable voice mode and configure voice settings.",
+    "@settingsDescriptionVoice": {
+        "description": "Description of the voice settings section",
+        "context": "Visible in the settings view"
+    },
     "settingsTitleExport": "Export",
     "@settingsTitleExport": {
         "description": "Title of the export settings section",
         "context": "Visible in the settings view"
     },
+    "settingsDescriptionExport": "Export and import your chat history.",
+    "@settingsDescriptionExport": {
+        "description": "Description of the export settings section",
+        "context": "Visible in the settings view"
+    },
     "settingsTitleAbout": "About",
     "@settingsTitleAbout": {
         "description": "Title of the about settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsDescriptionAbout": "Check for updates and learn more about Ollama App.",
+    "@settingsDescriptionAbout": {
+        "description": "Description of the about settings section",
         "context": "Visible in the settings view"
     },
     "settingsSavedAutomatically": "Settings are saved automatically",

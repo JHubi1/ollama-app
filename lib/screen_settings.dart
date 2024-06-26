@@ -19,6 +19,7 @@ import 'package:dartx/dartx.dart';
 import 'package:http/http.dart' as http;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 Widget toggle(BuildContext context, String text, bool value,
     Function(bool value) onChanged,
@@ -120,49 +121,99 @@ Widget title(String text, {double top = 16, double bottom = 16}) {
       ]));
 }
 
-Widget titleDivider({double top = 16, double bottom = 16}) {
+Widget titleDivider({double? top, double? bottom, BuildContext? context}) {
+  top ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
+  bottom ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
   return Padding(
       padding: EdgeInsets.only(left: 8, right: 8, top: top, bottom: bottom),
       child: const Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(child: Divider()),
-        ],
-      ));
+          mainAxisSize: MainAxisSize.max,
+          children: [Expanded(child: Divider())]));
+}
+
+Widget verticalTitleDivider(
+    {double? left, double? right, BuildContext? context}) {
+  left ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
+  right ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
+  return Padding(
+      padding: EdgeInsets.only(left: left, right: right, top: 8, bottom: 8),
+      child: const Row(mainAxisSize: MainAxisSize.max, children: [
+        // Expanded(child:
+        VerticalDivider()
+        // ),
+      ]));
 }
 
 Widget button(String text, IconData? icon, void Function()? onPressed,
-    {Color? color,
+    {BuildContext? context,
+    Color? color,
     bool disabled = false,
+    bool replaceIconIfNull = false,
+    String? description,
     void Function()? onDisabledTap,
     void Function()? onLongTap,
     void Function()? onDoubleTap}) {
-  return InkWell(
-      onTap: disabled
-          ? () {
-              selectionHaptic();
-              if (onDisabledTap != null) {
-                onDisabledTap();
+  if (description != null &&
+      (context != null && desktopLayoutNotRequired(context)) &&
+      !description.startsWith("\n")) {
+    description = " • $description";
+  }
+  return Padding(
+    padding: (context != null && desktopLayoutNotRequired(context))
+        ? const EdgeInsets.only(top: 8, bottom: 8)
+        : EdgeInsets.zero,
+    child: InkWell(
+        onTap: disabled
+            ? () {
+                selectionHaptic();
+                if (onDisabledTap != null) {
+                  onDisabledTap();
+                }
               }
-            }
-          : onPressed,
-      onLongPress: onLongTap,
-      onDoubleTap: onDoubleTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(children: [
-          (icon != null)
-              ? Icon(icon, color: disabled ? Colors.grey : color)
-              : const SizedBox.shrink(),
-          (icon != null)
-              ? const SizedBox(width: 16, height: 42)
-              : const SizedBox.shrink(),
-          Expanded(
-              child: Text(text,
-                  style: TextStyle(color: disabled ? Colors.grey : color)))
-        ]),
-      ));
+            : onPressed,
+        onLongPress: (description != null && context != null)
+            ? desktopLayoutNotRequired(context)
+                ? null
+                : () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(description!.trim()),
+                        showCloseIcon: true));
+                  }
+            : onLongTap,
+        onDoubleTap: onDoubleTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(children: [
+            (icon != null || replaceIconIfNull)
+                ? replaceIconIfNull
+                    ? ImageIcon(MemoryImage(kTransparentImage))
+                    : Icon(icon, color: disabled ? Colors.grey : color)
+                : const SizedBox.shrink(),
+            (icon != null || replaceIconIfNull)
+                ? const SizedBox(width: 16, height: 42)
+                : const SizedBox.shrink(),
+            Expanded(
+                child: (context != null)
+                    ? RichText(
+                        text: TextSpan(
+                            text: text,
+                            style: DefaultTextStyle.of(context).style.copyWith(
+                                color: disabled ? Colors.grey : color),
+                            children: [
+                            (description != null &&
+                                    desktopLayoutNotRequired(context))
+                                ? TextSpan(
+                                    text: description,
+                                    style: const TextStyle(color: Colors.grey))
+                                : const TextSpan()
+                          ]))
+                    : Text(text,
+                        style:
+                            TextStyle(color: disabled ? Colors.grey : color)))
+          ]),
+        )),
+  );
 }
 
 class ScreenSettings extends StatefulWidget {
@@ -233,6 +284,10 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     selectionHaptic();
   }
 
+  double iconSize = 1;
+  bool animatedInitialized = false;
+  bool animatedDesktop = false;
+
   @override
   void initState() {
     super.initState();
@@ -249,6 +304,10 @@ class _ScreenSettingsState extends State<ScreenSettings> {
 
   @override
   Widget build(BuildContext context) {
+    if (!animatedInitialized) {
+      animatedInitialized = true;
+      animatedDesktop = desktopLayoutNotRequired(context);
+    }
     return PopScope(
         canPop: !hostLoading,
         onPopInvoked: (didPop) {
@@ -267,222 +326,323 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                     actions: desktopControlsActions(context)),
                 body: Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16),
-                    child: Column(children: [
-                      Expanded(
-                        child: ListView(children: [
-                          const SizedBox(height: 8),
-                          TextField(
-                              controller: hostInputController,
-                              keyboardType: TextInputType.url,
-                              readOnly: useHost,
-                              onSubmitted: (value) {
-                                selectionHaptic();
-                                checkHost();
-                              },
-                              decoration: InputDecoration(
-                                  labelText: AppLocalizations.of(context)!
-                                      .settingsHost,
-                                  hintText: "http://localhost:11434",
-                                  prefixIcon: IconButton(
-                                      tooltip: AppLocalizations.of(context)!
-                                          .tooltipAddHostHeaders,
-                                      onPressed: () async {
-                                        selectionHaptic();
-                                        String tmp = await prompt(context,
-                                            placeholder:
-                                                "{\"Authorization\": \"Bearer ...\"}",
-                                            title: AppLocalizations.of(context)!
-                                                .settingsHostHeaderTitle,
-                                            value: (prefs!
-                                                    .getString("hostHeaders") ??
-                                                ""),
-                                            valueIfCanceled: "{}",
-                                            validator: (content) async {
-                                          try {
-                                            var tmp = jsonDecode(content);
-                                            tmp as Map<String, dynamic>;
-                                            return true;
-                                          } catch (_) {
-                                            return false;
-                                          }
-                                        },
-                                            validatorError:
-                                                AppLocalizations.of(context)!
-                                                    .settingsHostHeaderInvalid,
-                                            prefill: !((prefs!.getString(
-                                                        "hostHeaders") ??
-                                                    {}) ==
-                                                "{}"));
-                                        prefs!.setString("hostHeaders", tmp);
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      var column1 =
+                          Column(mainAxisSize: MainAxisSize.min, children: [
+                        AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            height: animatedDesktop ? 8 : 0,
+                            child: const SizedBox.shrink()),
+                        const SizedBox(height: 8),
+                        TextField(
+                            controller: hostInputController,
+                            keyboardType: TextInputType.url,
+                            readOnly: useHost,
+                            onSubmitted: (value) {
+                              selectionHaptic();
+                              checkHost();
+                            },
+                            decoration: InputDecoration(
+                                labelText:
+                                    AppLocalizations.of(context)!.settingsHost,
+                                hintText: "http://localhost:11434",
+                                prefixIcon: IconButton(
+                                    tooltip: AppLocalizations.of(context)!
+                                        .tooltipAddHostHeaders,
+                                    onPressed: () async {
+                                      selectionHaptic();
+                                      String tmp = await prompt(context,
+                                          placeholder:
+                                              "{\"Authorization\": \"Bearer ...\"}",
+                                          title: AppLocalizations.of(context)!
+                                              .settingsHostHeaderTitle,
+                                          value: (prefs!
+                                                  .getString("hostHeaders") ??
+                                              ""),
+                                          valueIfCanceled: "{}",
+                                          validator: (content) async {
+                                        try {
+                                          var tmp = jsonDecode(content);
+                                          tmp as Map<String, dynamic>;
+                                          return true;
+                                        } catch (_) {
+                                          return false;
+                                        }
                                       },
-                                      icon: const Icon(Icons.add_rounded)),
-                                  suffixIcon: useHost
-                                      ? const SizedBox.shrink()
-                                      : (hostLoading
-                                          ? Transform.scale(
-                                              scale: 0.5,
-                                              child:
-                                                  const CircularProgressIndicator())
-                                          : IconButton(
-                                              tooltip:
-                                                  AppLocalizations.of(context)!
-                                                      .tooltipSave,
-                                              onPressed: () {
-                                                selectionHaptic();
-                                                checkHost();
-                                              },
-                                              icon: const Icon(
-                                                  Icons.save_rounded),
-                                            )),
-                                  border: const OutlineInputBorder(),
-                                  error: (hostInvalidHost || hostInvalidUrl)
-                                      ? InkWell(
-                                          onTap: () {
-                                            selectionHaptic();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(AppLocalizations
-                                                            .of(context)!
-                                                        .settingsHostInvalidDetailed(
-                                                            hostInvalidHost
-                                                                ? "host"
-                                                                : "url")),
-                                                    showCloseIcon: true));
-                                          },
-                                          highlightColor: Colors.transparent,
-                                          splashFactory: NoSplash.splashFactory,
-                                          child: Row(
+                                          validatorError:
+                                              AppLocalizations.of(context)!
+                                                  .settingsHostHeaderInvalid,
+                                          prefill: !((prefs!.getString(
+                                                      "hostHeaders") ??
+                                                  {}) ==
+                                              "{}"));
+                                      prefs!.setString("hostHeaders", tmp);
+                                    },
+                                    icon: const Icon(Icons.add_rounded)),
+                                suffixIcon: useHost
+                                    ? const SizedBox.shrink()
+                                    : (hostLoading
+                                        ? Transform.scale(
+                                            scale: 0.5,
+                                            child:
+                                                const CircularProgressIndicator())
+                                        : IconButton(
+                                            tooltip:
+                                                AppLocalizations.of(context)!
+                                                    .tooltipSave,
+                                            onPressed: () {
+                                              selectionHaptic();
+                                              checkHost();
+                                            },
+                                            icon:
+                                                const Icon(Icons.save_rounded),
+                                          )),
+                                border: const OutlineInputBorder(),
+                                error: (hostInvalidHost || hostInvalidUrl)
+                                    ? InkWell(
+                                        onTap: () {
+                                          selectionHaptic();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .settingsHostInvalidDetailed(
+                                                          hostInvalidHost
+                                                              ? "host"
+                                                              : "url")),
+                                                  showCloseIcon: true));
+                                        },
+                                        splashFactory: NoSplash.splashFactory,
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.error_rounded,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                                AppLocalizations.of(context)!
+                                                    .settingsHostInvalid(
+                                                        hostInvalidHost
+                                                            ? "host"
+                                                            : "url"),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .error))
+                                          ],
+                                        ))
+                                    : null,
+                                helper: InkWell(
+                                    onTap: () {
+                                      selectionHaptic();
+                                    },
+                                    splashFactory: NoSplash.splashFactory,
+                                    highlightColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    child: hostLoading
+                                        ? Row(
                                             children: [
-                                              Icon(Icons.error_rounded,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .error),
+                                              const Icon(Icons.search_rounded,
+                                                  color: Colors.grey),
                                               const SizedBox(width: 8),
                                               Text(
                                                   AppLocalizations.of(context)!
-                                                      .settingsHostInvalid(
-                                                          hostInvalidHost
-                                                              ? "host"
-                                                              : "url"),
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .error))
+                                                      .settingsHostChecking,
+                                                  style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontFamily: "monospace"))
                                             ],
-                                          ))
-                                      : null,
-                                  helper: InkWell(
-                                      onTap: () {
-                                        selectionHaptic();
-                                      },
-                                      highlightColor: Colors.transparent,
-                                      splashFactory: NoSplash.splashFactory,
-                                      child: hostLoading
-                                          ? Row(
-                                              children: [
-                                                const Icon(Icons.search_rounded,
-                                                    color: Colors.grey),
-                                                const SizedBox(width: 8),
-                                                Text(
+                                          )
+                                        : Row(
+                                            children: [
+                                              Icon(Icons.check_rounded,
+                                                  color: Colors.green
+                                                      .harmonizeWith(
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .primary)),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                  AppLocalizations.of(context)!
+                                                      .settingsHostValid,
+                                                  style: TextStyle(
+                                                      color: Colors.green
+                                                          .harmonizeWith(
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary),
+                                                      fontFamily: "monospace"))
+                                            ],
+                                          ))))
+                      ]);
+                      var column2 =
+                          Column(mainAxisSize: MainAxisSize.min, children: [
+                        button(
+                            AppLocalizations.of(context)!.settingsTitleBehavior,
+                            Icons.psychology_rounded, () {
+                          selectionHaptic();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ScreenSettingsBehavior()));
+                        },
+                            context: context,
+                            description:
+                                "\n${AppLocalizations.of(context)!.settingsDescriptionBehavior}"),
+                        button(
+                            AppLocalizations.of(context)!
+                                .settingsTitleInterface,
+                            Icons.web_asset_rounded, () {
+                          selectionHaptic();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ScreenSettingsInterface()));
+                        },
+                            context: context,
+                            description:
+                                "\n${AppLocalizations.of(context)!.settingsDescriptionInterface}"),
+                        (!desktopFeature())
+                            ? button(
+                                AppLocalizations.of(context)!
+                                    .settingsTitleVoice,
+                                Icons.headphones_rounded, () {
+                                selectionHaptic();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ScreenSettingsVoice()));
+                              },
+                                context: context,
+                                description:
+                                    "\n${AppLocalizations.of(context)!.settingsDescriptionVoice}")
+                            : const SizedBox.shrink(),
+                        button(
+                            AppLocalizations.of(context)!.settingsTitleExport,
+                            Icons.share_rounded, () {
+                          selectionHaptic();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ScreenSettingsExport()));
+                        },
+                            context: context,
+                            description:
+                                "\n${AppLocalizations.of(context)!.settingsDescriptionExport}"),
+                        button(AppLocalizations.of(context)!.settingsTitleAbout,
+                            Icons.help_rounded, () {
+                          selectionHaptic();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ScreenSettingsAbout()));
+                        },
+                            context: context,
+                            description:
+                                "\n${AppLocalizations.of(context)!.settingsDescriptionAbout}")
+                      ]);
+                      animatedDesktop = desktopLayoutNotRequired(context);
+                      return Column(children: [
+                        Expanded(
+                            child: desktopLayoutNotRequired(context)
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                        Expanded(
+                                            child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                              column1,
+                                              Expanded(
+                                                  child: Center(
+                                                      child: InkWell(
+                                                splashFactory:
+                                                    NoSplash.splashFactory,
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                enableFeedback: false,
+                                                hoverColor: Colors.transparent,
+                                                onTap: () async {
+                                                  if (iconSize != 1) return;
+                                                  heavyHaptic();
+                                                  setState(() {
+                                                    iconSize = 0.8;
+                                                  });
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 200));
+                                                  setState(() {
+                                                    iconSize = 1.2;
+                                                  });
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 200));
+                                                  setState(() {
+                                                    iconSize = 1;
+                                                  });
+                                                },
+                                                child: AnimatedScale(
+                                                  scale: iconSize,
+                                                  duration: const Duration(
+                                                      milliseconds: 400),
+                                                  child: const ImageIcon(
+                                                      AssetImage(
+                                                          "assets/logo512.png"),
+                                                      size: 44),
+                                                ),
+                                              ))),
+                                              Transform.translate(
+                                                offset: const Offset(0, 8),
+                                                child: button(
                                                     AppLocalizations.of(
                                                             context)!
-                                                        .settingsHostChecking,
-                                                    style: const TextStyle(
-                                                        color: Colors.grey,
-                                                        fontFamily:
-                                                            "monospace"))
-                                              ],
-                                            )
-                                          : Row(
-                                              children: [
-                                                Icon(Icons.check_rounded,
-                                                    color: Colors.green
+                                                        .settingsSavedAutomatically,
+                                                    Icons.info_rounded,
+                                                    null,
+                                                    color: Colors.grey
                                                         .harmonizeWith(
                                                             Theme.of(context)
                                                                 .colorScheme
                                                                 .primary)),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .settingsHostValid,
-                                                    style: TextStyle(
-                                                        color: Colors.green
-                                                            .harmonizeWith(
-                                                                Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .primary),
-                                                        fontFamily:
-                                                            "monospace"))
-                                              ],
-                                            )))),
-                          titleDivider(bottom: 4),
-                          button(
-                              AppLocalizations.of(context)!
-                                  .settingsTitleBehavior,
-                              Icons.psychology_rounded, () {
-                            selectionHaptic();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ScreenSettingsBehavior()));
-                          }),
-                          button(
-                              AppLocalizations.of(context)!
-                                  .settingsTitleInterface,
-                              Icons.web_asset_rounded, () {
-                            selectionHaptic();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ScreenSettingsInterface()));
-                          }),
-                          (!desktopFeature())
-                              ? button(
-                                  AppLocalizations.of(context)!
-                                      .settingsTitleVoice,
-                                  Icons.headphones_rounded, () {
-                                  selectionHaptic();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ScreenSettingsVoice()));
-                                })
-                              : const SizedBox.shrink(),
-                          button(
-                              AppLocalizations.of(context)!.settingsTitleExport,
-                              Icons.share_rounded, () {
-                            selectionHaptic();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ScreenSettingsExport()));
-                          }),
-                          button(
-                              AppLocalizations.of(context)!.settingsTitleAbout,
-                              Icons.help_rounded, () {
-                            selectionHaptic();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ScreenSettingsAbout()));
-                          })
-                        ]),
-                      ),
-                      const SizedBox(height: 8),
-                      button(
-                          AppLocalizations.of(context)!
-                              .settingsSavedAutomatically,
-                          Icons.info_rounded,
-                          null,
-                          color: Colors.grey.harmonizeWith(
-                              Theme.of(context).colorScheme.primary))
-                    ])))));
+                                              )
+                                            ])),
+                                        verticalTitleDivider(context: context),
+                                        Expanded(child: column2)
+                                      ])
+                                : ListView(children: [
+                                    column1,
+                                    AnimatedOpacity(
+                                        opacity: animatedDesktop ? 0 : 1,
+                                        duration:
+                                            const Duration(milliseconds: 200),
+                                        child: titleDivider(bottom: 4)),
+                                    AnimatedOpacity(
+                                        opacity: animatedDesktop ? 0 : 1,
+                                        duration:
+                                            const Duration(milliseconds: 200),
+                                        child: column2)
+                                  ])),
+                        const SizedBox(height: 8),
+                        desktopLayoutNotRequired(context)
+                            ? const SizedBox.shrink()
+                            : button(
+                                AppLocalizations.of(context)!
+                                    .settingsSavedAutomatically,
+                                Icons.info_rounded,
+                                null,
+                                color: Colors.grey.harmonizeWith(
+                                    Theme.of(context).colorScheme.primary))
+                      ]);
+                    })))));
   }
 }

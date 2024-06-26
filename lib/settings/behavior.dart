@@ -46,7 +46,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                     TextField(
                         controller: systemInputController,
                         keyboardType: TextInputType.multiline,
-                        maxLines: 2,
+                        maxLines: desktopLayoutNotRequired(context) ? 5 : 2,
                         decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)!
                                 .settingsSystemMessage,

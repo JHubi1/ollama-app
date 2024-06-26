@@ -37,13 +37,11 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
       color: Theme.of(context).colorScheme.surface,
       child: Scaffold(
           appBar: AppBar(
-            title: Row(children: [
-              Text(AppLocalizations.of(context)!.settingsTitleAbout),
-              Expanded(child: SizedBox(height: 200, child: MoveWindow()))
-            ]),
-            actions:
-                desktopControlsActions(context)
-          ),
+              title: Row(children: [
+                Text(AppLocalizations.of(context)!.settingsTitleAbout),
+                Expanded(child: SizedBox(height: 200, child: MoveWindow()))
+              ]),
+              actions: desktopControlsActions(context)),
           body: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Column(children: [
@@ -110,7 +108,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                             prefs!.setBool("checkUpdateOnSettingsOpen", value);
                             setState(() {});
                           }),
-                    titleDivider(),
+                    titleDivider(context: context),
                     button(AppLocalizations.of(context)!.settingsGithub,
                         SimpleIcons.github, () {
                       selectionHaptic();
