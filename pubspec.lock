@@ -568,12 +568,11 @@ packages:
   ollama_dart:
     dependency: "direct main"
     description:
-      path: "packages/ollama_dart"
-      ref: ce2ef30c9a9a0dfe8f3059988b7007c94c45b9bd
-      resolved-ref: ce2ef30c9a9a0dfe8f3059988b7007c94c45b9bd
-      url: "https://github.com/davidmigloz/langchain_dart.git"
-    source: git
-    version: "0.1.0+1"
+      name: ollama_dart
+      sha256: f951f01d299376706bc245c03710205a530c76a64a8458a282a6bbb2e30e2c63
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   package_info_plus:
     dependency: "direct main"
     description:

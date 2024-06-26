@@ -11,11 +11,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  ollama_dart:
-    git:
-      url: https://github.com/davidmigloz/langchain_dart.git
-      path: packages/ollama_dart
-      ref: ce2ef30c9a9a0dfe8f3059988b7007c94c45b9bd
+  ollama_dart: ^0.1.1
   intl: any
   shared_preferences: ^2.2.3
   flutter_chat_ui: ^1.6.13
