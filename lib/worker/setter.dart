@@ -103,7 +103,8 @@ void setModel(BuildContext context, Function setState) {
           prefs?.setBool("multimodal", multimodal);
 
           if (model != null &&
-              int.parse(prefs!.getString("keepAlive") ?? "300") != 0 && (prefs!.getBool("preloadModel") ?? true)) {
+              int.parse(prefs!.getString("keepAlive") ?? "300") != 0 &&
+              (prefs!.getBool("preloadModel") ?? true)) {
             setLocalState(() {});
             try {
               // don't use llama client, package doesn't support just loading without content
@@ -474,6 +475,7 @@ Future<String> prompt(BuildContext context,
                                         .tooltipSave,
                                     onPressed: () async {
                                       if (validator != null) {
+                                        selectionHaptic();
                                         setLocalState(() {
                                           error = null;
                                         });
@@ -499,6 +501,7 @@ Future<String> prompt(BuildContext context,
                                         tooltip: AppLocalizations.of(context)!
                                             .tooltipLetAIThink,
                                         onPressed: () async {
+                                          selectionHaptic();
                                           setLocalState(() {
                                             loading = true;
                                           });
