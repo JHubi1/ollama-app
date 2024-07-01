@@ -272,7 +272,7 @@
         }
     },
     "settingsHostHeaderTitle": "Set host header",
-    "@settingsHostHeader": {
+    "@settingsHostHeaderTitle": {
         "description": "Text displayed as description for host header input",
         "context": "Visible in the settings view"
     },
