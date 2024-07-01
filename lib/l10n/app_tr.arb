@@ -1,0 +1,640 @@
+{
+    "@@locale": "tr",
+    "appTitle": "Ollama",
+    "@appTitle": {
+        "description": "Uygulamanın başlığı",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "optionNewChat": "Yeni Sohbet",
+    "@optionNewChat": {
+        "description": "Yeni sohbet seçeneği için görüntülenen metin",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "optionSettings": "Ayarlar",
+    "@optionSettings": {
+        "description": "Ayarlar seçeneği için görüntülenen metin",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "optionNoChatFound": "Sohbet bulunamadı",
+    "@optionNoChatFound": {
+        "description": "Sohbet bulunamadığında görüntülenen metin",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "tipPrefix": "İpucu: ",
+    "@tipPrefix": {
+        "description": "İpuçları için önek",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "tip0": "Mesajları düzenlemek için üzerlerine uzun basın",
+    "@tip0": {
+        "description": "Kenar çubuğunda görüntülenen ilk ipucu",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "tip1": "Mesajları silmek için üzerlerine çift dokunun",
+    "@tip1": {
+        "description": "Kenar çubuğunda görüntülenen ikinci ipucu",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "tip2": "Temayı ayarlardan değiştirebilirsiniz",
+    "@tip2": {
+        "description": "Kenar çubuğunda görüntülenen üçüncü ipucu",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "tip3": "Görsel girmek için çoklu modlu bir model seçin",
+    "@tip3": {
+        "description": "Kenar çubuğunda görüntülenen dördüncü ipucu",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "tip4": "Sohbetler otomatik olarak kaydedilir",
+    "@tip4": {
+        "description": "Kenar çubuğunda görüntülenen beşinci ipucu",
+        "context": "Kenar çubuğunda görünür"
+    },
+    "takeImage": "Fotoğraf Çek",
+    "@takeImage": {
+        "description": "Fotoğraf çekme düğmesi için görüntülenen metin",
+        "context": "Ek menüsünde görünür"
+    },
+    "uploadImage": "Görsel Yükle",
+    "@uploadImage": {
+        "description": "Görsel yükleme düğmesi için görüntülenen metin",
+        "context": "Ek menüsünde görünür"
+    },
+    "notAValidImage": "Geçerli bir görsel değil",
+    "@notAValidImage": {
+        "description": "Geçersiz bir görsel olduğunda görüntülenen metin",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "imageOnlyConversation": "Sadece Görsel İçeren Konuşma",
+    "@imageOnlyConversation": {
+        "description": "Metin mesajı olmayan bir konuşma için 'Başlık Oluştur' çalıştırıldığında görünen başlık",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "messageInputPlaceholder": "Mesaj",
+    "@messageInputPlaceholder": {
+        "description": "Mesaj girişi için yer tutucu metin",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "tooltipAttachment": "Ek ekle",
+    "@tooltipAttachment": {
+        "description": "Ek düğmesi için araç ipucu",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "tooltipSend": "Gönder",
+    "@tooltipSend": {
+        "description": "Gönder düğmesi için araç ipucu",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "tooltipSave": "Kaydet",
+    "@tooltipSave": {
+        "description": "Kaydet düğmesi için araç ipucu",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "tooltipLetAIThink": "AI'nın düşünmesine izin ver",
+    "@tooltipLetAIThink": {
+        "description": "AI'nın düşünmesine izin ver düğmesi için araç ipucu",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "tooltipAddHostHeaders": "Ana bilgisayar başlıkları ekle",
+    "@tooltipAddHostHeaders": {
+        "description": "Ana bilgisayar başlıkları ekle düğmesi için araç ipucu",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "noModelSelected": "Model seçilmedi",
+    "@noModelSelected": {
+        "description": "Model seçilmediğinde görüntülenen metin",
+        "context": "Sohbet görünümünde görünür"
+    },
+    "noHostSelected": "Ana bilgisayar seçilmedi, ayarları açıp bir tane belirleyin",
+    "@noSelectedHost": {
+        "description": "Ana bilgisayar seçilmediğinde görüntülenen metin",
+        "context": "Sohbet görünümünde görünür, tıklandığında ayarlar dialogunu açar"
+    },
+    "noSelectedModel": "<seçici>",
+    "@noSelectedModel": {
+        "description": "Model seçilmediğinde görüntülenen metin",
+        "context": "Sohbet görünümünde görünür, tıklandığında model dialogunu açar"
+    },
+    "newChatTitle": "İsimsiz Sohbet",
+    "@newChatTitle": {
+        "description": "Yeni bir sohbetin başlığı",
+        "context": "Yeni sohbet dialogunda görünür"
+    },
+    "modelDialogAddModel": "Ekle",
+    "@modelDialogAddModel": {
+        "description": "Model ekle düğmesi için görüntülenen metin",
+        "context": "Model dialogunda görünür"
+    },
+    "modelDialogAddSteps": "Model ekleme desteklenmiyor. Ana bilgisayar PC'nize gidin ve modelleri oradan ekleyin.",
+    "@modelDialogAddSteps": {
+        "description": "Yeni bir model ekleme adımları",
+        "context": "Model dialogunda görünür"
+    },
+    "deleteDialogTitle": "Sohbeti Sil",
+    "@deleteDialogTitle": {
+        "description": "Silme dialogunun başlığı",
+        "context": "Silme dialogunda görünür"
+    },
+    "deleteDialogDescription": "Devam etmek istediğinizden emin misiniz? Bu işlem, bu sohbetin tüm hafızasını silecek ve geri alınamaz.\nBu dialogu devre dışı bırakmak için ayarları ziyaret edin.",
+    "@deleteDialogDescription": {
+        "description": "Silme dialogunun açıklaması",
+        "context": "Silme dialogunda görünür"
+    },
+    "deleteDialogDelete": "Sil",
+    "@deleteDialogDelete": {
+        "description": "Sil düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+        "context": "Silme dialogunda görünür"
+    },
+    "deleteDialogCancel": "İptal",
+    "@deleteDialogCancel": {
+        "description": "İptal düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+        "context": "Silme dialogunda görünür"
+    },
+    "dialogEnterNewTitle": "Yeni başlık girin",
+    "@dialogEnterNewTitle": {
+        "description": "Yeni başlık girişi için görüntülenen açıklama metni",
+        "context": "Yeniden adlandırma dialogunda görünür"
+    },
+    "dialogEditMessageTitle": "Mesajı düzenle",
+    "@dialogEditMessageTitle": {
+        "description": "Mesaj düzenleme dialogunun başlığı",
+        "context": "Mesaj düzenleme dialogunda görünür"
+    },
+    "settingsTitleBehavior": "Davranış",
+    "@settingsTitleBehavior": {
+        "description": "Davranış ayarları bölümünün başlığı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsDescriptionBehavior": "AI'nın davranışını istediğiniz gibi değiştirin.",
+    "@settingsDescriptionBehavior": {
+        "description": "Davranış ayarları bölümünün açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsTitleInterface": "Arayüz",
+    "@settingsTitleInterface": {
+        "description": "Arayüz ayarları bölümünün başlığı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsDescriptionInterface": "Ollama Uygulamasının görünümünü ve davranışını düzenleyin.",
+    "@settingsDescriptionInterface": {
+        "description": "Arayüz ayarları bölümünün açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsTitleVoice": "Ses",
+    "@settingsTitleVoice": {
+        "description": "Ses ayarları bölümünün başlığı. Gerekli değilse çevirmeyin!",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsDescriptionVoice": "Ses modunu etkinleştirin ve ses ayarlarını yapılandırın.",
+    "@settingsDescriptionVoice": {
+        "description": "Ses ayarları bölümünün açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsTitleExport": "Dışa Aktar",
+    "@settingsTitleExport": {
+        "description": "Dışa aktarma ayarları bölümünün başlığı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsDescriptionExport": "Sohbet geçmişinizi dışa ve içe aktarın.",
+    "@settingsDescriptionExport": {
+        "description": "Dışa aktarma ayarları bölümünün açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsTitleAbout": "Hakkında",
+    "@settingsTitleAbout": {
+        "description": "Hakkında ayarları bölümünün başlığı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsDescriptionAbout": "Güncellemeleri kontrol edin ve Ollama Uygulaması hakkında daha fazla bilgi edinin.",
+    "@settingsDescriptionAbout": {
+        "description": "Hakkında ayarları bölümünün açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsSavedAutomatically": "Ayarlar otomatik olarak kaydedilir",
+    "@settingsSavedAutomatically": {
+        "description": "Ayarlar otomatik olarak kaydedildiğinde görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsExperimentalAlpha": "alfa",
+    "@settingsExperimentalAlpha": {
+        "description": "Bir özellik alfa aşamasında olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsExperimentalAlphaDescription": "Bu özellik alfa aşamasındadır ve beklendiği gibi çalışmayabilir.\nKritik sorunlar ve/veya cihaza ve/veya kullanılan hizmetlere kalıcı kritik hasar verilebilme ihtimali göz ardı edilemez.\nKendi sorumluluğunuzda kullanın. Uygulama yazarının hiçbir sorumluluğu yoktur.",
+    "@settingsExperimentalAlphaDescription": {
+        "description": "Alfa özelliğinin açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsExperimentalAlphaFeature": "Alfa özelliği, daha fazla bilgi için basılı tutun",
+    "@settingsExperimentalAlphaFeature": {
+        "description": "Bir özellik alfa aşamasında olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsExperimentalBeta": "beta",
+    "@settingsExperimentalBeta": {
+        "description": "Bir özellik beta aşamasında olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsExperimentalBetaDescription": "Bu özellik beta aşamasındadır ve beklendiği gibi çalışmayabilir.\nDaha az ciddi sorunlar ortaya çıkabilir. Hasar kritik olmamalıdır.\nKendi sorumluluğunuzda kullanın.",
+    "@settingsExperimentalBetaDescription": {
+        "description": "Beta özelliğinin açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsExperimentalBetaFeature": "Beta özelliği, daha fazla bilgi için basılı tutun",
+    "@settingsExperimentalBetaFeature": {
+        "description": "Bir özellik beta aşamasında olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsHost": "Ana bilgisayar",
+    "@settingsHost": {
+        "description": "Ana bilgisayar girişi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsHostValid": "Geçerli Ana Bilgisayar",
+    "@settingsHostValid": {
+        "description": "Ana bilgisayar geçerli olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsHostChecking": "Ana Bilgisayar Kontrol Ediliyor",
+    "@settingsHostChecking": {
+        "description": "Ana bilgisayar kontrol edilirken görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsHostInvalid": "Sorun: {type, select, url{Geçersiz URL} host{Geçersiz Ana Bilgisayar} timeout{İstek Başarısız. Sunucu sorunları} other{İstek Başarısız}}",
+    "@settingsHostInvalid": {
+        "description": "Ana bilgisayar geçersiz olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür",
+        "placeholders": {
+          "type": {
+            "type": "String",
+            "description": "Sorunun türü, 'url' veya 'other' (tercihen 'host')"
+          }
+        }
+    },
+    "settingsHostHeaderTitle": "Ana bilgisayar başlığını ayarla",
+    "@settingsHostHeader": {
+        "description": "Ana bilgisayar başlığı girişi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsHostHeaderInvalid": "Girilen metin geçerli bir başlık JSON nesnesi değil",
+    "@settingsHostHeaderInvalid": {
+        "description": "Ana bilgisayar başlığı geçersiz olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsHostInvalidDetailed": "{type, select, url{Girdiğiniz URL geçersiz. Standart bir URL formatında değil.} other{Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.}}",
+    "@settingsHostInvalidDetailed": {
+        "description": "Ana bilgisayar geçersiz olduğunda görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür",
+        "placeholders": {
+          "type": {
+            "type": "String",
+            "description": "Sorunun türü, 'url' veya 'other' (tercihen 'host')"
+          }
+        }
+    },
+    "settingsSystemMessage": "Sistem mesajı",
+    "@settingsSystemMessage": {
+        "description": "Sistem mesajı girişi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsDisableMarkdown": "Markdown'ı devre dışı bırak",
+    "@settingsDisableMarkdown": {
+        "description": "Markdown'ı devre dışı bırakma düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBehaviorNotUpdatedForOlderChats": "Davranış ayarları eski sohbetler için güncellenmez",
+    "@settingsBehaviorNotUpdatedForOlderChats": {
+        "description": "Davranış ayarları eski sohbetler için güncellenemediğinde görüntülenen metin",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsShowModelTags": "Model etiketlerini göster",
+    "@settingsShowModelTags": {
+        "description": "Model etiketlerini gösterme düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsPreloadModels": "Modelleri önceden yükle",
+    "@settingsPreloadModels": {
+        "description": "Modelleri önceden yükleme düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsResetOnModelChange": "Model değiştiğinde sıfırla",
+    "@settingsResetOnModelChange": {
+        "description": "Model değiştiğinde sıfırlama düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsRequestTypeStream": "Akış",
+    "@settingsRequestTypeStream": {
+        "description": "Akış istek türü için görüntülenen açıklama. Gerekli değilse çevirmeyin!",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsRequestTypeRequest": "İstek",
+    "@settingsRequestTypeRequest": {
+        "description": "İstek istek türü için görüntülenen açıklama. Gerekli değilse çevirmeyin!",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsGenerateTitles": "Başlıklar oluştur",
+    "@settingsGenerateTitles": {
+        "description": "Başlık oluşturma düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsEnableEditing": "Mesaj düzenlemeyi etkinleştir",
+    "@settingsEnableEditing": {
+        "description": "Mesaj düzenlemeyi etkinleştirme düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsAskBeforeDelete": "Sohbet silmeden önce sor",
+    "@settingsAskBeforeDelete": {
+        "description": "Silmeden önce sorma düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsShowTips": "Kenar çubuğunda ipuçlarını göster",
+    "@settingsShowTips": {
+        "description": "İpuçlarını gösterme düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsKeepModelLoadedAlways": "Modeli her zaman yüklü tut",
+    "@settingsKeepModelLoadedAlways": {
+        "description": "Modeli her zaman yüklü tutma düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsKeepModelLoadedNever": "Modeli yüklü tutma",
+    "@settingsKeepModelLoadedNever": {
+        "description": "Modeli yüklü tutmama düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsKeepModelLoadedFor": "Modelin yüklü kalacağı belirli bir süre ayarla",
+    "@settingsKeepModelLoadedFor": {
+        "description": "Modelin yüklü kalacağı süreyi ayarlama düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsKeepModelLoadedSet": "Modeli {minutes} dakika boyunca yüklü tut",
+    "@settingsKeepModelLoadedSet": {
+        "description": "Modelin belirli bir süre yüklü tutulması için ayarlanan düğme için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür",
+        "placeholders": {
+          "minutes": {
+            "type": "String",
+            "description": "Modelin yüklü tutulacağı dakika sayısı"
+          }
+        }
+    },
+    "settingsEnableHapticFeedback": "Dokunsal geri bildirimi etkinleştir",
+    "@settingsEnableHapticFeedback": {
+        "description": "Dokunsal geri bildirimi etkinleştirme düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsMaximizeOnStart": "Başlangıçta maksimize et",
+    "@settingsMaximizeOnStart": {
+        "description": "Başlangıçta maksimize etme düğmesi için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBrightnessSystem": "Sistem",
+    "@settingsBrightnessSystem": {
+        "description": "Sistem parlaklık seçeneği için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBrightnessLight": "Açık",
+    "@settingsBrightnessLight": {
+        "description": "Açık parlaklık seçeneği için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBrightnessDark": "Koyu",
+    "@settingsBrightnessDark": {
+        "description": "Koyu parlaklık seçeneği için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBrightnessRestartTitle": "Yeniden Başlatma Gerekli",
+    "@settingsBrightnessRestartTitle": {
+        "description": "Yeniden başlatma gerekli dialogunun başlığı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBrightnessRestartDescription": "Temayı değiştirmek yeniden başlatma gerektirir.\nŞimdi yeniden başlatmak istiyor musunuz yoksa işlemi iptal etmek mi istiyorsunuz?",
+    "@settingsBrightnessRestartDescription": {
+        "description": "Yeniden başlatma gerekli dialogunun açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBrightnessRestartRestart": "Yeniden Başlat",
+    "@settingsBrightnessRestartRestart": {
+        "description": "Yeniden başlat düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsBrightnessRestartCancel": "İptal",
+    "@settingsBrightnessRestartCancel": {
+        "description": "İptal düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsThemeDevice": "Cihaz",
+    "@settingsThemeDevice": {
+        "description": "Cihaz tema seçeneği için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsThemeOllama": "Ollama",
+    "@settingsThemeOllama": {
+        "description": "Ollama tema seçeneği için görüntülenen açıklama",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsThemeRestartTitle": "Yeniden Başlatma Gerekli",
+    "@settingsThemeRestartTitle": {
+        "description": "Yeniden başlatma gerekli dialogunun başlığı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsThemeRestartDescription": "Temayı değiştirmek yeniden başlatma gerektirir.\nŞimdi yeniden başlatmak istiyor musunuz yoksa işlemi iptal etmek mi istiyorsunuz?",
+    "@settingsThemeRestartDescription": {
+        "description": "Yeniden başlatma gerekli dialogunun açıklaması",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsThemeRestartRestart": "Yeniden Başlat",
+    "@settingsThemeRestartRestart": {
+        "description": "Yeniden başlat düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    "settingsThemeRestartCancel": "İptal",
+    "@settingsThemeRestartCancel": {
+        "description": "İptal düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+        "context": "Ayarlar görünümünde görünür"
+    },
+    {
+        "settingsVoicePermissionLoading": "Ses izinleri yükleniyor ...",
+        "@settingsVoicePermissionLoading": {
+            "description": "Ses izinleri yüklenirken görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoiceTtsNotSupported": "Metin okuma desteklenmiyor",
+        "@settingsVoiceTtsNotSupported": {
+            "description": "Metin okuma desteklenmediğinde görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoiceTtsNotSupportedDescription": "Metin okuma hizmetleri seçili dil için desteklenmiyor. Bunları yeniden etkinleştirmek için dil çekmecesinden farklı bir dil seçin.\nSes tanıma ve yapay zeka düşünme gibi diğer hizmetler hala normal şekilde çalışacak, ancak etkileşim o kadar akıcı olmayabilir.",
+        "settingsVoicePermissionNot": "İzinler verilmedi",
+        "@settingsVoicePermissionNot": {
+            "description": "Ses izinleri verilmediğinde görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoiceNotEnabled": "Ses modu etkin değil",
+        "@settingsVoiceNotEnabled": {
+            "description": "Ses modu etkin olmadığında görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoiceNotSupported": "Ses modu desteklenmiyor",
+        "@settingsVoiceNotSupported": {
+            "description": "Ses modu desteklenmediğinde görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoiceEnable": "Ses modunu etkinleştir",
+        "@settingsVoiceEnable": {
+            "description": "Ses modunu etkinleştirme düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoiceNoLanguage": "Dil seçilmedi",
+        "@settingsVoiceNoLanguage": {
+            "description": "Dil seçilmediğinde görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoiceLimitLanguage": "Seçili dille sınırla",
+        "@settingsVoiceLimitLanguage": {
+            "description": "Dil sınırlama düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVoicePunctuation": "Yapay zeka noktalama işaretlerini etkinleştir",
+        "@settingsVoicePunctuation": {
+            "description": "Yapay zeka noktalama işaretlerini etkinleştirme düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsExportChats": "Sohbetleri dışa aktar",
+        "@settingsExportChats": {
+            "description": "Sohbetleri dışa aktarma düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsImportChats": "Sohbetleri içe aktar",
+        "@settingsImportChats": {
+            "description": "Sohbetleri içe aktarma düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsImportChatsTitle": "İçe Aktar",
+        "@settingsImportChatsTitle": {
+            "description": "İçe aktarma iletişim kutusunun başlığı",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsImportChatsDescription": "Sonraki adım, seçilen dosyadan sohbetleri içe aktaracaktır. Bu işlem, şu anda mevcut olan tüm sohbetlerin üzerine yazacaktır.\nDevam etmek istiyor musunuz?",
+        "@settingsImportChatsDescription": {
+            "description": "İçe aktarma iletişim kutusunun açıklaması",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsImportChatsImport": "İçe Aktar ve Sil",
+        "@settingsImportChatsImport": {
+            "description": "İçe aktarma düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsImportChatsCancel": "İptal",
+        "@settingsImportChatsCancel": {
+            "description": "İptal düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsImportChatsSuccess": "Sohbetler başarıyla içe aktarıldı",
+        "@settingsImportChatsSuccess": {
+            "description": "Sohbetler başarıyla içe aktarıldığında görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsExportInfo": "Bu seçenekler, sohbet geçmişinizi dışa ve içe aktarmanıza olanak tanır. Bu, sohbet geçmişinizi başka bir cihaza aktarmak veya yedeklemek istediğinizde kullanışlı olabilir",
+        "@settingsExportInfo": {
+            "description": "Dışa ve içe aktarma seçenekleri için görüntülenen bilgi",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsExportWarning": "Birden fazla sohbet geçmişi birleştirilmeyecek! Yeni bir sohbet geçmişi içe aktarırsanız mevcut sohbet geçmişinizi kaybedeceksiniz",
+        "@settingsExportWarning": {
+            "description": "Dışa ve içe aktarma seçenekleri için görüntülenen uyarı",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateCheck": "Güncellemeleri kontrol et",
+        "@settingsUpdateCheck": {
+            "description": "Güncellemeleri kontrol etme düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateChecking": "Güncellemeler kontrol ediliyor ...",
+        "@settingsUpdateChecking": {
+            "description": "Güncellemeler aranırken görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateLatest": "En son sürümü kullanıyorsunuz",
+        "@settingsUpdateLatest": {
+            "description": "Uygulama güncel olduğunda görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateAvailable": "Güncelleme mevcut (v{version})",
+        "@settingsUpdateAvailable": {
+            "description": "Bir güncelleme mevcut olduğunda görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür",
+            "placeholders": {
+              "version": {
+                "type": "String",
+                "description": "Mevcut güncellemenin sürüm numarası"
+              }
+            }
+        },
+        "settingsUpdateRateLimit": "Kontrol edilemiyor, API hız sınırı aşıldı",
+        "@settingsUpdateRateLimit": {
+            "description": "API hız sınırı aşıldığında görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateIssue": "Bir sorun oluştu",
+        "@settingsUpdateIssue": {
+            "description": "Güncellemeler kontrol edilirken bir sorun oluştuğunda görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateDialogTitle": "Yeni sürüm mevcut",
+        "@settingsUpdateDialogTitle": {
+            "description": "Güncelleme iletişim kutusunun başlığı",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateDialogDescription": "Ollama'nın yeni bir sürümü mevcut. Şimdi indirip kurmak istiyor musunuz?",
+        "@settingsUpdateDialogDescription": {
+            "description": "Güncelleme iletişim kutusunun açıklaması",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateChangeLog": "Değişiklik Günlüğü",
+        "@settingsUpdateChangeLog": {
+            "description": "Değişiklik günlüğü düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateDialogUpdate": "Güncelle",
+        "@settingsUpdateDialogUpdate": {
+            "description": "Güncelleme düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsUpdateDialogCancel": "İptal",
+        "@settingsUpdateDialogCancel": {
+            "description": "İptal düğmesi için görüntülenen metin, büyük harfle yazılmalı",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsCheckForUpdates": "Açılışta güncellemeleri kontrol et",
+        "@settingsCheckForUpdates": {
+            "description": "Güncellemeleri kontrol etme düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsGithub": "GitHub",
+        "@settingsGithub": {
+            "description": "GitHub düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsReportIssue": "Sorun Bildir",
+        "@settingsReportIssue": {
+            "description": "Sorun bildirme düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsMainDeveloper": "Ana Geliştirici",
+        "@settingsMainDeveloper": {
+            "description": "Ana geliştirici düğmesi için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür"
+        },
+        "settingsVersion": "Ollama App v{version}",
+        "@settingsVersion": {
+            "description": "Sürüm için açıklama olarak görüntülenen metin",
+            "context": "Ayarlar görünümünde görünür",
+            "placeholders": {
+              "version": {
+                "type": "String",
+                "description": "Uygulamanın sürüm numarası"
+              }
+            }
+        }
+    }
