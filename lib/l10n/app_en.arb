@@ -297,6 +297,16 @@
         "description": "Text displayed as description for system message input",
         "context": "Visible in the settings view"
     },
+    "settingsUseSystem": "Use system message",
+    "@settingsUseSystem": {
+        "description": "Text displayed as description for use system message toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsUseSystemDescription": "Disables setting the system message above and use the one of the model instead. Can be useful for models with model files",
+    "@settingsUseSystemDescription": {
+        "description": "Description of the use system message toggle",
+        "context": "Visible in the settings view by long pressing the toggle"
+    },
     "settingsDisableMarkdown": "Disable markdown",
     "@settingsDisableMarkdown": {
         "description": "Text displayed as description for disable markdown toggle",

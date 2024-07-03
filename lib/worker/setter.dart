@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ollama_app/worker/desktop.dart';
+import 'desktop.dart';
 import 'haptic.dart';
 import '../main.dart';
+import 'sender.dart';
 
 import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
@@ -518,58 +519,8 @@ Future<String> prompt(BuildContext context,
                                                     [])[i])["uuid"] ==
                                                 uuid) {
                                               try {
-                                                List history = [];
-                                                var tmp = jsonDecode(jsonDecode(
-                                                    (prefs!.getStringList(
-                                                            "chats") ??
-                                                        [])[i])["messages"]);
-                                                for (var j = 0;
-                                                    j < tmp.length;
-                                                    j++) {
-                                                  if (tmp[j]["type"] != null) {
-                                                    continue;
-                                                  }
-                                                  history
-                                                      .add(tmp[j]["content"]);
-                                                }
-                                                if (history.isEmpty) {
-                                                  controller
-                                                      .text = AppLocalizations
-                                                          .of(context)!
-                                                      .imageOnlyConversation;
-                                                  setLocalState(() {
-                                                    loading = false;
-                                                  });
-                                                  return;
-                                                }
-
-                                                final generated =
-                                                    await llama.OllamaClient(
-                                                  headers: (jsonDecode(prefs!
-                                                              .getString(
-                                                                  "hostHeaders") ??
-                                                          "{}") as Map)
-                                                      .cast<String, String>(),
-                                                  baseUrl: "$host/api",
-                                                )
-                                                        .generateCompletion(
-                                                          request: llama.GenerateCompletionRequest(
-                                                              model: model!,
-                                                              prompt:
-                                                                  "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
-                                                              keepAlive: int.parse(
-                                                                  prefs!.getString(
-                                                                          "keepAlive") ??
-                                                                      "300")),
-                                                        )
-                                                        .timeout(const Duration(
-                                                            seconds: 10));
-                                                var title = generated.response!
-                                                    .replaceAll("\"", "")
-                                                    .replaceAll("'", "")
-                                                    .replaceAll("*", "")
-                                                    .replaceAll("_", "")
-                                                    .trim();
+                                                var title = await getTitleAi(
+                                                    await getHistory());
                                                 controller.text = title;
                                                 setLocalState(() {
                                                   loading = false;

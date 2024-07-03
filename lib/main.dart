@@ -566,6 +566,7 @@ class _MainAppState extends State<MainApp> {
                           Expanded(
                             child: Text(jsonDecode(item)["title"],
                                 softWrap: false,
+                                maxLines: 1,
                                 overflow: TextOverflow.fade,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500)),

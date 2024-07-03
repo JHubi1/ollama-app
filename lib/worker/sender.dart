@@ -25,9 +25,9 @@ Future<List<llama.Message>> getHistory([String? addToSystem]) async {
     system += "\n$addToSystem";
   }
 
-  List<llama.Message> history = [
-    llama.Message(role: llama.MessageRole.system, content: system)
-  ];
+  List<llama.Message> history = (prefs!.getBool("useSystem") ?? true)
+      ? [llama.Message(role: llama.MessageRole.system, content: system)]
+      : [];
   List<llama.Message> history2 = [];
   images = [];
   for (var i = 0; i < messages.length; i++) {
@@ -51,6 +51,52 @@ Future<List<llama.Message>> getHistory([String? addToSystem]) async {
 
   history.addAll(history2.reversed.toList());
   return history;
+}
+
+Future<String> getTitleAi(List history) async {
+  final generated = await (llama.OllamaClient(
+          headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
+              .cast<String, String>(),
+          baseUrl: "$host/api"))
+      .generateChatCompletion(
+        request: llama.GenerateChatCompletionRequest(
+            model: model!,
+            messages: [
+              const llama.Message(
+                  role: llama.MessageRole.system,
+                  content:
+                      "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!"),
+              llama.Message(
+                  role: llama.MessageRole.user, content: jsonEncode(history))
+            ],
+            keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
+      )
+      .timeout(const Duration(seconds: 10));
+  var title = generated.message!.content
+      .replaceAll("\"", "")
+      .replaceAll("'", "")
+      .replaceAll("*", "")
+      .replaceAll("_", "")
+      .replaceAll("\n", " ")
+      .trim();
+  return title;
+}
+
+Future<void> setTitleAi(List history) async {
+  try {
+    var title = await getTitleAi(history);
+    var tmp = (prefs!.getStringList("chats") ?? []);
+    for (var i = 0; i < tmp.length; i++) {
+      if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
+          chatUuid) {
+        var tmp2 = jsonDecode(tmp[i]);
+        tmp2["title"] = title;
+        tmp[i] = jsonEncode(tmp2);
+        break;
+      }
+    }
+    prefs!.setStringList("chats", tmp);
+  } catch (_) {}
 }
 
 Future<String> send(String value, BuildContext context, Function setState,
@@ -210,37 +256,7 @@ Future<String> send(String value, BuildContext context, Function setState,
 
   if (newChat && (prefs!.getBool("generateTitles") ?? true)) {
     void setTitle() async {
-      history = await getHistory();
-
-      try {
-        final generated = await client
-            .generateCompletion(
-              request: llama.GenerateCompletionRequest(
-                  model: model!,
-                  prompt:
-                      "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!\n\n```json\n${jsonEncode(history)}\n```",
-                  keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
-            )
-            .timeout(const Duration(seconds: 10));
-        var title = generated.response!
-            .replaceAll("\"", "")
-            .replaceAll("'", "")
-            .replaceAll("*", "")
-            .replaceAll("_", "")
-            .trim();
-        var tmp = (prefs!.getStringList("chats") ?? []);
-        for (var i = 0; i < tmp.length; i++) {
-          if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
-              chatUuid) {
-            var tmp2 = jsonDecode(tmp[i]);
-            tmp2["title"] = title;
-            tmp[i] = jsonEncode(tmp2);
-            break;
-          }
-        }
-        prefs!.setStringList("chats", tmp);
-      } catch (_) {}
-
+      await setTitleAi(await getHistory());
       setState(() {});
     }
 

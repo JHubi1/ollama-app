@@ -26,7 +26,8 @@ Widget toggle(BuildContext context, String text, bool value,
     {bool disabled = false,
     void Function()? onDisabledTap,
     void Function()? onLongTap,
-    void Function()? onDoubleTap}) {
+    void Function()? onDoubleTap,
+    Widget? icon}) {
   var space = "⁣"; // Invisible character: U+2063
   var spacePlus = "    $space";
   return InkWell(
@@ -49,12 +50,19 @@ Widget toggle(BuildContext context, String text, bool value,
       padding: const EdgeInsets.only(top: 4, bottom: 4),
       child: Stack(children: [
         Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 12),
+            padding: EdgeInsets.only(
+                left: (icon == null) ? 16 : 32, right: 16, top: 12),
             child: Divider(
                 color: (Theme.of(context).brightness == Brightness.light)
                     ? Colors.grey[300]
                     : Colors.grey[900])),
         Row(mainAxisSize: MainAxisSize.max, children: [
+          (icon != null)
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: icon,
+                )
+              : const SizedBox.shrink(),
           Expanded(
               child: Text(text + spacePlus,
                   overflow: TextOverflow.ellipsis,

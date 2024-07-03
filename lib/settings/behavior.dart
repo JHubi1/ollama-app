@@ -68,6 +68,23 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                     const SizedBox(height: 16),
                     toggle(
                         context,
+                        AppLocalizations.of(context)!.settingsUseSystem,
+                        (prefs!.getBool("useSystem") ?? true),
+                        (value) {
+                          selectionHaptic();
+                          prefs!.setBool("useSystem", value);
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.info_outline_rounded),
+                        onLongTap: () {
+                          selectionHaptic();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .settingsUseSystemDescription),
+                              showCloseIcon: true));
+                        }),
+                    toggle(
+                        context,
                         AppLocalizations.of(context)!.settingsDisableMarkdown,
                         (prefs!.getBool("noMarkdown") ?? false), (value) {
                       selectionHaptic();
