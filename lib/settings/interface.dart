@@ -11,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:duration_picker/duration_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ScreenSettingsInterface extends StatefulWidget {
   const ScreenSettingsInterface({super.key});
@@ -404,6 +405,21 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                 });
                               });
                         }),
+                    titleDivider(),
+                    toggle(context, "Fix to code block not scrollable",
+                        (prefs!.getBool("fixCodeblockScroll") ?? false),
+                        (value) {
+                      prefs!.setBool("fixCodeblockScroll", value);
+                      if ((prefs!.getBool("fixCodeblockScroll") ?? false) ==
+                          false) {
+                        prefs!.remove("fixCodeblockScroll");
+                      }
+                      selectionHaptic();
+                      setState(() {});
+                    }, onLongTap: () {
+                      launchUrl(Uri.parse(
+                          "https://github.com/JHubi1/ollama-app/issues/26"));
+                    }),
                     const SizedBox(height: 16)
                   ]),
                 )
