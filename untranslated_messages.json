@@ -13,6 +13,34 @@
     "settingsVoiceNotEnabled"
   ],
 
+  "it": [
+    "settingsDescriptionBehavior",
+    "settingsDescriptionInterface",
+    "settingsDescriptionVoice",
+    "settingsDescriptionExport",
+    "settingsDescriptionAbout",
+    "settingsUseSystem",
+    "settingsUseSystemDescription",
+    "settingsPreloadModels",
+    "settingsVoiceTtsNotSupported",
+    "settingsVoiceTtsNotSupportedDescription",
+    "settingsVoiceNotEnabled"
+  ],
+
+  "tr": [
+    "settingsDescriptionBehavior",
+    "settingsDescriptionInterface",
+    "settingsDescriptionVoice",
+    "settingsDescriptionExport",
+    "settingsDescriptionAbout",
+    "settingsUseSystem",
+    "settingsUseSystemDescription",
+    "settingsPreloadModels",
+    "settingsVoiceTtsNotSupported",
+    "settingsVoiceTtsNotSupportedDescription",
+    "settingsVoiceNotEnabled"
+  ],
+
   "zh": [
     "settingsDescriptionBehavior",
     "settingsDescriptionInterface",
