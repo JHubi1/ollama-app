@@ -255,17 +255,21 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       return;
     }
 
-    http.Response request;
+    http.Response? request;
     try {
-      request = await http
-          .get(
-        Uri.parse(tmpHost),
-        headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-            .cast<String, String>(),
-      )
+      var client = http.Client();
+      final requestBase = http.Request("get", Uri.parse(tmpHost))
+        ..headers.addAll(
+          (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
+              .cast<String, String>(),
+        )
+        ..followRedirects = false;
+      request = await http.Response.fromStream(await requestBase
+          .send()
           .timeout(const Duration(seconds: 5), onTimeout: () {
-        return http.Response("Error", 408);
-      });
+        return http.StreamedResponse(const Stream.empty(), 408);
+      }));
+      client.close();
     } catch (e) {
       setState(() {
         hostInvalidHost = true;
@@ -278,7 +282,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       setState(() {
         hostLoading = false;
         host = tmpHost;
-        if (hostInputController.text != host!) {
+        if (hostInputController.text != host! &&
+            (Uri.parse(tmpHost).toString() != fixedHost)) {
           hostInputController.text = host!;
         }
       });

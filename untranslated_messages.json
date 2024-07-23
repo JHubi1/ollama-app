@@ -1,5 +1,7 @@
 {
   "de": [
+    "deleteChat",
+    "renameChat",
     "settingsDescriptionBehavior",
     "settingsDescriptionInterface",
     "settingsDescriptionVoice",
@@ -14,6 +16,8 @@
   ],
 
   "zh": [
+    "deleteChat",
+    "renameChat",
     "settingsDescriptionBehavior",
     "settingsDescriptionInterface",
     "settingsDescriptionVoice",

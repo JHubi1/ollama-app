@@ -39,7 +39,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 // use host or not, if false dialog is shown
 const useHost = false;
-// host of ollama, must be accessible from the client, without trailing slash, will always be accepted as valid
+// host of ollama, must be accessible from the client, without trailing slash
+// ! will always be accepted as valid, even if [useHost] is false
 const fixedHost = "http://example.com:11434";
 // use model or not, if false selector is shown
 const useModel = false;
@@ -66,6 +67,7 @@ bool multimodal = false;
 List<types.Message> messages = [];
 String? chatUuid;
 bool chatAllowed = true;
+String hoveredChat = "";
 
 final user = types.User(id: const Uuid().v4());
 final assistant = types.User(id: const Uuid().v4());
@@ -283,14 +285,13 @@ class _MainAppState extends State<MainApp> {
                         ),
                         const SizedBox(width: 16),
                       ]))))),
-      desktopLayoutNotRequired(context)
+      (desktopLayoutNotRequired(context) ||
+              (!allowMultipleChats && !allowSettings))
           ? const SizedBox.shrink()
-          : (!allowMultipleChats && !allowSettings)
-              ? const SizedBox.shrink()
-              : Divider(
-                  color: desktopLayout(context)
-                      ? Theme.of(context).colorScheme.onSurface.withAlpha(20)
-                      : null),
+          : Divider(
+              color: desktopLayout(context)
+                  ? Theme.of(context).colorScheme.onSurface.withAlpha(20)
+                  : null),
       (allowMultipleChats)
           ? (Padding(
               padding: padding,
@@ -360,10 +361,13 @@ class _MainAppState extends State<MainApp> {
                         const SizedBox(width: 16),
                       ])))))
           : const SizedBox.shrink(),
-      Divider(
-          color: desktopLayout(context)
-              ? Theme.of(context).colorScheme.onSurface.withAlpha(20)
-              : null),
+      (desktopLayoutNotRequired(context) &&
+              (!allowMultipleChats && !allowSettings))
+          ? const SizedBox.shrink()
+          : Divider(
+              color: desktopLayout(context)
+                  ? Theme.of(context).colorScheme.onSurface.withAlpha(20)
+                  : null),
       ((prefs?.getStringList("chats") ?? []).isNotEmpty)
           ? const SizedBox.shrink()
           : (Padding(
@@ -444,135 +448,466 @@ class _MainAppState extends State<MainApp> {
       }),
     ])
       ..addAll((prefs?.getStringList("chats") ?? []).map((item) {
-        return Dismissible(
-            key: Key(jsonDecode(item)["uuid"]),
-            direction: (chatAllowed)
-                ? DismissDirection.startToEnd
-                : DismissDirection.none,
-            confirmDismiss: (direction) async {
-              bool returnValue = false;
-              if (!chatAllowed) return false;
-
-              if (prefs!.getBool("askBeforeDeletion") ?? false) {
-                await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return StatefulBuilder(builder: (context, setLocalState) {
-                        return AlertDialog(
-                            title: Text(AppLocalizations.of(context)!
-                                .deleteDialogTitle),
-                            content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(AppLocalizations.of(context)!
-                                      .deleteDialogDescription),
-                                ]),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    selectionHaptic();
-                                    Navigator.of(context).pop();
-                                    returnValue = false;
-                                  },
-                                  child: Text(AppLocalizations.of(context)!
-                                      .deleteDialogCancel)),
-                              TextButton(
-                                  onPressed: () {
-                                    selectionHaptic();
-                                    Navigator.of(context).pop();
-                                    returnValue = true;
-                                  },
-                                  child: Text(AppLocalizations.of(context)!
-                                      .deleteDialogDelete))
-                            ]);
-                      });
-                    });
-              } else {
-                returnValue = true;
-              }
-              return returnValue;
-            },
-            onDismissed: (direction) {
-              selectionHaptic();
-              for (var i = 0;
-                  i < (prefs!.getStringList("chats") ?? []).length;
-                  i++) {
-                if (jsonDecode(
-                        (prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
-                    jsonDecode(item)["uuid"]) {
-                  List<String> tmp = prefs!.getStringList("chats")!;
-                  tmp.removeAt(i);
-                  prefs!.setStringList("chats", tmp);
-                  break;
-                }
-              }
-              if (chatUuid == jsonDecode(item)["uuid"]) {
-                messages = [];
-                chatUuid = null;
-                if (!desktopLayoutRequired(context)) {
-                  Navigator.of(context).pop();
-                }
-              }
-              setState(() {});
-            },
-            child: Padding(
-                padding: padding,
-                child: InkWell(
-                    customBorder: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(50))),
-                    onTap: () {
-                      selectionHaptic();
-                      if (!desktopLayoutRequired(context)) {
-                        Navigator.of(context).pop();
-                      }
-                      if (!chatAllowed) return;
-                      if (chatUuid == jsonDecode(item)["uuid"]) return;
-                      loadChat(jsonDecode(item)["uuid"], setState);
-                      chatUuid = jsonDecode(item)["uuid"];
-                    },
-                    onLongPress: () async {
-                      selectionHaptic();
-                      if (!chatAllowed) return;
-                      if (!allowSettings) return;
-                      String oldTitle = jsonDecode(item)["title"];
-                      var newTitle = await prompt(context,
-                          title:
-                              AppLocalizations.of(context)!.dialogEnterNewTitle,
-                          value: oldTitle,
-                          uuid: jsonDecode(item)["uuid"]);
-                      var tmp = (prefs!.getStringList("chats") ?? []);
-                      for (var i = 0; i < tmp.length; i++) {
-                        if (jsonDecode((prefs!.getStringList("chats") ??
-                                [])[i])["uuid"] ==
-                            jsonDecode(item)["uuid"]) {
-                          var tmp2 = jsonDecode(tmp[i]);
-                          tmp2["title"] = newTitle;
-                          tmp[i] = jsonEncode(tmp2);
-                          break;
+        var child = Padding(
+            padding: padding,
+            child: InkWell(
+                customBorder: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(50))),
+                onTap: () {
+                  selectionHaptic();
+                  if (!desktopLayoutRequired(context)) {
+                    Navigator.of(context).pop();
+                  }
+                  if (!chatAllowed) return;
+                  if (chatUuid == jsonDecode(item)["uuid"]) return;
+                  loadChat(jsonDecode(item)["uuid"], setState);
+                  chatUuid = jsonDecode(item)["uuid"];
+                },
+                onHover: (value) {
+                  setState(() {
+                    if (value) {
+                      hoveredChat = jsonDecode(item)["uuid"];
+                    } else {
+                      hoveredChat = "";
+                    }
+                  });
+                },
+                onLongPress: desktopFeature()
+                    ? null
+                    : () async {
+                        selectionHaptic();
+                        if (!chatAllowed) return;
+                        if (!allowSettings) return;
+                        String oldTitle = jsonDecode(item)["title"];
+                        var newTitle = await prompt(context,
+                            title: AppLocalizations.of(context)!
+                                .dialogEnterNewTitle,
+                            value: oldTitle,
+                            uuid: jsonDecode(item)["uuid"]);
+                        var tmp = (prefs!.getStringList("chats") ?? []);
+                        for (var i = 0; i < tmp.length; i++) {
+                          if (jsonDecode((prefs!.getStringList("chats") ??
+                                  [])[i])["uuid"] ==
+                              jsonDecode(item)["uuid"]) {
+                            var tmp2 = jsonDecode(tmp[i]);
+                            tmp2["title"] = newTitle;
+                            tmp[i] = jsonEncode(tmp2);
+                            break;
+                          }
                         }
-                      }
-                      prefs!.setStringList("chats", tmp);
-                      setState(() {});
-                    },
-                    child: Padding(
-                        padding: const EdgeInsets.only(top: 16, bottom: 16),
-                        child: Row(children: [
-                          Padding(
+                        prefs!.setStringList("chats", tmp);
+                        setState(() {});
+                      },
+                child: Padding(
+                    padding: const EdgeInsets.only(top: 16, bottom: 16),
+                    child: Row(children: [
+                      allowMultipleChats
+                          ? Padding(
                               padding:
                                   const EdgeInsets.only(left: 16, right: 16),
                               child: Icon((chatUuid == jsonDecode(item)["uuid"])
                                   ? Icons.location_on_rounded
-                                  : Icons.restore_rounded)),
-                          Expanded(
-                            child: Text(jsonDecode(item)["title"],
-                                softWrap: false,
-                                maxLines: 1,
-                                overflow: TextOverflow.fade,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500)),
-                          ),
-                          const SizedBox(width: 16),
-                        ])))));
+                                  : Icons.restore_rounded))
+                          : const SizedBox(width: 16),
+                      Expanded(
+                        child: Text(jsonDecode(item)["title"],
+                            softWrap: false,
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w500)),
+                      ),
+                      AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 100),
+                          child:
+                              ((desktopFeature() &&
+                                          (hoveredChat ==
+                                              jsonDecode(item)["uuid"])) ||
+                                      !allowMultipleChats)
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16, right: 16),
+                                      child: SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            if (!allowMultipleChats) {
+                                              for (var i = 0;
+                                                  i <
+                                                      (prefs!.getStringList(
+                                                                  "chats") ??
+                                                              [])
+                                                          .length;
+                                                  i++) {
+                                                if (jsonDecode((prefs!
+                                                            .getStringList(
+                                                                "chats") ??
+                                                        [])[i])["uuid"] ==
+                                                    jsonDecode(item)["uuid"]) {
+                                                  List<String> tmp = prefs!
+                                                      .getStringList("chats")!;
+                                                  tmp.removeAt(i);
+                                                  prefs!.setStringList(
+                                                      "chats", tmp);
+                                                  break;
+                                                }
+                                              }
+                                              messages = [];
+                                              chatUuid = null;
+                                              if (!desktopLayoutRequired(
+                                                  context)) {
+                                                Navigator.of(context).pop();
+                                              }
+                                              setState(() {});
+                                              return;
+                                            }
+                                            if (!allowSettings) {
+                                              if (prefs!.getBool(
+                                                      "askBeforeDeletion") ??
+                                                  false) {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return StatefulBuilder(
+                                                          builder: (context,
+                                                              setLocalState) {
+                                                        return AlertDialog(
+                                                            title: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .deleteDialogTitle),
+                                                            content: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Text(AppLocalizations.of(
+                                                                          context)!
+                                                                      .deleteDialogDescription),
+                                                                ]),
+                                                            actions: [
+                                                              TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                  child: Text(AppLocalizations.of(
+                                                                          context)!
+                                                                      .deleteDialogCancel)),
+                                                              TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                    for (var i =
+                                                                            0;
+                                                                        i < (prefs!.getStringList("chats") ?? []).length;
+                                                                        i++) {
+                                                                      if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])[
+                                                                              "uuid"] ==
+                                                                          jsonDecode(
+                                                                              item)["uuid"]) {
+                                                                        List<String>
+                                                                            tmp =
+                                                                            prefs!.getStringList("chats")!;
+                                                                        tmp.removeAt(
+                                                                            i);
+                                                                        prefs!.setStringList(
+                                                                            "chats",
+                                                                            tmp);
+                                                                        break;
+                                                                      }
+                                                                    }
+                                                                    if (chatUuid ==
+                                                                        jsonDecode(
+                                                                            item)["uuid"]) {
+                                                                      messages =
+                                                                          [];
+                                                                      chatUuid =
+                                                                          null;
+                                                                      if (!desktopLayoutRequired(
+                                                                          context)) {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                      }
+                                                                    }
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  child: Text(AppLocalizations.of(
+                                                                          context)!
+                                                                      .deleteDialogDelete))
+                                                            ]);
+                                                      });
+                                                    });
+                                              } else {
+                                                for (var i = 0;
+                                                    i <
+                                                        (prefs!.getStringList(
+                                                                    "chats") ??
+                                                                [])
+                                                            .length;
+                                                    i++) {
+                                                  if (jsonDecode((prefs!
+                                                              .getStringList(
+                                                                  "chats") ??
+                                                          [])[i])["uuid"] ==
+                                                      jsonDecode(
+                                                          item)["uuid"]) {
+                                                    List<String> tmp = prefs!
+                                                        .getStringList(
+                                                            "chats")!;
+                                                    tmp.removeAt(i);
+                                                    prefs!.setStringList(
+                                                        "chats", tmp);
+                                                    break;
+                                                  }
+                                                }
+                                                if (chatUuid ==
+                                                    jsonDecode(item)["uuid"]) {
+                                                  messages = [];
+                                                  chatUuid = null;
+                                                  if (!desktopLayoutRequired(
+                                                      context)) {
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                }
+                                                setState(() {});
+                                              }
+                                              return;
+                                            }
+                                            if (!chatAllowed) return;
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return Dialog(
+                                                    alignment:
+                                                        Alignment.bottomLeft,
+                                                    insetPadding:
+                                                        const EdgeInsets.only(
+                                                            left: 12,
+                                                            bottom: 12),
+                                                    child: Container(
+                                                        width: 100,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 16,
+                                                                right: 16,
+                                                                top: 16),
+                                                        child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              SizedBox(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  child: OutlinedButton
+                                                                      .icon(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.of(context).pop();
+                                                                            if (prefs!.getBool("askBeforeDeletion") ??
+                                                                                false) {
+                                                                              showDialog(
+                                                                                  context: context,
+                                                                                  builder: (context) {
+                                                                                    return StatefulBuilder(builder: (context, setLocalState) {
+                                                                                      return AlertDialog(
+                                                                                          title: Text(AppLocalizations.of(context)!.deleteDialogTitle),
+                                                                                          content: Column(mainAxisSize: MainAxisSize.min, children: [
+                                                                                            Text(AppLocalizations.of(context)!.deleteDialogDescription),
+                                                                                          ]),
+                                                                                          actions: [
+                                                                                            TextButton(
+                                                                                                onPressed: () {
+                                                                                                  Navigator.of(context).pop();
+                                                                                                },
+                                                                                                child: Text(AppLocalizations.of(context)!.deleteDialogCancel)),
+                                                                                            TextButton(
+                                                                                                onPressed: () {
+                                                                                                  Navigator.of(context).pop();
+                                                                                                  for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
+                                                                                                    if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == jsonDecode(item)["uuid"]) {
+                                                                                                      List<String> tmp = prefs!.getStringList("chats")!;
+                                                                                                      tmp.removeAt(i);
+                                                                                                      prefs!.setStringList("chats", tmp);
+                                                                                                      break;
+                                                                                                    }
+                                                                                                  }
+                                                                                                  if (chatUuid == jsonDecode(item)["uuid"]) {
+                                                                                                    messages = [];
+                                                                                                    chatUuid = null;
+                                                                                                    if (!desktopLayoutRequired(context)) {
+                                                                                                      Navigator.of(context).pop();
+                                                                                                    }
+                                                                                                  }
+                                                                                                  setState(() {});
+                                                                                                },
+                                                                                                child: Text(AppLocalizations.of(context)!.deleteDialogDelete))
+                                                                                          ]);
+                                                                                    });
+                                                                                  });
+                                                                            } else {
+                                                                              for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
+                                                                                if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == jsonDecode(item)["uuid"]) {
+                                                                                  List<String> tmp = prefs!.getStringList("chats")!;
+                                                                                  tmp.removeAt(i);
+                                                                                  prefs!.setStringList("chats", tmp);
+                                                                                  break;
+                                                                                }
+                                                                              }
+                                                                              if (chatUuid == jsonDecode(item)["uuid"]) {
+                                                                                messages = [];
+                                                                                chatUuid = null;
+                                                                                if (!desktopLayoutRequired(context)) {
+                                                                                  Navigator.of(context).pop();
+                                                                                }
+                                                                              }
+                                                                              setState(() {});
+                                                                            }
+                                                                          },
+                                                                          icon: const Icon(Icons
+                                                                              .delete_forever_rounded),
+                                                                          label:
+                                                                              Text(AppLocalizations.of(context)!.deleteChat))),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              SizedBox(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  child: OutlinedButton
+                                                                      .icon(
+                                                                          onPressed:
+                                                                              () async {
+                                                                            Navigator.of(context).pop();
+                                                                            String
+                                                                                oldTitle =
+                                                                                jsonDecode(item)["title"];
+                                                                            var newTitle = await prompt(context,
+                                                                                title: AppLocalizations.of(context)!.dialogEnterNewTitle,
+                                                                                value: oldTitle,
+                                                                                uuid: jsonDecode(item)["uuid"]);
+                                                                            var tmp =
+                                                                                (prefs!.getStringList("chats") ?? []);
+                                                                            for (var i = 0;
+                                                                                i < tmp.length;
+                                                                                i++) {
+                                                                              if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == jsonDecode(item)["uuid"]) {
+                                                                                var tmp2 = jsonDecode(tmp[i]);
+                                                                                tmp2["title"] = newTitle;
+                                                                                tmp[i] = jsonEncode(tmp2);
+                                                                                break;
+                                                                              }
+                                                                            }
+                                                                            prefs!.setStringList("chats",
+                                                                                tmp);
+                                                                            setState(() {});
+                                                                          },
+                                                                          icon: const Icon(Icons
+                                                                              .edit_rounded),
+                                                                          label:
+                                                                              Text(AppLocalizations.of(context)!.renameChat))),
+                                                              const SizedBox(
+                                                                  height: 16)
+                                                            ])),
+                                                  );
+                                                });
+                                          },
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          icon: Transform.translate(
+                                            offset: const Offset(-8, -8),
+                                            child: const Icon(allowMultipleChats
+                                                ? allowSettings
+                                                    ? Icons.more_horiz_rounded
+                                                    : Icons.close_rounded
+                                                : Icons.restart_alt_rounded),
+                                          ),
+                                        ),
+                                      ))
+                                  : const SizedBox(width: 16)),
+                    ]))));
+        return desktopFeature() || !allowMultipleChats
+            ? child
+            : Dismissible(
+                key: Key(jsonDecode(item)["uuid"]),
+                direction: (chatAllowed)
+                    ? DismissDirection.startToEnd
+                    : DismissDirection.none,
+                confirmDismiss: (direction) async {
+                  bool returnValue = false;
+                  if (!chatAllowed) return false;
+
+                  if (prefs!.getBool("askBeforeDeletion") ?? false) {
+                    await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return StatefulBuilder(
+                              builder: (context, setLocalState) {
+                            return AlertDialog(
+                                title: Text(AppLocalizations.of(context)!
+                                    .deleteDialogTitle),
+                                content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(AppLocalizations.of(context)!
+                                          .deleteDialogDescription),
+                                    ]),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        selectionHaptic();
+                                        Navigator.of(context).pop();
+                                        returnValue = false;
+                                      },
+                                      child: Text(AppLocalizations.of(context)!
+                                          .deleteDialogCancel)),
+                                  TextButton(
+                                      onPressed: () {
+                                        selectionHaptic();
+                                        Navigator.of(context).pop();
+                                        returnValue = true;
+                                      },
+                                      child: Text(AppLocalizations.of(context)!
+                                          .deleteDialogDelete))
+                                ]);
+                          });
+                        });
+                  } else {
+                    returnValue = true;
+                  }
+                  return returnValue;
+                },
+                onDismissed: (direction) {
+                  selectionHaptic();
+                  for (var i = 0;
+                      i < (prefs!.getStringList("chats") ?? []).length;
+                      i++) {
+                    if (jsonDecode(
+                            (prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
+                        jsonDecode(item)["uuid"]) {
+                      List<String> tmp = prefs!.getStringList("chats")!;
+                      tmp.removeAt(i);
+                      prefs!.setStringList("chats", tmp);
+                      break;
+                    }
+                  }
+                  if (chatUuid == jsonDecode(item)["uuid"]) {
+                    messages = [];
+                    chatUuid = null;
+                    if (!desktopLayoutRequired(context)) {
+                      Navigator.of(context).pop();
+                    }
+                  }
+                  setState(() {});
+                },
+                child: child);
       }).toList());
   }
 
@@ -610,7 +945,9 @@ class _MainAppState extends State<MainApp> {
                             padding: EdgeInsets.all(16),
                             child: Text(
                                 "*Build Error:*\n\nuseHost: $useHost\nallowSettings: $allowSettings\n\nYou created this build? One of them must be set to true or the app is not functional!\n\nYou received this build by someone else? Please contact them and report the issue.",
-                                style: TextStyle(color: Colors.red)))));
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontFamily: "monospace")))));
               });
         }
 
@@ -726,91 +1063,98 @@ class _MainAppState extends State<MainApp> {
                       : [Expanded(child: selector)]),
               actions: desktopControlsActions(context, [
                 const SizedBox(width: 4),
-                IconButton(
-                    onPressed: () {
-                      selectionHaptic();
-                      if (!chatAllowed) return;
+                allowMultipleChats
+                    ? IconButton(
+                        onPressed: () {
+                          selectionHaptic();
+                          if (!chatAllowed) return;
 
-                      if (prefs!.getBool("askBeforeDeletion") ??
-                          // ignore: dead_code
-                          false && messages.isNotEmpty) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return StatefulBuilder(
-                                  builder: (context, setLocalState) {
-                                return AlertDialog(
-                                    title: Text(AppLocalizations.of(context)!
-                                        .deleteDialogTitle),
-                                    content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(AppLocalizations.of(context)!
-                                              .deleteDialogDescription),
-                                        ]),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            selectionHaptic();
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .deleteDialogCancel)),
-                                      TextButton(
-                                          onPressed: () {
-                                            selectionHaptic();
-                                            Navigator.of(context).pop();
+                          if (prefs!.getBool("askBeforeDeletion") ??
+                              // ignore: dead_code
+                              false && messages.isNotEmpty) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(
+                                      builder: (context, setLocalState) {
+                                    return AlertDialog(
+                                        title: Text(
+                                            AppLocalizations.of(context)!
+                                                .deleteDialogTitle),
+                                        content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(AppLocalizations.of(context)!
+                                                  .deleteDialogDescription),
+                                            ]),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                selectionHaptic();
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .deleteDialogCancel)),
+                                          TextButton(
+                                              onPressed: () {
+                                                selectionHaptic();
+                                                Navigator.of(context).pop();
 
-                                            for (var i = 0;
-                                                i <
-                                                    (prefs!.getStringList(
-                                                                "chats") ??
-                                                            [])
-                                                        .length;
-                                                i++) {
-                                              if (jsonDecode((prefs!
-                                                          .getStringList(
-                                                              "chats") ??
-                                                      [])[i])["uuid"] ==
-                                                  chatUuid) {
-                                                List<String> tmp = prefs!
-                                                    .getStringList("chats")!;
-                                                tmp.removeAt(i);
-                                                prefs!.setStringList(
-                                                    "chats", tmp);
-                                                break;
-                                              }
-                                            }
-                                            messages = [];
-                                            chatUuid = null;
-                                            setState(() {});
-                                          },
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .deleteDialogDelete))
-                                    ]);
-                              });
-                            });
-                      } else {
-                        for (var i = 0;
-                            i < (prefs!.getStringList("chats") ?? []).length;
-                            i++) {
-                          if (jsonDecode((prefs!.getStringList("chats") ??
-                                  [])[i])["uuid"] ==
-                              chatUuid) {
-                            List<String> tmp = prefs!.getStringList("chats")!;
-                            tmp.removeAt(i);
-                            prefs!.setStringList("chats", tmp);
-                            break;
+                                                for (var i = 0;
+                                                    i <
+                                                        (prefs!.getStringList(
+                                                                    "chats") ??
+                                                                [])
+                                                            .length;
+                                                    i++) {
+                                                  if (jsonDecode((prefs!
+                                                              .getStringList(
+                                                                  "chats") ??
+                                                          [])[i])["uuid"] ==
+                                                      chatUuid) {
+                                                    List<String> tmp = prefs!
+                                                        .getStringList(
+                                                            "chats")!;
+                                                    tmp.removeAt(i);
+                                                    prefs!.setStringList(
+                                                        "chats", tmp);
+                                                    break;
+                                                  }
+                                                }
+                                                messages = [];
+                                                chatUuid = null;
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .deleteDialogDelete))
+                                        ]);
+                                  });
+                                });
+                          } else {
+                            for (var i = 0;
+                                i <
+                                    (prefs!.getStringList("chats") ?? [])
+                                        .length;
+                                i++) {
+                              if (jsonDecode((prefs!.getStringList("chats") ??
+                                      [])[i])["uuid"] ==
+                                  chatUuid) {
+                                List<String> tmp =
+                                    prefs!.getStringList("chats")!;
+                                tmp.removeAt(i);
+                                prefs!.setStringList("chats", tmp);
+                                break;
+                              }
+                            }
+                            messages = [];
+                            chatUuid = null;
                           }
-                        }
-                        messages = [];
-                        chatUuid = null;
-                      }
-                      setState(() {});
-                    },
-                    icon: const Icon(Icons.restart_alt_rounded))
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.restart_alt_rounded))
+                    : const SizedBox.shrink()
               ]),
               bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(1),
@@ -875,6 +1219,13 @@ class _MainAppState extends State<MainApp> {
                                   {required messageWidth, required showName}) {
                                 var white =
                                     const TextStyle(color: Colors.white);
+                                bool greyed = false;
+                                String text = p0.text;
+                                if (text.trim() == "") {
+                                  text =
+                                      "_Empty AI response, try restarting conversation_"; // Warning icon: U+26A0
+                                  greyed = true;
+                                }
                                 return Padding(
                                     padding: const EdgeInsets.only(
                                         left: 20,
@@ -889,7 +1240,7 @@ class _MainAppState extends State<MainApp> {
                                                       WidgetStatePropertyAll(
                                                           Colors.grey))),
                                       child: MarkdownBody(
-                                          data: p0.text,
+                                          data: text,
                                           onTapLink: (text, href, title) async {
                                             selectionHaptic();
                                             try {
@@ -1020,9 +1371,8 @@ class _MainAppState extends State<MainApp> {
                                                           Colors.white),
                                                   codeblockDecoration: BoxDecoration(
                                                       color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8)),
+                                                      borderRadius: BorderRadius.circular(
+                                                          8)),
                                                   h1: white,
                                                   h2: white,
                                                   h3: white,
@@ -1042,8 +1392,10 @@ class _MainAppState extends State<MainApp> {
                                               : (Theme.of(context).brightness ==
                                                       Brightness.light)
                                                   ? MarkdownStyleSheet(
-                                                      p: const TextStyle(
-                                                          color: Colors.black,
+                                                      p: TextStyle(
+                                                          color: greyed
+                                                              ? Colors.grey
+                                                              : Colors.black,
                                                           fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.w500),
@@ -1056,8 +1408,7 @@ class _MainAppState extends State<MainApp> {
                                                       ),
                                                       code: const TextStyle(
                                                           color: Colors.white,
-                                                          backgroundColor:
-                                                              Colors.black),
+                                                          backgroundColor: Colors.black),
                                                       codeblockDecoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
                                                       horizontalRuleDecoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[200]!, width: 1))))
                                                   : MarkdownStyleSheet(
@@ -1476,7 +1827,7 @@ class _MainAppState extends State<MainApp> {
                                       inputTextColor: (theme ?? ThemeData()).colorScheme.onSurface,
                                       inputBorderRadius: const BorderRadius.all(Radius.circular(64)),
                                       inputPadding: const EdgeInsets.all(16),
-                                      inputMargin: EdgeInsets.only(left: 8, right: 8, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 0 : 8),
+                                      inputMargin: EdgeInsets.only(left: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 8 : 6, right: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 8 : 6, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 0 : 8),
                                       messageMaxWidth: (MediaQuery.of(context).size.width >= 1000)
                                           ? (MediaQuery.of(context).size.width >= 1600)
                                               ? (MediaQuery.of(context).size.width >= 2200)
@@ -1532,7 +1883,7 @@ class _MainAppState extends State<MainApp> {
               ),
             ],
           ),
-          drawerEdgeDragWidth: (prefs!.getBool("fixCodeblockScroll") ?? false)
+          drawerEdgeDragWidth: (prefs?.getBool("fixCodeblockScroll") ?? false)
               ? null
               : (desktopLayout(context)
                   ? null

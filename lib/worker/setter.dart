@@ -82,7 +82,8 @@ void setModel(BuildContext context, Function setState) {
           if (!loaded) return;
           loaded = false;
           if (usedIndex >= 0 && modelsReal[usedIndex] != model) {
-            if (prefs!.getBool("resetOnModelSelect") ?? true) {
+            if (prefs!.getBool("resetOnModelSelect") ??
+                true && allowMultipleChats) {
               messages = [];
               chatUuid = null;
             }
@@ -467,6 +468,24 @@ Future<String> prompt(BuildContext context,
                             autofocus: true,
                             keyboardType: keyboard,
                             maxLines: maxLines,
+                            onSubmitted: (value) async {
+                              if (validator != null) {
+                                selectionHaptic();
+                                setLocalState(() {
+                                  error = null;
+                                });
+                                bool valid = await validator(controller.text);
+                                if (!valid) {
+                                  setLocalState(() {
+                                    error = validatorError;
+                                  });
+                                  return;
+                                }
+                              }
+                              returnText = controller.text;
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop();
+                            },
                             decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
                                 hintText: placeholder,
