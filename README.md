@@ -221,6 +221,11 @@ Ollama App does support multiple languages. Currently available are:
 
 - [x] English (fallback)
 - [x] German
+- [ ] Chinese (simplified)
+- [ ] Italian
+- [ ] Turkish
+
+The tick is set if the language is translated with 100%. This might not be up to date, check the project page to get the latest progress.
 
 In case the language you're looking for isn't listed, you can check if the development is in progress on the [Crowdin project page](https://crowdin.com/project/ollama-app). If not, you can always contribute.
 
