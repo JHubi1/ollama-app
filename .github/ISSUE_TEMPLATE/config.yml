@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contact Author
+    url: https://jhubi1.com/mailto
+    about: Report security concerns or ask general questions.
+  - name: Translations
+    url: https://crowdin.com/project/ollama-app
+    about: Help translate the app into your language.

@@ -1,0 +1,32 @@
+name: Feature Request
+description: Suggest a new feature or improvement for the app.
+assignees: ["JHubi1"]
+labels: ["enhancement"]
+body:
+  - type: checkboxes
+    attributes:
+      label: "Requirements"
+      description: "Please check all the following requirements before submitting a feature request."
+      options:
+        - label: I have searched the issues of this repository and believe that this is not a duplicate
+          required: true
+        - label: I can confirm this feature request is not already implemented in the app
+          required: true
+  - type: textarea
+    attributes:
+      label: "Description"
+      description: "A description of the feature you are proposing."
+      placeholder: "I would like to see..."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Possible solution"
+      description: "Suggestions on how to implement the feature."
+      placeholder: "It would be great if..."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Additional context"
+      description: "Add any other context, screenshots or possible concepts about the feature request here."

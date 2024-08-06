@@ -1,0 +1,54 @@
+name: Bug Report
+description: Report a bug in the app.
+assignees: ["JHubi1"]
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: "Requirements"
+      description: "Please check all the following requirements before submitting a bug report."
+      options:
+        - label: I have searched the issues of this repository and believe that this is not a duplicate
+          required: true
+        - label: I have confirmed this bug exists on the latest version of the app
+          required: true
+  - type: input
+    attributes:
+      label: "Platform"
+      description: "The platforms on which the bug occurs, separated by commas. Use `*` if all platforms are affected.\nAvailable platforms: Android, Windows"
+      placeholder: "Android, Windows"
+      value: "*"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: "Description"
+      description: "A short description of what the bug is."
+      placeholder: "I was trying to do X, but Y happened instead."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Steps to reproduce"
+      description: "Detailed steps for reproducing the issue."
+      placeholder: "1. Go to '...' 2. Click on '....' 3. Scroll down to '....' 4. See error"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Expected behavior"
+      description: "A clear and concise description of what you expected to happen."
+      placeholder: "I expected to see..."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Actual behavior"
+      description: "A clear and concise description of what actually happened."
+      placeholder: "Instead, I saw..."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Screenshots or additional context"
+      description: "If applicable, add screenshots to help explain your problem."
