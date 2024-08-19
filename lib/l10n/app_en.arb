@@ -660,9 +660,9 @@
         "description": "Text displayed as description for report issue button",
         "context": "Visible in the settings view"
     },
-    "settingsMainDeveloper": "Main Developer",
-    "@settingsMainDeveloper": {
-        "description": "Text displayed as description for main developer button",
+    "settingsLicenses": " Licenses",
+    "@settingsLicenses": {
+        "description": "Text displayed as description for licenses button",
         "context": "Visible in the settings view"
     },
     "settingsVersion": "Ollama App v{version}",
