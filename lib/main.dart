@@ -1060,7 +1060,35 @@ class _MainAppState extends State<MainApp> {
                                   child: SizedBox(
                                       height: 200, child: MoveWindow()))
                             ]
-                      : [Expanded(child: selector)]),
+                      : desktopLayoutRequired(context)
+                          ? [
+                              // bottom left tile
+                              const SizedBox(width: 304, height: 200),
+                              SizedBox(
+                                  height: 200,
+                                  child: AnimatedOpacity(
+                                      opacity: menuVisible ? 1.0 : 0.0,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      child: VerticalDivider(
+                                          width: 2,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withAlpha(20)))),
+                              AnimatedOpacity(
+                                opacity: desktopTitleVisible ? 1.0 : 0.0,
+                                duration: desktopTitleVisible
+                                    ? const Duration(milliseconds: 300)
+                                    : const Duration(milliseconds: 0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: selector,
+                                ),
+                              ),
+                              const Expanded(child: SizedBox(height: 200))
+                            ]
+                          : [Expanded(child: selector)]),
               actions: desktopControlsActions(context, [
                 const SizedBox(width: 4),
                 allowMultipleChats

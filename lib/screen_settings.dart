@@ -520,7 +520,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                             context: context,
                             description:
                                 "\n${AppLocalizations.of(context)!.settingsDescriptionInterface}"),
-                        (!desktopFeature())
+                        (!desktopFeature(web: true))
                             ? button(
                                 AppLocalizations.of(context)!
                                     .settingsTitleVoice,

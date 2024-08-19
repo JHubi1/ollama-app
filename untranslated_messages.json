@@ -16,6 +16,8 @@
   ],
 
   "it": [
+    "deleteChat",
+    "renameChat",
     "settingsDescriptionBehavior",
     "settingsDescriptionInterface",
     "settingsDescriptionVoice",
@@ -30,6 +32,8 @@
   ],
 
   "tr": [
+    "deleteChat",
+    "renameChat",
     "settingsDescriptionBehavior",
     "settingsDescriptionInterface",
     "settingsDescriptionVoice",

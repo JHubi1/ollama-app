@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <base href="$FLUTTER_BASE_HREF"> -->
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A modern and easy-to-use client for Ollama">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="ollama_app">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <title>Ollama App</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+    }
+
+    .loader {
+      width: 28px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: black;
+      transform-origin: top;
+      display: grid;
+      animation: l3-0 1s infinite linear;
+    }
+
+    .loader::before,
+    .loader::after {
+      content: "";
+      grid-area: 1/1;
+      background: lightgrey;
+      border-radius: 50%;
+      transform-origin: top;
+      animation: inherit;
+      animation-name: l3-1;
+    }
+
+    .loader::after {
+      background: black;
+      --s: 180deg;
+    }
+
+    @keyframes l3-0 {
+
+      0%,
+      20% {
+        transform: rotate(0)
+      }
+
+      100% {
+        transform: rotate(360deg)
+      }
+    }
+
+    @keyframes l3-1 {
+      50% {
+        transform: rotate(var(--s, 90deg))
+      }
+
+      100% {
+        transform: rotate(0)
+      }
+    }
+  </style>
+  <style>
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: black;
+      }
+
+      .loader {
+        background: white;
+      }
+
+      .loader::after {
+        background: white;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loader"></div>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+
+</html>

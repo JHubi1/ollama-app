@@ -6,26 +6,30 @@ import 'package:flutter/foundation.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 bool desktopFeature({bool web = false}) {
-  return (Platform.isWindows ||
-      Platform.isLinux ||
-      Platform.isMacOS ||
-      (web ? kIsWeb : false));
+  try {
+    return (Platform.isWindows ||
+        Platform.isLinux ||
+        Platform.isMacOS ||
+        (web ? kIsWeb : false));
+  } catch (_) {
+    return web ? kIsWeb : false;
+  }
 }
 
 bool desktopLayout(BuildContext context,
-    {bool web = false, double? value, double valueCap = 1000}) {
+    {bool web = true, double? value, double valueCap = 1000}) {
   value ??= MediaQuery.of(context).size.width;
   return (desktopFeature(web: web) || value >= valueCap);
 }
 
 bool desktopLayoutRequired(BuildContext context,
-    {bool web = false, double? value, double valueCap = 1000}) {
+    {bool web = true, double? value, double valueCap = 1000}) {
   value ??= MediaQuery.of(context).size.width;
   return (desktopFeature(web: web) && value >= valueCap);
 }
 
 bool desktopLayoutNotRequired(BuildContext context,
-    {bool web = false, double? value, double valueCap = 1000}) {
+    {bool web = true, double? value, double valueCap = 1000}) {
   value ??= MediaQuery.of(context).size.width;
   return (value >= valueCap);
 }

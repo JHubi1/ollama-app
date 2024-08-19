@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'dart:convert';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../main.dart';
 import '../worker/haptic.dart';
@@ -42,18 +45,37 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                     button(AppLocalizations.of(context)!.settingsExportChats,
                         Icons.upload_rounded, () async {
                       selectionHaptic();
-                      var path = await FilePicker.platform.saveFile(
-                          type: FileType.custom,
-                          allowedExtensions: ["json"],
-                          fileName:
-                              "ollama-export-${DateFormat('yyyy-MM-dd-H-m-s').format(DateTime.now())}.json",
-                          bytes: utf8.encode(
-                              jsonEncode(prefs!.getStringList("chats") ?? [])));
-                      selectionHaptic();
-                      if (path == null) return;
-                      if (desktopFeature()) {
-                        File(path).writeAsString(
-                            jsonEncode(prefs!.getStringList("chats") ?? []));
+                      var name =
+                          "ollama-export-${DateFormat('yyyy-MM-dd-H-m-s').format(DateTime.now())}.json";
+                      var content =
+                          jsonEncode(prefs!.getStringList("chats") ?? []);
+                      if (kIsWeb) {
+                        final bytes = utf8.encode(content);
+                        final blob = html.Blob([bytes]);
+                        final url = html.Url.createObjectUrlFromBlob(blob);
+                        final anchor = html.document.createElement("a")
+                            as html.AnchorElement
+                          ..href = url
+                          ..style.display = "none"
+                          ..download = name;
+                        html.document.body!.children.add(anchor);
+
+                        anchor.click();
+
+                        html.document.body!.children.remove(anchor);
+                        html.Url.revokeObjectUrl(url);
+                      } else {
+                        var path = await FilePicker.platform.saveFile(
+                            type: FileType.custom,
+                            allowedExtensions: ["json"],
+                            fileName: name,
+                            bytes: utf8.encode(jsonEncode(
+                                prefs!.getStringList("chats") ?? [])));
+                        selectionHaptic();
+                        if (path == null) return;
+                        if (desktopFeature()) {
+                          File(path).writeAsString(content);
+                        }
                       }
                     }),
                     allowMultipleChats
@@ -95,10 +117,18 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                                                 return;
                                               }
 
-                                              File file = File(
-                                                  result.files.single.path!);
-                                              var content =
-                                                  await file.readAsString();
+                                              String content;
+                                              try {
+                                                File file = File(
+                                                    result.files.single.path!);
+                                                content =
+                                                    await file.readAsString();
+                                              } catch (_) {
+                                                content = utf8.decode(result
+                                                    .files
+                                                    .single
+                                                    .bytes as List<int>);
+                                              }
                                               List<dynamic> tmpHistory =
                                                   jsonDecode(content);
                                               List<String> history = [];

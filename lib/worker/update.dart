@@ -37,7 +37,7 @@ Future<bool> updatesSupported(Function setState,
     "com.machiav3lli.fdroid",
     "nya.kitsunyan.foxydroid"
   ];
-  if (!desktopFeature()) {
+  if (!desktopFeature(web: true)) {
     if ((await InstallReferrer.referrer !=
             InstallationAppReferrer.androidManually) ||
         (installerApps
