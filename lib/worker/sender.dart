@@ -162,7 +162,7 @@ Future<String> send(String value, BuildContext context, Function setState,
           .cast<String, String>(),
       baseUrl: "$host/api");
 
-  // try {
+  try {
   if ((prefs!.getString("requestType") ?? "stream") == "stream") {
     final stream = client
         .generateChatCompletionStream(
@@ -215,37 +215,37 @@ Future<String> send(String value, BuildContext context, Function setState,
     setState(() {});
     heavyHaptic();
   }
-  // } catch (e) {
-  //   for (var i = 0; i < messages.length; i++) {
-  //     if (messages[i].id == newId) {
-  //       messages.removeAt(i);
-  //       break;
-  //     }
-  //   }
-  //   setState(() {
-  //     chatAllowed = true;
-  //     messages.removeAt(0);
-  //     if (messages.isEmpty) {
-  //       var tmp = (prefs!.getStringList("chats") ?? []);
-  //       for (var i = 0; i < tmp.length; i++) {
-  //         if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
-  //             chatUuid) {
-  //           tmp.removeAt(i);
-  //           prefs!.setStringList("chats", tmp);
-  //           break;
-  //         }
-  //       }
-  //       chatUuid = null;
-  //     }
-  //   });
-  //   // ignore: use_build_context_synchronously
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content:
-  //           // ignore: use_build_context_synchronously
-  //           Text(AppLocalizations.of(context)!.settingsHostInvalid("timeout")),
-  //       showCloseIcon: true));
-  //   return "";
-  // }
+  } catch (e) {
+    for (var i = 0; i < messages.length; i++) {
+      if (messages[i].id == newId) {
+        messages.removeAt(i);
+        break;
+      }
+    }
+    setState(() {
+      chatAllowed = true;
+      messages.removeAt(0);
+      if (messages.isEmpty) {
+        var tmp = (prefs!.getStringList("chats") ?? []);
+        for (var i = 0; i < tmp.length; i++) {
+          if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
+              chatUuid) {
+            tmp.removeAt(i);
+            prefs!.setStringList("chats", tmp);
+            break;
+          }
+        }
+        chatUuid = null;
+      }
+    });
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            // ignore: use_build_context_synchronously
+            Text(AppLocalizations.of(context)!.settingsHostInvalid("timeout")),
+        showCloseIcon: true));
+    return "";
+  }
 
   if ((prefs!.getString("requestType") ?? "stream") == "stream") {
     if (onStream != null) {
