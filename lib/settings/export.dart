@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
