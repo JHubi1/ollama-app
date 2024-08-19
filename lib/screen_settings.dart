@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ollama_app/worker/theme.dart';
 
 import 'main.dart';
 import 'worker/haptic.dart';
 import 'worker/update.dart';
 import 'worker/desktop.dart';
-import 'package:ollama_app/worker/setter.dart';
+import 'worker/setter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'settings/behavior.dart';
@@ -31,6 +32,7 @@ Widget toggle(BuildContext context, String text, bool value,
   var space = "⁣"; // Invisible character: U+2063
   var spacePlus = "    $space";
   return InkWell(
+    enableFeedback: false,
     splashFactory: NoSplash.splashFactory,
     highlightColor: Colors.transparent,
     hoverColor: Colors.transparent,
@@ -71,26 +73,24 @@ Widget toggle(BuildContext context, String text, bool value,
                       color: disabled ? Colors.grey : null,
                       backgroundColor:
                           (Theme.of(context).brightness == Brightness.light)
-                              ? (theme ?? ThemeData()).colorScheme.surface
-                              : (themeDark ?? ThemeData.dark())
-                                  .colorScheme
-                                  .surface))),
+                              ? themeLight().colorScheme.surface
+                              : themeDark().colorScheme.surface))),
           Container(
               padding: const EdgeInsets.only(left: 16),
               color: (Theme.of(context).brightness == Brightness.light)
-                  ? (theme ?? ThemeData()).colorScheme.surface
-                  : (themeDark ?? ThemeData.dark()).colorScheme.surface,
+                  ? themeLight().colorScheme.surface
+                  : themeDark().colorScheme.surface,
               child: SizedBox(
                   height: 40,
                   child: Switch(
                       value: value,
                       onChanged: disabled
-                          ? (p0) {
-                              selectionHaptic();
-                              if (onDisabledTap != null) {
-                                onDisabledTap();
-                              }
-                            }
+                          ? (onDisabledTap != null)
+                              ? (p0) {
+                                  selectionHaptic();
+                                  onDisabledTap();
+                                }
+                              : null
                           : onChanged,
                       activeTrackColor: disabled
                           ? Theme.of(context).colorScheme.primary.withAlpha(50)
@@ -171,6 +171,7 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
         ? const EdgeInsets.only(top: 8, bottom: 8)
         : EdgeInsets.zero,
     child: InkWell(
+        enableFeedback: false,
         onTap: disabled
             ? () {
                 selectionHaptic();
@@ -178,7 +179,11 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                   onDisabledTap();
                 }
               }
-            : onPressed,
+            : (onPressed == null && (onLongTap != null || onDoubleTap != null))
+                ? () {
+                    selectionHaptic();
+                  }
+                : onPressed,
         onLongPress: (description != null && context != null)
             ? desktopLayoutNotRequired(context)
                 ? null
@@ -305,7 +310,11 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    checkHost();
+    if ((Uri.parse(hostInputController.text.trim().removeSuffix("/").trim())
+            .toString() !=
+        fixedHost)) {
+      checkHost();
+    }
     updatesSupported(setState, true);
   }
 

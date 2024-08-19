@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'main.dart';
+import 'worker/theme.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -18,57 +18,6 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
   int page = 0;
 
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await Future.delayed(const Duration(milliseconds: 10));
-      WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
-          () {
-        // invert colors used, because brightness not updated yet
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            systemNavigationBarColor:
-                (prefs!.getString("brightness") ?? "system") == "system"
-                    ? ((MediaQuery.of(context).platformBrightness ==
-                            Brightness.light)
-                        ? Colors.grey[900]
-                        : Colors.grey[100])
-                    : (prefs!.getString("brightness") == "dark"
-                        ? Colors.grey[900]
-                        : Colors.grey[100]),
-            systemNavigationBarIconBrightness:
-                (((prefs!.getString("brightness") ?? "system") == "system" &&
-                            MediaQuery.of(context).platformBrightness ==
-                                Brightness.dark) ||
-                        prefs!.getString("brightness") == "light")
-                    ? Brightness.dark
-                    : Brightness.light));
-      };
-
-      // brightness changed function not run at first startup
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          systemNavigationBarColor:
-              (prefs!.getString("brightness") ?? "system") == "system"
-                  // ignore: use_build_context_synchronously
-                  ? ((MediaQuery.of(context).platformBrightness ==
-                          Brightness.light)
-                      ? Colors.grey[100]
-                      : Colors.grey[900])
-                  : (prefs!.getString("brightness") == "dark"
-                      ? Colors.grey[900]
-                      : Colors.grey[100]),
-          systemNavigationBarIconBrightness:
-              (((prefs!.getString("brightness") ?? "system") == "system" &&
-                          // ignore: use_build_context_synchronously
-                          MediaQuery.of(context).platformBrightness ==
-                              Brightness.light) ||
-                      prefs!.getString("brightness") == "light")
-                  ? Brightness.dark
-                  : Brightness.light));
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     precacheImage(const AssetImage("assets/welcome/1.png"), context);
     precacheImage(const AssetImage("assets/welcome/2.png"), context);
@@ -76,6 +25,20 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
     precacheImage(const AssetImage("assets/welcome/1dark.png"), context);
     precacheImage(const AssetImage("assets/welcome/2dark.png"), context);
     precacheImage(const AssetImage("assets/welcome/3dark.png"), context);
+
+    resetSystemNavigation(context,
+        systemNavigationBarColor:
+            (prefs!.getString("brightness") ?? "system") == "system"
+                // ignore: use_build_context_synchronously
+                ? ((MediaQuery.of(context).platformBrightness ==
+                        Brightness.light)
+                    ? Colors.grey[100]
+                    : Colors.grey[900])
+                : (prefs!.getString("brightness") == "dark"
+                    ? Colors.grey[900]
+                    : Colors.grey[100]),
+        delay: const Duration(milliseconds: 10));
+
     return Scaffold(
         bottomNavigationBar: BottomSheet(
             enableDrag: false,
@@ -94,73 +57,26 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
                         effect: ExpandingDotsEffect(
                             activeDotColor: (Theme.of(context).brightness ==
                                     Brightness.light)
-                                ? (theme ?? ThemeData()).colorScheme.primary
-                                : (themeDark ?? ThemeData.dark())
-                                    .colorScheme
-                                    .primary)),
+                                ? themeLight().colorScheme.primary
+                                : themeDark().colorScheme.primary)),
                   ]));
             }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (page < 2) {
-              _pageController.nextPage(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeInOut);
-            } else {
-              prefs!.setBool("welcomeFinished", true);
-
-              WidgetsBinding.instance.platformDispatcher
-                  .onPlatformBrightnessChanged = () {
-                SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                    systemNavigationBarColor:
-                        (prefs!.getString("brightness") ?? "system") == "system"
-                            ? ((MediaQuery.of(context).platformBrightness ==
-                                    Brightness.light)
-                                ? (themeDark ?? ThemeData.dark())
-                                    .colorScheme
-                                    .surface
-                                : (theme ?? ThemeData()).colorScheme.surface)
-                            : (prefs!.getString("brightness") == "dark"
-                                ? (themeDark ?? ThemeData()).colorScheme.surface
-                                : (theme ?? ThemeData.dark())
-                                    .colorScheme
-                                    .surface),
-                    systemNavigationBarIconBrightness:
-                        (((prefs!.getString("brightness") ?? "system") ==
-                                        "system" &&
-                                    MediaQuery.of(context).platformBrightness ==
-                                        Brightness.dark) ||
-                                prefs!.getString("brightness") == "light")
-                            ? Brightness.dark
-                            : Brightness.light));
-              };
-              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                  systemNavigationBarColor:
-                      (prefs!.getString("brightness") ?? "system") == "system"
-                          ? ((MediaQuery.of(context).platformBrightness ==
-                                  Brightness.light)
-                              ? (theme ?? ThemeData.dark()).colorScheme.surface
-                              : (themeDark ?? ThemeData()).colorScheme.surface)
-                          : (prefs!.getString("brightness") == "dark"
-                              ? (themeDark ?? ThemeData()).colorScheme.surface
-                              : (theme ?? ThemeData.dark())
-                                  .colorScheme
-                                  .surface),
-                  systemNavigationBarIconBrightness:
-                      (((prefs!.getString("brightness") ?? "system") ==
-                                      "system" &&
-                                  MediaQuery.of(context).platformBrightness ==
-                                      Brightness.light) ||
-                              prefs!.getString("brightness") == "light")
-                          ? Brightness.dark
-                          : Brightness.light));
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const MainApp()));
-            }
-          },
-          child: Icon((page < 2) ? Icons.arrow_forward : Icons.check_rounded),
-        ),
+            onPressed: () {
+              if (page < 2) {
+                _pageController.nextPage(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut);
+              } else {
+                prefs!.setBool("welcomeFinished", true);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const MainApp()));
+              }
+            },
+            child: (page < 2)
+                ? const Icon(Icons.arrow_forward)
+                : const Icon(Icons.check_rounded)),
         body: SafeArea(
             child: Column(children: [
           Expanded(

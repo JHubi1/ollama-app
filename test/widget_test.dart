@@ -1,30 +1,48 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ollama_app/main.dart';
+import 'functions.dart';
+import 'package:ollama_app/screen_settings.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MainApp());
+  testWidgets("Widget: button", (WidgetTester tester) async {
+    String text = random(10);
+    bool clicked = false;
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: button(text, Icons.add_rounded, () {
+      clicked = true;
+    }))));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text(text), findsOneWidget);
+    expect(find.byIcon(Icons.add_rounded), findsOneWidget);
+    expect(clicked, false);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.tap(find.text(text));
     await tester.pump();
+    expect(clicked, true);
+  });
+  testWidgets("Widget: toggle", (WidgetTester tester) async {
+    String text = random(10);
+    bool toggled = false;
+    await tester.pumpWidget(
+        MaterialApp(home: Scaffold(body: Builder(builder: (context) {
+      return toggle(context, text, toggled, (value) {
+        toggled = value;
+      });
+    }))));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.textContaining(text), findsOneWidget);
+    expect(find.byType(Switch), findsOneWidget);
+    expect(toggled, false);
+
+    await tester.tap(find.textContaining(text));
+    await tester.pump();
+    expect(toggled, true);
+
+    toggled = false;
+    await tester.tap(find.byType(Switch));
+    await tester.pump();
+    expect(toggled, true);
   });
 }

@@ -10,6 +10,10 @@
     "settingsUseSystem",
     "settingsUseSystemDescription",
     "settingsPreloadModels",
+    "settingsTemporaryFixes",
+    "settingsTemporaryFixesDescription",
+    "settingsTemporaryFixesInstructions",
+    "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled"
@@ -26,6 +30,10 @@
     "settingsUseSystem",
     "settingsUseSystemDescription",
     "settingsPreloadModels",
+    "settingsTemporaryFixes",
+    "settingsTemporaryFixesDescription",
+    "settingsTemporaryFixesInstructions",
+    "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled"
@@ -42,6 +50,10 @@
     "settingsUseSystem",
     "settingsUseSystemDescription",
     "settingsPreloadModels",
+    "settingsTemporaryFixes",
+    "settingsTemporaryFixesDescription",
+    "settingsTemporaryFixesInstructions",
+    "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled"
@@ -58,6 +70,10 @@
     "settingsUseSystem",
     "settingsUseSystemDescription",
     "settingsPreloadModels",
+    "settingsTemporaryFixes",
+    "settingsTemporaryFixesDescription",
+    "settingsTemporaryFixesInstructions",
+    "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled"

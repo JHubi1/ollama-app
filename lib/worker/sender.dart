@@ -111,6 +111,9 @@ Future<String> send(String value, BuildContext context, Function setState,
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context)!.noHostSelected),
         showCloseIcon: true));
+    if (onStream != null) {
+      onStream("", true);
+    }
     return "";
   }
 
@@ -119,6 +122,9 @@ Future<String> send(String value, BuildContext context, Function setState,
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context)!.noModelSelected),
           showCloseIcon: true));
+    }
+    if (onStream != null) {
+      onStream("", true);
     }
     return "";
   }

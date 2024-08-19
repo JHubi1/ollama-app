@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ollama_app/worker/haptic.dart';
+import 'package:ollama_app/worker/theme.dart';
 
 import '../main.dart';
 // import '../worker/haptic.dart';
@@ -281,21 +282,21 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                                                               !(prefs?.getBool("useDeviceTheme") ??
                                                                                   false))
                                                                           ? ((MediaQuery.of(context).platformBrightness == Brightness.light)
-                                                                              ? (theme ?? ThemeData()).colorScheme.secondary
-                                                                              : (themeDark ?? ThemeData.dark()).colorScheme.secondary)
+                                                                              ? themeLight().colorScheme.secondary
+                                                                              : themeDark().colorScheme.secondary)
                                                                           : null,
                                                                       labelStyle: (usedIndex == index &&
                                                                               !(prefs?.getBool("useDeviceTheme") ??
                                                                                   false))
                                                                           ? TextStyle(
-                                                                              color: (MediaQuery.of(context).platformBrightness == Brightness.light) ? (theme ?? ThemeData()).colorScheme.secondary : (themeDark ?? ThemeData.dark()).colorScheme.secondary)
+                                                                              color: (MediaQuery.of(context).platformBrightness == Brightness.light) ? themeLight().colorScheme.secondary : themeDark().colorScheme.secondary)
                                                                           : null,
                                                                       selectedColor: (prefs?.getBool("useDeviceTheme") ??
                                                                               false)
                                                                           ? null
                                                                           : (MediaQuery.of(context).platformBrightness == Brightness.light)
-                                                                              ? (theme ?? ThemeData()).colorScheme.primary
-                                                                              : (themeDark ?? ThemeData.dark()).colorScheme.primary,
+                                                                              ? themeLight().colorScheme.primary
+                                                                              : themeDark().colorScheme.primary,
                                                                       onSelected:
                                                                           (bool
                                                                               selected) {

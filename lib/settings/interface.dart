@@ -12,6 +12,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:duration_picker/duration_picker.dart';
+import 'package:dynamic_color/dynamic_color.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 class ScreenSettingsInterface extends StatefulWidget {
@@ -132,6 +134,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             .settingsKeepModelLoadedAlways,
                         int.parse(prefs!.getString("keepAlive") ?? "300") == -1,
                         (value) {
+                      selectionHaptic();
                       setState(() {
                         if (value) {
                           prefs!.setString("keepAlive", "-1");
@@ -146,6 +149,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             .settingsKeepModelLoadedNever,
                         int.parse(prefs!.getString("keepAlive") ?? "300") == 0,
                         (value) {
+                      selectionHaptic();
                       setState(() {
                         if (value) {
                           prefs!.setString("keepAlive", "0");
@@ -165,6 +169,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             : AppLocalizations.of(context)!
                                 .settingsKeepModelLoadedFor,
                         Icons.snooze_rounded, () async {
+                      selectionHaptic();
                       bool loaded = false;
                       await showDialog(
                           context: context,
@@ -412,19 +417,74 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             })
                         : const SizedBox.shrink(),
                     titleDivider(),
-                    toggle(context, "Fix to code block not scrollable",
-                        (prefs!.getBool("fixCodeblockScroll") ?? false),
-                        (value) {
-                      prefs!.setBool("fixCodeblockScroll", value);
-                      if ((prefs!.getBool("fixCodeblockScroll") ?? false) ==
-                          false) {
-                        prefs!.remove("fixCodeblockScroll");
-                      }
+                    button(AppLocalizations.of(context)!.settingsTemporaryFixes,
+                        Icons.fast_forward_rounded, () {
                       selectionHaptic();
-                      setState(() {});
-                    }, onLongTap: () {
-                      launchUrl(Uri.parse(
-                          "https://github.com/JHubi1/ollama-app/issues/26"));
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return StatefulBuilder(
+                                builder: (context, setState) {
+                              return Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                    top: 16,
+                                    bottom: desktopLayout(context) ? 16 : 0),
+                                child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      button(
+                                          AppLocalizations.of(context)!
+                                              .settingsTemporaryFixesDescription,
+                                          Icons.info_rounded,
+                                          null,
+                                          color: Colors.grey.harmonizeWith(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary)),
+                                      button(
+                                          AppLocalizations.of(context)!
+                                              .settingsTemporaryFixesInstructions,
+                                          Icons.warning_rounded,
+                                          null,
+                                          color: Colors.orange.harmonizeWith(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary)),
+                                      titleDivider(),
+                                      // Text(
+                                      //     AppLocalizations.of(context)!
+                                      //         .settingsTemporaryFixesNoFixes,
+                                      //     style: const TextStyle(
+                                      //         color: Colors.grey)),
+                                      toggle(
+                                          context,
+                                          "Fixing code block not scrollable",
+                                          (prefs!.getBool(
+                                                  "fixCodeblockScroll") ??
+                                              false), (value) {
+                                        selectionHaptic();
+                                        prefs!.setBool(
+                                            "fixCodeblockScroll", value);
+                                        if ((prefs!.getBool(
+                                                    "fixCodeblockScroll") ??
+                                                false) ==
+                                            false) {
+                                          prefs!.remove("fixCodeblockScroll");
+                                        }
+                                        setState(() {});
+                                      }, onLongTap: () {
+                                        selectionHaptic();
+                                        launchUrl(Uri.parse(
+                                            "https://github.com/JHubi1/ollama-app/issues/26"));
+                                      }),
+                                      const SizedBox(height: 16)
+                                    ]),
+                              );
+                            });
+                          });
                     }),
                     const SizedBox(height: 16)
                   ]),

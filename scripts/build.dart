@@ -3,10 +3,7 @@
 import 'dart:io';
 
 void main() async {
-  if (Directory.current.path.endsWith('scripts')) {
-    Directory.current = Directory.current.parent;
-  }
-
+  Directory.current = Directory(Platform.script.toFilePath()).parent.parent;
   String flutterExecutable = Platform.isWindows ? 'flutter.bat' : 'flutter';
 
   print("Build script for Ollama App by JHubi1");

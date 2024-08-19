@@ -1,17 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:ollama_app/worker/haptic.dart';
-import 'package:ollama_app/worker/setter.dart';
 
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:datetime_loop/datetime_loop.dart';
-// import 'package:volume_controller/volume_controller.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'main.dart';
 import 'worker/sender.dart';
+import 'worker/haptic.dart';
+import 'worker/setter.dart';
+import 'worker/theme.dart';
 import 'settings/voice.dart';
 
 class ScreenVoice extends StatefulWidget {
@@ -33,47 +34,6 @@ class _ScreenVoiceState extends State<ScreenVoice> {
   String aiText = "";
 
   bool intendedStop = false;
-
-  void setBrightness() {
-    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
-        () {
-      // invert colors used, because brightness not updated yet
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          systemNavigationBarColor:
-              (prefs!.getString("brightness") ?? "system") == "system"
-                  ? ((MediaQuery.of(context).platformBrightness ==
-                          Brightness.light)
-                      ? (themeDark ?? ThemeData.dark()).colorScheme.surface
-                      : (theme ?? ThemeData()).colorScheme.surface)
-                  : (prefs!.getString("brightness") == "dark"
-                      ? (themeDark ?? ThemeData()).colorScheme.surface
-                      : (theme ?? ThemeData.dark()).colorScheme.surface),
-          systemNavigationBarIconBrightness:
-              (((prefs!.getString("brightness") ?? "system") == "system" &&
-                          MediaQuery.of(context).platformBrightness ==
-                              Brightness.dark) ||
-                      prefs!.getString("brightness") == "light")
-                  ? Brightness.dark
-                  : Brightness.light));
-    };
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor:
-            (prefs!.getString("brightness") ?? "system") == "system"
-                ? ((MediaQuery.of(context).platformBrightness ==
-                        Brightness.light)
-                    ? (theme ?? ThemeData.dark()).colorScheme.surface
-                    : (themeDark ?? ThemeData()).colorScheme.surface)
-                : (prefs!.getString("brightness") == "dark"
-                    ? (themeDark ?? ThemeData()).colorScheme.surface
-                    : (theme ?? ThemeData.dark()).colorScheme.surface),
-        systemNavigationBarIconBrightness:
-            (((prefs!.getString("brightness") ?? "system") == "system" &&
-                        MediaQuery.of(context).platformBrightness ==
-                            Brightness.light) ||
-                    prefs!.getString("brightness") == "light")
-                ? Brightness.dark
-                : Brightness.light));
-  }
 
   void process() async {
     setState(() {
@@ -171,74 +131,18 @@ class _ScreenVoiceState extends State<ScreenVoice> {
         aiText = currentText;
         lightHaptic();
       });
-
-      // var volume = await VolumeController().getVolume();
-      // var voicesTmp1 = await voice.getLanguages;
-      // var voices = jsonEncode(voicesTmp1);
-      // var isVoiceAvailable = (await voice.isLanguageAvailable(
-      //         (prefs!.getString("voiceLanguage") ?? "en_US")
-      //             .replaceAll("_", "-")))
-      //     .toString();
-      // var voices2Tmp1 = await speech.locales();
-      // var voices2Tmp2 = [];
-      // for (var voice in voices2Tmp1) {
-      //   voices2Tmp2.add(voice.localeId.replaceAll("_", "-"));
-      // }
-      // var voices2 = jsonEncode(voices2Tmp2);
-      // await showDialog(
-      //     // ignore: use_build_context_synchronously
-      //     context: context,
-      //     builder: (context) {
-      //       return Dialog.fullscreen(
-      //           child: ListView(children: [
-      //         const Row(
-      //             crossAxisAlignment: CrossAxisAlignment.center,
-      //             mainAxisSize: MainAxisSize.max,
-      //             children: [
-      //               Expanded(child: Divider(color: Colors.red)),
-      //               SizedBox(width: 8),
-      //               Text("START", style: TextStyle(color: Colors.red)),
-      //               SizedBox(width: 8),
-      //               Expanded(child: Divider(color: Colors.red))
-      //             ]),
-      //         Text((prefs!.getString("voiceLanguage") ?? "en_US")
-      //             .replaceAll("_", "-")),
-      //         const Divider(),
-      //         Text(volume.toString()),
-      //         const Divider(),
-      //         Text(voices),
-      //         const Divider(),
-      //         Text(voicesTmp1
-      //             .contains((prefs!.getString("voiceLanguage") ?? "en_US")
-      //                 .replaceAll("_", "-"))
-      //             .toString()),
-      //         const Divider(),
-      //         Text(isVoiceAvailable),
-      //         const Divider(),
-      //         Text(voices2),
-      //         const Divider(),
-      //         Text(voices2Tmp2
-      //             .contains((prefs!.getString("voiceLanguage") ?? "en_US")
-      //                 .replaceAll("_", "-"))
-      //             .toString()),
-      //         const Divider(),
-      //         Text(speech.isAvailable.toString()),
-      //         const Row(
-      //             crossAxisAlignment: CrossAxisAlignment.center,
-      //             mainAxisSize: MainAxisSize.max,
-      //             children: [
-      //               Expanded(child: Divider(color: Colors.red)),
-      //               SizedBox(width: 8),
-      //               Text("END", style: TextStyle(color: Colors.red)),
-      //               SizedBox(width: 8),
-      //               Expanded(child: Divider(color: Colors.red))
-      //             ])
-      //       ]));
-      //     });
-
       if (done) {
         aiThinking = false;
         heavyHaptic();
+
+        if (currentText.isEmpty) {
+          text = "";
+          speaking = false;
+          try {
+            setState(() {});
+          } catch (_) {}
+          return;
+        }
 
         if ((await voice.getLanguages as List).contains(
             (prefs!.getString("voiceLanguage") ?? "en_US")
@@ -270,21 +174,10 @@ class _ScreenVoiceState extends State<ScreenVoice> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
-          () {
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            systemNavigationBarColor:
-                (themeDark ?? ThemeData.dark()).colorScheme.surface,
-            systemNavigationBarIconBrightness: Brightness.dark));
-      };
-
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          systemNavigationBarColor:
-              (themeDark ?? ThemeData.dark()).colorScheme.surface,
-          systemNavigationBarIconBrightness: Brightness.dark));
-      setState(() {});
-    });
+    resetSystemNavigation(context,
+        statusBarColor: themeDark().colorScheme.surface,
+        systemNavigationBarColor: themeDark().colorScheme.surface,
+        delay: const Duration(milliseconds: 10));
 
     void load() async {
       var tmp = await speech.locales();
@@ -306,10 +199,11 @@ class _ScreenVoiceState extends State<ScreenVoice> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-        data: themeDark!,
+        data: themeDark(),
         child: PopScope(
             canPop: !aiThinking,
             onPopInvoked: (didPop) {
+              if (!didPop) return;
               speaking = false;
               voice.stop();
               if (chatUuid != null) {
@@ -317,13 +211,12 @@ class _ScreenVoiceState extends State<ScreenVoice> {
               }
               settingsOpen = false;
               logoVisible = true;
-              setBrightness();
+              resetSystemNavigation(context);
             },
             child: Scaffold(
                 appBar: AppBar(
                     leading: IconButton(
                         onPressed: () {
-                          speaking = false;
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(Icons.close_rounded,
@@ -332,7 +225,11 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Expanded(
-                            child: Text(model!.split(":")[0],
+                            child: Text(
+                                (model ??
+                                        AppLocalizations.of(context)!
+                                            .noSelectedModel)
+                                    .split(":")[0],
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.fade,
                                 style: const TextStyle(
@@ -345,11 +242,11 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                             speaking = false;
                             settingsOpen = false;
                             logoVisible = true;
-                            setBrightness();
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const ScreenSettingsVoice()));
+                            resetSystemNavigation(context);
                           },
                           icon: const Icon(
                             Icons.settings_rounded,
@@ -411,8 +308,9 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                                               process();
                                             },
                                             child: CircleAvatar(
-                                                backgroundColor: themeDark!
-                                                    .colorScheme.primary
+                                                backgroundColor: themeDark()
+                                                    .colorScheme
+                                                    .primary
                                                     .withAlpha(
                                                         !speaking ? 200 : 255),
                                                 child: AnimatedSwitcher(
@@ -421,19 +319,23 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                                                     child: speaking
                                                         ? aiThinking
                                                             ? Icon(Icons.auto_awesome_rounded,
-                                                                color: themeDark!
+                                                                color: themeDark()
                                                                     .colorScheme
                                                                     .secondary,
                                                                 key: const ValueKey(
                                                                     "aiThinking"))
                                                             : sttDone
                                                                 ? Icon(Icons.volume_up_rounded,
-                                                                    color: themeDark!
+                                                                    color: themeDark()
                                                                         .colorScheme
                                                                         .secondary,
                                                                     key: const ValueKey(
                                                                         "tts"))
-                                                                : Icon(Icons.mic_rounded, color: themeDark!.colorScheme.secondary, key: const ValueKey("stt"))
+                                                                : Icon(Icons.mic_rounded,
+                                                                    color: themeDark()
+                                                                        .colorScheme
+                                                                        .secondary,
+                                                                    key: const ValueKey("stt"))
                                                         : null)))),
                                   );
                                 }))),

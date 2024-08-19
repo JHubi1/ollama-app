@@ -8,6 +8,7 @@ import 'desktop.dart';
 import 'haptic.dart';
 import '../main.dart';
 import 'sender.dart';
+import 'theme.dart';
 
 import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
@@ -215,10 +216,10 @@ void setModel(BuildContext context, Function setState) {
                                         ? ((MediaQuery.of(context)
                                                     .platformBrightness ==
                                                 Brightness.light)
-                                            ? (theme ?? ThemeData())
+                                            ? themeLight()
                                                 .colorScheme
                                                 .secondary
-                                            : (themeDark ?? ThemeData.dark())
+                                            : themeDark()
                                                 .colorScheme
                                                 .secondary)
                                         : null,
@@ -230,11 +231,10 @@ void setModel(BuildContext context, Function setState) {
                                             color: (MediaQuery.of(context)
                                                         .platformBrightness ==
                                                     Brightness.light)
-                                                ? (theme ?? ThemeData())
+                                                ? themeLight()
                                                     .colorScheme
                                                     .secondary
-                                                : (themeDark ??
-                                                        ThemeData.dark())
+                                                : themeDark()
                                                     .colorScheme
                                                     .secondary)
                                         : null,
@@ -245,10 +245,10 @@ void setModel(BuildContext context, Function setState) {
                                         : (MediaQuery.of(context)
                                                     .platformBrightness ==
                                                 Brightness.light)
-                                            ? (theme ?? ThemeData())
+                                            ?themeLight()
                                                 .colorScheme
                                                 .primary
-                                            : (themeDark ?? ThemeData.dark())
+                                            : themeDark()
                                                 .colorScheme
                                                 .primary,
                                     onSelected: (bool selected) {
