@@ -660,7 +660,7 @@
         "description": "Text displayed as description for report issue button",
         "context": "Visible in the settings view"
     },
-    "settingsLicenses": " Licenses",
+    "settingsLicenses": "Licenses",
     "@settingsLicenses": {
         "description": "Text displayed as description for licenses button",
         "context": "Visible in the settings view"
