@@ -984,8 +984,9 @@ class _MainAppState extends State<MainApp> {
     return WindowBorder(
       color: Theme.of(context).colorScheme.surface,
       child: PopScope(
-        canPop:
-            DateTime.now().millisecondsSinceEpoch < (backPullTimestamp + 2000),
+        // disabled for now, shows buggy behavior if enabled
+        canPop: true,
+        // DateTime.now().millisecondsSinceEpoch < (backPullTimestamp + 2000),
         onPopInvoked: (didPop) {
           if (!didPop) {
             setState(() {
