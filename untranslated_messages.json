@@ -17,6 +17,7 @@
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
     "settingsLicenses"
   ],
 
@@ -38,6 +39,7 @@
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
     "settingsLicenses"
   ],
 
@@ -59,6 +61,7 @@
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
     "settingsLicenses"
   ],
 
@@ -80,6 +83,7 @@
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
     "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
     "settingsLicenses"
   ]
 }

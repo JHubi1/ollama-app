@@ -88,6 +88,12 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                           File(path).writeAsString(content);
                         }
                       }
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          // ignore: use_build_context_synchronously
+                          content: Text(AppLocalizations.of(context)!
+                              .settingsExportChatsSuccess),
+                          showCloseIcon: true));
                     }),
                     allowMultipleChats
                         ? button(
