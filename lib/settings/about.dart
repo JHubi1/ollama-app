@@ -42,123 +42,130 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                 Expanded(child: SizedBox(height: 200, child: MoveWindow()))
               ]),
               actions: desktopControlsActions(context)),
-          body: Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Column(children: [
-                Expanded(
-                  child: ListView(children: [
-                    // const SizedBox(height: 8),
-                    button(
-                        AppLocalizations.of(context)!
-                            .settingsVersion(currentVersion ?? ""),
-                        Icons.verified_rounded,
-                        null),
-                    (updateStatus == "notAvailable")
-                        ? const SizedBox.shrink()
-                        : button(
-                            (!updateChecked
-                                ? AppLocalizations.of(context)!
-                                    .settingsUpdateCheck
-                                : updateLoading
-                                    ? AppLocalizations.of(context)!
-                                        .settingsUpdateChecking
-                                    : (updateStatus == "rateLimit")
-                                        ? AppLocalizations.of(context)!
-                                            .settingsUpdateRateLimit
-                                        : (updateStatus != "ok")
-                                            ? AppLocalizations.of(context)!
-                                                .settingsUpdateIssue
-                                            : (Version.parse(latestVersion ??
-                                                        "1.0.0") >
-                                                    Version.parse(
-                                                        currentVersion ??
-                                                            "2.0.0"))
-                                                ? AppLocalizations.of(context)!
-                                                    .settingsUpdateAvailable(
-                                                        latestVersion!)
-                                                : AppLocalizations.of(context)!
-                                                    .settingsUpdateLatest),
-                            ((updateStatus != "ok")
-                                ? Icons.warning_rounded
-                                : (Version.parse(latestVersion ?? "1.0.0") >
-                                        Version.parse(
-                                            currentVersion ?? "2.0.0"))
-                                    ? Icons.info_outline_rounded
-                                    : Icons.update_rounded), () {
-                            if (updateLoading) return;
-                            selectionHaptic();
-                            if ((Version.parse(latestVersion ?? "1.0.0") >
-                                    Version.parse(currentVersion ?? "2.0.0")) &&
-                                (updateStatus == "ok")) {
-                              updateDialog(context, title);
-                            } else {
-                              checkUpdate(setState);
-                              return;
-                            }
-                          }),
-                    (updateStatus == "notAvailable")
-                        ? const SizedBox.shrink()
-                        : toggle(
-                            context,
-                            AppLocalizations.of(context)!
-                                .settingsCheckForUpdates,
-                            (prefs!.getBool("checkUpdateOnSettingsOpen") ??
-                                false), (value) {
-                            selectionHaptic();
-                            prefs!.setBool("checkUpdateOnSettingsOpen", value);
-                            setState(() {});
-                          }),
-                    titleDivider(context: context),
-                    button(AppLocalizations.of(context)!.settingsGithub,
-                        SimpleIcons.github, () {
-                      selectionHaptic();
-                      launchUrl(
-                          mode: LaunchMode.inAppBrowserView,
-                          Uri.parse(repoUrl));
-                    }),
-                    button(AppLocalizations.of(context)!.settingsReportIssue,
-                        Icons.report_rounded, () {
-                      selectionHaptic();
-                      launchUrl(
-                          mode: LaunchMode.inAppBrowserView,
-                          Uri.parse("$repoUrl/issues"));
-                    }),
-                    button(AppLocalizations.of(context)!.settingsLicenses,
-                        Icons.gavel_rounded, () {
-                      selectionHaptic();
-                      String legal = "Copyright 2024 JHubi1";
-                      Widget icon = const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: ImageIcon(AssetImage("assets/logo512.png"),
-                            size: 48),
-                      );
-                      if (desktopFeature()) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                  child: ClipRRect(
-                                borderRadius: BorderRadius.circular(28),
-                                child: LicensePage(
-                                    applicationName: "Ollama App",
-                                    applicationVersion: currentVersion,
-                                    applicationIcon: icon,
-                                    applicationLegalese: legal),
-                              ));
-                            });
-                      } else {
-                        showLicensePage(
-                            context: context,
-                            applicationName: "Ollama App",
-                            applicationVersion: currentVersion,
-                            applicationIcon: icon,
-                            applicationLegalese: legal);
-                      }
-                    }),
-                    const SizedBox(height: 16)
-                  ]),
-                )
-              ]))),
+          body: Center(
+            child: Container(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Column(children: [
+                  Expanded(
+                    child: ListView(children: [
+                      // const SizedBox(height: 8),
+                      button(
+                          AppLocalizations.of(context)!
+                              .settingsVersion(currentVersion ?? ""),
+                          Icons.verified_rounded,
+                          null),
+                      (updateStatus == "notAvailable")
+                          ? const SizedBox.shrink()
+                          : button(
+                              (!updateChecked
+                                  ? AppLocalizations.of(context)!
+                                      .settingsUpdateCheck
+                                  : updateLoading
+                                      ? AppLocalizations.of(context)!
+                                          .settingsUpdateChecking
+                                      : (updateStatus == "rateLimit")
+                                          ? AppLocalizations.of(context)!
+                                              .settingsUpdateRateLimit
+                                          : (updateStatus != "ok")
+                                              ? AppLocalizations.of(context)!
+                                                  .settingsUpdateIssue
+                                              : (Version.parse(latestVersion ??
+                                                          "1.0.0") >
+                                                      Version.parse(
+                                                          currentVersion ??
+                                                              "2.0.0"))
+                                                  ? AppLocalizations.of(
+                                                          context)!
+                                                      .settingsUpdateAvailable(
+                                                          latestVersion!)
+                                                  : AppLocalizations.of(
+                                                          context)!
+                                                      .settingsUpdateLatest),
+                              ((updateStatus != "ok")
+                                  ? Icons.warning_rounded
+                                  : (Version.parse(latestVersion ?? "1.0.0") >
+                                          Version.parse(
+                                              currentVersion ?? "2.0.0"))
+                                      ? Icons.info_outline_rounded
+                                      : Icons.update_rounded), () {
+                              if (updateLoading) return;
+                              selectionHaptic();
+                              if ((Version.parse(latestVersion ?? "1.0.0") >
+                                      Version.parse(
+                                          currentVersion ?? "2.0.0")) &&
+                                  (updateStatus == "ok")) {
+                                updateDialog(context, title);
+                              } else {
+                                checkUpdate(setState);
+                                return;
+                              }
+                            }),
+                      (updateStatus == "notAvailable")
+                          ? const SizedBox.shrink()
+                          : toggle(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .settingsCheckForUpdates,
+                              (prefs!.getBool("checkUpdateOnSettingsOpen") ??
+                                  false), (value) {
+                              selectionHaptic();
+                              prefs!
+                                  .setBool("checkUpdateOnSettingsOpen", value);
+                              setState(() {});
+                            }),
+                      titleDivider(context: context),
+                      button(AppLocalizations.of(context)!.settingsGithub,
+                          SimpleIcons.github, () {
+                        selectionHaptic();
+                        launchUrl(
+                            mode: LaunchMode.inAppBrowserView,
+                            Uri.parse(repoUrl));
+                      }),
+                      button(AppLocalizations.of(context)!.settingsReportIssue,
+                          Icons.report_rounded, () {
+                        selectionHaptic();
+                        launchUrl(
+                            mode: LaunchMode.inAppBrowserView,
+                            Uri.parse("$repoUrl/issues"));
+                      }),
+                      button(AppLocalizations.of(context)!.settingsLicenses,
+                          Icons.gavel_rounded, () {
+                        selectionHaptic();
+                        String legal = "Copyright 2024 JHubi1";
+                        Widget icon = const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: ImageIcon(AssetImage("assets/logo512.png"),
+                              size: 48),
+                        );
+                        if (desktopFeature()) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                    child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(28),
+                                  child: LicensePage(
+                                      applicationName: "Ollama App",
+                                      applicationVersion: currentVersion,
+                                      applicationIcon: icon,
+                                      applicationLegalese: legal),
+                                ));
+                              });
+                        } else {
+                          showLicensePage(
+                              context: context,
+                              applicationName: "Ollama App",
+                              applicationVersion: currentVersion,
+                              applicationIcon: icon,
+                              applicationLegalese: legal);
+                        }
+                      }),
+                      const SizedBox(height: 16)
+                    ]),
+                  )
+                ])),
+          )),
     );
   }
 }

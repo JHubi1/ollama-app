@@ -125,6 +125,7 @@ void updateDialog(BuildContext context, Function title) {
       context: context,
       builder: (context) {
         return AlertDialog(
+            surfaceTintColor: (Theme.of(context).brightness == Brightness.dark) ?  Colors.grey[800] : null,
             title:
                 Text(AppLocalizations.of(context)!.settingsUpdateDialogTitle),
             content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -133,9 +134,12 @@ void updateDialog(BuildContext context, Function title) {
               title(AppLocalizations.of(context)!.settingsUpdateChangeLog),
               Flexible(
                   child: SingleChildScrollView(
-                      child: MarkdownBody(
-                          data: updateChangeLog ?? "No changelog given.",
-                          shrinkWrap: true)))
+                      child: Container(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: MarkdownBody(
+                    data: updateChangeLog ?? "No changelog given.",
+                    shrinkWrap: true),
+              )))
             ]),
             actions: [
               TextButton(

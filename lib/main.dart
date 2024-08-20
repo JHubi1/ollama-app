@@ -424,7 +424,8 @@ class _MainAppState extends State<MainApp> {
                     ? null
                     : () async {
                         selectionHaptic();
-                        if (!chatAllowed) return;
+                        if (!chatAllowed &&
+                            chatUuid == jsonDecode(item)["uuid"]) return;
                         if (!allowSettings) return;
                         String oldTitle = jsonDecode(item)["title"];
                         var newTitle = await prompt(context,
@@ -480,6 +481,10 @@ class _MainAppState extends State<MainApp> {
                                         width: 24,
                                         child: IconButton(
                                           onPressed: () {
+                                            if (!chatAllowed &&
+                                                chatUuid ==
+                                                    jsonDecode(item)["uuid"])
+                                              return;
                                             if (!allowMultipleChats) {
                                               for (var i = 0;
                                                   i <
@@ -511,124 +516,14 @@ class _MainAppState extends State<MainApp> {
                                               return;
                                             }
                                             if (!allowSettings) {
-                                              if (prefs!.getBool(
-                                                      "askBeforeDeletion") ??
-                                                  false) {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return StatefulBuilder(
-                                                          builder: (context,
-                                                              setLocalState) {
-                                                        return AlertDialog(
-                                                            title: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .deleteDialogTitle),
-                                                            content: Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Text(AppLocalizations.of(
-                                                                          context)!
-                                                                      .deleteDialogDescription),
-                                                                ]),
-                                                            actions: [
-                                                              TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
-                                                                  child: Text(AppLocalizations.of(
-                                                                          context)!
-                                                                      .deleteDialogCancel)),
-                                                              TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                    for (var i =
-                                                                            0;
-                                                                        i < (prefs!.getStringList("chats") ?? []).length;
-                                                                        i++) {
-                                                                      if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])[
-                                                                              "uuid"] ==
-                                                                          jsonDecode(
-                                                                              item)["uuid"]) {
-                                                                        List<String>
-                                                                            tmp =
-                                                                            prefs!.getStringList("chats")!;
-                                                                        tmp.removeAt(
-                                                                            i);
-                                                                        prefs!.setStringList(
-                                                                            "chats",
-                                                                            tmp);
-                                                                        break;
-                                                                      }
-                                                                    }
-                                                                    if (chatUuid ==
-                                                                        jsonDecode(
-                                                                            item)["uuid"]) {
-                                                                      messages =
-                                                                          [];
-                                                                      chatUuid =
-                                                                          null;
-                                                                      if (!desktopLayoutRequired(
-                                                                          context)) {
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                      }
-                                                                    }
-                                                                    setState(
-                                                                        () {});
-                                                                  },
-                                                                  child: Text(AppLocalizations.of(
-                                                                          context)!
-                                                                      .deleteDialogDelete))
-                                                            ]);
-                                                      });
-                                                    });
-                                              } else {
-                                                for (var i = 0;
-                                                    i <
-                                                        (prefs!.getStringList(
-                                                                    "chats") ??
-                                                                [])
-                                                            .length;
-                                                    i++) {
-                                                  if (jsonDecode((prefs!
-                                                              .getStringList(
-                                                                  "chats") ??
-                                                          [])[i])["uuid"] ==
-                                                      jsonDecode(
-                                                          item)["uuid"]) {
-                                                    List<String> tmp = prefs!
-                                                        .getStringList(
-                                                            "chats")!;
-                                                    tmp.removeAt(i);
-                                                    prefs!.setStringList(
-                                                        "chats", tmp);
-                                                    break;
-                                                  }
-                                                }
-                                                if (chatUuid ==
-                                                    jsonDecode(item)["uuid"]) {
-                                                  messages = [];
-                                                  chatUuid = null;
-                                                  if (!desktopLayoutRequired(
-                                                      context)) {
-                                                    Navigator.of(context).pop();
-                                                  }
-                                                }
-                                                setState(() {});
-                                              }
+                                              deleteChatDialog(
+                                                  context, setState,
+                                                  additionalCondition: false,
+                                                  uuid:
+                                                      jsonDecode(item)["uuid"],
+                                                  popSidebar: true);
                                               return;
                                             }
-                                            if (!chatAllowed) return;
                                             if (!desktopLayoutRequired(
                                                 context)) {
                                               Navigator.of(context).pop();
@@ -636,7 +531,22 @@ class _MainAppState extends State<MainApp> {
                                             showModalBottomSheet(
                                                 context: context,
                                                 builder: (context) {
-                                                  return Padding(
+                                                  return Container(
+                                                      decoration: (Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark)
+                                                          ? BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .white),
+                                                              borderRadius: const BorderRadius.only(
+                                                                  topLeft:
+                                                                      Radius.circular(
+                                                                          26),
+                                                                  topRight:
+                                                                      Radius.circular(
+                                                                          26)))
+                                                          : null,
                                                       padding:
                                                           const EdgeInsets.only(
                                                               left: 16,
@@ -655,68 +565,11 @@ class _MainAppState extends State<MainApp> {
                                                                             () {
                                                                           Navigator.of(context)
                                                                               .pop();
-                                                                          if (prefs!.getBool("askBeforeDeletion") ??
-                                                                              false) {
-                                                                            showDialog(
-                                                                                context: context,
-                                                                                builder: (context) {
-                                                                                  return StatefulBuilder(builder: (context, setLocalState) {
-                                                                                    return AlertDialog(
-                                                                                        title: Text(AppLocalizations.of(context)!.deleteDialogTitle),
-                                                                                        content: Column(mainAxisSize: MainAxisSize.min, children: [
-                                                                                          Text(AppLocalizations.of(context)!.deleteDialogDescription),
-                                                                                        ]),
-                                                                                        actions: [
-                                                                                          TextButton(
-                                                                                              onPressed: () {
-                                                                                                Navigator.of(context).pop();
-                                                                                              },
-                                                                                              child: Text(AppLocalizations.of(context)!.deleteDialogCancel)),
-                                                                                          TextButton(
-                                                                                              onPressed: () {
-                                                                                                Navigator.of(context).pop();
-                                                                                                for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
-                                                                                                  if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == jsonDecode(item)["uuid"]) {
-                                                                                                    List<String> tmp = prefs!.getStringList("chats")!;
-                                                                                                    tmp.removeAt(i);
-                                                                                                    prefs!.setStringList("chats", tmp);
-                                                                                                    break;
-                                                                                                  }
-                                                                                                }
-                                                                                                if (chatUuid == jsonDecode(item)["uuid"]) {
-                                                                                                  messages = [];
-                                                                                                  chatUuid = null;
-                                                                                                  if (!desktopLayoutRequired(context)) {
-                                                                                                    Navigator.of(context).pop();
-                                                                                                  }
-                                                                                                }
-                                                                                                setState(() {});
-                                                                                              },
-                                                                                              child: Text(AppLocalizations.of(context)!.deleteDialogDelete))
-                                                                                        ]);
-                                                                                  });
-                                                                                });
-                                                                          } else {
-                                                                            for (var i = 0;
-                                                                                i < (prefs!.getStringList("chats") ?? []).length;
-                                                                                i++) {
-                                                                              if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == jsonDecode(item)["uuid"]) {
-                                                                                List<String> tmp = prefs!.getStringList("chats")!;
-                                                                                tmp.removeAt(i);
-                                                                                prefs!.setStringList("chats", tmp);
-                                                                                break;
-                                                                              }
-                                                                            }
-                                                                            if (chatUuid ==
-                                                                                jsonDecode(item)["uuid"]) {
-                                                                              messages = [];
-                                                                              chatUuid = null;
-                                                                              if (!desktopLayoutRequired(context)) {
-                                                                                Navigator.of(context).pop();
-                                                                              }
-                                                                            }
-                                                                            setState(() {});
-                                                                          }
+                                                                          deleteChatDialog(
+                                                                              context,
+                                                                              setState,
+                                                                              uuid: jsonDecode(item)["uuid"],
+                                                                              popSidebar: true);
                                                                         },
                                                                         icon: const Icon(Icons
                                                                             .delete_forever_rounded),
@@ -793,48 +646,10 @@ class _MainAppState extends State<MainApp> {
                     ? DismissDirection.startToEnd
                     : DismissDirection.none,
                 confirmDismiss: (direction) async {
-                  bool returnValue = false;
-                  if (!chatAllowed) return false;
-
-                  if (prefs!.getBool("askBeforeDeletion") ?? false) {
-                    await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return StatefulBuilder(
-                              builder: (context, setLocalState) {
-                            return AlertDialog(
-                                title: Text(AppLocalizations.of(context)!
-                                    .deleteDialogTitle),
-                                content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(AppLocalizations.of(context)!
-                                          .deleteDialogDescription),
-                                    ]),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        selectionHaptic();
-                                        Navigator.of(context).pop();
-                                        returnValue = false;
-                                      },
-                                      child: Text(AppLocalizations.of(context)!
-                                          .deleteDialogCancel)),
-                                  TextButton(
-                                      onPressed: () {
-                                        selectionHaptic();
-                                        Navigator.of(context).pop();
-                                        returnValue = true;
-                                      },
-                                      child: Text(AppLocalizations.of(context)!
-                                          .deleteDialogDelete))
-                                ]);
-                          });
-                        });
-                  } else {
-                    returnValue = true;
-                  }
-                  return returnValue;
+                  if (!chatAllowed && chatUuid == jsonDecode(item)["uuid"])
+                    return false;
+                  return await deleteChatDialog(context, setState,
+                      takeAction: false);
                 },
                 onDismissed: (direction) {
                   selectionHaptic();
@@ -937,15 +752,18 @@ class _MainAppState extends State<MainApp> {
     resetSystemNavigation(context);
 
     Widget selector = InkWell(
-        onTap: () {
-          if (host == null) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(AppLocalizations.of(context)!.noHostSelected),
-                showCloseIcon: true));
-            return;
-          }
-          setModel(context, setState);
-        },
+        onTap: !useModel
+            ? () {
+                if (host == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text(AppLocalizations.of(context)!.noHostSelected),
+                      showCloseIcon: true));
+                  return;
+                }
+                setModel(context, setState);
+              }
+            : null,
         splashFactory: NoSplash.splashFactory,
         highlightColor: Colors.transparent,
         enableFeedback: false,
@@ -1053,90 +871,8 @@ class _MainAppState extends State<MainApp> {
                         onPressed: () {
                           selectionHaptic();
                           if (!chatAllowed) return;
-
-                          if (prefs!.getBool("askBeforeDeletion") ??
-                              // ignore: dead_code
-                              false && messages.isNotEmpty) {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return StatefulBuilder(
-                                      builder: (context, setLocalState) {
-                                    return AlertDialog(
-                                        title: Text(
-                                            AppLocalizations.of(context)!
-                                                .deleteDialogTitle),
-                                        content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(AppLocalizations.of(context)!
-                                                  .deleteDialogDescription),
-                                            ]),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                selectionHaptic();
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .deleteDialogCancel)),
-                                          TextButton(
-                                              onPressed: () {
-                                                selectionHaptic();
-                                                Navigator.of(context).pop();
-
-                                                for (var i = 0;
-                                                    i <
-                                                        (prefs!.getStringList(
-                                                                    "chats") ??
-                                                                [])
-                                                            .length;
-                                                    i++) {
-                                                  if (jsonDecode((prefs!
-                                                              .getStringList(
-                                                                  "chats") ??
-                                                          [])[i])["uuid"] ==
-                                                      chatUuid) {
-                                                    List<String> tmp = prefs!
-                                                        .getStringList(
-                                                            "chats")!;
-                                                    tmp.removeAt(i);
-                                                    prefs!.setStringList(
-                                                        "chats", tmp);
-                                                    break;
-                                                  }
-                                                }
-                                                messages = [];
-                                                chatUuid = null;
-                                                setState(() {});
-                                              },
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .deleteDialogDelete))
-                                        ]);
-                                  });
-                                });
-                          } else {
-                            for (var i = 0;
-                                i <
-                                    (prefs!.getStringList("chats") ?? [])
-                                        .length;
-                                i++) {
-                              if (jsonDecode((prefs!.getStringList("chats") ??
-                                      [])[i])["uuid"] ==
-                                  chatUuid) {
-                                List<String> tmp =
-                                    prefs!.getStringList("chats")!;
-                                tmp.removeAt(i);
-                                prefs!.setStringList("chats", tmp);
-                                break;
-                              }
-                            }
-                            messages = [];
-                            chatUuid = null;
-                          }
-                          setState(() {});
+                          deleteChatDialog(context, setState,
+                              additionalCondition: messages.isNotEmpty);
                         },
                         icon: const Icon(Icons.restart_alt_rounded))
                     : const SizedBox.shrink()
@@ -1533,189 +1269,198 @@ class _MainAppState extends State<MainApp> {
                                           context: context,
                                           builder: (context) {
                                             return Container(
+                                                decoration: (Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark)
+                                                    ? BoxDecoration(
+                                                        border: Border.all(
+                                                            color:
+                                                                Colors.white),
+                                                        borderRadius:
+                                                            const BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        26),
+                                                                topRight:
+                                                                    Radius.circular(
+                                                                        26)))
+                                                    : null,
                                                 width: double.infinity,
                                                 padding: const EdgeInsets.only(
                                                     left: 16,
                                                     right: 16,
                                                     top: 16),
-                                                child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      (prefs?.getBool(
-                                                                  "voiceModeEnabled") ??
-                                                              false)
-                                                          ? SizedBox(
-                                                              width: double
-                                                                  .infinity,
-                                                              child: OutlinedButton
-                                                                  .icon(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        selectionHaptic();
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                        setMainState =
-                                                                            setState;
-                                                                        settingsOpen =
-                                                                            true;
-                                                                        logoVisible =
-                                                                            false;
-                                                                        Navigator.of(context).push(MaterialPageRoute(
+                                                child:
+                                                    Column(mainAxisSize: MainAxisSize.min, children: [
+                                                  (prefs?.getBool(
+                                                              "voiceModeEnabled") ??
+                                                          false)
+                                                      ? SizedBox(
+                                                          width:
+                                                              double.infinity,
+                                                          child: OutlinedButton
+                                                              .icon(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    selectionHaptic();
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                    setMainState =
+                                                                        setState;
+                                                                    settingsOpen =
+                                                                        true;
+                                                                    logoVisible =
+                                                                        false;
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(MaterialPageRoute(
                                                                             builder: (context) =>
                                                                                 const ScreenVoice()));
-                                                                      },
-                                                                      icon: const Icon(
-                                                                          Icons
-                                                                              .headphones_rounded),
-                                                                      label: Text(
-                                                                          AppLocalizations.of(context)!
-                                                                              .settingsTitleVoice)))
-                                                          : const SizedBox
-                                                              .shrink(),
-                                                      (prefs?.getBool(
-                                                                  "voiceModeEnabled") ??
-                                                              false)
-                                                          ? const SizedBox(
-                                                              height: 8)
-                                                          : const SizedBox
-                                                              .shrink(),
-                                                      SizedBox(
-                                                          width:
-                                                              double.infinity,
-                                                          child: OutlinedButton
-                                                              .icon(
-                                                                  onPressed:
-                                                                      () async {
-                                                                    selectionHaptic();
-
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                    final result =
-                                                                        await ImagePicker()
-                                                                            .pickImage(
-                                                                      source: ImageSource
-                                                                          .camera,
-                                                                    );
-                                                                    if (result ==
-                                                                        null) {
-                                                                      return;
-                                                                    }
-
-                                                                    final bytes =
-                                                                        await result
-                                                                            .readAsBytes();
-                                                                    final image =
-                                                                        await decodeImageFromList(
-                                                                            bytes);
-
-                                                                    final message =
-                                                                        types
-                                                                            .ImageMessage(
-                                                                      author:
-                                                                          user,
-                                                                      createdAt:
-                                                                          DateTime.now()
-                                                                              .millisecondsSinceEpoch,
-                                                                      height: image
-                                                                          .height
-                                                                          .toDouble(),
-                                                                      id: const Uuid()
-                                                                          .v4(),
-                                                                      name: result
-                                                                          .name,
-                                                                      size: bytes
-                                                                          .length,
-                                                                      uri: result
-                                                                          .path,
-                                                                      width: image
-                                                                          .width
-                                                                          .toDouble(),
-                                                                    );
-
-                                                                    messages.insert(
-                                                                        0,
-                                                                        message);
-                                                                    setState(
-                                                                        () {});
-                                                                    selectionHaptic();
                                                                   },
                                                                   icon: const Icon(
                                                                       Icons
-                                                                          .photo_camera_rounded),
+                                                                          .headphones_rounded),
                                                                   label: Text(AppLocalizations.of(
+                                                                          context)!
+                                                                      .settingsTitleVoice)))
+                                                      : const SizedBox.shrink(),
+                                                  (prefs?.getBool(
+                                                              "voiceModeEnabled") ??
+                                                          false)
+                                                      ? const SizedBox(
+                                                          height: 8)
+                                                      : const SizedBox.shrink(),
+                                                  SizedBox(
+                                                      width: double.infinity,
+                                                      child:
+                                                          OutlinedButton.icon(
+                                                              onPressed:
+                                                                  () async {
+                                                                selectionHaptic();
+
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                final result =
+                                                                    await ImagePicker()
+                                                                        .pickImage(
+                                                                  source:
+                                                                      ImageSource
+                                                                          .camera,
+                                                                );
+                                                                if (result ==
+                                                                    null) {
+                                                                  return;
+                                                                }
+
+                                                                final bytes =
+                                                                    await result
+                                                                        .readAsBytes();
+                                                                final image =
+                                                                    await decodeImageFromList(
+                                                                        bytes);
+
+                                                                final message =
+                                                                    types
+                                                                        .ImageMessage(
+                                                                  author: user,
+                                                                  createdAt: DateTime
+                                                                          .now()
+                                                                      .millisecondsSinceEpoch,
+                                                                  height: image
+                                                                      .height
+                                                                      .toDouble(),
+                                                                  id: const Uuid()
+                                                                      .v4(),
+                                                                  name: result
+                                                                      .name,
+                                                                  size: bytes
+                                                                      .length,
+                                                                  uri: result
+                                                                      .path,
+                                                                  width: image
+                                                                      .width
+                                                                      .toDouble(),
+                                                                );
+
+                                                                messages.insert(
+                                                                    0, message);
+                                                                setState(() {});
+                                                                selectionHaptic();
+                                                              },
+                                                              icon: const Icon(Icons
+                                                                  .photo_camera_rounded),
+                                                              label: Text(
+                                                                  AppLocalizations.of(
                                                                           context)!
                                                                       .takeImage))),
-                                                      const SizedBox(height: 8),
-                                                      SizedBox(
-                                                          width:
-                                                              double.infinity,
-                                                          child: OutlinedButton
-                                                              .icon(
-                                                                  onPressed:
-                                                                      () async {
-                                                                    selectionHaptic();
+                                                  const SizedBox(height: 8),
+                                                  SizedBox(
+                                                      width: double.infinity,
+                                                      child:
+                                                          OutlinedButton.icon(
+                                                              onPressed:
+                                                                  () async {
+                                                                selectionHaptic();
 
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                    final result =
-                                                                        await ImagePicker()
-                                                                            .pickImage(
-                                                                      source: ImageSource
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                final result =
+                                                                    await ImagePicker()
+                                                                        .pickImage(
+                                                                  source:
+                                                                      ImageSource
                                                                           .gallery,
-                                                                    );
-                                                                    if (result ==
-                                                                        null) {
-                                                                      return;
-                                                                    }
+                                                                );
+                                                                if (result ==
+                                                                    null) {
+                                                                  return;
+                                                                }
 
-                                                                    final bytes =
-                                                                        await result
-                                                                            .readAsBytes();
-                                                                    final image =
-                                                                        await decodeImageFromList(
-                                                                            bytes);
+                                                                final bytes =
+                                                                    await result
+                                                                        .readAsBytes();
+                                                                final image =
+                                                                    await decodeImageFromList(
+                                                                        bytes);
 
-                                                                    final message =
-                                                                        types
-                                                                            .ImageMessage(
-                                                                      author:
-                                                                          user,
-                                                                      createdAt:
-                                                                          DateTime.now()
-                                                                              .millisecondsSinceEpoch,
-                                                                      height: image
-                                                                          .height
-                                                                          .toDouble(),
-                                                                      id: const Uuid()
-                                                                          .v4(),
-                                                                      name: result
-                                                                          .name,
-                                                                      size: bytes
-                                                                          .length,
-                                                                      uri: result
-                                                                          .path,
-                                                                      width: image
-                                                                          .width
-                                                                          .toDouble(),
-                                                                    );
+                                                                final message =
+                                                                    types
+                                                                        .ImageMessage(
+                                                                  author: user,
+                                                                  createdAt: DateTime
+                                                                          .now()
+                                                                      .millisecondsSinceEpoch,
+                                                                  height: image
+                                                                      .height
+                                                                      .toDouble(),
+                                                                  id: const Uuid()
+                                                                      .v4(),
+                                                                  name: result
+                                                                      .name,
+                                                                  size: bytes
+                                                                      .length,
+                                                                  uri: result
+                                                                      .path,
+                                                                  width: image
+                                                                      .width
+                                                                      .toDouble(),
+                                                                );
 
-                                                                    messages.insert(
-                                                                        0,
-                                                                        message);
-                                                                    setState(
-                                                                        () {});
-                                                                    selectionHaptic();
-                                                                  },
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .image_rounded),
-                                                                  label: Text(AppLocalizations.of(
+                                                                messages.insert(
+                                                                    0, message);
+                                                                setState(() {});
+                                                                selectionHaptic();
+                                                              },
+                                                              icon: const Icon(Icons
+                                                                  .image_rounded),
+                                                              label: Text(
+                                                                  AppLocalizations.of(
                                                                           context)!
                                                                       .uploadImage)))
-                                                    ]));
+                                                ]));
                                           });
                                     },
                               l10n: ChatL10nEn(

@@ -278,6 +278,10 @@ void setModel(BuildContext context, Function setState) {
                 ? const Offset(289, 0)
                 : const Offset(0, 0),
             child: Dialog(
+                surfaceTintColor:
+                    (Theme.of(context).brightness == Brightness.dark)
+                        ? Colors.grey[800]
+                        : null,
                 alignment: desktopLayoutRequired(context)
                     ? Alignment.topLeft
                     : Alignment.topCenter,
@@ -285,7 +289,17 @@ void setModel(BuildContext context, Function setState) {
           );
         });
   } else {
-    showModalBottomSheet(context: context, builder: (context) => content);
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+            decoration: (Theme.of(context).brightness == Brightness.dark)
+                ? BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26)))
+                : null,
+            child: content));
   }
 }
 
@@ -406,6 +420,79 @@ void loadChat(String uuid, Function setState) {
   setState(() {});
 }
 
+Future<bool> deleteChatDialog(BuildContext context, Function setState,
+    {bool takeAction = true,
+    bool? additionalCondition,
+    String? uuid,
+    bool popSidebar = false}) async {
+  additionalCondition ??= true;
+  uuid ??= chatUuid;
+
+  bool returnValue = false;
+  void delete() {
+    returnValue = true;
+    if (takeAction) {
+      for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
+        if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
+            uuid) {
+          List<String> tmp = prefs!.getStringList("chats")!;
+          tmp.removeAt(i);
+          prefs!.setStringList("chats", tmp);
+          break;
+        }
+      }
+      if (chatUuid == uuid) {
+        messages = [];
+        chatUuid = null;
+        if (!desktopLayoutRequired(context) &&
+            Navigator.of(context).canPop() &&
+            popSidebar) {
+          Navigator.of(context).pop();
+        }
+      }
+    }
+  }
+
+  if ((prefs!.getBool("askBeforeDeletion") ?? false) && additionalCondition) {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setLocalState) {
+            return AlertDialog(
+                surfaceTintColor:
+                    (Theme.of(context).brightness == Brightness.dark)
+                        ? Colors.grey[800]
+                        : null,
+                title: Text(AppLocalizations.of(context)!.deleteDialogTitle),
+                content: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text(AppLocalizations.of(context)!.deleteDialogDescription),
+                ]),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        selectionHaptic();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                          AppLocalizations.of(context)!.deleteDialogCancel)),
+                  TextButton(
+                      onPressed: () {
+                        selectionHaptic();
+                        Navigator.of(context).pop();
+                        delete();
+                      },
+                      child: Text(
+                          AppLocalizations.of(context)!.deleteDialogDelete))
+                ]);
+          });
+        });
+  } else {
+    delete();
+  }
+  setState(() {});
+  return returnValue;
+}
+
 Future<String> prompt(BuildContext context,
     {String description = "",
     String value = "",
@@ -431,6 +518,13 @@ Future<String> prompt(BuildContext context,
         return StatefulBuilder(builder: (context, setLocalState) {
           return PopScope(
               child: Container(
+                  decoration: (Theme.of(context).brightness == Brightness.dark)
+                      ? BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(26),
+                              topRight: Radius.circular(26)))
+                      : null,
                   padding: EdgeInsets.only(
                       left: 16,
                       right: 16,

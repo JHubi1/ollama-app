@@ -125,14 +125,15 @@ Widget title(String text, {double top = 16, double bottom = 16}) {
         Padding(
             padding: const EdgeInsets.only(left: 24, right: 24),
             child: Text(text)),
-        const Expanded(child: Divider())
+        const Expanded(child: Divider(height: 1))
       ]));
 }
 
 Widget titleDivider({double? top, double? bottom, BuildContext? context}) {
   top ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
   bottom ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
-  return Padding(
+  return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.only(left: 8, right: 8, top: top, bottom: bottom),
       child: const Row(
           mainAxisSize: MainAxisSize.max,
@@ -143,13 +144,12 @@ Widget verticalTitleDivider(
     {double? left, double? right, BuildContext? context}) {
   left ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
   right ??= (context != null && desktopLayoutNotRequired(context)) ? 32 : 16;
-  return Padding(
+  return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.only(left: left, right: right, top: 8, bottom: 8),
-      child: const Row(mainAxisSize: MainAxisSize.max, children: [
-        // Expanded(child:
-        VerticalDivider()
-        // ),
-      ]));
+      child: const Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [VerticalDivider(width: 1)]));
 }
 
 Widget button(String text, IconData? icon, void Function()? onPressed,
@@ -359,6 +359,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                         TextField(
                             controller: hostInputController,
                             keyboardType: TextInputType.url,
+                            autofillHints: const [AutofillHints.url],
                             readOnly: useHost,
                             onSubmitted: (value) {
                               selectionHaptic();
