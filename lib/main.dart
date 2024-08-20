@@ -1570,8 +1570,9 @@ class _MainAppState extends State<MainApp> {
                                         : null
                                     : () {
                                         selectionHaptic();
-                                        if (!chatAllowed || model == null)
+                                        if (!chatAllowed || model == null) {
                                           return;
+                                        }
                                         if (desktopFeature()) {
                                           FilePicker.platform
                                               .pickFiles(type: FileType.image)
