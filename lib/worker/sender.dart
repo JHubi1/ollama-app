@@ -79,6 +79,9 @@ Future<String> getTitleAi(List history) async {
       .replaceAll("_", "")
       .replaceAll("\n", " ")
       .trim();
+  while (title.contains("  ")) {
+    title = title.replaceAll("  ", " ");
+  }
   return title;
 }
 
@@ -169,58 +172,58 @@ Future<String> send(String value, BuildContext context, Function setState,
       baseUrl: "$host/api");
 
   try {
-  if ((prefs!.getString("requestType") ?? "stream") == "stream") {
-    final stream = client
-        .generateChatCompletionStream(
-          request: llama.GenerateChatCompletionRequest(
-              model: model!,
-              messages: history,
-              keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
-        )
-        .timeout(const Duration(seconds: 30));
+    if ((prefs!.getString("requestType") ?? "stream") == "stream") {
+      final stream = client
+          .generateChatCompletionStream(
+            request: llama.GenerateChatCompletionRequest(
+                model: model!,
+                messages: history,
+                keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
+          )
+          .timeout(const Duration(seconds: 30));
 
-    await for (final res in stream) {
-      text += (res.message?.content ?? "");
-      for (var i = 0; i < messages.length; i++) {
-        if (messages[i].id == newId) {
-          messages.removeAt(i);
-          break;
+      await for (final res in stream) {
+        text += (res.message?.content ?? "");
+        for (var i = 0; i < messages.length; i++) {
+          if (messages[i].id == newId) {
+            messages.removeAt(i);
+            break;
+          }
         }
+        if (chatAllowed) return "";
+        // if (text.trim() == "") {
+        //   throw Exception();
+        // }
+        messages.insert(
+            0, types.TextMessage(author: assistant, id: newId, text: text));
+        if (onStream != null) {
+          onStream(text, false);
+        }
+        setState(() {});
+        heavyHaptic();
       }
+    } else {
+      llama.GenerateChatCompletionResponse request;
+      request = await client
+          .generateChatCompletion(
+            request: llama.GenerateChatCompletionRequest(
+                model: model!,
+                messages: history,
+                keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
+          )
+          .timeout(const Duration(seconds: 30));
       if (chatAllowed) return "";
-      // if (text.trim() == "") {
+      // if (request.message!.content.trim() == "") {
       //   throw Exception();
       // }
       messages.insert(
-          0, types.TextMessage(author: assistant, id: newId, text: text));
-      if (onStream != null) {
-        onStream(text, false);
-      }
+          0,
+          types.TextMessage(
+              author: assistant, id: newId, text: request.message!.content));
+      text = request.message!.content;
       setState(() {});
       heavyHaptic();
     }
-  } else {
-    llama.GenerateChatCompletionResponse request;
-    request = await client
-        .generateChatCompletion(
-          request: llama.GenerateChatCompletionRequest(
-              model: model!,
-              messages: history,
-              keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
-        )
-        .timeout(const Duration(seconds: 30));
-    if (chatAllowed) return "";
-    // if (request.message!.content.trim() == "") {
-    //   throw Exception();
-    // }
-    messages.insert(
-        0,
-        types.TextMessage(
-            author: assistant, id: newId, text: request.message!.content));
-    text = request.message!.content;
-    setState(() {});
-    heavyHaptic();
-  }
   } catch (e) {
     for (var i = 0; i < messages.length; i++) {
       if (messages[i].id == newId) {

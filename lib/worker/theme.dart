@@ -54,10 +54,20 @@ void resetSystemNavigation(BuildContext context,
   });
 }
 
+ThemeData themeModifier(ThemeData theme) {
+  return theme.copyWith(
+    // https://docs.flutter.dev/platform-integration/android/predictive-back#set-up-your-app
+      pageTransitionsTheme: const PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+    },
+  ));
+}
+
 ThemeData themeLight() {
   if (!(prefs?.getBool("useDeviceTheme") ?? false) ||
       colorSchemeLight == null) {
-    return ThemeData.from(
+    return themeModifier(ThemeData.from(
         colorScheme: const ColorScheme(
             brightness: Brightness.light,
             primary: Colors.black,
@@ -67,15 +77,15 @@ ThemeData themeLight() {
             error: Colors.red,
             onError: Colors.white,
             surface: Colors.white,
-            onSurface: Colors.black));
+            onSurface: Colors.black)));
   } else {
-    return ThemeData.from(colorScheme: colorSchemeLight!);
+    return themeModifier(ThemeData.from(colorScheme: colorSchemeLight!));
   }
 }
 
 ThemeData themeDark() {
   if (!(prefs?.getBool("useDeviceTheme") ?? false) || colorSchemeDark == null) {
-    return ThemeData.from(
+    return themeModifier(ThemeData.from(
         colorScheme: const ColorScheme(
             brightness: Brightness.dark,
             primary: Colors.white,
@@ -85,9 +95,9 @@ ThemeData themeDark() {
             error: Colors.red,
             onError: Colors.black,
             surface: Colors.black,
-            onSurface: Colors.white));
+            onSurface: Colors.white)));
   } else {
-    return ThemeData.from(colorScheme: colorSchemeDark!);
+    return themeModifier(ThemeData.from(colorScheme: colorSchemeDark!));
   }
 }
 

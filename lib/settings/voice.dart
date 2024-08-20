@@ -95,14 +95,10 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                     : !(permissionBluetooth && permissionRecord)
                                         ? AppLocalizations.of(context)!
                                             .settingsVoicePermissionNot
-                                        : !(prefs!.getBool(
-                                                    "voiceModeEnabled") ??
-                                                false)
-                                            ? AppLocalizations.of(context)!
-                                                .settingsVoiceNotEnabled
-                                            : AppLocalizations.of(context)!
-                                                .settingsVoiceNotSupported,
+                                        : AppLocalizations.of(context)!
+                                            .settingsVoiceNotSupported,
                             Icons.info_rounded, () {
+                            selectionHaptic();
                             if (permissionLoading) return;
                             if (!(permissionBluetooth && permissionRecord)) {
                               void load() async {
@@ -139,7 +135,6 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                             } else if (!voiceLanguageOptions.contains(
                                 (prefs!.getString("voiceLanguage") ??
                                     "en_US"))) {
-                              selectionHaptic();
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(AppLocalizations.of(context)!
                                       .settingsVoiceTtsNotSupportedDescription),

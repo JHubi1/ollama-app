@@ -544,6 +544,11 @@
         "description": "Text displayed as description for export chats button",
         "context": "Visible in the settings view"
     },
+    "settingsExportChatsSuccess": "Chats exported successfully",
+    "@settingsExportChatsSuccess": {
+        "description": "Text displayed when chats are exported successfully",
+        "context": "Visible in the settings view"
+    },
     "settingsImportChats": "Import chats",
     "@settingsImportChats": {
         "description": "Text displayed as description for import chats button",
@@ -660,9 +665,9 @@
         "description": "Text displayed as description for report issue button",
         "context": "Visible in the settings view"
     },
-    "settingsMainDeveloper": "Main Developer",
-    "@settingsMainDeveloper": {
-        "description": "Text displayed as description for main developer button",
+    "settingsLicenses": "Licenses",
+    "@settingsLicenses": {
+        "description": "Text displayed as description for licenses button",
         "context": "Visible in the settings view"
     },
     "settingsVersion": "Ollama App v{version}",

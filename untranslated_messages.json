@@ -16,7 +16,9 @@
     "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
-    "settingsVoiceNotEnabled"
+    "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
+    "settingsLicenses"
   ],
 
   "it": [
@@ -36,7 +38,9 @@
     "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
-    "settingsVoiceNotEnabled"
+    "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
+    "settingsLicenses"
   ],
 
   "tr": [
@@ -56,7 +60,9 @@
     "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
-    "settingsVoiceNotEnabled"
+    "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
+    "settingsLicenses"
   ],
 
   "zh": [
@@ -76,6 +82,8 @@
     "settingsTemporaryFixesNoFixes",
     "settingsVoiceTtsNotSupported",
     "settingsVoiceTtsNotSupportedDescription",
-    "settingsVoiceNotEnabled"
+    "settingsVoiceNotEnabled",
+    "settingsExportChatsSuccess",
+    "settingsLicenses"
   ]
 }

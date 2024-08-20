@@ -216,12 +216,8 @@ void setModel(BuildContext context, Function setState) {
                                         ? ((MediaQuery.of(context)
                                                     .platformBrightness ==
                                                 Brightness.light)
-                                            ? themeLight()
-                                                .colorScheme
-                                                .secondary
-                                            : themeDark()
-                                                .colorScheme
-                                                .secondary)
+                                            ? themeLight().colorScheme.secondary
+                                            : themeDark().colorScheme.secondary)
                                         : null,
                                     labelStyle: (usedIndex == index &&
                                             !(prefs?.getBool(
@@ -245,12 +241,8 @@ void setModel(BuildContext context, Function setState) {
                                         : (MediaQuery.of(context)
                                                     .platformBrightness ==
                                                 Brightness.light)
-                                            ?themeLight()
-                                                .colorScheme
-                                                .primary
-                                            : themeDark()
-                                                .colorScheme
-                                                .primary,
+                                            ? themeLight().colorScheme.primary
+                                            : themeDark().colorScheme.primary,
                                     onSelected: (bool selected) {
                                       selectionHaptic();
                                       if (addIndex == index) {
@@ -539,7 +531,11 @@ Future<String> prompt(BuildContext context,
                                                 uuid) {
                                               try {
                                                 var title = await getTitleAi(
-                                                    await getHistory());
+                                                    jsonDecode(jsonDecode(
+                                                        (prefs!.getStringList(
+                                                                    "chats") ??
+                                                                [])[
+                                                            i])["messages"]));
                                                 controller.text = title;
                                                 setLocalState(() {
                                                   loading = false;

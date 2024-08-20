@@ -123,13 +123,37 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                           mode: LaunchMode.inAppBrowserView,
                           Uri.parse("$repoUrl/issues"));
                     }),
-                    button(AppLocalizations.of(context)!.settingsMainDeveloper,
-                        Icons.developer_board_rounded, () {
+                    button(AppLocalizations.of(context)!.settingsLicenses,
+                        Icons.gavel_rounded, () {
                       selectionHaptic();
-                      launchUrl(
-                          mode: LaunchMode.inAppBrowserView,
-                          Uri.parse(
-                              repoUrl.substring(0, repoUrl.lastIndexOf('/'))));
+                      String legal = "Copyright 2024 JHubi1";
+                      Widget icon = const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: ImageIcon(AssetImage("assets/logo512.png"),
+                            size: 48),
+                      );
+                      if (desktopFeature()) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                  child: ClipRRect(
+                                borderRadius: BorderRadius.circular(28),
+                                child: LicensePage(
+                                    applicationName: "Ollama App",
+                                    applicationVersion: currentVersion,
+                                    applicationIcon: icon,
+                                    applicationLegalese: legal),
+                              ));
+                            });
+                      } else {
+                        showLicensePage(
+                            context: context,
+                            applicationName: "Ollama App",
+                            applicationVersion: currentVersion,
+                            applicationIcon: icon,
+                            applicationLegalese: legal);
+                      }
                     }),
                     const SizedBox(height: 16)
                   ]),

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:intl/intl.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 
@@ -50,6 +50,7 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                       var content =
                           jsonEncode(prefs!.getStringList("chats") ?? []);
                       if (kIsWeb) {
+                        // web fallback
                         final bytes = utf8.encode(content);
                         final blob = html.Blob([bytes]);
                         final url = html.Url.createObjectUrlFromBlob(blob);
@@ -65,18 +66,34 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                         html.document.body!.children.remove(anchor);
                         html.Url.revokeObjectUrl(url);
                       } else {
-                        var path = await FilePicker.platform.saveFile(
-                            type: FileType.custom,
-                            allowedExtensions: ["json"],
-                            fileName: name,
-                            bytes: utf8.encode(jsonEncode(
-                                prefs!.getStringList("chats") ?? [])));
+                        String? path = "";
+                        try {
+                          path = (await file_selector
+                                  .getSaveLocation(acceptedTypeGroups: [
+                            const file_selector.XTypeGroup(
+                                label: "Ollama App File", extensions: ["json"])
+                          ], suggestedName: name))
+                              ?.path;
+                        } catch (_) {
+                          path = await FilePicker.platform.saveFile(
+                              type: FileType.custom,
+                              allowedExtensions: ["json"],
+                              fileName: name,
+                              bytes: utf8.encode(jsonEncode(
+                                  prefs!.getStringList("chats") ?? [])));
+                        }
                         selectionHaptic();
                         if (path == null) return;
                         if (desktopFeature()) {
                           File(path).writeAsString(content);
                         }
                       }
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          // ignore: use_build_context_synchronously
+                          content: Text(AppLocalizations.of(context)!
+                              .settingsExportChatsSuccess),
+                          showCloseIcon: true));
                     }),
                     allowMultipleChats
                         ? button(
@@ -104,30 +121,54 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                                         TextButton(
                                             onPressed: () async {
                                               selectionHaptic();
-                                              FilePickerResult? result =
-                                                  await FilePicker.platform
-                                                      .pickFiles(
-                                                          type: FileType.custom,
-                                                          allowedExtensions: [
-                                                    "json"
-                                                  ]);
-                                              if (result == null) {
-                                                // ignore: use_build_context_synchronously
-                                                Navigator.of(context).pop();
-                                                return;
-                                              }
-
                                               String content;
                                               try {
-                                                File file = File(
-                                                    result.files.single.path!);
+                                                if (kIsWeb) {
+                                                  throw Exception(
+                                                      "web must use file picker");
+                                                }
+                                                file_selector.XFile? result =
+                                                    await file_selector.openFile(
+                                                        acceptedTypeGroups: [
+                                                      const file_selector
+                                                          .XTypeGroup(
+                                                          label:
+                                                              "Ollama App File",
+                                                          extensions: ["json"])
+                                                    ]);
+                                                if (result == null) {
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.of(context).pop();
+                                                  return;
+                                                }
                                                 content =
-                                                    await file.readAsString();
+                                                    await result.readAsString();
                                               } catch (_) {
-                                                content = utf8.decode(result
-                                                    .files
-                                                    .single
-                                                    .bytes as List<int>);
+                                                FilePickerResult? result =
+                                                    await FilePicker.platform
+                                                        .pickFiles(
+                                                            type:
+                                                                FileType.custom,
+                                                            allowedExtensions: [
+                                                      "json"
+                                                    ]);
+                                                if (result == null) {
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.of(context).pop();
+                                                  return;
+                                                }
+                                                try {
+                                                  File file = File(result
+                                                      .files.single.path!);
+                                                  content =
+                                                      await file.readAsString();
+                                                } catch (_) {
+                                                  // web fallback
+                                                  content = utf8.decode(result
+                                                      .files
+                                                      .single
+                                                      .bytes as List<int>);
+                                                }
                                               }
                                               List<dynamic> tmpHistory =
                                                   jsonDecode(content);
