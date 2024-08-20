@@ -517,47 +517,30 @@ Future<String> prompt(BuildContext context,
                                           setLocalState(() {
                                             loading = true;
                                           });
-                                          for (var i = 0;
-                                              i <
-                                                  (prefs!.getStringList(
-                                                              "chats") ??
-                                                          [])
-                                                      .length;
-                                              i++) {
-                                            if (jsonDecode((prefs!
-                                                        .getStringList(
-                                                            "chats") ??
-                                                    [])[i])["uuid"] ==
-                                                uuid) {
-                                              try {
-                                                var title = await getTitleAi(
-                                                    jsonDecode(jsonDecode(
-                                                        (prefs!.getStringList(
-                                                                    "chats") ??
-                                                                [])[
-                                                            i])["messages"]));
-                                                controller.text = title;
-                                                setLocalState(() {
-                                                  loading = false;
-                                                });
-                                              } catch (_) {
-                                                try {
-                                                  setLocalState(() {
-                                                    loading = false;
-                                                  });
-                                                  // ignore: use_build_context_synchronously
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                          content: Text(AppLocalizations.of(
+
+                                          try {
+                                            var title = await getTitleAi(
+                                                getHistoryString(uuid));
+                                            controller.text = title;
+                                            setLocalState(() {
+                                              loading = false;
+                                            });
+                                          } catch (_) {
+                                            try {
+                                              setLocalState(() {
+                                                loading = false;
+                                              });
+                                              // ignore: use_build_context_synchronously
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          AppLocalizations.of(
                                                                   // ignore: use_build_context_synchronously
                                                                   context)!
                                                               .settingsHostInvalid(
                                                                   "timeout")),
-                                                          showCloseIcon: true));
-                                                } catch (_) {}
-                                              }
-                                              break;
-                                            }
+                                                      showCloseIcon: true));
+                                            } catch (_) {}
                                           }
                                         },
                                         icon: const Icon(

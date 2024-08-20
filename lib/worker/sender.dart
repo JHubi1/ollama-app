@@ -53,7 +53,34 @@ Future<List<llama.Message>> getHistory([String? addToSystem]) async {
   return history;
 }
 
+List getHistoryString([String? uuid]) {
+  uuid ??= chatUuid!;
+  List messages = [];
+  for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
+    if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == uuid) {
+      messages = jsonDecode(
+          jsonDecode((prefs!.getStringList("chats") ?? [])[i])["messages"]);
+      break;
+    }
+  }
+
+  if (messages[0]["role"] == "system") {
+    messages.removeAt(0);
+  }
+  for (var i = 0; i < messages.length; i++) {
+    if (messages[i]["type"] == "image") {
+      messages[i] = {
+        "role": messages[i]["role"]!,
+        "content": "<${messages[i]["role"]} inserted an image>"
+      };
+    }
+  }
+
+  return messages;
+}
+
 Future<String> getTitleAi(List history) async {
+  print(history);
   final generated = await (llama.OllamaClient(
           headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
               .cast<String, String>(),
@@ -65,20 +92,44 @@ Future<String> getTitleAi(List history) async {
               const llama.Message(
                   role: llama.MessageRole.system,
                   content:
-                      "You must not use markdown or any other formatting language! Create a short title for the subject of the conversation described in the following json object. It is not allowed to be too general; no 'Assistance', 'Help' or similar!"),
+                      "Generate a three to six word title for the conversation provided by the user. If an object or person is very important in the conversation, put it in the title as well; keep the focus on the main subject. You must not put the assistant in the focus and you must not put the word 'assistant' in the title! Do preferably use title case. Use a formal tone, don't use dramatic words, like 'mystery' Use spaces between words, do not use camel case! You must not use markdown or any other formatting language! You must not use emojis or any other symbols! You must not use general clauses like 'assistance', 'help' or 'session' in your title! \n\n~~User Introduces Themselves~~ -> User Introduction\n~~User Asks for Help with a Problem~~ -> Problem Help\n~~User has a _**big**_ Problem~~ -> Big Problem\n~~Conversation~~ -> Conversation about Fireflies"),
               llama.Message(
-                  role: llama.MessageRole.user, content: jsonEncode(history))
+                  role: llama.MessageRole.user,
+                  content: "```\n${jsonEncode(history)}\n```")
             ],
             keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
       )
       .timeout(const Duration(seconds: 10));
-  var title = generated.message!.content
-      .replaceAll("\"", "")
-      .replaceAll("'", "")
-      .replaceAll("*", "")
-      .replaceAll("_", "")
-      .replaceAll("\n", " ")
-      .trim();
+  var title = generated.message!.content;
+  title = title.replaceAll("\n", " ").trim();
+
+  var terms = [
+    "\"",
+    "'",
+    "*",
+    "_",
+    ".",
+    ",",
+    "!",
+    "?",
+    ":",
+    ";",
+    "(",
+    ")",
+    "[",
+    "]",
+    "{",
+    "}"
+  ];
+  for (var i = 0; i < terms.length; i++) {
+    title = title.replaceAll(terms[i], "");
+  }
+
+  title = title.replaceAll(RegExp(r'<.*?>', dotAll: true), "");
+  if (title.split(":").length == 2) {
+    title = title.split(":")[1].trim();
+  }
+
   while (title.contains("  ")) {
     title = title.replaceAll("  ", " ");
   }
@@ -213,9 +264,6 @@ Future<String> send(String value, BuildContext context, Function setState,
           )
           .timeout(const Duration(seconds: 30));
       if (chatAllowed) return "";
-      // if (request.message!.content.trim() == "") {
-      //   throw Exception();
-      // }
       messages.insert(
           0,
           types.TextMessage(
@@ -265,7 +313,7 @@ Future<String> send(String value, BuildContext context, Function setState,
 
   if (newChat && (prefs!.getBool("generateTitles") ?? true)) {
     void setTitle() async {
-      await setTitleAi(await getHistory());
+      await setTitleAi(getHistoryString());
       setState(() {});
     }
 
