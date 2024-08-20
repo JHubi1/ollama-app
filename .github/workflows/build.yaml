@@ -50,6 +50,9 @@ jobs:
           echo $'storePassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}\nkeyPassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}\nkeyAlias=upload\nstoreFile=upload-keystore.jks\n' > ./android/key.properties
           echo "${{ secrets.ANDROID_KEYSTORE }}" > ./android/app/upload-keystore.jks.asc
           gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch ./android/app/upload-keystore.jks.asc > ./android/app/upload-keystore.jks
+      - name: Get flutter version
+        id: get_flutter_version
+        uses: its404/get-flutter-version@v1.0.0
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Running build
