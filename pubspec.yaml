@@ -28,6 +28,7 @@ dependencies:
   restart_app: ^1.2.1
   flutter_markdown: ^0.7.1
   file_picker: ^8.0.3
+  file_selector: ^1.0.3
   bitsdojo_window: ^0.1.6
   install_referrer: ^1.2.1
   package_info_plus: ^8.0.0

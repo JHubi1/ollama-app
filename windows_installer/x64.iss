@@ -28,7 +28,7 @@ UninstallDisplayName={#AppName}
 
 DefaultDirName={autopf}\OllamaApp
 OutputDir=build\windows\{#AppArchitectures}\runner
-OutputBaseFilename=ollama-v{#AppVersion}-{#AppArchitectures}
+OutputBaseFilename=ollama-windows-{#AppArchitectures}-v{#AppVersion}
 
 AppSupportURL=https://github.com/JHubi1/ollama-app/issues
 AppUpdatesURL=https://github.com/JHubi1/ollama-app/releases
