@@ -32,18 +32,18 @@ void main() async {
 
   // ----------
 
-  await execute('Windows x64', flutterExecutable, [
-    'build',
-    'windows',
-    '--obfuscate',
-    '--split-debug-info=build\\debugWindows'
-  ]);
+  // await execute('Windows x64', flutterExecutable, [
+  //   'build',
+  //   'windows',
+  //   '--obfuscate',
+  //   '--split-debug-info=build\\debugWindows'
+  // ]);
 
-  await execute(
-      'Windows x64 installer',
-      'iscc.exe',
-      ['windows_installer/x64.iss', '/qp', '/dAppVersion=$version'],
-      "  > Inno Setup is not installed. Please install it from https://www.jrsoftware.org/isdl.php#stable\n     Then add the Inno Setup directory to your PATH environment variable.");
+  // await execute(
+  //     'Windows x64 installer',
+  //     'iscc.exe',
+  //     ['windows_installer/x64.iss', '/qp', '/dAppVersion=$version'],
+  //     "  > Inno Setup is not installed. Please install it from https://www.jrsoftware.org/isdl.php#stable\n     Then add the Inno Setup directory to your PATH environment variable.");
 
   // ----------
 

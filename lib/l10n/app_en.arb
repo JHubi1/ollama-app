@@ -5,11 +5,6 @@
         "description": "Title of the application",
         "context": "Visible in the side bar"
     },
-    "backToExit": "Press back again to exit",
-    "@backToExit": {
-        "description": "Text displayed when the back button is pressed to exit the app",
-        "context": "Visible in the chat view"
-    },
     "optionNewChat": "New Chat",
     "@optionNewChat": {
         "description": "Text displayed for new chat option",
