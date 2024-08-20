@@ -42,6 +42,7 @@ dependencies:
   dynamic_color: ^1.7.0
   volume_controller: ^2.0.7
   universal_html: ^2.2.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
