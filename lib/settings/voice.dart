@@ -66,7 +66,14 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
       color: Theme.of(context).colorScheme.surface,
       child: Scaffold(
           appBar: AppBar(
-              title: Text(AppLocalizations.of(context)!.settingsTitleVoice)),
+              title: Badge(
+                  label: Text(
+                      AppLocalizations.of(context)!.settingsExperimentalBeta),
+                  offset: const Offset(20, -4),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  textColor: Theme.of(context).colorScheme.onPrimary,
+                  child:
+                      Text(AppLocalizations.of(context)!.settingsTitleVoice))),
           body: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Column(children: [

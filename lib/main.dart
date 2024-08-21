@@ -483,8 +483,9 @@ class _MainAppState extends State<MainApp> {
                                           onPressed: () {
                                             if (!chatAllowed &&
                                                 chatUuid ==
-                                                    jsonDecode(item)["uuid"])
+                                                    jsonDecode(item)["uuid"]) {
                                               return;
+                                            }
                                             if (!allowMultipleChats) {
                                               for (var i = 0;
                                                   i <
@@ -646,8 +647,9 @@ class _MainAppState extends State<MainApp> {
                     ? DismissDirection.startToEnd
                     : DismissDirection.none,
                 confirmDismiss: (direction) async {
-                  if (!chatAllowed && chatUuid == jsonDecode(item)["uuid"])
+                  if (!chatAllowed && chatUuid == jsonDecode(item)["uuid"]) {
                     return false;
+                  }
                   return await deleteChatDialog(context, setState,
                       takeAction: false);
                 },

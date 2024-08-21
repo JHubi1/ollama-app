@@ -158,6 +158,7 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
     bool disabled = false,
     bool replaceIconIfNull = false,
     String? description,
+    String? badge,
     void Function()? onDisabledTap,
     void Function()? onLongTap,
     void Function()? onDoubleTap}) {
@@ -206,24 +207,43 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
             (icon != null || replaceIconIfNull)
                 ? const SizedBox(width: 16, height: 42)
                 : const SizedBox.shrink(),
-            Expanded(
-                child: (context != null)
-                    ? RichText(
-                        text: TextSpan(
-                            text: text,
-                            style: DefaultTextStyle.of(context).style.copyWith(
-                                color: disabled ? Colors.grey : color),
-                            children: [
-                            (description != null &&
-                                    desktopLayoutNotRequired(context))
-                                ? TextSpan(
-                                    text: description,
-                                    style: const TextStyle(color: Colors.grey))
-                                : const TextSpan()
-                          ]))
-                    : Text(text,
-                        style:
-                            TextStyle(color: disabled ? Colors.grey : color)))
+            Expanded(child: Builder(builder: (context) {
+              Widget textWidget = Text(text,
+                  style: TextStyle(color: disabled ? Colors.grey : color));
+              if (badge != null) {
+                textWidget = Badge(
+                    label: Text(badge),
+                    offset: const Offset(20, -4),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    textColor: Theme.of(context).colorScheme.onPrimary,
+                    child: textWidget);
+              }
+              if (description == null || description!.startsWith("\n")) {
+                description = description?.removePrefix("\n");
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      textWidget,
+                      (description != null && desktopLayoutNotRequired(context))
+                          ? Text(description!,
+                              style: const TextStyle(color: Colors.grey))
+                          : const SizedBox.shrink()
+                    ]);
+              } else {
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      textWidget,
+                      (description != null && desktopLayoutNotRequired(context))
+                          ? Text(description!,
+                              style: const TextStyle(color: Colors.grey))
+                          : const SizedBox.shrink()
+                    ]);
+              }
+            }))
           ]),
         )),
   );
@@ -544,7 +564,9 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               },
                                 context: context,
                                 description:
-                                    "\n${AppLocalizations.of(context)!.settingsDescriptionVoice}")
+                                    "\n${AppLocalizations.of(context)!.settingsDescriptionVoice}",
+                                badge: AppLocalizations.of(context)!
+                                    .settingsExperimentalBeta)
                             : const SizedBox.shrink(),
                         button(
                             AppLocalizations.of(context)!.settingsTitleExport,
