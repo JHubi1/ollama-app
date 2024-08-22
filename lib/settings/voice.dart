@@ -180,10 +180,6 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
 
                       showModalBottomSheet(
                           context: context,
-                          barrierColor:
-                              (Theme.of(context).brightness == Brightness.dark)
-                                  ? Colors.grey.withOpacity(0.2)
-                                  : null,
                           builder:
                               (context) => StatefulBuilder(
                                       builder: (context, setLocalState) {

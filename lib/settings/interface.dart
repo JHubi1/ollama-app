@@ -345,10 +345,6 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                         selectionHaptic();
                         showModalBottomSheet(
                             context: context,
-                            barrierColor: (Theme.of(context).brightness ==
-                                    Brightness.dark)
-                                ? Colors.grey.withOpacity(0.2)
-                                : null,
                             builder: (context) {
                               return StatefulBuilder(
                                   builder: (context, setState) {

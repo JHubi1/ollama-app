@@ -54,10 +54,7 @@ Widget toggle(BuildContext context, String text, bool value,
         Padding(
             padding: EdgeInsets.only(
                 left: (icon == null) ? 16 : 32, right: 16, top: 12),
-            child: Divider(
-                color: (Theme.of(context).brightness == Brightness.light)
-                    ? Colors.grey[300]
-                    : Colors.grey[900])),
+            child: Divider(color: Theme.of(context).dividerColor)),
         Row(mainAxisSize: MainAxisSize.max, children: [
           (icon != null)
               ? Padding(
@@ -366,328 +363,341 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           child: SizedBox(height: 200, child: MoveWindow()))
                     ]),
                     actions: desktopControlsActions(context)),
-                body: Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      var column1 =
-                          Column(mainAxisSize: MainAxisSize.min, children: [
-                        AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            height: animatedDesktop ? 8 : 0,
-                            child: const SizedBox.shrink()),
-                        const SizedBox(height: 8),
-                        TextField(
-                            controller: hostInputController,
-                            keyboardType: TextInputType.url,
-                            autofillHints: const [AutofillHints.url],
-                            readOnly: useHost,
-                            onSubmitted: (value) {
-                              selectionHaptic();
-                              checkHost();
-                            },
-                            decoration: InputDecoration(
-                                labelText:
-                                    AppLocalizations.of(context)!.settingsHost,
-                                hintText: "http://localhost:11434",
-                                prefixIcon: IconButton(
-                                    tooltip: AppLocalizations.of(context)!
-                                        .tooltipAddHostHeaders,
-                                    onPressed: () async {
-                                      selectionHaptic();
-                                      String tmp = await prompt(context,
-                                          placeholder:
-                                              "{\"Authorization\": \"Bearer ...\"}",
-                                          title: AppLocalizations.of(context)!
-                                              .settingsHostHeaderTitle,
-                                          value: (prefs!
-                                                  .getString("hostHeaders") ??
-                                              ""),
-                                          valueIfCanceled: "{}",
-                                          validator: (content) async {
-                                        try {
-                                          var tmp = jsonDecode(content);
-                                          tmp as Map<String, dynamic>;
-                                          return true;
-                                        } catch (_) {
-                                          return false;
-                                        }
-                                      },
-                                          validatorError:
-                                              AppLocalizations.of(context)!
-                                                  .settingsHostHeaderInvalid,
-                                          prefill: !((prefs!.getString(
-                                                      "hostHeaders") ??
-                                                  {}) ==
-                                              "{}"));
-                                      prefs!.setString("hostHeaders", tmp);
-                                    },
-                                    icon: const Icon(Icons.add_rounded)),
-                                suffixIcon: useHost
-                                    ? const SizedBox.shrink()
-                                    : (hostLoading
-                                        ? Transform.scale(
-                                            scale: 0.5,
-                                            child:
-                                                const CircularProgressIndicator())
-                                        : IconButton(
-                                            tooltip:
+                body: Center(
+                  child: Container(
+                      constraints: const BoxConstraints(maxWidth: 1200),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        var column1 =
+                            Column(mainAxisSize: MainAxisSize.min, children: [
+                          AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              height: animatedDesktop ? 8 : 0,
+                              child: const SizedBox.shrink()),
+                          const SizedBox(height: 8),
+                          TextField(
+                              controller: hostInputController,
+                              keyboardType: TextInputType.url,
+                              autofillHints: const [AutofillHints.url],
+                              readOnly: useHost,
+                              onSubmitted: (value) {
+                                selectionHaptic();
+                                checkHost();
+                              },
+                              decoration: InputDecoration(
+                                  labelText: AppLocalizations.of(context)!
+                                      .settingsHost,
+                                  hintText: "http://localhost:11434",
+                                  prefixIcon: IconButton(
+                                      tooltip: AppLocalizations.of(context)!
+                                          .tooltipAddHostHeaders,
+                                      onPressed: () async {
+                                        selectionHaptic();
+                                        String tmp = await prompt(context,
+                                            placeholder:
+                                                "{\"Authorization\": \"Bearer ...\"}",
+                                            title: AppLocalizations.of(context)!
+                                                .settingsHostHeaderTitle,
+                                            value: (prefs!
+                                                    .getString("hostHeaders") ??
+                                                ""),
+                                            valueIfCanceled: "{}",
+                                            validator: (content) async {
+                                          try {
+                                            var tmp = jsonDecode(content);
+                                            tmp as Map<String, dynamic>;
+                                            return true;
+                                          } catch (_) {
+                                            return false;
+                                          }
+                                        },
+                                            validatorError:
                                                 AppLocalizations.of(context)!
-                                                    .tooltipSave,
-                                            onPressed: () {
-                                              selectionHaptic();
-                                              checkHost();
-                                            },
-                                            icon:
-                                                const Icon(Icons.save_rounded),
-                                          )),
-                                border: const OutlineInputBorder(),
-                                error: (hostInvalidHost || hostInvalidUrl)
-                                    ? InkWell(
-                                        onTap: () {
-                                          selectionHaptic();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .settingsHostInvalidDetailed(
+                                                    .settingsHostHeaderInvalid,
+                                            prefill: !((prefs!.getString(
+                                                        "hostHeaders") ??
+                                                    {}) ==
+                                                "{}"));
+                                        prefs!.setString("hostHeaders", tmp);
+                                      },
+                                      icon: const Icon(Icons.add_rounded)),
+                                  suffixIcon: useHost
+                                      ? const SizedBox.shrink()
+                                      : (hostLoading
+                                          ? Transform.scale(
+                                              scale: 0.5,
+                                              child:
+                                                  const CircularProgressIndicator())
+                                          : IconButton(
+                                              tooltip:
+                                                  AppLocalizations.of(context)!
+                                                      .tooltipSave,
+                                              onPressed: () {
+                                                selectionHaptic();
+                                                checkHost();
+                                              },
+                                              icon: const Icon(
+                                                  Icons.save_rounded),
+                                            )),
+                                  border: const OutlineInputBorder(),
+                                  error: (hostInvalidHost || hostInvalidUrl)
+                                      ? InkWell(
+                                          onTap: () {
+                                            selectionHaptic();
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(AppLocalizations
+                                                            .of(context)!
+                                                        .settingsHostInvalidDetailed(
+                                                            hostInvalidHost
+                                                                ? "host"
+                                                                : "url")),
+                                                    showCloseIcon: true));
+                                          },
+                                          splashFactory: NoSplash.splashFactory,
+                                          highlightColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.error_rounded,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .error),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                  AppLocalizations.of(context)!
+                                                      .settingsHostInvalid(
                                                           hostInvalidHost
                                                               ? "host"
-                                                              : "url")),
-                                                  showCloseIcon: true));
-                                        },
-                                        splashFactory: NoSplash.splashFactory,
-                                        highlightColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.error_rounded,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .error),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                                AppLocalizations.of(context)!
-                                                    .settingsHostInvalid(
-                                                        hostInvalidHost
-                                                            ? "host"
-                                                            : "url"),
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .error))
-                                          ],
-                                        ))
-                                    : null,
-                                helper: InkWell(
-                                    onTap: () {
-                                      selectionHaptic();
-                                    },
-                                    splashFactory: NoSplash.splashFactory,
-                                    highlightColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    child: hostLoading
-                                        ? Row(
-                                            children: [
-                                              const Icon(Icons.search_rounded,
-                                                  color: Colors.grey),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                  AppLocalizations.of(context)!
-                                                      .settingsHostChecking,
-                                                  style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontFamily: "monospace"))
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Icon(Icons.check_rounded,
-                                                  color: Colors.green
-                                                      .harmonizeWith(
-                                                          Theme.of(context)
-                                                              .colorScheme
-                                                              .primary)),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                  AppLocalizations.of(context)!
-                                                      .settingsHostValid,
+                                                              : "url"),
                                                   style: TextStyle(
-                                                      color: Colors.green
-                                                          .harmonizeWith(
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary),
-                                                      fontFamily: "monospace"))
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .error))
                                             ],
-                                          ))))
-                      ]);
-                      var column2 =
-                          Column(mainAxisSize: MainAxisSize.min, children: [
-                        button(
-                            AppLocalizations.of(context)!.settingsTitleBehavior,
-                            Icons.psychology_rounded, () {
-                          selectionHaptic();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ScreenSettingsBehavior()));
-                        },
-                            context: context,
-                            description:
-                                "\n${AppLocalizations.of(context)!.settingsDescriptionBehavior}"),
-                        button(
-                            AppLocalizations.of(context)!
-                                .settingsTitleInterface,
-                            Icons.web_asset_rounded, () {
-                          selectionHaptic();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ScreenSettingsInterface()));
-                        },
-                            context: context,
-                            description:
-                                "\n${AppLocalizations.of(context)!.settingsDescriptionInterface}"),
-                        (!desktopFeature(web: true))
-                            ? button(
-                                AppLocalizations.of(context)!
-                                    .settingsTitleVoice,
-                                Icons.headphones_rounded, () {
-                                selectionHaptic();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ScreenSettingsVoice()));
-                              },
-                                context: context,
-                                description:
-                                    "\n${AppLocalizations.of(context)!.settingsDescriptionVoice}",
-                                badge: AppLocalizations.of(context)!
-                                    .settingsExperimentalBeta)
-                            : const SizedBox.shrink(),
-                        button(
-                            AppLocalizations.of(context)!.settingsTitleExport,
-                            Icons.share_rounded, () {
-                          selectionHaptic();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ScreenSettingsExport()));
-                        },
-                            context: context,
-                            description:
-                                "\n${AppLocalizations.of(context)!.settingsDescriptionExport}"),
-                        button(AppLocalizations.of(context)!.settingsTitleAbout,
-                            Icons.help_rounded, () {
-                          selectionHaptic();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ScreenSettingsAbout()));
-                        },
-                            context: context,
-                            description:
-                                "\n${AppLocalizations.of(context)!.settingsDescriptionAbout}")
-                      ]);
-                      animatedDesktop = desktopLayoutNotRequired(context);
-                      return Column(children: [
-                        Expanded(
-                            child: desktopLayoutNotRequired(context)
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                        Expanded(
-                                            child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                              column1,
-                                              Expanded(
-                                                  child: Center(
-                                                      child: InkWell(
-                                                splashFactory:
-                                                    NoSplash.splashFactory,
-                                                highlightColor:
-                                                    Colors.transparent,
-                                                enableFeedback: false,
-                                                hoverColor: Colors.transparent,
-                                                onTap: () async {
-                                                  if (iconSize != 1) return;
-                                                  heavyHaptic();
-                                                  setState(() {
-                                                    iconSize = 0.8;
-                                                  });
-                                                  await Future.delayed(
-                                                      const Duration(
-                                                          milliseconds: 200));
-                                                  setState(() {
-                                                    iconSize = 1.2;
-                                                  });
-                                                  await Future.delayed(
-                                                      const Duration(
-                                                          milliseconds: 200));
-                                                  setState(() {
-                                                    iconSize = 1;
-                                                  });
-                                                },
-                                                child: AnimatedScale(
-                                                  scale: iconSize,
-                                                  duration: const Duration(
-                                                      milliseconds: 400),
-                                                  child: const ImageIcon(
-                                                      AssetImage(
-                                                          "assets/logo512.png"),
-                                                      size: 44),
-                                                ),
-                                              ))),
-                                              Transform.translate(
-                                                offset: const Offset(0, 8),
-                                                child: button(
+                                          ))
+                                      : null,
+                                  helper: InkWell(
+                                      onTap: () {
+                                        selectionHaptic();
+                                      },
+                                      splashFactory: NoSplash.splashFactory,
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      child: hostLoading
+                                          ? Row(
+                                              children: [
+                                                const Icon(Icons.search_rounded,
+                                                    color: Colors.grey),
+                                                const SizedBox(width: 8),
+                                                Text(
                                                     AppLocalizations.of(
                                                             context)!
-                                                        .settingsSavedAutomatically,
-                                                    Icons.info_rounded,
-                                                    null,
-                                                    color: Colors.grey
+                                                        .settingsHostChecking,
+                                                    style: const TextStyle(
+                                                        color: Colors.grey,
+                                                        fontFamily:
+                                                            "monospace"))
+                                              ],
+                                            )
+                                          : Row(
+                                              children: [
+                                                Icon(Icons.check_rounded,
+                                                    color: Colors.green
                                                         .harmonizeWith(
                                                             Theme.of(context)
                                                                 .colorScheme
                                                                 .primary)),
-                                              )
-                                            ])),
-                                        verticalTitleDivider(context: context),
-                                        Expanded(child: column2)
-                                      ])
-                                : ListView(children: [
-                                    column1,
-                                    AnimatedOpacity(
-                                        opacity: animatedDesktop ? 0 : 1,
-                                        duration:
-                                            const Duration(milliseconds: 200),
-                                        child: titleDivider(bottom: 4)),
-                                    AnimatedOpacity(
-                                        opacity: animatedDesktop ? 0 : 1,
-                                        duration:
-                                            const Duration(milliseconds: 200),
-                                        child: column2)
-                                  ])),
-                        const SizedBox(height: 8),
-                        desktopLayoutNotRequired(context)
-                            ? const SizedBox.shrink()
-                            : button(
-                                AppLocalizations.of(context)!
-                                    .settingsSavedAutomatically,
-                                Icons.info_rounded,
-                                null,
-                                color: Colors.grey.harmonizeWith(
-                                    Theme.of(context).colorScheme.primary))
-                      ]);
-                    })))));
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .settingsHostValid,
+                                                    style: TextStyle(
+                                                        color: Colors.green
+                                                            .harmonizeWith(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary),
+                                                        fontFamily:
+                                                            "monospace"))
+                                              ],
+                                            ))))
+                        ]);
+                        var column2 =
+                            Column(mainAxisSize: MainAxisSize.min, children: [
+                          button(
+                              AppLocalizations.of(context)!
+                                  .settingsTitleBehavior,
+                              Icons.psychology_rounded, () {
+                            selectionHaptic();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ScreenSettingsBehavior()));
+                          },
+                              context: context,
+                              description:
+                                  "\n${AppLocalizations.of(context)!.settingsDescriptionBehavior}"),
+                          button(
+                              AppLocalizations.of(context)!
+                                  .settingsTitleInterface,
+                              Icons.web_asset_rounded, () {
+                            selectionHaptic();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ScreenSettingsInterface()));
+                          },
+                              context: context,
+                              description:
+                                  "\n${AppLocalizations.of(context)!.settingsDescriptionInterface}"),
+                          (!desktopFeature(web: true))
+                              ? button(
+                                  AppLocalizations.of(context)!
+                                      .settingsTitleVoice,
+                                  Icons.headphones_rounded, () {
+                                  selectionHaptic();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ScreenSettingsVoice()));
+                                },
+                                  context: context,
+                                  description:
+                                      "\n${AppLocalizations.of(context)!.settingsDescriptionVoice}",
+                                  badge: AppLocalizations.of(context)!
+                                      .settingsExperimentalBeta)
+                              : const SizedBox.shrink(),
+                          button(
+                              AppLocalizations.of(context)!.settingsTitleExport,
+                              Icons.share_rounded, () {
+                            selectionHaptic();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ScreenSettingsExport()));
+                          },
+                              context: context,
+                              description:
+                                  "\n${AppLocalizations.of(context)!.settingsDescriptionExport}"),
+                          button(
+                              AppLocalizations.of(context)!.settingsTitleAbout,
+                              Icons.help_rounded, () {
+                            selectionHaptic();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ScreenSettingsAbout()));
+                          },
+                              context: context,
+                              description:
+                                  "\n${AppLocalizations.of(context)!.settingsDescriptionAbout}")
+                        ]);
+                        animatedDesktop = desktopLayoutNotRequired(context);
+                        return Column(children: [
+                          Expanded(
+                              child: desktopLayoutNotRequired(context)
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                          Expanded(
+                                              child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                column1,
+                                                Expanded(
+                                                    child: Center(
+                                                        child: InkWell(
+                                                  splashFactory:
+                                                      NoSplash.splashFactory,
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  enableFeedback: false,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  onTap: () async {
+                                                    if (iconSize != 1) return;
+                                                    heavyHaptic();
+                                                    setState(() {
+                                                      iconSize = 0.8;
+                                                    });
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 200));
+                                                    setState(() {
+                                                      iconSize = 1.2;
+                                                    });
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 200));
+                                                    setState(() {
+                                                      iconSize = 1;
+                                                    });
+                                                  },
+                                                  child: AnimatedScale(
+                                                    scale: iconSize,
+                                                    duration: const Duration(
+                                                        milliseconds: 400),
+                                                    child: const ImageIcon(
+                                                        AssetImage(
+                                                            "assets/logo512.png"),
+                                                        size: 44),
+                                                  ),
+                                                ))),
+                                                Transform.translate(
+                                                  offset: const Offset(0, 8),
+                                                  child: button(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .settingsSavedAutomatically,
+                                                      Icons.info_rounded,
+                                                      null,
+                                                      color: Colors.grey
+                                                          .harmonizeWith(
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary)),
+                                                )
+                                              ])),
+                                          verticalTitleDivider(
+                                              context: context),
+                                          Expanded(child: column2)
+                                        ])
+                                  : ListView(children: [
+                                      column1,
+                                      AnimatedOpacity(
+                                          opacity: animatedDesktop ? 0 : 1,
+                                          duration:
+                                              const Duration(milliseconds: 200),
+                                          child: titleDivider(bottom: 4)),
+                                      AnimatedOpacity(
+                                          opacity: animatedDesktop ? 0 : 1,
+                                          duration:
+                                              const Duration(milliseconds: 200),
+                                          child: column2)
+                                    ])),
+                          const SizedBox(height: 8),
+                          desktopLayoutNotRequired(context)
+                              ? const SizedBox.shrink()
+                              : button(
+                                  AppLocalizations.of(context)!
+                                      .settingsSavedAutomatically,
+                                  Icons.info_rounded,
+                                  null,
+                                  color: Colors.grey.harmonizeWith(
+                                      Theme.of(context).colorScheme.primary))
+                        ]);
+                      })),
+                ))));
   }
 }

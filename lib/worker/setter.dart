@@ -290,11 +290,7 @@ void setModel(BuildContext context, Function setState) {
         });
   } else {
     showModalBottomSheet(
-        context: context,
-        barrierColor: (Theme.of(context).brightness == Brightness.dark)
-            ? Colors.grey.withOpacity(0.2)
-            : null,
-        builder: (context) => Container(child: content));
+        context: context, builder: (context) => Container(child: content));
   }
 }
 
@@ -506,9 +502,6 @@ Future<String> prompt(BuildContext context,
   String? error;
   await showModalBottomSheet(
       context: context,
-      barrierColor: (Theme.of(context).brightness == Brightness.dark)
-          ? Colors.grey.withOpacity(0.2)
-          : null,
       isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(builder: (context, setLocalState) {

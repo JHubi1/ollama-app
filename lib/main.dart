@@ -536,12 +536,6 @@ class _MainAppState extends State<MainApp> {
                                             }
                                             showModalBottomSheet(
                                                 context: context,
-                                                barrierColor: (Theme.of(context)
-                                                            .brightness ==
-                                                        Brightness.dark)
-                                                    ? Colors.grey
-                                                        .withOpacity(0.2)
-                                                    : null,
                                                 builder: (context) {
                                                   return Container(
                                                       padding:
@@ -1266,11 +1260,6 @@ class _MainAppState extends State<MainApp> {
                                       }
                                       showModalBottomSheet(
                                           context: context,
-                                          barrierColor:
-                                              (Theme.of(context).brightness ==
-                                                      Brightness.dark)
-                                                  ? Colors.grey.withOpacity(0.2)
-                                                  : null,
                                           builder: (context) {
                                             return Container(
                                                 width: double.infinity,
