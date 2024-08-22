@@ -13,6 +13,7 @@ import 'package:dartx/dartx.dart';
 import 'package:uuid/uuid.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+// import 'package:scroll_to_index/scroll_to_index.dart';
 
 List<String> images = [];
 Future<List<llama.Message>> getHistory([String? addToSystem]) async {
@@ -99,7 +100,7 @@ Future<String> getTitleAi(List history) async {
             keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
       )
       .timeout(const Duration(seconds: 10));
-  var title = generated.message!.content;
+  var title = generated.message.content;
   title = title.replaceAll("\n", " ").trim();
 
   var terms = [
@@ -233,7 +234,7 @@ Future<String> send(String value, BuildContext context, Function setState,
           .timeout(const Duration(seconds: 30));
 
       await for (final res in stream) {
-        text += (res.message?.content ?? "");
+        text += (res.message.content);
         for (var i = 0; i < messages.length; i++) {
           if (messages[i].id == newId) {
             messages.removeAt(i);
@@ -241,11 +242,12 @@ Future<String> send(String value, BuildContext context, Function setState,
           }
         }
         if (chatAllowed) return "";
-        // if (text.trim() == "") {
-        //   throw Exception();
-        // }
         messages.insert(
             0, types.TextMessage(author: assistant, id: newId, text: text));
+        //TODO: add functionality
+        //
+        // chatKey!.currentState!.scrollToMessage(messages[1].id,
+        //     preferPosition: AutoScrollPosition.end);
         if (onStream != null) {
           onStream(text, false);
         }
@@ -266,8 +268,8 @@ Future<String> send(String value, BuildContext context, Function setState,
       messages.insert(
           0,
           types.TextMessage(
-              author: assistant, id: newId, text: request.message!.content));
-      text = request.message!.content;
+              author: assistant, id: newId, text: request.message.content));
+      text = request.message.content;
       setState(() {});
       heavyHaptic();
     }
@@ -302,7 +304,10 @@ Future<String> send(String value, BuildContext context, Function setState,
         showCloseIcon: true));
     return "";
   }
-
+  //TODO: add functionality
+  //
+  // chatKey!.currentState!
+  //     .scrollToMessage(messages[1].id, preferPosition: AutoScrollPosition.end);
   if ((prefs!.getString("requestType") ?? "stream") == "stream") {
     if (onStream != null) {
       onStream(text, true);

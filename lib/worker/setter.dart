@@ -291,15 +291,10 @@ void setModel(BuildContext context, Function setState) {
   } else {
     showModalBottomSheet(
         context: context,
-        builder: (context) => Container(
-            decoration: (Theme.of(context).brightness == Brightness.dark)
-                ? BoxDecoration(
-                    border: Border.all(color: Colors.white),
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(26),
-                        topRight: Radius.circular(26)))
-                : null,
-            child: content));
+        barrierColor: (Theme.of(context).brightness == Brightness.dark)
+            ? Colors.grey.withOpacity(0.2)
+            : null,
+        builder: (context) => Container(child: content));
   }
 }
 
@@ -454,15 +449,13 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
   }
 
   if ((prefs!.getBool("askBeforeDeletion") ?? false) && additionalCondition) {
+    resetSystemNavigation(context,
+        systemNavigationBarColor: Colors.grey.withOpacity(0.2));
     await showDialog(
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setLocalState) {
             return AlertDialog(
-                surfaceTintColor:
-                    (Theme.of(context).brightness == Brightness.dark)
-                        ? Colors.grey[800]
-                        : null,
                 title: Text(AppLocalizations.of(context)!.deleteDialogTitle),
                 content: Column(mainAxisSize: MainAxisSize.min, children: [
                   Text(AppLocalizations.of(context)!.deleteDialogDescription),
@@ -513,18 +506,14 @@ Future<String> prompt(BuildContext context,
   String? error;
   await showModalBottomSheet(
       context: context,
+      barrierColor: (Theme.of(context).brightness == Brightness.dark)
+          ? Colors.grey.withOpacity(0.2)
+          : null,
       isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(builder: (context, setLocalState) {
           return PopScope(
               child: Container(
-                  decoration: (Theme.of(context).brightness == Brightness.dark)
-                      ? BoxDecoration(
-                          border: Border.all(color: Colors.white),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(26),
-                              topRight: Radius.circular(26)))
-                      : null,
                   padding: EdgeInsets.only(
                       left: 16,
                       right: 16,

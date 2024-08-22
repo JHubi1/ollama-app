@@ -175,11 +175,6 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             context: context,
                             builder: (context) {
                               return Dialog(
-                                  surfaceTintColor:
-                                      (Theme.of(context).brightness ==
-                                              Brightness.dark)
-                                          ? Colors.grey[800]
-                                          : null,
                                   alignment: desktopLayout(context)
                                       ? null
                                       : Alignment.bottomRight,
@@ -350,20 +345,15 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                         selectionHaptic();
                         showModalBottomSheet(
                             context: context,
+                            barrierColor: (Theme.of(context).brightness ==
+                                    Brightness.dark)
+                                ? Colors.grey.withOpacity(0.2)
+                                : null,
                             builder: (context) {
                               return StatefulBuilder(
                                   builder: (context, setState) {
                                 return Container(
                                   width: double.infinity,
-                                  decoration: (Theme.of(context).brightness ==
-                                          Brightness.dark)
-                                      ? BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.white),
-                                          borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(26),
-                                              topRight: Radius.circular(26)))
-                                      : null,
                                   padding: EdgeInsets.only(
                                       left: 16,
                                       right: 16,

@@ -180,6 +180,10 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
 
                       showModalBottomSheet(
                           context: context,
+                          barrierColor:
+                              (Theme.of(context).brightness == Brightness.dark)
+                                  ? Colors.grey.withOpacity(0.2)
+                                  : null,
                           builder:
                               (context) => StatefulBuilder(
                                       builder: (context, setLocalState) {
@@ -223,21 +227,6 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                           });
                                         },
                                         child: Container(
-                                            decoration: (Theme.of(context)
-                                                        .brightness ==
-                                                    Brightness.dark)
-                                                ? BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.white),
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    26),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    26)))
-                                                : null,
                                             width: double.infinity,
                                             padding: const EdgeInsets.only(
                                                 left: 16,

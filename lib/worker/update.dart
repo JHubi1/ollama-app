@@ -125,7 +125,6 @@ void updateDialog(BuildContext context, Function title) {
       context: context,
       builder: (context) {
         return AlertDialog(
-            surfaceTintColor: (Theme.of(context).brightness == Brightness.dark) ?  Colors.grey[800] : null,
             title:
                 Text(AppLocalizations.of(context)!.settingsUpdateDialogTitle),
             content: Column(mainAxisSize: MainAxisSize.min, children: [

@@ -11,10 +11,11 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  ollama_dart: ^0.1.1
+  ollama_dart: ^0.2.1
   intl: any
   shared_preferences: ^2.2.3
   flutter_chat_ui: ^1.6.13
+  scroll_to_index: ^3.0.1
   uuid: ^4.4.0
   animated_text_kit: ^4.2.2
   image_picker: ^1.1.1
@@ -34,7 +35,7 @@ dependencies:
   version: ^3.0.2
   flutter_displaymode: ^0.6.0
   duration_picker: ^1.2.0
-  speech_to_text: ^6.6.2
+  speech_to_text: ^7.0.0
   flutter_tts: ^4.0.2
   permission_handler: ^11.3.1
   datetime_loop: ^1.2.0

@@ -107,11 +107,6 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                        surfaceTintColor:
-                                            (Theme.of(context).brightness ==
-                                                    Brightness.dark)
-                                                ? Colors.grey[800]
-                                                : null,
                                         title: Text(
                                             AppLocalizations.of(context)!
                                                 .settingsImportChatsTitle),
