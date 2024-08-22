@@ -16,6 +16,7 @@ body:
     attributes:
       label: "Platform"
       description: "The platforms on which the bug occurs or had occurred. Select all that apply."
+      multiple: true
       options:
         - Android
         - Windows
