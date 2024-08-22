@@ -80,7 +80,8 @@ SpeechToText speech = SpeechToText();
 FlutterTts voice = FlutterTts();
 bool voiceSupported = false;
 
-Function? setMainState;
+void Function(void Function())? setGlobalState;
+void Function(void Function())? setMainAppState;
 
 void main() {
   runApp(const App());
@@ -146,25 +147,28 @@ class _AppState extends State<App> {
         builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
       colorSchemeLight = lightDynamic;
       colorSchemeDark = darkDynamic;
-      return MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localeListResolutionCallback: (deviceLocales, supportedLocales) {
-            if (deviceLocales != null) {
-              for (final locale in deviceLocales) {
-                var newLocale = Locale(locale.languageCode);
-                if (supportedLocales.contains(newLocale)) {
-                  return locale;
+      return StatefulBuilder(builder: (context, setState) {
+        setMainAppState = setState;
+        return MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localeListResolutionCallback: (deviceLocales, supportedLocales) {
+              if (deviceLocales != null) {
+                for (final locale in deviceLocales) {
+                  var newLocale = Locale(locale.languageCode);
+                  if (supportedLocales.contains(newLocale)) {
+                    return locale;
+                  }
                 }
               }
-            }
-            return const Locale("en");
-          },
-          title: "Ollama",
-          theme: themeLight(),
-          darkTheme: themeDark(),
-          themeMode: themeMode(),
-          home: const MainApp());
+              return const Locale("en");
+            },
+            title: "Ollama",
+            theme: themeLight(),
+            darkTheme: themeDark(),
+            themeMode: themeMode(),
+            home: const MainApp());
+      });
     });
   }
 }
@@ -1226,7 +1230,7 @@ class _MainAppState extends State<MainApp> {
                                       ? (model != null)
                                           ? () {
                                               selectionHaptic();
-                                              setMainState = setState;
+                                              setGlobalState = setState;
                                               settingsOpen = true;
                                               logoVisible = false;
                                               Navigator.of(context).push(
@@ -1308,7 +1312,7 @@ class _MainAppState extends State<MainApp> {
                                                                     Navigator.of(
                                                                             context)
                                                                         .pop();
-                                                                    setMainState =
+                                                                    setGlobalState =
                                                                         setState;
                                                                     settingsOpen =
                                                                         true;

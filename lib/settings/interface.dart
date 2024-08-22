@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -10,7 +8,6 @@ import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:duration_picker/duration_picker.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 
@@ -178,7 +175,11 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             context: context,
                             builder: (context) {
                               return Dialog(
-            surfaceTintColor: (Theme.of(context).brightness == Brightness.dark) ?  Colors.grey[800] : null,
+                                  surfaceTintColor:
+                                      (Theme.of(context).brightness ==
+                                              Brightness.dark)
+                                          ? Colors.grey[800]
+                                          : null,
                                   alignment: desktopLayout(context)
                                       ? null
                                       : Alignment.bottomRight,
@@ -306,61 +307,12 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           selected: {
                             prefs!.getString("brightness") ?? "system"
                           },
-                          onSelectionChanged: (p0) {
+                          onSelectionChanged: (p0) async {
                             selectionHaptic();
-                            var tmp =
-                                prefs!.getString("brightness") ?? "system";
-                            prefs!.setString("brightness", p0.elementAt(0));
+                            await prefs!
+                                .setString("brightness", p0.elementAt(0));
+                            setMainAppState!(() {});
                             setState(() {});
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return StatefulBuilder(
-                                      builder: (context, setLocalState) {
-                                    return PopScope(
-                                        onPopInvoked: (didPop) {
-                                          prefs!.setString("brightness", tmp);
-                                          setState(() {});
-                                        },
-                                        child: AlertDialog(
-            surfaceTintColor: (Theme.of(context).brightness == Brightness.dark) ?  Colors.grey[800] : null,
-                                            title: Text(AppLocalizations.of(
-                                                    context)!
-                                                .settingsBrightnessRestartTitle),
-                                            content: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(AppLocalizations.of(
-                                                          context)!
-                                                      .settingsBrightnessRestartDescription),
-                                                ]),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    selectionHaptic();
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .settingsBrightnessRestartCancel)),
-                                              TextButton(
-                                                  onPressed: () async {
-                                                    selectionHaptic();
-                                                    await prefs!.setString(
-                                                        "brightness",
-                                                        p0.elementAt(0));
-                                                    if (desktopFeature()) {
-                                                      exit(0);
-                                                    } else {
-                                                      Restart.restartApp();
-                                                    }
-                                                  },
-                                                  child: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .settingsBrightnessRestartRestart))
-                                            ]));
-                                  });
-                                });
                           }),
                       const SizedBox(height: 8),
                       !kIsWeb
@@ -383,53 +335,12 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                       ? "device"
                                       : "ollama"
                                 },
-                              onSelectionChanged: (p0) {
+                              onSelectionChanged: (p0) async {
                                 selectionHaptic();
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return StatefulBuilder(
-                                          builder: (context, setLocalState) {
-                                        return AlertDialog(
-            surfaceTintColor: (Theme.of(context).brightness == Brightness.dark) ?  Colors.grey[800] : null,
-                                            title: Text(
-                                                AppLocalizations.of(context)!
-                                                    .settingsThemeRestartTitle),
-                                            content: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(AppLocalizations.of(
-                                                          context)!
-                                                      .settingsThemeRestartDescription),
-                                                ]),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    selectionHaptic();
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .settingsThemeRestartCancel)),
-                                              TextButton(
-                                                  onPressed: () async {
-                                                    selectionHaptic();
-                                                    await prefs!.setBool(
-                                                        "useDeviceTheme",
-                                                        p0.elementAt(0) ==
-                                                            "device");
-                                                    if (desktopFeature()) {
-                                                      exit(0);
-                                                    } else {
-                                                      Restart.restartApp();
-                                                    }
-                                                  },
-                                                  child: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .settingsThemeRestartRestart))
-                                            ]);
-                                      });
-                                    });
+                                await prefs!.setBool("useDeviceTheme",
+                                    p0.elementAt(0) == "device");
+                                setMainAppState!(() {});
+                                setState(() {});
                               })
                           : const SizedBox.shrink(),
                       titleDivider(),

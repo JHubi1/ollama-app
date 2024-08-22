@@ -207,7 +207,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
               speaking = false;
               voice.stop();
               if (chatUuid != null) {
-                loadChat(chatUuid!, setMainState!);
+                loadChat(chatUuid!, setGlobalState!);
               }
               settingsOpen = false;
               logoVisible = true;

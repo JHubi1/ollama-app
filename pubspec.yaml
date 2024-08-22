@@ -25,7 +25,6 @@ dependencies:
   transparent_image: ^2.0.1
   simple_icons: ^10.1.3
   url_launcher: ^6.2.6
-  restart_app: ^1.2.1
   flutter_markdown: ^0.7.1
   file_picker: ^8.0.3
   file_selector: ^1.0.3
