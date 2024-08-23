@@ -35,7 +35,9 @@ void setModel(BuildContext context, Function setState) {
                       .cast<String, String>(),
               baseUrl: "$host/api")
           .listModels()
-          .timeout(const Duration(seconds: 10));
+          .timeout(Duration(
+              seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                  .round()));
       for (var i = 0; i < list.models!.length; i++) {
         models.add(list.models![i].model!.split(":")[0]);
         modelsReal.add(list.models![i].model!);
@@ -125,7 +127,10 @@ void setModel(BuildContext context, Function setState) {
                           int.parse(prefs!.getString("keepAlive") ?? "300")
                     }),
                   )
-                  .timeout(const Duration(seconds: 15));
+                  .timeout(Duration(
+                      seconds: (10.0 *
+                              (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                          .round()));
             } catch (_) {
               // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -420,7 +425,7 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
   uuid ??= chatUuid;
 
   bool returnValue = false;
-  void delete() {
+  void delete(BuildContext context) {
     returnValue = true;
     if (takeAction) {
       for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
@@ -468,7 +473,7 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
                       onPressed: () {
                         selectionHaptic();
                         Navigator.of(context).pop();
-                        delete();
+                        delete(context);
                       },
                       child: Text(
                           AppLocalizations.of(context)!.deleteDialogDelete))
@@ -476,7 +481,7 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
           });
         });
   } else {
-    delete();
+    delete(context);
   }
   setState(() {});
   return returnValue;

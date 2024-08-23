@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -19,6 +20,25 @@ class ScreenSettingsInterface extends StatefulWidget {
   @override
   State<ScreenSettingsInterface> createState() =>
       _ScreenSettingsInterfaceState();
+}
+
+String secondsBeautify(double seconds) {
+  String? endString;
+  int? endMinutes;
+  int? endSeconds;
+
+  if (seconds > 60) {
+    endSeconds = seconds.toInt() % 60;
+    endMinutes = (seconds - endSeconds) ~/ 60;
+
+    endString = "${endMinutes}m";
+    if (endSeconds > 0) {
+      endString += " ${endSeconds}s";
+    }
+    return "($endString)";
+  } else {
+    return "";
+  }
 }
 
 class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
@@ -257,6 +277,37 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                   }));
                             });
                       }),
+                      titleDivider(context: context),
+                      button(
+                          AppLocalizations.of(context)!
+                              .settingsTimeoutMultiplier,
+                          Icons.info_outline_rounded,
+                          null,
+                          context: context,
+                          alwaysMobileDescription: true,
+                          description:
+                              "\n${AppLocalizations.of(context)!.settingsTimeoutMultiplierDescription}"),
+                      Slider(
+                          value: (prefs!.getDouble("timeoutMultiplier") ?? 1),
+                          min: 0.5,
+                          divisions: 19,
+                          max: 10,
+                          label: (prefs!.getDouble("timeoutMultiplier") ?? 1)
+                              .toString()
+                              .removeSuffix(".0"),
+                          onChanged: (value) {
+                            selectionHaptic();
+                            prefs!.setDouble("timeoutMultiplier", value);
+                            setState(() {});
+                          }),
+                      button(
+                          AppLocalizations.of(context)!
+                              .settingsTimeoutMultiplierExample,
+                          Icons.calculate_rounded,
+                          null,
+                          onlyDesktopDescription: false,
+                          description:
+                              "\n${(prefs!.getDouble("timeoutMultiplier") ?? 1)} x 30s = ${((prefs!.getDouble("timeoutMultiplier") ?? 1) * 30).round()}s ${secondsBeautify((prefs!.getDouble("timeoutMultiplier") ?? 1) * 30)}"),
                       titleDivider(context: context),
                       toggle(
                           context,

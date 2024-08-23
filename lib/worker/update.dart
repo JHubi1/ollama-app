@@ -6,6 +6,8 @@ import 'package:ollama_app/worker/desktop.dart';
 import 'haptic.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../main.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:install_referrer/install_referrer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -87,7 +89,10 @@ void checkUpdate(Function setState) async {
       var request = await http
           .get(Uri.parse(
               "https://api.github.com/repos/${repo[3]}/${repo[4]}/releases"))
-          .timeout(const Duration(seconds: 5));
+          .timeout(Duration(
+              milliseconds:
+                  (5000.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                      .round()));
       if (request.statusCode == 403) {
         setState(() {
           updateStatus = "rateLimit";

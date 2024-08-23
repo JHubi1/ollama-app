@@ -398,6 +398,21 @@
             }
         }
     },
+    "settingsTimeoutMultiplier": "Timeout multiplier",
+    "@settingsTimeoutMultiplier": {
+        "description": "Text displayed as title for the timeout multiplier section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTimeoutMultiplierDescription": "Select the multiplier that is applied to every timeout value in the app. Can be useful with a slow internet connection or a slow host.",
+    "@settingsTimeoutMultiplierDescription": {
+        "description": "Description of the timeout multiplier section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTimeoutMultiplierExample": "E.g. message timeout:",
+    "@settingsTimeoutMultiplierExample": {
+        "description": "Example for the timeout multiplier",
+        "context": "Visible in the settings view"
+    },
     "settingsEnableHapticFeedback": "Enable haptic feedback",
     "@settingsEnableHapticFeedback": {
         "description": "Text displayed as description for enable haptic feedback toggle",
@@ -423,26 +438,6 @@
         "description": "Text displayed as description for dark brightness option",
         "context": "Visible in the settings view"
     },
-    "settingsBrightnessRestartTitle": "Restart Required",
-    "@settingsBrightnessRestartTitle": {
-        "description": "Title of the restart required dialog",
-        "context": "Visible in the settings view"
-    },
-    "settingsBrightnessRestartDescription": "Changing the theme requires a restart.\nDo you want to restart now or cancel the action?",
-    "@settingsBrightnessRestartDescription": {
-        "description": "Description of the restart required dialog",
-        "context": "Visible in the settings view"
-    },
-    "settingsBrightnessRestartRestart": "Restart",
-    "@settingsBrightnessRestartRestart": {
-        "description": "Text displayed for restart button, should be capitalized",
-        "context": "Visible in the settings view"
-    },
-    "settingsBrightnessRestartCancel": "Cancel",
-    "@settingsBrightnessRestartCancel": {
-        "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the settings view"
-    },
     "settingsThemeDevice": "Device",
     "@settingsThemeDevice": {
         "description": "Text displayed as description for device theme option",
@@ -451,26 +446,6 @@
     "settingsThemeOllama": "Ollama",
     "@settingsThemeOllama": {
         "description": "Text displayed as description for Ollama theme option",
-        "context": "Visible in the settings view"
-    },
-    "settingsThemeRestartTitle": "Restart Required",
-    "@settingsThemeRestartTitle": {
-        "description": "Title of the restart required dialog",
-        "context": "Visible in the settings view"
-    },
-    "settingsThemeRestartDescription": "Changing the theme requires a restart.\nDo you want to restart now or cancel the action?",
-    "@settingsThemeRestartDescription": {
-        "description": "Description of the restart required dialog",
-        "context": "Visible in the settings view"
-    },
-    "settingsThemeRestartRestart": "Restart",
-    "@settingsThemeRestartRestart": {
-        "description": "Text displayed for restart button, should be capitalized",
-        "context": "Visible in the settings view"
-    },
-    "settingsThemeRestartCancel": "Cancel",
-    "@settingsThemeRestartCancel": {
-        "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the settings view"
     },
     "settingsTemporaryFixes": "Temporary interface fixes",

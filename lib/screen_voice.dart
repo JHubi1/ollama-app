@@ -118,7 +118,9 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                       "Add punctuation and syntax to the following sentence. You must not change order of words or a word in itself! You must not add any word or phrase or remove one! Do not change between formal and personal form, keep the original one!\n\n$text",
                   keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
             )
-            .timeout(const Duration(seconds: 10));
+            .timeout(Duration(
+                seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                    .round()));
         setState(() {
           text = generated.response!;
         });

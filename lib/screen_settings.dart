@@ -122,7 +122,7 @@ Widget title(String text, {double top = 16, double bottom = 16}) {
         Padding(
             padding: const EdgeInsets.only(left: 24, right: 24),
             child: Text(text)),
-        const Expanded(child: Divider(height: 1))
+        const Expanded(child: Divider())
       ]));
 }
 
@@ -155,16 +155,21 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
     bool disabled = false,
     bool replaceIconIfNull = false,
     String? description,
+    bool onlyDesktopDescription = true,
+    bool alwaysMobileDescription = false,
     String? badge,
     void Function()? onDisabledTap,
     void Function()? onLongTap,
     void Function()? onDoubleTap}) {
   if (description != null &&
-      (context != null && desktopLayoutNotRequired(context)) &&
+      ((context != null && desktopLayoutNotRequired(context)) ||
+          !onlyDesktopDescription) &&
+      !alwaysMobileDescription &&
       !description.startsWith("\n")) {
     description = " • $description";
   }
-  return Padding(
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 200),
     padding: (context != null && desktopLayoutNotRequired(context))
         ? const EdgeInsets.only(top: 8, bottom: 8)
         : EdgeInsets.zero,
@@ -183,9 +188,11 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                   }
                 : onPressed,
         onLongPress: (description != null && context != null)
-            ? desktopLayoutNotRequired(context)
+            ? (desktopLayoutNotRequired(context) && !alwaysMobileDescription) ||
+                    !onlyDesktopDescription
                 ? null
                 : () {
+                    selectionHaptic();
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(description!.trim()),
                         showCloseIcon: true));
@@ -223,9 +230,14 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       textWidget,
-                      (description != null && desktopLayoutNotRequired(context))
+                      (description != null &&
+                              !alwaysMobileDescription &&
+                              (desktopLayoutNotRequired(context) ||
+                                  !onlyDesktopDescription))
                           ? Text(description!,
-                              style: const TextStyle(color: Colors.grey))
+                              style: const TextStyle(
+                                  color: Colors.grey,
+                                  overflow: TextOverflow.ellipsis))
                           : const SizedBox.shrink()
                     ]);
               } else {
@@ -234,9 +246,16 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       textWidget,
-                      (description != null && desktopLayoutNotRequired(context))
-                          ? Text(description!,
-                              style: const TextStyle(color: Colors.grey))
+                      (description != null &&
+                              !alwaysMobileDescription &&
+                              (desktopLayoutNotRequired(context) ||
+                                  !onlyDesktopDescription))
+                          ? Expanded(
+                              child: Text(description!,
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      overflow: TextOverflow.ellipsis)),
+                            )
                           : const SizedBox.shrink()
                     ]);
               }
@@ -286,9 +305,11 @@ class _ScreenSettingsState extends State<ScreenSettings> {
               .cast<String, String>(),
         )
         ..followRedirects = false;
-      request = await http.Response.fromStream(await requestBase
-          .send()
-          .timeout(const Duration(seconds: 5), onTimeout: () {
+      request = await http.Response.fromStream(await requestBase.send().timeout(
+          Duration(
+              milliseconds:
+                  (5000.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                      .round()), onTimeout: () {
         return http.StreamedResponse(const Stream.empty(), 408);
       }));
       client.close();

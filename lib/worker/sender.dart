@@ -99,9 +99,11 @@ Future<String> getTitleAi(List history) async {
             ],
             keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
       )
-      .timeout(const Duration(seconds: 10));
+      .timeout(Duration(
+          seconds:
+              (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0)).round()));
   var title = generated.message.content;
-  title = title.replaceAll("\n", " ").trim();
+  title = title.replaceAll("\n", " ");
 
   var terms = [
     "\"",
@@ -127,13 +129,13 @@ Future<String> getTitleAi(List history) async {
 
   title = title.replaceAll(RegExp(r'<.*?>', dotAll: true), "");
   if (title.split(":").length == 2) {
-    title = title.split(":")[1].trim();
+    title = title.split(":")[1];
   }
 
   while (title.contains("  ")) {
     title = title.replaceAll("  ", " ");
   }
-  return title;
+  return title.trim();
 }
 
 Future<void> setTitleAi(List history) async {
@@ -231,7 +233,9 @@ Future<String> send(String value, BuildContext context, Function setState,
                 messages: history,
                 keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
           )
-          .timeout(const Duration(seconds: 30));
+          .timeout(Duration(
+              seconds: (30.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                  .round()));
 
       await for (final res in stream) {
         text += (res.message.content);
@@ -263,7 +267,9 @@ Future<String> send(String value, BuildContext context, Function setState,
                 messages: history,
                 keepAlive: int.parse(prefs!.getString("keepAlive") ?? "300")),
           )
-          .timeout(const Duration(seconds: 30));
+          .timeout(Duration(
+              seconds: (30.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                  .round()));
       if (chatAllowed) return "";
       messages.insert(
           0,
