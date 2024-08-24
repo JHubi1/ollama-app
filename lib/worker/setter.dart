@@ -22,6 +22,7 @@ void setModel(BuildContext context, Function setState) {
   List<String> modelsReal = [];
   List<bool> modal = [];
   int usedIndex = -1;
+  int oldIndex = -1;
   int addIndex = -1;
   bool loaded = false;
   Function? setModalState;
@@ -52,6 +53,18 @@ void setModel(BuildContext context, Function setState) {
       for (var i = 0; i < modelsReal.length; i++) {
         if (modelsReal[i] == model) {
           usedIndex = i;
+          oldIndex = usedIndex;
+        }
+      }
+      if (prefs!.getBool("modelTags") == null) {
+        List duplicateFinder = [];
+        for (var model in models) {
+          if (duplicateFinder.contains(model)) {
+            prefs!.setBool("modelTags", true);
+            break;
+          } else {
+            duplicateFinder.add(model);
+          }
         }
       }
       loaded = true;
@@ -64,7 +77,6 @@ void setModel(BuildContext context, Function setState) {
       Navigator.of(context).pop();
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          // ignore: use_build_context_synchronously
           content: Text(
               // ignore: use_build_context_synchronously
               AppLocalizations.of(context)!.settingsHostInvalid("timeout")),
@@ -84,18 +96,14 @@ void setModel(BuildContext context, Function setState) {
         onPopInvoked: (didPop) async {
           if (!loaded) return;
           loaded = false;
+          bool preload = false;
           if (usedIndex >= 0 && modelsReal[usedIndex] != model) {
+            preload = true;
             if (prefs!.getBool("resetOnModelSelect") ??
                 true && allowMultipleChats) {
               messages = [];
               chatUuid = null;
             }
-          } else {
-            setState(() {
-              desktopTitleVisible = true;
-            });
-            Navigator.of(context).pop();
-            return;
           }
           model = (usedIndex >= 0) ? modelsReal[usedIndex] : null;
           chatAllowed = !(model == null);
@@ -108,6 +116,7 @@ void setModel(BuildContext context, Function setState) {
           prefs?.setBool("multimodal", multimodal);
 
           if (model != null &&
+              preload &&
               int.parse(prefs!.getString("keepAlive") ?? "300") != 0 &&
               (prefs!.getBool("preloadModel") ?? true)) {
             setLocalState(() {});
@@ -152,7 +161,9 @@ void setModel(BuildContext context, Function setState) {
             setState(() {
               desktopTitleVisible = true;
             });
-            Navigator.of(context).pop();
+            try {
+              Navigator.of(context).pop();
+            } catch (_) {}
           }
         },
         child: Container(
@@ -251,14 +262,16 @@ void setModel(BuildContext context, Function setState) {
                                     onSelected: (bool selected) {
                                       selectionHaptic();
                                       if (addIndex == index) {
+                                        usedIndex = oldIndex;
                                         Navigator.of(context).pop();
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .modelDialogAddSteps),
-                                                showCloseIcon: true));
+                                        // ScaffoldMessenger.of(context)
+                                        //     .showSnackBar(SnackBar(
+                                        //         content: Text(
+                                        //             AppLocalizations.of(
+                                        //                     context)!
+                                        //                 .modelDialogAddSteps),
+                                        //         showCloseIcon: true));
+                                        addModel(context, setState);
                                       }
                                       if (!chatAllowed && model != null) {
                                         return;
@@ -296,6 +309,166 @@ void setModel(BuildContext context, Function setState) {
   } else {
     showModalBottomSheet(
         context: context, builder: (context) => Container(child: content));
+  }
+}
+
+void addModel(BuildContext context, Function setState) async {
+  var client = llama.OllamaClient(
+      headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
+          .cast<String, String>(),
+      baseUrl: "$host/api");
+  bool canceled = false;
+  bool networkError = false;
+  bool alreadyExists = false;
+  final String invalidText =
+      AppLocalizations.of(context)!.modelDialogAddPromptInvalid;
+  final networkErrorText =
+      AppLocalizations.of(context)!.settingsHostInvalid("other");
+  final alreadyExistsText =
+      AppLocalizations.of(context)!.modelDialogAddPromptAlreadyExists;
+  final downloadSuccessText =
+      AppLocalizations.of(context)!.modelDialogAddDownloadSuccess;
+  final downloadFailedText =
+      AppLocalizations.of(context)!.modelDialogAddDownloadFailed;
+  var requestedModel = await prompt(
+    context,
+    title: AppLocalizations.of(context)!.modelDialogAddPromptTitle,
+    description: AppLocalizations.of(context)!.modelDialogAddPromptDescription,
+    placeholder: "llama3:latest",
+    enableSuggestions: false,
+    validator: (content) async {
+      var model = content;
+      model = model.removeSuffix(":latest");
+      if (model == "") return false;
+      canceled = false;
+      networkError = false;
+      alreadyExists = false;
+      try {
+        var request = await client.listModels().timeout(Duration(
+            seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                .round()));
+        for (var element in request.models!) {
+          var localModel = element.model!.removeSuffix(":latest");
+          if (localModel == model) {
+            alreadyExists = true;
+          }
+        }
+        if (alreadyExists) return false;
+      } catch (_) {
+        networkError = true;
+        return false;
+      }
+      http.Response response;
+      try {
+        response = await http
+            .get(Uri.parse("https://ollama.com/library/$model"))
+            .timeout(Duration(
+                seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                    .round()));
+      } catch (_) {
+        networkError = true;
+        return false;
+      }
+      if (response.statusCode == 200) {
+        bool returnValue = false;
+        await showDialog(
+            context: mainContext!,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                  title: Text(AppLocalizations.of(context)!
+                      .modelDialogAddAssuranceTitle(model)),
+                  content: Text(AppLocalizations.of(context)!
+                      .modelDialogAddAssuranceDescription(model)),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          canceled = true;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(AppLocalizations.of(context)!
+                            .modelDialogAddAssuranceCancel)),
+                    TextButton(
+                        onPressed: () {
+                          returnValue = true;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(AppLocalizations.of(context)!
+                            .modelDialogAddAssuranceAdd))
+                  ]);
+            });
+        return returnValue;
+      }
+      return false;
+    },
+    validatorErrorCallback: (content) {
+      if (networkError) return networkErrorText;
+      if (alreadyExists) return alreadyExistsText;
+      if (canceled) return null;
+      return invalidText;
+    },
+  );
+  if (requestedModel == "") return;
+  requestedModel = requestedModel.removeSuffix(":latest");
+  double? percent;
+  Function? setDialogState;
+  showModalBottomSheet(
+      context: mainContext!,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setLocalState) {
+          setDialogState = setLocalState;
+          return PopScope(
+              canPop: false,
+              child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 16,
+                      bottom: desktopLayout(context) ? 16 : 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        percent == null
+                            ? AppLocalizations.of(context)!
+                                .modelDialogAddDownloadPercentLoading
+                            : AppLocalizations.of(context)!
+                                .modelDialogAddDownloadPercent(
+                                    (percent * 100).round().toString()),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 4)),
+                      LinearProgressIndicator(value: percent),
+                    ],
+                  )));
+        });
+      });
+  try {
+    final stream = client
+        .pullModelStream(request: llama.PullModelRequest(model: requestedModel))
+        .timeout(Duration(
+            seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+                .round()));
+    await for (final res in stream) {
+      percent = ((res.completed ?? 0).toInt() / (res.total ?? 100).toInt());
+      if ((percent * 100).round() == 0) {
+        percent = null;
+      }
+      setDialogState!(() {});
+    }
+    Navigator.of(mainContext!).pop();
+    setState(() {
+      model = requestedModel;
+      if (model!.split(":").length == 1) {
+        model = "$model:latest";
+      }
+    });
+    ScaffoldMessenger.of(mainContext!).showSnackBar(
+        SnackBar(content: Text(downloadSuccessText), showCloseIcon: true));
+  } catch (_) {
+    Navigator.of(mainContext!).pop();
+    ScaffoldMessenger.of(mainContext!).showSnackBar(
+        SnackBar(content: Text(downloadFailedText), showCloseIcon: true));
   }
 }
 
@@ -493,11 +666,15 @@ Future<String> prompt(BuildContext context,
     String title = "",
     String? valueIfCanceled,
     TextInputType keyboard = TextInputType.text,
+    bool autocorrect = true,
+    Iterable<String> autofillHints = const [],
+    bool enableSuggestions = true,
     Icon? prefixIcon,
     int maxLines = 1,
     String? uuid,
     Future<bool> Function(String content)? validator,
     String? validatorError,
+    String? Function(String content)? validatorErrorCallback,
     String? placeholder,
     bool prefill = true}) async {
   var returnText = (valueIfCanceled != null) ? valueIfCanceled : value;
@@ -510,6 +687,35 @@ Future<String> prompt(BuildContext context,
       isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(builder: (context, setLocalState) {
+          void submit() async {
+            selectionHaptic();
+            if (validator != null) {
+              setLocalState(() {
+                error = null;
+                loading = true;
+              });
+              bool valid = await validator(controller.text);
+              setLocalState(() {
+                loading = false;
+              });
+              if (!valid) {
+                setLocalState(() {
+                  if (validatorError != null) {
+                    error = validatorError;
+                  } else if (validatorErrorCallback != null) {
+                    error = validatorErrorCallback(controller.text);
+                  } else {
+                    error = null;
+                  }
+                });
+                return;
+              }
+            }
+            returnText = controller.text;
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pop();
+          }
+
           return PopScope(
               child: Container(
                   padding: EdgeInsets.only(
@@ -540,25 +746,11 @@ Future<String> prompt(BuildContext context,
                             controller: controller,
                             autofocus: true,
                             keyboardType: keyboard,
+                            autocorrect: autocorrect,
+                            autofillHints: autofillHints,
+                            enableSuggestions: enableSuggestions,
                             maxLines: maxLines,
-                            onSubmitted: (value) async {
-                              if (validator != null) {
-                                selectionHaptic();
-                                setLocalState(() {
-                                  error = null;
-                                });
-                                bool valid = await validator(controller.text);
-                                if (!valid) {
-                                  setLocalState(() {
-                                    error = validatorError;
-                                  });
-                                  return;
-                                }
-                              }
-                              returnText = controller.text;
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).pop();
-                            },
+                            onSubmitted: (_) => submit(),
                             decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
                                 hintText: placeholder,
@@ -566,25 +758,7 @@ Future<String> prompt(BuildContext context,
                                 suffixIcon: IconButton(
                                     tooltip: AppLocalizations.of(context)!
                                         .tooltipSave,
-                                    onPressed: () async {
-                                      if (validator != null) {
-                                        selectionHaptic();
-                                        setLocalState(() {
-                                          error = null;
-                                        });
-                                        bool valid =
-                                            await validator(controller.text);
-                                        if (!valid) {
-                                          setLocalState(() {
-                                            error = validatorError;
-                                          });
-                                          return;
-                                        }
-                                      }
-                                      returnText = controller.text;
-                                      // ignore: use_build_context_synchronously
-                                      Navigator.of(context).pop();
-                                    },
+                                    onPressed: submit,
                                     icon: const Icon(Icons.save_rounded)),
                                 prefixIcon: (title ==
                                             AppLocalizations.of(context)!

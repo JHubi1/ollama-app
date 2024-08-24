@@ -81,6 +81,7 @@ SpeechToText speech = SpeechToText();
 FlutterTts voice = FlutterTts();
 bool voiceSupported = false;
 
+BuildContext? mainContext;
 void Function(void Function())? setGlobalState;
 void Function(void Function())? setMainAppState;
 
@@ -673,6 +674,7 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
+    mainContext = context;
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
@@ -692,6 +694,10 @@ class _MainAppState extends State<MainApp> {
         }
 
         if (!(allowSettings || useHost)) {
+          // ignore: use_build_context_synchronously
+          resetSystemNavigation(context,
+              statusBarColor: Colors.black,
+              systemNavigationBarColor: Colors.black);
           showDialog(
               // ignore: use_build_context_synchronously
               context: context,

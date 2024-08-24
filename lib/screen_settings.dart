@@ -422,6 +422,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                             value: (prefs!
                                                     .getString("hostHeaders") ??
                                                 ""),
+                                            enableSuggestions: false,
                                             valueIfCanceled: "{}",
                                             validator: (content) async {
                                           try {

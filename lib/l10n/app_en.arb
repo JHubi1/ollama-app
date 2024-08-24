@@ -135,9 +135,82 @@
         "description": "Text displayed for add model button",
         "context": "Visible in the model dialog"
     },
-    "modelDialogAddSteps": "Adding models is not supported. Go to your host pc and add models there.",
-    "@modelDialogAddSteps": {
-        "description": "Steps to add a new model",
+    "modelDialogAddPromptTitle": "Add new model",
+    "@modelDialogAddPromptTitle": {
+        "description": "Title of the add model dialog",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddPromptDescription": "This can have either be a normal name (e.g. 'llama3') or name and tag (e.g. 'llama3:70b').",
+    "@modelDialogAddPromptDescription": {
+        "description": "Description of the add model dialog",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddPromptAlreadyExists": "Model already exists",
+    "@modelDialogAddPromptAlreadyExists": {
+        "description": "Text displayed when the model already exists",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddPromptInvalid": "Invalid model name",
+    "@modelDialogAddPromptInvalid": {
+        "description": "Text displayed when the model name is invalid",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAssuranceTitle": "Add {model}?",
+    "@modelDialogAddAssuranceTitle": {
+        "description": "Title of the add model assurance dialog",
+        "context": "Visible in the model dialog",
+        "placeholders": {
+            "model": {
+                "type": "String",
+                "description": "Name of the model to be added"
+            }
+        }
+    },
+    "modelDialogAddAssuranceDescription": "Pressing 'Add' will download the model '{model}' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it'll resume if you enter the name into the model dialog again.",
+    "@modelDialogAddAssuranceDescription": {
+        "description": "Description of the add model assurance dialog",
+        "context": "Visible in the model dialog",
+        "placeholders": {
+            "model": {
+                "type": "String",
+                "description": "Name of the model to be added"
+            }
+        }
+    },
+    "modelDialogAddAssuranceAdd": "Add",
+    "@modelDialogAddAssuranceAdd": {
+        "description": "Text displayed for add button, should be capitalized",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAssuranceCancel": "Cancel",
+    "@modelDialogAddAssuranceCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddDownloadPercentLoading": "loading progress",
+    "@modelDialogAddDownloadPercentLoading": {
+        "description": "Text displayed while loading the download progress",
+        "context": "Visible in the model dialog; 'loading progress in the moment'"
+    },
+    "modelDialogAddDownloadPercent": "download at {percent}%",
+    "@modelDialogAddDownloadPercent": {
+        "description": "Text displayed while downloading a model",
+        "context": "Visible in the model dialog; download is at x percent",
+        "placeholders": {
+            "percent": {
+                "type": "String",
+                "description": "Percentage of the download"
+            }
+        }
+    },
+    "modelDialogAddDownloadFailed": "Disconnected, try again",
+    "@modelDialogAddDownloadFailed": {
+        "description": "Text displayed when the download of a model fails",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddDownloadSuccess": "Download successful",
+    "@modelDialogAddDownloadSuccess": {
+        "description": "Text displayed when the download of a model is successful",
         "context": "Visible in the model dialog"
     },
     "deleteDialogTitle": "Delete Chat",
