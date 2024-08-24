@@ -264,13 +264,6 @@ void setModel(BuildContext context, Function setState) {
                                       if (addIndex == index) {
                                         usedIndex = oldIndex;
                                         Navigator.of(context).pop();
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(SnackBar(
-                                        //         content: Text(
-                                        //             AppLocalizations.of(
-                                        //                     context)!
-                                        //                 .modelDialogAddSteps),
-                                        //         showCloseIcon: true));
                                         addModel(context, setState);
                                       }
                                       if (!chatAllowed && model != null) {
@@ -462,6 +455,7 @@ void addModel(BuildContext context, Function setState) async {
       if (model!.split(":").length == 1) {
         model = "$model:latest";
       }
+      chatAllowed = true;
     });
     ScaffoldMessenger.of(mainContext!).showSnackBar(
         SnackBar(content: Text(downloadSuccessText), showCloseIcon: true));
