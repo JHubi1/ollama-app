@@ -317,6 +317,8 @@ void addModel(BuildContext context, Function setState) async {
       AppLocalizations.of(context)!.modelDialogAddPromptInvalid;
   final networkErrorText =
       AppLocalizations.of(context)!.settingsHostInvalid("other");
+  final timeoutErrorText =
+      AppLocalizations.of(context)!.settingsHostInvalid("timeout");
   final alreadyExistsText =
       AppLocalizations.of(context)!.modelDialogAddPromptAlreadyExists;
   final downloadSuccessText =
@@ -430,7 +432,7 @@ void addModel(BuildContext context, Function setState) async {
                                 .modelDialogAddDownloadPercent(
                                     (percent * 100).round().toString()),
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 4)),
+                      const Padding(padding: EdgeInsets.only(top: 8)),
                       LinearProgressIndicator(value: percent),
                     ],
                   )));
@@ -442,21 +444,67 @@ void addModel(BuildContext context, Function setState) async {
         .timeout(Duration(
             seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
                 .round()));
+    bool alreadyProgressed = false;
     await for (final res in stream) {
-      percent = ((res.completed ?? 0).toInt() / (res.total ?? 100).toInt());
-      if ((percent * 100).round() == 0) {
-        percent = null;
+      double tmpPercent =
+          ((res.completed ?? 0).toInt() / (res.total ?? 100).toInt());
+      if ((tmpPercent * 100).round() == 0) {
+        if (!alreadyProgressed) {
+          percent = null;
+        }
+      } else {
+        percent = tmpPercent;
+        alreadyProgressed = true;
       }
       setDialogState!(() {});
     }
-    Navigator.of(mainContext!).pop();
-    setState(() {
-      model = requestedModel;
-      if (model!.split(":").length == 1) {
-        model = "$model:latest";
+    // done downloading
+    if (prefs!.getBool("resetOnModelSelect") ?? true && allowMultipleChats) {
+      messages = [];
+      chatUuid = null;
+    }
+    model = requestedModel;
+    if (model!.split(":").length == 1) {
+      model = "$model:latest";
+    }
+    bool exists = false;
+    try {
+      var request = await client.listModels().timeout(Duration(
+          seconds:
+              (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0)).round()));
+      for (var element in request.models!) {
+        if (element.model == model) {
+          exists = true;
+          multimodal = (element.details!.families ?? []).contains("clip");
+        }
       }
+      if (!exists) {
+        throw Exception();
+      }
+    } catch (_) {
+      setState(() {
+        model = null;
+        multimodal = false;
+        chatAllowed = false;
+      });
+      prefs?.remove("model");
+      prefs?.setBool("multimodal", multimodal);
+      Navigator.of(mainContext!).pop();
+      if (!exists) {
+        ScaffoldMessenger.of(mainContext!).showSnackBar(
+            SnackBar(content: Text(downloadFailedText), showCloseIcon: true));
+      } else {
+        ScaffoldMessenger.of(mainContext!).showSnackBar(
+            SnackBar(content: Text(timeoutErrorText), showCloseIcon: true));
+      }
+      return;
+    }
+    prefs?.setString("model", model!);
+    prefs?.setBool("multimodal", multimodal);
+    setState(() {
       chatAllowed = true;
     });
+    Navigator.of(mainContext!).pop();
     ScaffoldMessenger.of(mainContext!).showSnackBar(
         SnackBar(content: Text(downloadSuccessText), showCloseIcon: true));
   } catch (_) {
