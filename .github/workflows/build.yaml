@@ -88,7 +88,7 @@ jobs:
       - name: Running installer build
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
-          path: .\windows_installer\x64.iss
+          path: .\windows_installer\ollama.iss
           options: /O+ /dAppVersion=${{ steps.get_flutter_version.outputs.version_number }}
       - name: Uploading installer
         uses: actions/upload-artifact@v4

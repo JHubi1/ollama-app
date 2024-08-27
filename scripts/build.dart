@@ -42,7 +42,7 @@ void main() async {
   // await execute(
   //     'Windows x64 installer',
   //     'iscc.exe',
-  //     ['windows_installer/x64.iss', '/qp', '/dAppVersion=$version'],
+  //     ['windows_installer/ollama.iss', '/qp', '/dAppVersion=$version'],
   //     "  > Inno Setup is not installed. Please install it from https://www.jrsoftware.org/isdl.php#stable\n     Then add the Inno Setup directory to your PATH environment variable.");
 
   // ----------
@@ -59,7 +59,12 @@ void main() async {
   // await execute(
   //     'Windows arm64 installer',
   //     'iscc.exe',
-  //     ['windows_installer/arm64.iss', '/qp', '/dAppVersion=$version'],
+  //     [
+  //       'windows_installer/ollama.iss',
+  //       '/qp',
+  //       '/dAppVersion=$version',
+  //       '/dAppArchitectures=arm64'
+  //     ],
   //     "  > Inno Setup is not installed. Please install it from https://www.jrsoftware.org/isdl.php#stable\n     Then add the Inno Setup directory to your PATH environment variable.");
 
   print('----------');
@@ -73,11 +78,10 @@ void main() async {
     await outputDir.create();
 
     await copyFile('build\\app\\outputs\\flutter-apk\\app-release.apk',
-        'build\\.output\\ollama.apk');
-    await copyFile('build\\app\\outputs\\flutter-apk\\app-release.apk.sha1',
-        'build\\.output\\ollama.apk.sha1');
-    await copyFile('build\\windows\\x64\\runner\\ollama-v$version-x64.exe',
-        'build\\.output\\ollama-v$version-x64.exe');
+        'build\\.output\\ollama-android-v$version.apk');
+    await copyFile(
+        'build\\windows\\x64\\runner\\ollama-windows-x64-v$version.exe',
+        'build\\.output\\ollama-windows-x64-v$version.exe');
     print('- done');
   } catch (_) {
     print('- failed');
