@@ -96,7 +96,7 @@ jobs:
           name: ollama-windows-x64
           path: build\windows\x64\runner\ollama-windows-x64-v${{ steps.get_flutter_version.outputs.version_number }}.exe
   build-linux-x64:
-    name: Building for Linux
+    name: Building for Linux x64
     if: ${{ github.event.inputs.buildLinuxX64 == 'true' }}
     runs-on: ubuntu-latest
     needs: analyze
