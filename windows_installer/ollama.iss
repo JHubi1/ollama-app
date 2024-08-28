@@ -33,6 +33,11 @@ AppPublisherURL={#AppURL}
 SetupIconFile=windows\runner\resources\app_icon.ico
 AppCopyright=Copyright 2024 {#AppPublisher}
 
+VersionInfoCompany={#AppPublisher}
+VersionInfoDescription=Installation program for {#AppName}
+VersionInfoOriginalFileName={#AppExeName}
+VersionInfoVersion={#AppVersion}
+
 UninstallDisplayIcon={app}\{#AppExeName}
 UninstallDisplayName={#AppName}
 
@@ -50,15 +55,19 @@ InfoAfterFile=windows_installer\docs\after.txt
 WizardImageFile=assets\OllamaAppBanner.bmp
 
 PrivilegesRequiredOverridesAllowed=dialog
-;Password=enterPasswordInCaseOfSecretBuild
-;Encryption=yes
+; Password=enterPasswordInCaseOfSecretBuild
+; Encryption=yes
 
 DisableWelcomePage=no
 DisableProgramGroupPage=yes
 
-Compression=lzma
+Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
+WizardResizable=no
+
+SetupMutex=OllamaAppSetup
+CloseApplications=force
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
