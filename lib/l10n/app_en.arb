@@ -15,6 +15,11 @@
         "description": "Text displayed for settings option",
         "context": "Visible in the side bar"
     },
+    "optionInstallPwa": "Install Webapp",
+    "@optionInstallPwa": {
+        "description": "Text displayed for install PWA option",
+        "context": "Visible in the side bar"
+    },
     "optionNoChatFound": "No chats found",
     "@optionNoChatFound": {
         "description": "Text displayed when no chats are found",
@@ -158,6 +163,22 @@
     "modelDialogAddPromptInvalid": "Invalid model name",
     "@modelDialogAddPromptInvalid": {
         "description": "Text displayed when the model name is invalid",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAllowanceTitle": "Allow Proxy",
+    "modelDialogAddAllowanceDescription": "Ollama App must check if the entered model is valid. For that, we normally send a web request to the Ollama model list and check the status code, but because you're using the web client, we can't do that directly. Instead, the app will send the request to a different api, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potential harmful intentions.\nIf you accept, your selection will be remembered in the future; if not, nothing will be sent and the model won't be added.",
+    "@modelDialogAddAllowanceDescription": {
+        "description": "Description of the allow proxy dialog",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAllowanceAllow": "Allow",
+    "@modelDialogAddAllowanceAllow": {
+        "description": "Text displayed for allow button, should be capitalized",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAllowanceDeny": "Deny",
+    "@modelDialogAddAllowanceDeny": {
+        "description": "Text displayed for deny button, should be capitalized",
         "context": "Visible in the model dialog"
     },
     "modelDialogAddAssuranceTitle": "Add {model}?",
@@ -363,14 +384,14 @@
         "description": "Text displayed when the host is being checked",
         "context": "Visible in the settings view"
     },
-    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request Failed. Server issues} other{Request Failed}}",
+    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request Failed. Server issues} ratelimit{Too many requests} other{Request Failed}}",
     "@settingsHostInvalid": {
         "description": "Text displayed when the host is invalid",
         "context": "Visible in the settings view",
         "placeholders": {
             "type": {
                 "type": "String",
-                "description": "Type of the issue, either 'url' or 'other' (preferably 'host')"
+                "description": "Type of the issue, either 'url', 'host', 'timeout', 'ratelimit' or 'other' (preferably 'host')"
             }
         }
     },

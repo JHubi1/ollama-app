@@ -7,6 +7,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A modern and easy-to-use client for Ollama">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -91,6 +92,19 @@
       }
     }
   </style>
+  <script>
+    let deferredPrompt;
+    window.addEventListener("beforeinstallprompt", (e) => { deferredPrompt = e; });
+    function promptInstall() { deferredPrompt.prompt(); }
+    window.addEventListener("appinstalled", () => { deferredPrompt = null; appInstalled(); });
+    function getLaunchMode() {
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+      if (deferredPrompt) hasPrompt();
+      if (document.referrer.startsWith("android-app://")) { appLaunchedAsTWA(); }
+      else if (navigator.standalone || isStandalone) { appLaunchedAsPWA(); }
+      else { window.appLaunchedInBrowser(); }
+    }
+  </script>
 </head>
 
 <body>

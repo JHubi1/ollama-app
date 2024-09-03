@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../main.dart';
@@ -11,29 +12,12 @@ void resetSystemNavigation(BuildContext context,
     Color? statusBarColor,
     Color? systemNavigationBarColor,
     Duration? delay}) {
-  ColorScheme getColorScheme() {
-    final ColorScheme schemeLight = themeLight().colorScheme;
-    final ColorScheme schemeDark = themeDark().colorScheme;
-    if (themeMode() == ThemeMode.system) {
-      if (MediaQuery.of(context).platformBrightness == Brightness.light) {
-        return schemeLight;
-      } else {
-        return schemeDark;
-      }
-    } else {
-      if (themeMode() == ThemeMode.light) {
-        return schemeLight;
-      } else {
-        return schemeDark;
-      }
-    }
-  }
-
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     if (delay != null) {
       await Future.delayed(delay);
     }
-    color ??= getColorScheme().surface;
+    // ignore: use_build_context_synchronously
+    color ??= themeCurrent(context).colorScheme.surface;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarIconBrightness:
           (((statusBarColor != null) ? statusBarColor : color)!
@@ -42,8 +26,10 @@ void resetSystemNavigation(BuildContext context,
               ? Brightness.dark
               : Brightness.light,
       statusBarColor:
-          (((statusBarColor != null) ? statusBarColor : color)!.value !=
-                  getColorScheme().surface.value)
+          ((((statusBarColor != null) ? statusBarColor : color)!.value !=
+                      // ignore: use_build_context_synchronously
+                      themeCurrent(context).colorScheme.surface.value) ||
+                  kIsWeb)
               ? (statusBarColor != null)
                   ? statusBarColor
                   : color
@@ -56,12 +42,28 @@ void resetSystemNavigation(BuildContext context,
 
 ThemeData themeModifier(ThemeData theme) {
   return theme.copyWith(
-    // https://docs.flutter.dev/platform-integration/android/predictive-back#set-up-your-app
+      // https://docs.flutter.dev/platform-integration/android/predictive-back#set-up-your-app
       pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
     },
   ));
+}
+
+ThemeData themeCurrent(BuildContext context) {
+  if (themeMode() == ThemeMode.system) {
+    if (MediaQuery.of(context).platformBrightness == Brightness.light) {
+      return themeLight();
+    } else {
+      return themeDark();
+    }
+  } else {
+    if (themeMode() == ThemeMode.light) {
+      return themeLight();
+    } else {
+      return themeDark();
+    }
+  }
 }
 
 ThemeData themeLight() {

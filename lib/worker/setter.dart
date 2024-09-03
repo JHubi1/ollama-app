@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'desktop.dart';
@@ -187,11 +188,8 @@ void setModel(BuildContext context, Function setState) {
                             scrollDirection: Axis.vertical,
                             child: Wrap(
                               spacing: desktopLayout(context) ? 10.0 : 5.0,
-                              runSpacing: desktopFeature()
-                                  ? desktopFeature()
-                                      ? 10.0
-                                      : 5.0
-                                  : 0.0,
+                              runSpacing:
+                                  desktopFeature(web: true) ? 10.0 : 0.0,
                               alignment: WrapAlignment.center,
                               children: List<Widget>.generate(
                                 models.length,
@@ -280,7 +278,7 @@ void setModel(BuildContext context, Function setState) {
                   ])));
   });
 
-  if (desktopFeature()) {
+  if (desktopLayoutNotRequired(context)) {
     showDialog(
         context: context,
         builder: (context) {
@@ -312,6 +310,7 @@ void addModel(BuildContext context, Function setState) async {
       baseUrl: "$host/api");
   bool canceled = false;
   bool networkError = false;
+  bool ratelimitError = false;
   bool alreadyExists = false;
   final String invalidText =
       AppLocalizations.of(context)!.modelDialogAddPromptInvalid;
@@ -319,6 +318,8 @@ void addModel(BuildContext context, Function setState) async {
       AppLocalizations.of(context)!.settingsHostInvalid("other");
   final timeoutErrorText =
       AppLocalizations.of(context)!.settingsHostInvalid("timeout");
+  final ratelimitErrorText =
+      AppLocalizations.of(context)!.settingsHostInvalid("ratelimit");
   final alreadyExistsText =
       AppLocalizations.of(context)!.modelDialogAddPromptAlreadyExists;
   final downloadSuccessText =
@@ -337,6 +338,7 @@ void addModel(BuildContext context, Function setState) async {
       if (model == "") return false;
       canceled = false;
       networkError = false;
+      ratelimitError = false;
       alreadyExists = false;
       try {
         var request = await client.listModels().timeout(Duration(
@@ -353,11 +355,48 @@ void addModel(BuildContext context, Function setState) async {
         networkError = true;
         return false;
       }
+      var endpoint = "https://ollama.com/library/";
+      if (kIsWeb) {
+        if (!(prefs!.getBool("allowWebProxy") ?? false)) {
+          bool returnValue = false;
+          await showDialog(
+              context: mainContext!,
+              barrierDismissible: false,
+              builder: (context) {
+                return AlertDialog(
+                    title: Text(AppLocalizations.of(context)!
+                        .modelDialogAddAllowanceTitle),
+                    content: SizedBox(
+                      width: 640,
+                      child: Text(AppLocalizations.of(context)!
+                          .modelDialogAddAllowanceDescription),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            canceled = true;
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AppLocalizations.of(context)!
+                              .modelDialogAddAllowanceDeny)),
+                      TextButton(
+                          onPressed: () {
+                            returnValue = true;
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AppLocalizations.of(context)!
+                              .modelDialogAddAllowanceAllow))
+                    ]);
+              });
+          if (!returnValue) return false;
+          prefs!.setBool("allowWebProxy", true);
+        }
+        endpoint = "https://end.jhubi1.com/ollama-proxy/";
+      }
       http.Response response;
       try {
-        response = await http
-            .get(Uri.parse("https://ollama.com/library/$model"))
-            .timeout(Duration(
+        response = await http.get(Uri.parse("$endpoint$model")).timeout(
+            Duration(
                 seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
                     .round()));
       } catch (_) {
@@ -376,8 +415,11 @@ void addModel(BuildContext context, Function setState) async {
               return AlertDialog(
                   title: Text(AppLocalizations.of(context)!
                       .modelDialogAddAssuranceTitle(model)),
-                  content: Text(AppLocalizations.of(context)!
-                      .modelDialogAddAssuranceDescription(model)),
+                  content: SizedBox(
+                    width: 640,
+                    child: Text(AppLocalizations.of(context)!
+                        .modelDialogAddAssuranceDescription(model)),
+                  ),
                   actions: [
                     TextButton(
                         onPressed: () {
@@ -398,10 +440,14 @@ void addModel(BuildContext context, Function setState) async {
         resetSystemNavigation(mainContext!);
         return returnValue;
       }
+      if (response.statusCode == 429) {
+        ratelimitError = true;
+      }
       return false;
     },
     validatorErrorCallback: (content) {
       if (networkError) return networkErrorText;
+      if (ratelimitError) return ratelimitErrorText;
       if (alreadyExists) return alreadyExistsText;
       if (canceled) return null;
       return invalidText;
@@ -774,8 +820,8 @@ Future<String> prompt(BuildContext context,
                       left: 16,
                       right: 16,
                       top: 16,
-                      bottom: desktopFeature()
-                          ? 16
+                      bottom: desktopFeature(web: true)
+                          ? 12
                           : MediaQuery.of(context).viewInsets.bottom),
                   width: double.infinity,
                   child: Column(

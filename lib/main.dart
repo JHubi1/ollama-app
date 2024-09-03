@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -35,6 +36,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
+import 'package:pwa_install/pwa_install.dart' as pwa;
+import 'package:universal_html/html.dart' as html;
 
 // client configuration
 
@@ -89,6 +92,10 @@ void Function(void Function())? setGlobalState;
 void Function(void Function())? setMainAppState;
 
 void main() {
+  pwa.PWAInstall().setup(installCallback: () {
+    debugPrint('APP INSTALLED!');
+  });
+
   runApp(const App());
 
   if (desktopFeature()) {
@@ -195,7 +202,9 @@ class _MainAppState extends State<MainApp> {
         left: desktopLayoutRequired(context) ? 17 : 12,
         right: desktopLayoutRequired(context) ? 17 : 12);
     return List.from([
-      desktopFeature() ? const SizedBox(height: 8) : const SizedBox.shrink(),
+      (desktopLayoutNotRequired(context) || kIsWeb)
+          ? const SizedBox(height: 8)
+          : const SizedBox.shrink(),
       desktopLayoutNotRequired(context)
           ? const SizedBox.shrink()
           : (Padding(
@@ -324,6 +333,47 @@ class _MainAppState extends State<MainApp> {
                         const SizedBox(width: 16),
                       ])))))
           : const SizedBox.shrink(),
+      (pwa.PWAInstall().installPromptEnabled &&
+              pwa.PWAInstall().launchMode == pwa.LaunchMode.browser)
+          ? (Padding(
+              padding: padding,
+              child: InkWell(
+                  enableFeedback: false,
+                  customBorder: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(50))),
+                  onTap: () {
+                    selectionHaptic();
+                    if (!desktopLayout(context)) {
+                      Navigator.of(context).pop();
+                    }
+                    pwa.PWAInstall().onAppInstalled = () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        pwa.setLaunchModePWA();
+                        setMainAppState!(() {});
+                      });
+                    };
+                    pwa.PWAInstall().promptInstall_();
+                    setState(() {});
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
+                      child: Row(children: [
+                        Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 12),
+                            child: desktopLayoutNotRequired(context)
+                                ? const Icon(Icons.install_desktop_rounded)
+                                : const Icon(Icons.install_mobile_rounded)),
+                        Expanded(
+                          child: Text(
+                              AppLocalizations.of(context)!.optionInstallPwa,
+                              softWrap: false,
+                              overflow: TextOverflow.fade,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500)),
+                        ),
+                        const SizedBox(width: 16),
+                      ])))))
+          : const SizedBox.shrink(),
       (desktopLayoutNotRequired(context) &&
               (!allowMultipleChats && !allowSettings))
           ? const SizedBox.shrink()
@@ -437,7 +487,8 @@ class _MainAppState extends State<MainApp> {
                     }
                   });
                 },
-                onLongPress: desktopFeature()
+                onLongPress: (desktopFeature() ||
+                        (kIsWeb && desktopLayoutNotRequired(context)))
                     ? null
                     : () async {
                         selectionHaptic();
@@ -486,7 +537,10 @@ class _MainAppState extends State<MainApp> {
                       AnimatedSwitcher(
                           duration: const Duration(milliseconds: 100),
                           child:
-                              ((desktopFeature() &&
+                              (((desktopFeature() ||
+                                              (kIsWeb &&
+                                                  desktopLayoutNotRequired(
+                                                      context))) &&
                                           (hoveredChat ==
                                               jsonDecode(item)["uuid"])) ||
                                       !allowMultipleChats)
@@ -643,7 +697,9 @@ class _MainAppState extends State<MainApp> {
                                       ))
                                   : const SizedBox(width: 16)),
                     ]))));
-        return desktopFeature() || !allowMultipleChats
+        return (desktopFeature() ||
+                    (kIsWeb && desktopLayoutNotRequired(context))) ||
+                !allowMultipleChats
             ? child
             : Dismissible(
                 key: Key(jsonDecode(item)["uuid"]),
@@ -688,6 +744,10 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
     mainContext = context;
+
+    if (kIsWeb) {
+      html.querySelector(".loader")?.remove();
+    }
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
@@ -1529,7 +1589,7 @@ class _MainAppState extends State<MainApp> {
                                       inputTextColor: themeLight().colorScheme.onSurface,
                                       inputBorderRadius: BorderRadius.circular(32),
                                       inputPadding: const EdgeInsets.all(16),
-                                      inputMargin: EdgeInsets.only(left: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 8 : 6, right: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 8 : 6, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 0 : 8),
+                                      inputMargin: EdgeInsets.only(left: !desktopFeature(web: true) ? 8 : 6, right: !desktopFeature(web: true) ? 8 : 6, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature(web: true)) ? 0 : 8),
                                       messageMaxWidth: (MediaQuery.of(context).size.width >= 1000)
                                           ? (MediaQuery.of(context).size.width >= 1600)
                                               ? (MediaQuery.of(context).size.width >= 2200)
@@ -1567,9 +1627,9 @@ class _MainAppState extends State<MainApp> {
                                       attachmentButtonMargin: EdgeInsets.zero,
                                       inputBackgroundColor: themeDark().colorScheme.onSurface.withAlpha(40),
                                       inputTextColor: themeDark().colorScheme.onSurface,
-                                      inputBorderRadius: const BorderRadius.all(Radius.circular(64)),
+                                      inputBorderRadius: BorderRadius.circular(32),
                                       inputPadding: const EdgeInsets.all(16),
-                                      inputMargin: EdgeInsets.only(left: 8, right: 8, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature()) ? 0 : 8),
+                                      inputMargin: EdgeInsets.only(left: !desktopFeature(web: true) ? 8 : 6, right: !desktopFeature(web: true) ? 8 : 6, bottom: (MediaQuery.of(context).viewInsets.bottom == 0.0 && !desktopFeature(web: true)) ? 0 : 8),
                                       messageMaxWidth: (MediaQuery.of(context).size.width >= 1000)
                                           ? (MediaQuery.of(context).size.width >= 1600)
                                               ? (MediaQuery.of(context).size.width >= 2200)

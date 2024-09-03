@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 import '../main.dart';
 import '../worker/haptic.dart';
@@ -313,8 +312,19 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           Icons.calculate_rounded,
                           null,
                           onlyDesktopDescription: false,
-                          description:
-                              "\n${((prefs!.getDouble("timeoutMultiplier") ?? 1) == 10) ? "${(prefs!.getDouble("timeoutMultiplier") ?? 1).round()}." : (prefs!.getDouble("timeoutMultiplier") ?? 1)} x 30s = ${((prefs!.getDouble("timeoutMultiplier") ?? 1) * 30).round()}s ${secondsBeautify((prefs!.getDouble("timeoutMultiplier") ?? 1) * 30)}"),
+                          // making it complicated because web is weird and doesn't like to round numbers
+                          description: "\n${() {
+                            var value =
+                                (prefs!.getDouble("timeoutMultiplier") ?? 1);
+                            if (value == 10) {
+                              return "${value.round()}.";
+                            } else {
+                              if (!value.toString().contains(".")) {
+                                return "${value.toString()}.0";
+                              }
+                              return value;
+                            }
+                          }.call()} x 30s = ${((prefs!.getDouble("timeoutMultiplier") ?? 1) * 30).round()}s ${secondsBeautify((prefs!.getDouble("timeoutMultiplier") ?? 1) * 30)}"),
                       titleDivider(context: context),
                       toggle(
                           context,
@@ -368,7 +378,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             setState(() {});
                           }),
                       const SizedBox(height: 8),
-                      !kIsWeb
+                      (colorSchemeLight != null && colorSchemeDark != null)
                           ? SegmentedButton(
                               segments: [
                                   ButtonSegment(
