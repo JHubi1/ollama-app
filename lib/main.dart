@@ -15,6 +15,7 @@ import 'worker/haptic.dart';
 import 'worker/sender.dart';
 import 'worker/desktop.dart';
 import 'worker/theme.dart';
+import 'worker/update.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
@@ -33,6 +34,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:version/version.dart';
 
 // client configuration
 
@@ -75,6 +77,7 @@ bool desktopTitleVisible = true;
 bool logoVisible = true;
 bool menuVisible = false;
 bool sendable = false;
+bool updateDetectedOnStart = false;
 double sidebarIconSize = 1;
 
 SpeechToText speech = SpeechToText();
@@ -165,7 +168,9 @@ class _AppState extends State<App> {
               }
               return const Locale("en");
             },
-            title: "Ollama",
+            onGenerateTitle: (context) {
+              return AppLocalizations.of(context)!.appTitle;
+            },
             theme: themeLight(),
             darkTheme: themeDark(),
             themeMode: themeMode(),
@@ -299,9 +304,15 @@ class _MainAppState extends State<MainApp> {
                   child: Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
                       child: Row(children: [
-                        const Padding(
-                            padding: EdgeInsets.only(left: 16, right: 12),
-                            child: Icon(Icons.dns_rounded)),
+                        Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 12),
+                            child: (updateStatus == "ok" &&
+                                    updateDetectedOnStart &&
+                                    (Version.parse(latestVersion ?? "1.0.0") >
+                                        Version.parse(
+                                            currentVersion ?? "2.0.0")))
+                                ? const Badge(child: Icon(Icons.dns_rounded))
+                                : const Icon(Icons.dns_rounded)),
                         Expanded(
                           child: Text(
                               AppLocalizations.of(context)!.optionSettings,
@@ -486,6 +497,8 @@ class _MainAppState extends State<MainApp> {
                                         height: 24,
                                         width: 24,
                                         child: IconButton(
+                                          tooltip: AppLocalizations.of(context)!
+                                              .tooltipReset,
                                           onPressed: () {
                                             if (!chatAllowed &&
                                                 chatUuid ==
@@ -685,14 +698,6 @@ class _MainAppState extends State<MainApp> {
                   }));
         }
 
-        // prefs!.remove("welcomeFinished");
-        if (!(prefs!.getBool("welcomeFinished") ?? false) && allowSettings) {
-          // ignore: use_build_context_synchronously
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const ScreenWelcome()));
-          return;
-        }
-
         if (!(allowSettings || useHost)) {
           // ignore: use_build_context_synchronously
           resetSystemNavigation(context,
@@ -720,6 +725,14 @@ class _MainAppState extends State<MainApp> {
               });
         }
 
+        // prefs!.remove("welcomeFinished");
+        if (!(prefs!.getBool("welcomeFinished") ?? false) && allowSettings) {
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const ScreenWelcome()));
+          return;
+        }
+
         if (!allowMultipleChats &&
             (prefs!.getStringList("chats") ?? []).isNotEmpty) {
           chatUuid =
@@ -740,6 +753,11 @@ class _MainAppState extends State<MainApp> {
               // ignore: use_build_context_synchronously
               content: Text(AppLocalizations.of(context)!.noHostSelected),
               showCloseIcon: true));
+        }
+
+        setState(() {});
+        if (prefs!.getBool("checkUpdateOnSettingsOpen") ?? false) {
+          updateDetectedOnStart = await checkUpdate(setState);
         }
       },
     );

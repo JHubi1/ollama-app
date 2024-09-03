@@ -26,9 +26,6 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
     WidgetsFlutterBinding.ensureInitialized();
     updatesSupported(setState, true);
     setState(() {});
-    if (prefs!.getBool("checkUpdateOnSettingsOpen") ?? false) {
-      checkUpdate(setState);
-    }
   }
 
   @override
@@ -75,12 +72,10 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                                                       Version.parse(
                                                           currentVersion ??
                                                               "2.0.0"))
-                                                  ? AppLocalizations.of(
-                                                          context)!
+                                                  ? AppLocalizations.of(context)!
                                                       .settingsUpdateAvailable(
                                                           latestVersion!)
-                                                  : AppLocalizations.of(
-                                                          context)!
+                                                  : AppLocalizations.of(context)!
                                                       .settingsUpdateLatest),
                               ((updateStatus != "ok")
                                   ? Icons.warning_rounded
@@ -100,7 +95,13 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                                 checkUpdate(setState);
                                 return;
                               }
-                            }),
+                            },
+                              iconBadge: (updateStatus == "ok" &&
+                                      updateDetectedOnStart &&
+                                      (Version.parse(latestVersion ?? "1.0.0") >
+                                          Version.parse(currentVersion ?? "2.0.0")))
+                                  ? ""
+                                  : null),
                       (updateStatus == "notAvailable")
                           ? const SizedBox.shrink()
                           : toggle(

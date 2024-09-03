@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ollama_app/worker/desktop.dart';
 
 import 'haptic.dart';
+import 'theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../main.dart';
@@ -13,6 +15,7 @@ import 'package:install_referrer/install_referrer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:version/version.dart';
 
 const repoUrl = "https://github.com/JHubi1/ollama-app";
 
@@ -25,10 +28,6 @@ String? currentVersion;
 String? updateChangeLog;
 Future<bool> updatesSupported(Function setState,
     [bool takeAction = false]) async {
-  var tmp = (await PackageInfo.fromPlatform()).version;
-  setState(() {
-    currentVersion = tmp;
-  });
   bool returnValue = true;
   var installerApps = [
     "org.fdroid.fdroid",
@@ -45,10 +44,10 @@ Future<bool> updatesSupported(Function setState,
         (installerApps
             .contains((await InstallReferrer.app).packageName ?? ""))) {
       returnValue = false;
-      // if (await InstallReferrer.referrer ==
-      //     InstallationAppReferrer.androidDebug) {
-      //   returnValue = true;
-      // }
+      if (await InstallReferrer.referrer ==
+          InstallationAppReferrer.androidDebug) {
+        returnValue = true;
+      }
     }
     if (!repoUrl.startsWith("https://github.com")) {
       returnValue = false;
@@ -64,7 +63,7 @@ Future<bool> updatesSupported(Function setState,
   return returnValue;
 }
 
-void checkUpdate(Function setState) async {
+Future<bool> checkUpdate(Function setState) async {
   try {
     setState(() {
       updateChecked = true;
@@ -76,7 +75,7 @@ void checkUpdate(Function setState) async {
         updateStatus = "notAvailable";
         updateLoading = false;
       });
-      return;
+      return false;
     }
 
     var repo = repoUrl.split("/");
@@ -98,7 +97,7 @@ void checkUpdate(Function setState) async {
           updateStatus = "rateLimit";
           updateLoading = false;
         });
-        return;
+        return false;
       }
       version = jsonDecode(request.body)[0]["tag_name"];
       updateChangeLog = jsonDecode(request.body)[0]["body"];
@@ -108,7 +107,7 @@ void checkUpdate(Function setState) async {
         updateStatus = "error";
         updateLoading = false;
       });
-      return;
+      return false;
     }
 
     latestVersion = version;
@@ -123,10 +122,16 @@ void checkUpdate(Function setState) async {
       updateLoading = false;
     });
   }
+  return (updateStatus == "ok" &&
+      (Version.parse(latestVersion ?? "1.0.0") >
+          Version.parse(currentVersion ?? "2.0.0")));
 }
 
-void updateDialog(BuildContext context, Function title) {
-  showDialog(
+void updateDialog(BuildContext context, Function title) async {
+  resetSystemNavigation(context,
+      systemNavigationBarColor: Color.alphaBlend(
+          Colors.black54, Theme.of(context).colorScheme.surface));
+  await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -165,4 +170,6 @@ void updateDialog(BuildContext context, Function title) {
                       AppLocalizations.of(context)!.settingsUpdateDialogUpdate))
             ]);
       });
+  // ignore: use_build_context_synchronously
+  resetSystemNavigation(context);
 }

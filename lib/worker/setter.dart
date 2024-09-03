@@ -366,6 +366,9 @@ void addModel(BuildContext context, Function setState) async {
       }
       if (response.statusCode == 200) {
         bool returnValue = false;
+        resetSystemNavigation(mainContext!,
+            systemNavigationBarColor: Color.alphaBlend(
+                Colors.black54, Theme.of(mainContext!).colorScheme.surface));
         await showDialog(
             context: mainContext!,
             barrierDismissible: false,
@@ -392,6 +395,7 @@ void addModel(BuildContext context, Function setState) async {
                             .modelDialogAddAssuranceAdd))
                   ]);
             });
+        resetSystemNavigation(mainContext!);
         return returnValue;
       }
       return false;
@@ -665,8 +669,12 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
   }
 
   if ((prefs!.getBool("askBeforeDeletion") ?? false) && additionalCondition) {
+    // ignore: use_build_context_synchronously
     resetSystemNavigation(context,
-        systemNavigationBarColor: Colors.grey.withOpacity(0.2));
+        systemNavigationBarColor: Color.alphaBlend(
+            Colors.black54,
+            // ignore: use_build_context_synchronously
+            Theme.of(context).colorScheme.surface));
     await showDialog(
         context: context,
         builder: (context) {
@@ -695,6 +703,8 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
                 ]);
           });
         });
+    // ignore: use_build_context_synchronously
+    resetSystemNavigation(context);
   } else {
     delete(context);
   }

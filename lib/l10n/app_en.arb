@@ -110,6 +110,11 @@
         "description": "Tooltip for add host headers button",
         "context": "Visible in settings view"
     },
+    "tooltipReset": "Reset current chat",
+    "@tooltipReset": {
+        "description": "Tooltip for reset button",
+        "context": "Visible in the chat view"
+    },
     "noModelSelected": "No model selected",
     "@noModelSelected": {
         "description": "Text displayed when no model is selected",
@@ -326,6 +331,21 @@
     "settingsExperimentalBetaFeature": "Beta feature, hold to learn more",
     "@settingsExperimentalBetaFeature": {
         "description": "Text displayed when a feature is in beta",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalDeprecated": "deprecated",
+    "@settingsExperimentalDeprecated": {
+        "description": "Text displayed when a feature is deprecated",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalDeprecatedDescription": "This feature is deprecated and will be removed in a future version.\nIt may not work as intended or expected. Use at your own risk.",
+    "@settingsExperimentalDeprecatedDescription": {
+        "description": "Description of the deprecated feature",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalDeprecatedFeature": "Deprecated feature, hold to learn more",
+    "@settingsExperimentalDeprecatedFeature": {
+        "description": "Text displayed when a feature is deprecated",
         "context": "Visible in the settings view"
     },
     "settingsHost": "Host",

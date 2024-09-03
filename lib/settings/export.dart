@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import '../main.dart';
 import '../worker/haptic.dart';
 import '../worker/desktop.dart';
+import '../worker/theme.dart';
 import '../screen_settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -101,9 +102,13 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                       allowMultipleChats
                           ? button(
                               AppLocalizations.of(context)!.settingsImportChats,
-                              Icons.download_rounded, () {
+                              Icons.download_rounded, () async {
                               selectionHaptic();
-                              showDialog(
+                              resetSystemNavigation(context,
+                                  systemNavigationBarColor: Color.alphaBlend(
+                                      Colors.black54,
+                                      Theme.of(context).colorScheme.surface));
+                              await showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
@@ -214,6 +219,8 @@ class _ScreenSettingsExportState extends State<ScreenSettingsExport> {
                                                   .settingsImportChatsImport))
                                         ]);
                                   });
+                              // ignore: use_build_context_synchronously
+                              resetSystemNavigation(context);
                             })
                           : const SizedBox.shrink()
                     ]),

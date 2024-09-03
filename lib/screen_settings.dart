@@ -21,6 +21,7 @@ import 'package:http/http.dart' as http;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:version/version.dart';
 
 Widget toggle(BuildContext context, String text, bool value,
     Function(bool value) onChanged,
@@ -158,6 +159,7 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
     bool onlyDesktopDescription = true,
     bool alwaysMobileDescription = false,
     String? badge,
+    String? iconBadge,
     void Function()? onDisabledTap,
     void Function()? onLongTap,
     void Function()? onDoubleTap}) {
@@ -202,65 +204,72 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
         borderRadius: BorderRadius.circular(8),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Row(children: [
-            (icon != null || replaceIconIfNull)
+          child: Builder(builder: (context) {
+            var iconContent = (icon != null || replaceIconIfNull)
                 ? replaceIconIfNull
                     ? ImageIcon(MemoryImage(kTransparentImage))
                     : Icon(icon, color: disabled ? Colors.grey : color)
-                : const SizedBox.shrink(),
-            (icon != null || replaceIconIfNull)
-                ? const SizedBox(width: 16, height: 42)
-                : const SizedBox.shrink(),
-            Expanded(child: Builder(builder: (context) {
-              Widget textWidget = Text(text,
-                  style: TextStyle(color: disabled ? Colors.grey : color));
-              if (badge != null) {
-                textWidget = Badge(
-                    label: Text(badge),
-                    offset: const Offset(20, -4),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    textColor: Theme.of(context).colorScheme.onPrimary,
-                    child: textWidget);
-              }
-              if (description == null || description!.startsWith("\n")) {
-                description = description?.removePrefix("\n");
-                return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      textWidget,
-                      (description != null &&
-                              !alwaysMobileDescription &&
-                              (desktopLayoutNotRequired(context) ||
-                                  !onlyDesktopDescription))
-                          ? Text(description!,
-                              style: const TextStyle(
-                                  color: Colors.grey,
-                                  overflow: TextOverflow.ellipsis))
-                          : const SizedBox.shrink()
-                    ]);
-              } else {
-                return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      textWidget,
-                      (description != null &&
-                              !alwaysMobileDescription &&
-                              (desktopLayoutNotRequired(context) ||
-                                  !onlyDesktopDescription))
-                          ? Expanded(
-                              child: Text(description!,
-                                  style: const TextStyle(
-                                      color: Colors.grey,
-                                      overflow: TextOverflow.ellipsis)),
-                            )
-                          : const SizedBox.shrink()
-                    ]);
-              }
-            }))
-          ]),
+                : const SizedBox.shrink();
+            return Row(children: [
+              (iconBadge == null)
+                  ? iconContent
+                  : Badge(
+                      label: (iconBadge != "") ? Text(iconBadge) : null,
+                      child: iconContent),
+              (icon != null || replaceIconIfNull)
+                  ? const SizedBox(width: 16, height: 42)
+                  : const SizedBox.shrink(),
+              Expanded(child: Builder(builder: (context) {
+                Widget textWidget = Text(text,
+                    style: TextStyle(color: disabled ? Colors.grey : color));
+                if (badge != null) {
+                  textWidget = Badge(
+                      label: Text(badge),
+                      offset: const Offset(20, -4),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      textColor: Theme.of(context).colorScheme.onPrimary,
+                      child: textWidget);
+                }
+                if (description == null || description!.startsWith("\n")) {
+                  description = description?.removePrefix("\n");
+                  return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        textWidget,
+                        (description != null &&
+                                !alwaysMobileDescription &&
+                                (desktopLayoutNotRequired(context) ||
+                                    !onlyDesktopDescription))
+                            ? Text(description!,
+                                style: const TextStyle(
+                                    color: Colors.grey,
+                                    overflow: TextOverflow.ellipsis))
+                            : const SizedBox.shrink()
+                      ]);
+                } else {
+                  return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        textWidget,
+                        (description != null &&
+                                !alwaysMobileDescription &&
+                                (desktopLayoutNotRequired(context) ||
+                                    !onlyDesktopDescription))
+                            ? Expanded(
+                                child: Text(description!,
+                                    style: const TextStyle(
+                                        color: Colors.grey,
+                                        overflow: TextOverflow.ellipsis)),
+                              )
+                            : const SizedBox.shrink()
+                      ]);
+                }
+              }))
+            ]);
+          }),
         )),
   );
 }
@@ -353,7 +362,6 @@ class _ScreenSettingsState extends State<ScreenSettings> {
         fixedHost)) {
       checkHost();
     }
-    updatesSupported(setState, true);
   }
 
   @override
@@ -608,19 +616,30 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               context: context,
                               description:
                                   "\n${AppLocalizations.of(context)!.settingsDescriptionExport}"),
-                          button(
-                              AppLocalizations.of(context)!.settingsTitleAbout,
-                              Icons.help_rounded, () {
-                            selectionHaptic();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ScreenSettingsAbout()));
-                          },
-                              context: context,
-                              description:
-                                  "\n${AppLocalizations.of(context)!.settingsDescriptionAbout}")
+                          Builder(builder: (context) {
+                            return button(
+                                AppLocalizations.of(context)!
+                                    .settingsTitleAbout,
+                                Icons.help_rounded, () {
+                              selectionHaptic();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ScreenSettingsAbout()));
+                            },
+                                context: context,
+                                description:
+                                    "\n${AppLocalizations.of(context)!.settingsDescriptionAbout}",
+                                iconBadge: (updateStatus == "ok" &&
+                                        updateDetectedOnStart &&
+                                        (Version.parse(
+                                                latestVersion ?? "1.0.0") >
+                                            Version.parse(
+                                                currentVersion ?? "2.0.0")))
+                                    ? ""
+                                    : null);
+                          })
                         ]);
                         animatedDesktop = desktopLayoutNotRequired(context);
                         return Column(children: [
