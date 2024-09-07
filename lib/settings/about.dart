@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:simple_icons/simple_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 
 class ScreenSettingsAbout extends StatefulWidget {
@@ -26,6 +27,15 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
     WidgetsFlutterBinding.ensureInitialized();
     updatesSupported(setState, true);
     setState(() {});
+
+    void setCurrentVersion(Function setState) async {
+      currentVersion = (await PackageInfo.fromPlatform()).version;
+      setState(() {});
+    }
+
+    if (currentVersion == null) {
+      setCurrentVersion(setState);
+    }
   }
 
   @override
