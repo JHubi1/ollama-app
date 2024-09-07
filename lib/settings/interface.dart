@@ -248,15 +248,18 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                     return Padding(
                                       padding: const EdgeInsets.all(16),
                                       child: Theme(
-                                        data:
-                                            (prefs?.getBool("useDeviceTheme") ??
-                                                    false)
-                                                ? Theme.of(context)
-                                                : ThemeData.from(
-                                                    colorScheme:
-                                                        ColorScheme.fromSeed(
-                                                            seedColor:
-                                                                Colors.black)),
+                                        data: (prefs?.getBool(
+                                                    "useDeviceTheme") ??
+                                                false)
+                                            ? Theme.of(context)
+                                            : ThemeData.from(
+                                                colorScheme:
+                                                    ColorScheme.fromSeed(
+                                                        seedColor: Colors.black,
+                                                        brightness:
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .brightness)),
                                         child: DurationPicker(
                                             duration: Duration(
                                                 seconds: int.parse(prefs!
