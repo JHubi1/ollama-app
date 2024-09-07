@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ollama_app/worker/theme.dart';
 
 import 'main.dart';
 import 'worker/haptic.dart';
@@ -29,9 +28,8 @@ Widget toggle(BuildContext context, String text, bool value,
     void Function()? onDisabledTap,
     void Function()? onLongTap,
     void Function()? onDoubleTap,
-    Widget? icon}) {
-  var space = "⁣"; // Invisible character: U+2063
-  var spacePlus = "    $space";
+    Widget? icon,
+    bool? iconAfterwards}) {
   return InkWell(
     enableFeedback: false,
     splashFactory: NoSplash.splashFactory,
@@ -51,65 +49,66 @@ Widget toggle(BuildContext context, String text, bool value,
     onDoubleTap: onDoubleTap,
     child: Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 4),
-      child: Stack(children: [
+      child: Row(children: [
+        Expanded(
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Row(mainAxisSize: MainAxisSize.max, children: [
+              (icon != null && !(iconAfterwards ?? false))
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: icon,
+                    )
+                  : const SizedBox.shrink(),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxWidth: constraints.maxWidth - (icon != null ? 32 : 0)),
+                child: Text(text,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(color: disabled ? Colors.grey : null)),
+              ),
+              (icon != null && (iconAfterwards ?? false))
+                  ? Transform.translate(
+                      offset: const Offset(0, 1),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: icon,
+                      ))
+                  : const SizedBox.shrink(),
+              Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Divider(color: Theme.of(context).dividerColor)),
+              ),
+            ]);
+          }),
+        ),
         Padding(
-            padding: EdgeInsets.only(
-                left: (icon == null) ? 16 : 32, right: 16, top: 12),
-            child: Divider(color: Theme.of(context).dividerColor)),
-        Row(mainAxisSize: MainAxisSize.max, children: [
-          (icon != null)
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: icon,
-                )
-              : const SizedBox.shrink(),
-          Expanded(
-              child: Text(text + spacePlus,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                      color: disabled ? Colors.grey : null,
-                      backgroundColor:
-                          (Theme.of(context).brightness == Brightness.light)
-                              ? themeLight().colorScheme.surface
-                              : themeDark().colorScheme.surface))),
-          Container(
-              padding: const EdgeInsets.only(left: 16),
-              color: (Theme.of(context).brightness == Brightness.light)
-                  ? themeLight().colorScheme.surface
-                  : themeDark().colorScheme.surface,
-              child: SizedBox(
-                  height: 40,
-                  child: Switch(
-                      value: value,
-                      onChanged: disabled
-                          ? (onDisabledTap != null)
-                              ? (p0) {
-                                  selectionHaptic();
-                                  onDisabledTap();
-                                }
-                              : null
-                          : onChanged,
-                      activeTrackColor: disabled
-                          ? Theme.of(context).colorScheme.primary.withAlpha(50)
-                          : null,
-                      trackOutlineColor: disabled
-                          ? WidgetStatePropertyAll(Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(150))
-                          : null,
-                      thumbColor: disabled
-                          ? WidgetStatePropertyAll(Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(150))
-                          : !(prefs?.getBool("useDeviceTheme") ?? false) &&
-                                  value
-                              ? WidgetStatePropertyAll(
-                                  Theme.of(context).colorScheme.secondary)
-                              : null)))
-        ]),
+            padding: const EdgeInsets.only(left: 16),
+            child: Switch(
+                value: value,
+                onChanged: disabled
+                    ? (onDisabledTap != null)
+                        ? (p0) {
+                            selectionHaptic();
+                            onDisabledTap();
+                          }
+                        : null
+                    : onChanged,
+                activeTrackColor: disabled
+                    ? Theme.of(context).colorScheme.primary.withAlpha(50)
+                    : null,
+                trackOutlineColor: disabled
+                    ? WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.primary.withAlpha(150))
+                    : null,
+                thumbColor: disabled
+                    ? WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.primary.withAlpha(150))
+                    : !(prefs?.getBool("useDeviceTheme") ?? false) && value
+                        ? WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.secondary)
+                        : null))
       ]),
     ),
   );
@@ -160,6 +159,7 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
     bool alwaysMobileDescription = false,
     String? badge,
     String? iconBadge,
+    bool? iconAfterwards,
     void Function()? onDisabledTap,
     void Function()? onLongTap,
     void Function()? onDoubleTap}) {
@@ -177,6 +177,10 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
         : EdgeInsets.zero,
     child: InkWell(
         enableFeedback: false,
+        // disable hint that clickable, other tap functions still functional
+        splashFactory: (onPressed == null) ? NoSplash.splashFactory : null,
+        highlightColor: (onPressed == null) ? Colors.transparent : null,
+        hoverColor: (onPressed == null) ? Colors.transparent : null,
         onTap: disabled
             ? () {
                 selectionHaptic();
@@ -208,67 +212,99 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
             var iconContent = (icon != null || replaceIconIfNull)
                 ? replaceIconIfNull
                     ? ImageIcon(MemoryImage(kTransparentImage))
-                    : Icon(icon, color: disabled ? Colors.grey : color)
+                    : Icon(icon,
+                        color: disabled || (iconAfterwards ?? false)
+                            ? Colors.grey
+                            : color)
                 : const SizedBox.shrink();
-            return Row(children: [
-              (iconBadge == null)
-                  ? iconContent
-                  : Badge(
-                      label: (iconBadge != "") ? Text(iconBadge) : null,
-                      child: iconContent),
-              (icon != null || replaceIconIfNull)
-                  ? const SizedBox(width: 16, height: 42)
-                  : const SizedBox.shrink(),
-              Expanded(child: Builder(builder: (context) {
-                Widget textWidget = Text(text,
-                    style: TextStyle(color: disabled ? Colors.grey : color));
-                if (badge != null) {
-                  textWidget = Badge(
-                      label: Text(badge),
-                      offset: const Offset(20, -4),
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      textColor: Theme.of(context).colorScheme.onPrimary,
-                      child: textWidget);
-                }
-                if (description == null || description!.startsWith("\n")) {
-                  description = description?.removePrefix("\n");
-                  return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        textWidget,
-                        (description != null &&
-                                !alwaysMobileDescription &&
-                                (desktopLayoutNotRequired(context) ||
-                                    !onlyDesktopDescription))
-                            ? Text(description!,
-                                style: const TextStyle(
-                                    color: Colors.grey,
-                                    overflow: TextOverflow.ellipsis))
-                            : const SizedBox.shrink()
-                      ]);
-                } else {
-                  return Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        textWidget,
-                        (description != null &&
-                                !alwaysMobileDescription &&
-                                (desktopLayoutNotRequired(context) ||
-                                    !onlyDesktopDescription))
-                            ? Expanded(
-                                child: Text(description!,
-                                    style: const TextStyle(
-                                        color: Colors.grey,
-                                        overflow: TextOverflow.ellipsis)),
-                              )
-                            : const SizedBox.shrink()
-                      ]);
-                }
-              }))
-            ]);
+            return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  !(iconAfterwards ?? false)
+                      ? (iconBadge == null)
+                          ? iconContent
+                          : Badge(
+                              label: (iconBadge != "") ? Text(iconBadge) : null,
+                              child: iconContent)
+                      : const SizedBox.shrink(),
+                  (icon != null || replaceIconIfNull)
+                      ? SizedBox(
+                          width: !(iconAfterwards ?? false) ? 16 : null,
+                          height: 42)
+                      : const SizedBox.shrink(),
+                  Expanded(child: Builder(builder: (context) {
+                    Widget textWidget = Text(text,
+                        style:
+                            TextStyle(color: disabled ? Colors.grey : color));
+                    if (badge != null) {
+                      textWidget = Badge(
+                          label: Text(badge),
+                          offset: const Offset(20, -4),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          textColor: Theme.of(context).colorScheme.onPrimary,
+                          child: textWidget);
+                    }
+                    if (iconAfterwards ?? false) {
+                      return Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            textWidget,
+                            // same info distance as [toggle]
+                            const SizedBox(width: 8),
+                            Transform.translate(
+                                offset: const Offset(0, 1),
+                                child: (iconBadge == null)
+                                    ? iconContent
+                                    : Badge(
+                                        label: (iconBadge != "")
+                                            ? Text(iconBadge)
+                                            : null,
+                                        child: iconContent)),
+                          ]);
+                    } else {
+                      if (description == null ||
+                          description!.startsWith("\n")) {
+                        description = description?.removePrefix("\n");
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              textWidget,
+                              (description != null &&
+                                      !alwaysMobileDescription &&
+                                      (desktopLayoutNotRequired(context) ||
+                                          !onlyDesktopDescription))
+                                  ? Text(description!,
+                                      style: const TextStyle(
+                                          color: Colors.grey,
+                                          overflow: TextOverflow.ellipsis))
+                                  : const SizedBox.shrink()
+                            ]);
+                      } else {
+                        return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              textWidget,
+                              (description != null &&
+                                      !alwaysMobileDescription &&
+                                      (desktopLayoutNotRequired(context) ||
+                                          !onlyDesktopDescription))
+                                  ? Expanded(
+                                      child: Text(description!,
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              overflow: TextOverflow.ellipsis)),
+                                    )
+                                  : const SizedBox.shrink()
+                            ]);
+                      }
+                    }
+                  }))
+                ]);
           }),
         )),
   );

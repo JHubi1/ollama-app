@@ -78,7 +78,9 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                             prefs!.setBool("useSystem", value);
                             setState(() {});
                           },
-                          icon: const Icon(Icons.info_outline_rounded),
+                          icon: const Icon(Icons.info_rounded,
+                              color: Colors.grey),
+                          iconAfterwards: true,
                           onLongTap: () {
                             selectionHaptic();
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

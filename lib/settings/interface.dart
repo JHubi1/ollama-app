@@ -290,8 +290,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       button(
                           AppLocalizations.of(context)!
                               .settingsTimeoutMultiplier,
-                          Icons.info_outline_rounded,
+                          Icons.info_rounded,
                           null,
+                          iconAfterwards: true,
                           context: context,
                           alwaysMobileDescription: true,
                           description:
@@ -380,7 +381,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             setMainAppState!(() {});
                             setState(() {});
                           }),
-                      const SizedBox(height: 8),
+                      AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          height: desktopLayoutNotRequired(context) ? 16 : 8),
                       (colorSchemeLight != null && colorSchemeDark != null)
                           ? SegmentedButton(
                               segments: [
