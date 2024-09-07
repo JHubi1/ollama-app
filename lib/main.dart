@@ -92,9 +92,7 @@ void Function(void Function())? setGlobalState;
 void Function(void Function())? setMainAppState;
 
 void main() {
-  pwa.PWAInstall().setup(installCallback: () {
-    debugPrint('APP INSTALLED!');
-  });
+  pwa.PWAInstall().setup(installCallback: () {});
 
   runApp(const App());
 
