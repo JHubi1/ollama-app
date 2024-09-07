@@ -6,20 +6,23 @@ A modern and easy-to-use client for Ollama. Have the greatest experience while k
 |-|-|-|-|
 
 > [!IMPORTANT]
-> This app does not host a Ollama server on device, but rather connects to one and uses its api endpoint.
-> You don't know what Ollama is? Learn more at [ollama.com](https://ollama.com/).
+> This app does not host a Ollama server on device, but rather connects to one using its api endpoint.
+> You don't know what Ollama is? Learn more at [ollama.com](https://ollama.com).
 
 ## Getting Started
 
-Ollama App has a pretty simple and intuitive interface to be as open as possible. Everything just works out of the but, you just have to follow the two next steps.
+Ollama App has a pretty simple and intuitive interface to be as open as possible. Everything just works out of the box, you just have to follow the next steps.
 
 ### Installation
 
-You'll find the latest recommended version of the Ollama App under [the releases tab](https://github.com/JHubi1/ollama-app/releases). Download the APK and install it on your Android device. That's it, now proceed to [Initial Setup](#initial-setup).
+You'll find the latest recommended version of the Ollama App under the [releases tab](https://github.com/JHubi1/ollama-app/releases). Download the correct executable onto your device and install it.
 
 Alternatively, you can also download the app from any of the following stores:
 
-[<img src="assets/stores/IzzyOnDroid.png" width="215" style="padding: 5px" />](https://apt.izzysoft.de/fdroid/index/apk/com.freakurl.apps.ollama/)
+[<img src="assets/stores/IzzyOnDroid.png" width="215" />](https://apt.izzysoft.de/fdroid/index/apk/com.freakurl.apps.ollama/)
+<!-- [<img src="assets/stores/FDroid.png" width="215" />](/com.freakurl.apps.ollama/) -->
+
+That's it, you've successfully installed Ollama App! Now just proceed to [Initial Setup](https://github.com/JHubi1/ollama-app/wiki/Getting-Started#initial-setup) or alternatively [Setup](#setup) below.
 
 ### Setup
 
@@ -32,7 +35,7 @@ And you're done! Just start chatting with your local AI and have fun!
 
 ## Documentation
 
-The documentation for components, functions, etc. has moved to the [Wiki Page](https://github.com/JHubi1/ollama-app/wiki) of this repository. These steps there will be updated with future versions.
+The documentation for components, settings, functions, etc. has moved to the [Wiki Page](https://github.com/JHubi1/ollama-app/wiki) of this repository. The steps there will be updated with future versions. Still having questions? Feel free to open an issue.
 
 ## Translations and Contribution
 
