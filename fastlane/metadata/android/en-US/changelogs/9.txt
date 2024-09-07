@@ -1,0 +1,12 @@
+- Added translation: Chinese, Italian, Turkish
+- Ability to download models
+- Fixed title generation
+- Added timeout multiplier
+- Theme / brightness change doesn't require restart
+- Preloading models enabled by default
+- Support android predictive back
+- Improved Voice Mode
+- Improved update mechanism
+- Ability to use Modelfiles (on host)
+- Unified theme usage
+- Smaller bug fixes and improvements
