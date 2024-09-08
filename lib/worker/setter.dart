@@ -854,6 +854,7 @@ Future<String> prompt(BuildContext context,
                                 hintText: placeholder,
                                 errorText: error,
                                 suffixIcon: IconButton(
+                                    enableFeedback: false,
                                     tooltip: AppLocalizations.of(context)!
                                         .tooltipSave,
                                     onPressed: submit,
@@ -863,6 +864,7 @@ Future<String> prompt(BuildContext context,
                                                 .dialogEnterNewTitle &&
                                         uuid != null)
                                     ? IconButton(
+                                        enableFeedback: false,
                                         tooltip: AppLocalizations.of(context)!
                                             .tooltipLetAIThink,
                                         onPressed: () async {

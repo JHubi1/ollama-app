@@ -55,6 +55,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                               alignLabelWithHint: true,
                               hintText: "You are a helpful assistant",
                               suffixIcon: IconButton(
+                                enableFeedback: false,
                                 tooltip:
                                     AppLocalizations.of(context)!.tooltipSave,
                                 onPressed: () {

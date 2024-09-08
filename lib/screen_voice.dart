@@ -218,6 +218,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
             child: Scaffold(
                 appBar: AppBar(
                     leading: IconButton(
+                      enableFeedback: false,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -240,6 +241,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                     ),
                     actions: [
                       IconButton(
+                        enableFeedback: false,
                           onPressed: () {
                             speaking = false;
                             settingsOpen = false;

@@ -120,6 +120,11 @@
         "description": "Tooltip for reset button",
         "context": "Visible in the chat view"
     },
+    "tooltipOptions": "Show options",
+    "@tooltipOptions": {
+        "description": "Tooltip for options button",
+        "context": "Visible in the chat view"
+    },
     "noModelSelected": "No model selected",
     "@noModelSelected": {
         "description": "Text displayed when no model is selected",

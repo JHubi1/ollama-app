@@ -549,8 +549,16 @@ class _MainAppState extends State<MainApp> {
                                         height: 24,
                                         width: 24,
                                         child: IconButton(
-                                          tooltip: AppLocalizations.of(context)!
-                                              .tooltipReset,
+                                          tooltip: allowMultipleChats
+                                              ? allowSettings
+                                                  ? AppLocalizations.of(
+                                                          context)!
+                                                      .tooltipOptions
+                                                  : AppLocalizations.of(
+                                                          context)!
+                                                      .deleteChat
+                                              : AppLocalizations.of(context)!
+                                                  .tooltipReset,
                                           onPressed: () {
                                             if (!chatAllowed &&
                                                 chatUuid ==
@@ -942,6 +950,7 @@ class _MainAppState extends State<MainApp> {
                 const SizedBox(width: 4),
                 allowMultipleChats
                     ? IconButton(
+                      enableFeedback: false,
                         onPressed: () {
                           selectionHaptic();
                           if (!chatAllowed) return;

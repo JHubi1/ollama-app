@@ -454,6 +454,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                       .settingsHost,
                                   hintText: "http://localhost:11434",
                                   prefixIcon: IconButton(
+                                      enableFeedback: false,
                                       tooltip: AppLocalizations.of(context)!
                                           .tooltipAddHostHeaders,
                                       onPressed: () async {
@@ -495,6 +496,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                               child:
                                                   const CircularProgressIndicator())
                                           : IconButton(
+                                              enableFeedback: false,
                                               tooltip:
                                                   AppLocalizations.of(context)!
                                                       .tooltipSave,
