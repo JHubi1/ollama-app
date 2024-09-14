@@ -15,7 +15,7 @@ Ollama App has a pretty simple and intuitive interface to be as open as possible
 
 ### Installation
 
-You'll find the latest recommended version of the Ollama App under the [releases tab](https://github.com/JHubi1/ollama-app/releases). Download the correct executable onto your device and install it.
+You'll find the latest recommended version of the Ollama App under the [releases tab](https://github.com/JHubi1/ollama-app/releases). Download the correct executable onto your device and install it. If you want to install on a desktop platform, you might also have to follow the steps listed below, under [Ollama App for Desktop](#ollama-app-for-desktop).
 
 Alternatively, you can also download the app from any of the following stores:
 
@@ -23,6 +23,31 @@ Alternatively, you can also download the app from any of the following stores:
 <!-- [<img src="assets/stores/FDroid.png" width="215" />](/com.freakurl.apps.ollama/) -->
 
 That's it, you've successfully installed Ollama App! Now just proceed to [Initial Setup](https://github.com/JHubi1/ollama-app/wiki/Getting-Started#initial-setup) or alternatively [Setup](#setup) below.
+
+### Ollama App for Desktop
+
+> [!WARNING]
+> This is still an experimental feature! Some functions may not work as intended. If you come across any errors, please create a new [issue report](https://github.com/JHubi1/ollama-app/issues/new/choose).
+
+There are a few things you might have to keep in mind if you're planning to use the experimental desktop support.
+
+#### Windows
+
+The Windows version is provided in the form of an installer, you can find it attached on the [latest release](https://github.com/JHubi1/ollama-app/releases). It's not signed, you might have to dismiss the Windows Defender screen by pressing "View More" > "Run Anyway".
+
+Windows app data is kept at: `C:\Users\[user]\AppData\Roaming\JHubi1\Ollama App`
+
+#### Linux
+
+The Linux version is provided in the form of a portable executable, you can find it attached on the [latest release](https://github.com/JHubi1/ollama-app/releases). To start it, execute `./ollama` in the extracted folder.
+
+If a message like `error while loading shared libraries: libgtk-3.so.0: cannot open shared object file` appears when you start the app, run the following commands:
+
+- `sudo apt-get update`
+- `sudo apt-get upgrade`
+- `sudo apt-get install packagekit-gtk3-module`
+
+Linux app data is kept at: `/home/[user]/.local/share/ollama`
 
 ### Setup
 
