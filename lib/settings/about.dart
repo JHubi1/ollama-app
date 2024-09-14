@@ -119,7 +119,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                               AppLocalizations.of(context)!
                                   .settingsCheckForUpdates,
                               (prefs!.getBool("checkUpdateOnSettingsOpen") ??
-                                  false), (value) {
+                                  true), (value) {
                               selectionHaptic();
                               prefs!
                                   .setBool("checkUpdateOnSettingsOpen", value);

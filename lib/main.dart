@@ -822,7 +822,7 @@ class _MainAppState extends State<MainApp> {
         }
 
         setState(() {});
-        if (prefs!.getBool("checkUpdateOnSettingsOpen") ?? false) {
+        if (prefs!.getBool("checkUpdateOnSettingsOpen") ?? true) {
           updateDetectedOnStart = await checkUpdate(setState);
         }
       },
