@@ -1,0 +1,6 @@
+Bu, Ollama için modern ve kullanımı kolay bir istemcidir.
+
+ChatGPT uygulamasından ve Ollama'nın sayfasının sadeliğinden esinlenerek, önceden teknik bilgi verilmese bile yapay zeka ile etkileşimi olabildiğince kolay hale getirdik.
+Anlaşılması kolaydır ve birkaç saniye içinde açıklanabilir.
+
+Ollama uygulaması çok modlu girişi bile destekliyor. Bu, bir görüntü girebileceğiniz ve sohbet robotu aracılığıyla onunla konuşabileceğiniz anlamına gelir.

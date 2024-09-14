@@ -1,0 +1,6 @@
+This is a modern and easy-to-use client for Ollama.
+
+Inspired by the ChatGPT app and the simplicity of Ollama's page, we made it as easy as possible to interact with the AI, even if no prior technical knowledge is given.
+It is easy to understand and can be explained in a matter of seconds.
+
+The Ollama app even supports multimodal input. That means you can input an image and talk to it through the chatbot.
