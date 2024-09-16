@@ -333,7 +333,7 @@ void addModel(BuildContext context, Function setState) async {
     placeholder: "llama3:latest",
     enableSuggestions: false,
     validator: (content) async {
-      var model = content;
+      var model = content.trim();
       model = model.removeSuffix(":latest");
       if (model == "") return false;
       canceled = false;
@@ -395,8 +395,9 @@ void addModel(BuildContext context, Function setState) async {
       }
       http.Response response;
       try {
-        response = await http.get(Uri.parse("$endpoint$model")).timeout(
-            Duration(
+        response = await http
+            .get(Uri.parse("$endpoint${Uri.encodeComponent(model)}"))
+            .timeout(Duration(
                 seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
                     .round()));
       } catch (_) {
