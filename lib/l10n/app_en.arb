@@ -476,7 +476,7 @@
         "description": "Text displayed as description for generate titles toggle",
         "context": "Visible in the settings view"
     },
-    "settingsEnableEditing": "Enable editing of messages",
+    "settingsEnableEditing": "Message editing",
     "@settingsEnableEditing": {
         "description": "Text displayed as description for enable editing toggle",
         "context": "Visible in the settings view"
