@@ -131,7 +131,7 @@
         "context": "Visible in the chat view"
     },
     "noHostSelected": "No host selected, open setting to set one",
-    "@noSelectedHost": {
+    "@noHostSelected": {
         "description": "Text displayed when no host is selected",
         "context": "Visible in the chat view, opens the settings dialog when clicked"
     },
