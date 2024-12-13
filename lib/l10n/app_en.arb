@@ -171,6 +171,10 @@
         "context": "Visible in the model dialog"
     },
     "modelDialogAddAllowanceTitle": "Allow Proxy",
+    "@modelDialogAddAllowanceTitle": {
+        "description": "Title of the allow proxy dialog",
+        "context": "Visible in the model dialog"
+    },
     "modelDialogAddAllowanceDescription": "Ollama App must check if the entered model is valid. For that, we normally send a web request to the Ollama model list and check the status code, but because you're using the web client, we can't do that directly. Instead, the app will send the request to a different api, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potential harmful intentions.\nIf you accept, your selection will be remembered in the future; if not, nothing will be sent and the model won't be added.",
     "@modelDialogAddAllowanceDescription": {
         "description": "Description of the allow proxy dialog",
@@ -598,6 +602,10 @@
         "context": "Visible in the settings view"
     },
     "settingsVoiceTtsNotSupportedDescription": "Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to reenable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.",
+    "@settingsVoiceTtsNotSupportedDescription": {
+        "description": "Description of the text-to-speech not supported message",
+        "context": "Visible in the settings view"
+    },
     "settingsVoicePermissionNot": "Permissions not granted",
     "@settingsVoicePermissionNot": {
         "description": "Text displayed when voice permissions are not granted",

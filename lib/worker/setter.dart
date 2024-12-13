@@ -89,7 +89,7 @@ void setModel(BuildContext context, Function setState) {
     setModalState = setLocalState;
     return PopScope(
         canPop: false,
-        onPopInvoked: (didPop) async {
+        onPopInvokedWithResult: (didPop, result) async {
           if (!loaded) return;
           loaded = false;
           bool preload = false;

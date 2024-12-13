@@ -212,7 +212,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                     }
 
                                     return PopScope(
-                                        onPopInvoked: (didPop) {
+                                        onPopInvokedWithResult: (didPop, result) {
                                           if (usedIndex == -1) return;
                                           prefs!.setString(
                                               "voiceLanguage",

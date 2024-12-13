@@ -199,7 +199,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
         data: themeDark(),
         child: PopScope(
             canPop: !aiThinking,
-            onPopInvoked: (didPop) {
+            onPopInvokedWithResult: (didPop, result) {
               if (!didPop) return;
               speaking = false;
               voice.stop();
