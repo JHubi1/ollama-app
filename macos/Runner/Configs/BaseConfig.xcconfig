@@ -1,0 +1,2 @@
+// Set the minimum deployment target to macOS 10.15 (Catalina)
+MACOSX_DEPLOYMENT_TARGET = 10.15

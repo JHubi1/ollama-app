@@ -17,6 +17,11 @@ on:
         required: true
         default: false
         type: boolean
+      buildMacOS:
+        description: Build for macOS
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   analyze:
@@ -126,11 +131,49 @@ jobs:
         with:
           name: ollama-linux-x64
           path: build/linux/x64/release/bundle/ollama-linux-x64-v${{ steps.get_flutter_version.outputs.version_number }}.tar.gz
+  build-macos:
+    name: Building for macOS
+    if: ${{ github.event.inputs.buildMacOS == 'true' }}
+    runs-on: macos-latest
+    needs: analyze
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.22.1
+      - name: Get flutter version
+        id: get_flutter_version
+        uses: its404/get-flutter-version@v1.0.0
+      - name: Disabling flutter analytics
+        run: flutter config --no-analytics
+      - name: Install create-dmg
+        run: brew install create-dmg
+      - name: Running build
+        id: compile
+        run: flutter build macos --obfuscate --split-debug-info=build/debugMacOS
+      - name: Creating DMG
+        run: |
+          cd build/macos/Build/Products/Release
+          create-dmg \
+            --volname "Ollama" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "Ollama.app" 200 190 \
+            --hide-extension "Ollama.app" \
+            --app-drop-link 600 185 \
+            "ollama-macos-v${{ steps.get_flutter_version.outputs.version_number }}.dmg" \
+            "Ollama.app"
+      - name: Uploading DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: ollama-macos
+          path: build/macos/Build/Products/Release/ollama-macos-v${{ steps.get_flutter_version.outputs.version_number }}.dmg
   bundle:
     name: Creating bundle
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: [build-android, build-windows-x64, build-linux-x64]
+    needs: [build-android, build-windows-x64, build-linux-x64, build-macos]
     steps:
       - name: Adding builds
         uses: actions/download-artifact@v4
