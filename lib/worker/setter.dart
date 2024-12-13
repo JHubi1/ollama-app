@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ollama_app/worker/clients.dart';
 import 'desktop.dart';
 import 'haptic.dart';
 import '../main.dart';
@@ -31,15 +32,9 @@ void setModel(BuildContext context, Function setState) {
   setState(() {});
   void load() async {
     try {
-      var list = await llama.OllamaClient(
-              headers:
-                  (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-                      .cast<String, String>(),
-              baseUrl: "$host/api")
-          .listModels()
-          .timeout(Duration(
-              seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
-                  .round()));
+      var list = await ollamaClient.listModels().timeout(Duration(
+          seconds:
+              (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0)).round()));
       for (var i = 0; i < list.models!.length; i++) {
         models.add(list.models![i].model!.split(":")[0]);
         modelsReal.add(list.models![i].model!);
@@ -123,7 +118,7 @@ void setModel(BuildContext context, Function setState) {
             setLocalState(() {});
             try {
               // don't use llama client, package doesn't support just loading without content
-              await http
+              await httpClient
                   .post(
                     Uri.parse("$host/api/generate"),
                     headers: {
@@ -304,10 +299,6 @@ void setModel(BuildContext context, Function setState) {
 }
 
 void addModel(BuildContext context, Function setState) async {
-  var client = llama.OllamaClient(
-      headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-          .cast<String, String>(),
-      baseUrl: "$host/api");
   bool canceled = false;
   bool networkError = false;
   bool ratelimitError = false;
@@ -341,7 +332,7 @@ void addModel(BuildContext context, Function setState) async {
       ratelimitError = false;
       alreadyExists = false;
       try {
-        var request = await client.listModels().timeout(Duration(
+        var request = await ollamaClient.listModels().timeout(Duration(
             seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
                 .round()));
         for (var element in request.models!) {
@@ -395,7 +386,7 @@ void addModel(BuildContext context, Function setState) async {
       }
       http.Response response;
       try {
-        response = await http
+        response = await httpClient
             .get(Uri.parse("$endpoint${Uri.encodeComponent(model)}"))
             .timeout(Duration(
                 seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
@@ -490,7 +481,7 @@ void addModel(BuildContext context, Function setState) async {
         });
       });
   try {
-    final stream = client
+    final stream = ollamaClient
         .pullModelStream(request: llama.PullModelRequest(model: requestedModel))
         .timeout(Duration(
             seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
@@ -520,7 +511,7 @@ void addModel(BuildContext context, Function setState) async {
     }
     bool exists = false;
     try {
-      var request = await client.listModels().timeout(Duration(
+      var request = await ollamaClient.listModels().timeout(Duration(
           seconds:
               (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0)).round()));
       for (var element in request.models!) {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ollama_app/worker/clients.dart';
 
 import 'haptic.dart';
 import 'setter.dart';
@@ -81,10 +82,7 @@ List getHistoryString([String? uuid]) {
 }
 
 Future<String> getTitleAi(List history) async {
-  final generated = await (llama.OllamaClient(
-          headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-              .cast<String, String>(),
-          baseUrl: "$host/api"))
+  final generated = await ollamaClient
       .generateChatCompletion(
         request: llama.GenerateChatCompletionRequest(
             model: model!,
@@ -217,16 +215,11 @@ Future<String> send(String value, BuildContext context, Function setState,
   chatAllowed = false;
 
   String text = "";
-
   String newId = const Uuid().v4();
-  llama.OllamaClient client = llama.OllamaClient(
-      headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-          .cast<String, String>(),
-      baseUrl: "$host/api");
 
   try {
     if ((prefs!.getString("requestType") ?? "stream") == "stream") {
-      final stream = client
+      final stream = ollamaClient
           .generateChatCompletionStream(
             request: llama.GenerateChatCompletionRequest(
                 model: model!,
@@ -260,7 +253,7 @@ Future<String> send(String value, BuildContext context, Function setState,
       }
     } else {
       llama.GenerateChatCompletionResponse request;
-      request = await client
+      request = await ollamaClient
           .generateChatCompletion(
             request: llama.GenerateChatCompletionRequest(
                 model: model!,

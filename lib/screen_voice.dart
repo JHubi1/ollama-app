@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:ollama_app/worker/clients.dart';
 
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:ollama_dart/ollama_dart.dart' as llama;
@@ -106,11 +105,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
     aiThinking = true;
     try {
       if (prefs!.getBool("aiPunctuation") ?? true) {
-        final generated = await llama.OllamaClient(
-          headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-              .cast<String, String>(),
-          baseUrl: "$host/api",
-        )
+        final generated = await ollamaClient
             .generateCompletion(
               request: llama.GenerateCompletionRequest(
                   model: model!,
@@ -218,7 +213,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
             child: Scaffold(
                 appBar: AppBar(
                     leading: IconButton(
-                      enableFeedback: false,
+                        enableFeedback: false,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -241,7 +236,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                     ),
                     actions: [
                       IconButton(
-                        enableFeedback: false,
+                          enableFeedback: false,
                           onPressed: () {
                             speaking = false;
                             settingsOpen = false;

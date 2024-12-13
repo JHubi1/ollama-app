@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ import 'worker/haptic.dart';
 import 'worker/update.dart';
 import 'worker/desktop.dart';
 import 'worker/setter.dart';
+import 'worker/clients.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'settings/behavior.dart';
@@ -343,7 +345,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
 
     http.Response? request;
     try {
-      var client = http.Client();
+      // don't use centralized client because of unexplainable inconsistency
+      // between the ways of calling a request
       final requestBase = http.Request("get", Uri.parse(tmpHost))
         ..headers.addAll(
           (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
@@ -357,7 +360,6 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                       .round()), onTimeout: () {
         return http.StreamedResponse(const Stream.empty(), 408);
       }));
-      client.close();
     } catch (e) {
       setState(() {
         hostInvalidHost = true;
