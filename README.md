@@ -73,3 +73,8 @@ Read more in the [Contribution Guide](https://github.com/JHubi1/ollama-app/wiki/
 ## Star History
 
 ![Star History Chart](https://api.star-history.com/svg?repos=JHubi1/ollama-app&type=Timeline)
+
+## iOS
+In order to support iOS, check out the repository to ollama_app instead of ollama-app.
+Then execute the command 
+flutter create --platform=ios .
