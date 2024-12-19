@@ -2,6 +2,10 @@ name: Build app
 on:
   workflow_dispatch:
     inputs:
+      obfuscate:
+        description: Obfuscate
+        default: false
+        type: boolean
       buildAndroid:
         description: Build for Android
         required: true
@@ -22,11 +26,18 @@ jobs:
   analyze:
     name: Linting
     runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.version.outputs.result }}
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.22.1
+          flutter-version: 3.24.5
+      - name: Get flutter version
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -r '.version' 'pubspec.yaml' | awk -F'+' '{print $1}'
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Analyzing project code
@@ -40,7 +51,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.22.1
+          flutter-version: 3.24.5
       - uses: actions/setup-java@v4
         with:
           distribution: "adopt"
@@ -51,22 +62,24 @@ jobs:
           echo "${{ secrets.ANDROID_KEYSTORE }}" > ./android/app/upload-keystore.jks.asc
           gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch ./android/app/upload-keystore.jks.asc > ./android/app/upload-keystore.jks
       - name: Get flutter version
-        id: get_flutter_version
-        uses: its404/get-flutter-version@v1.0.0
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -r '.version' 'pubspec.yaml'
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Running build
         id: compile
-        run: flutter build apk --obfuscate --split-debug-info=build/debugAndroid
+        run: flutter build apk --split-debug-info=build/debugAndroid ${{ github.event.inputs.obfuscate == 'true' && '--obfuscate' || '' }}
       - name: Preparing files
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/ollama-android-v${{ steps.get_flutter_version.outputs.version_number }}.apk
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/ollama-android-v${{ needs.analyze.outputs.result }}.apk
       - name: Uploading APK
         uses: actions/upload-artifact@v4
         with:
           name: ollama-android
           path: |
-            build/app/outputs/flutter-apk/ollama-android-v${{ steps.get_flutter_version.outputs.version_number }}.apk
+            build/app/outputs/flutter-apk/ollama-android-v${{ needs.analyze.outputs.result }}.apk
   build-windows-x64:
     name: Building for Windows x64
     if: ${{ github.event.inputs.buildWindowsX64 == 'true' }}
@@ -76,25 +89,27 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.22.1
+          flutter-version: 3.24.5
       - name: Get flutter version
-        id: get_flutter_version
-        uses: its404/get-flutter-version@v1.0.0
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -r '.version' 'pubspec.yaml'
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Running build
         id: compile
-        run: flutter build windows --obfuscate --split-debug-info=build\debugWindows
+        run: flutter build windows --split-debug-info=build\debugWindows ${{ github.event.inputs.obfuscate == 'true' && '--obfuscate' || '' }}
       - name: Running installer build
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
           path: .\windows_installer\ollama.iss
-          options: /O+ /dAppVersion=${{ steps.get_flutter_version.outputs.version_number }}
+          options: /O+ /dAppVersion=${{ needs.analyze.outputs.result }}
       - name: Uploading installer
         uses: actions/upload-artifact@v4
         with:
           name: ollama-windows-x64
-          path: build\windows\x64\runner\ollama-windows-x64-v${{ steps.get_flutter_version.outputs.version_number }}.exe
+          path: build\windows\x64\runner\ollama-windows-x64-v${{ needs.analyze.outputs.result }}.exe
   build-linux-x64:
     name: Building for Linux x64
     if: ${{ github.event.inputs.buildLinuxX64 == 'true' }}
@@ -104,28 +119,30 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.22.1
+          flutter-version: 3.24.5
       - name: Get flutter version
-        id: get_flutter_version
-        uses: its404/get-flutter-version@v1.0.0
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -r '.version' 'pubspec.yaml'
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Installing linux dependencies
         run: |
-          sudo apt-get install ninja-build
-          sudo apt-get install build-essential libgtk-3-dev
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build libgtk-3-dev
       - name: Running build
         id: compile
-        run: flutter build linux --obfuscate --split-debug-info=build/debugLinux
+        run: flutter build linux --split-debug-info=build/debugLinux ${{ github.event.inputs.obfuscate == 'true' && '--obfuscate' || '' }}
       - name: Creating archive
         run: |
           cd build/linux/x64/release/bundle
-          tar -czf ollama-linux-x64-v${{ steps.get_flutter_version.outputs.version_number }}.tar.gz *
+          tar -czf ollama-linux-x64-v${{ needs.analyze.outputs.result }}.tar.gz *
       - name: Uploading archive
         uses: actions/upload-artifact@v4
         with:
           name: ollama-linux-x64
-          path: build/linux/x64/release/bundle/ollama-linux-x64-v${{ steps.get_flutter_version.outputs.version_number }}.tar.gz
+          path: build/linux/x64/release/bundle/ollama-linux-x64-v${{ needs.analyze.outputs.result }}.tar.gz
   bundle:
     name: Creating bundle
     runs-on: ubuntu-latest

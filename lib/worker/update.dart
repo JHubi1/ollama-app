@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ollama_app/worker/clients.dart';
 import 'package:ollama_app/worker/desktop.dart';
 
 import 'haptic.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../main.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:install_referrer/install_referrer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -85,7 +85,7 @@ Future<bool> checkUpdate(Function setState) async {
 
     String? version;
     try {
-      var request = await http
+      var request = await httpClient
           .get(Uri.parse(
               "https://api.github.com/repos/${repo[3]}/${repo[4]}/releases"))
           .timeout(Duration(

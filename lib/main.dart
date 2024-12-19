@@ -17,6 +17,7 @@ import 'worker/sender.dart';
 import 'worker/desktop.dart';
 import 'worker/theme.dart';
 import 'worker/update.dart';
+import 'worker/clients.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
@@ -93,6 +94,10 @@ void Function(void Function())? setMainAppState;
 
 void main() {
   pwa.PWAInstall().setup(installCallback: () {});
+
+  try {
+    HttpOverrides.global = OllamaHttpOverrides();
+  } catch (_) {}
 
   runApp(const App());
 
@@ -950,7 +955,7 @@ class _MainAppState extends State<MainApp> {
                 const SizedBox(width: 4),
                 allowMultipleChats
                     ? IconButton(
-                      enableFeedback: false,
+                        enableFeedback: false,
                         onPressed: () {
                           selectionHaptic();
                           if (!chatAllowed) return;

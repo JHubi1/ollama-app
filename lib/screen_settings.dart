@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
@@ -343,7 +344,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
 
     http.Response? request;
     try {
-      var client = http.Client();
+      // don't use centralized client because of unexplainable inconsistency
+      // between the ways of calling a request
       final requestBase = http.Request("get", Uri.parse(tmpHost))
         ..headers.addAll(
           (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
@@ -357,7 +359,6 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                       .round()), onTimeout: () {
         return http.StreamedResponse(const Stream.empty(), 408);
       }));
-      client.close();
     } catch (e) {
       setState(() {
         hostInvalidHost = true;
@@ -414,7 +415,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     }
     return PopScope(
         canPop: !hostLoading,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           settingsOpen = false;
           FocusManager.instance.primaryFocus?.unfocus();
         },
