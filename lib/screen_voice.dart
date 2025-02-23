@@ -127,6 +127,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
       setState(() {
         aiText = currentText;
         lightHaptic();
+        updateScrollState();
       });
       if (done) {
         aiThinking = false;
@@ -167,9 +168,22 @@ class _ScreenVoiceState extends State<ScreenVoice> {
             : null);
   }
 
+  final ScrollController scrollController = ScrollController();
+  bool atScrollEnd = false;
+
+  void updateScrollState() {
+    setState(() {
+      atScrollEnd = scrollController.position.extentAfter < 8.0;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    scrollController.addListener(() {
+      updateScrollState();
+    });
 
     resetSystemNavigation(context,
         statusBarColor: themeDark().colorScheme.surface,
@@ -212,6 +226,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
             },
             child: Scaffold(
                 appBar: AppBar(
+                    scrolledUnderElevation: 0.0,
                     leading: IconButton(
                         enableFeedback: false,
                         onPressed: () {
@@ -252,107 +267,145 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                             color: Colors.grey,
                           ))
                     ]),
-                body: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Column(mainAxisSize: MainAxisSize.max, children: [
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
+                body: SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Column(mainAxisSize: MainAxisSize.max, children: [
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Center(
+                                child: Text(text,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.fade,
+                                    style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontFamily: "monospace"))),
+                          ))
+                        ]),
+                      ),
+                      Expanded(
                           child: Center(
-                              child: Text(text,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.fade,
-                                  style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: "monospace"))),
-                        ))
-                      ]),
-                    ),
-                    Expanded(
-                        child: Center(
-                            child: DateTimeLoopBuilder(
-                                timeUnit: TimeUnit.seconds,
-                                builder: (context, dateTime, child) {
-                                  return SizedBox(
-                                    height: 96,
-                                    width: 96,
-                                    child: AnimatedScale(
-                                        scale: speaking
-                                            ? aiThinking
-                                                ? (dateTime.second).isEven
-                                                    ? 2.4
-                                                    : 2
-                                                : 2
-                                            : dateTime.second
-                                                    .toString()
-                                                    .endsWith("1")
-                                                ? 1.6
-                                                : 1.4,
-                                        duration: aiThinking
-                                            ? const Duration(seconds: 1)
-                                            : const Duration(milliseconds: 200),
-                                        curve: Curves.easeInOut,
-                                        child: InkWell(
-                                            borderRadius:
-                                                BorderRadius.circular(48),
-                                            onTap: () {
-                                              if (speaking && !aiThinking) {
-                                                intendedStop = true;
-                                                speaking = false;
-                                                voice.stop();
-                                                return;
-                                              }
-                                              process();
-                                            },
-                                            child: CircleAvatar(
-                                                backgroundColor: themeDark()
-                                                    .colorScheme
-                                                    .primary
+                              child: DateTimeLoopBuilder(
+                                  timeUnit: TimeUnit.seconds,
+                                  builder: (context, dateTime, child) {
+                                    return SizedBox(
+                                      height: 96,
+                                      width: 96,
+                                      child: AnimatedScale(
+                                          scale: speaking
+                                              ? aiThinking
+                                                  ? (dateTime.second).isEven
+                                                      ? 2.4
+                                                      : 2
+                                                  : 2
+                                              : dateTime.second
+                                                      .toString()
+                                                      .endsWith("1")
+                                                  ? 1.6
+                                                  : 1.4,
+                                          duration: aiThinking
+                                              ? const Duration(seconds: 1)
+                                              : const Duration(milliseconds: 200),
+                                          curve: Curves.easeInOut,
+                                          child: InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(48),
+                                              onTap: () {
+                                                if (speaking && !aiThinking) {
+                                                  intendedStop = true;
+                                                  speaking = false;
+                                                  voice.stop();
+                                                  return;
+                                                }
+                                                process();
+                                              },
+                                              child: CircleAvatar(
+                                                  backgroundColor: themeDark()
+                                                      .colorScheme
+                                                      .primary
                                                     .withAlpha(
                                                         !speaking ? 200 : 255),
-                                                child: AnimatedSwitcher(
-                                                    duration: const Duration(
-                                                        milliseconds: 200),
-                                                    child: speaking
-                                                        ? aiThinking
-                                                            ? Icon(Icons.auto_awesome_rounded,
-                                                                color: themeDark()
-                                                                    .colorScheme
-                                                                    .secondary,
-                                                                key: const ValueKey(
-                                                                    "aiThinking"))
-                                                            : sttDone
-                                                                ? Icon(Icons.volume_up_rounded,
-                                                                    color: themeDark()
-                                                                        .colorScheme
-                                                                        .secondary,
-                                                                    key: const ValueKey(
-                                                                        "tts"))
-                                                                : Icon(Icons.mic_rounded,
-                                                                    color: themeDark()
-                                                                        .colorScheme
-                                                                        .secondary,
-                                                                    key: const ValueKey("stt"))
-                                                        : null)))),
-                                  );
-                                }))),
-                    Expanded(
-                      child: Column(mainAxisSize: MainAxisSize.max, children: [
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Center(
-                              child: Text(aiText,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.fade,
-                                  style: const TextStyle(
-                                      fontFamily: "monospace"))),
-                        ))
-                      ]),
-                    )
-                  ],
+                                                  child: AnimatedSwitcher(
+                                                      duration: const Duration(
+                                                          milliseconds: 200),
+                                                      child: speaking
+                                                          ? aiThinking
+                                                              ? Icon(Icons.auto_awesome_rounded,
+                                                                  color: themeDark()
+                                                                      .colorScheme
+                                                                      .secondary,
+                                                                  key: const ValueKey(
+                                                                      "aiThinking"))
+                                                              : sttDone
+                                                                  ? Icon(Icons.volume_up_rounded,
+                                                                      color: themeDark()
+                                                                          .colorScheme
+                                                                          .secondary,
+                                                                      key: const ValueKey(
+                                                                          "tts"))
+                                                                  : Icon(Icons.mic_rounded,
+                                                                      color: themeDark()
+                                                                          .colorScheme
+                                                                          .secondary,
+                                                                      key: const ValueKey("stt"))
+                                                          : null)))),
+                                    );
+                                  }))),
+                      Expanded(
+                        child: Column(mainAxisSize: MainAxisSize.max, children: [
+                          Expanded(
+                              child: Stack(
+                            children: [
+                              ShaderMask(
+                                  shaderCallback: (Rect bounds) {
+                                    return LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: const [
+                                        Colors.transparent,
+                                        Colors.black
+                                      ],
+                                      stops: [0.0, atScrollEnd ? 0.0 : 0.1],
+                                    ).createShader(bounds);
+                                  },
+                                  blendMode: BlendMode.dstIn,
+                                  child: SingleChildScrollView(
+                                      controller: scrollController,
+                                      child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16, right: 16),
+                                          child: Center(
+                                              child: Text(aiText,
+                                                  textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.fade,
+                                                  style: const TextStyle(
+                                                      fontFamily:
+                                                          "monospace")))))),
+                              if (!atScrollEnd)
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: IconButton(
+                                      icon: const Icon(
+                                          Icons.arrow_downward_rounded,
+                                          color: Colors.grey),
+                                      onPressed: () {
+                                        scrollController.animateTo(
+                                            scrollController
+                                                .position.maxScrollExtent,
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            curve: Curves.easeInOut);
+                                      }),
+                                )
+                            ],
+                          ))
+                        ]),
+                      )
+                    ]),
                 ))));
   }
 }
