@@ -5,7 +5,8 @@ import '../worker/haptic.dart';
 import '../worker/desktop.dart';
 import '../worker/theme.dart';
 import '../screen_settings.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dartx/dartx.dart';
@@ -190,10 +191,6 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                   .settingsKeepModelLoadedFor,
                           Icons.snooze_rounded, () async {
                         selectionHaptic();
-                        resetSystemNavigation(context,
-                            systemNavigationBarColor: Color.alphaBlend(
-                                Colors.black54,
-                                Theme.of(context).colorScheme.surface));
                         bool loaded = false;
                         await showDialog(
                             context: context,
@@ -283,8 +280,6 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                     );
                                   }));
                             });
-                        // ignore: use_build_context_synchronously
-                        resetSystemNavigation(context);
                       }),
                       titleDivider(context: context),
                       button(

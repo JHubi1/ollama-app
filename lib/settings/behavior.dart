@@ -4,7 +4,8 @@ import '../main.dart';
 import '../worker/haptic.dart';
 import '../worker/desktop.dart';
 import '../screen_settings.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';

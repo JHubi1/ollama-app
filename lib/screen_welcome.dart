@@ -26,19 +26,6 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
     precacheImage(const AssetImage("assets/welcome/2dark.png"), context);
     precacheImage(const AssetImage("assets/welcome/3dark.png"), context);
 
-    resetSystemNavigation(context,
-        systemNavigationBarColor:
-            (prefs!.getString("brightness") ?? "system") == "system"
-                // ignore: use_build_context_synchronously
-                ? ((MediaQuery.of(context).platformBrightness ==
-                        Brightness.light)
-                    ? Colors.grey[100]
-                    : Colors.grey[900])
-                : (prefs!.getString("brightness") == "dark"
-                    ? Colors.grey[900]
-                    : Colors.grey[100]),
-        delay: const Duration(milliseconds: 10));
-
     return Scaffold(
         bottomNavigationBar: BottomSheet(
             enableDrag: false,

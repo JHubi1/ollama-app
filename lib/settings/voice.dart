@@ -5,9 +5,9 @@ import 'package:ollama_app/worker/haptic.dart';
 import 'package:ollama_app/worker/theme.dart';
 
 import '../main.dart';
-// import '../worker/haptic.dart';
 import '../screen_settings.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -212,7 +212,8 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                     }
 
                                     return PopScope(
-                                        onPopInvokedWithResult: (didPop, result) {
+                                        onPopInvokedWithResult:
+                                            (didPop, result) {
                                           if (usedIndex == -1) return;
                                           prefs!.setString(
                                               "voiceLanguage",

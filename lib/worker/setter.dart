@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ollama_app/worker/clients.dart';
 import 'desktop.dart';
 import 'haptic.dart';
 import '../main.dart';
 import 'sender.dart';
 import 'theme.dart';
+
+import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
 import 'package:dartx/dartx.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
@@ -397,9 +398,6 @@ void addModel(BuildContext context, Function setState) async {
       }
       if (response.statusCode == 200) {
         bool returnValue = false;
-        resetSystemNavigation(mainContext!,
-            systemNavigationBarColor: Color.alphaBlend(
-                Colors.black54, Theme.of(mainContext!).colorScheme.surface));
         await showDialog(
             context: mainContext!,
             barrierDismissible: false,
@@ -429,7 +427,6 @@ void addModel(BuildContext context, Function setState) async {
                             .modelDialogAddAssuranceAdd))
                   ]);
             });
-        resetSystemNavigation(mainContext!);
         return returnValue;
       }
       if (response.statusCode == 429) {
@@ -707,12 +704,6 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
   }
 
   if ((prefs!.getBool("askBeforeDeletion") ?? false) && additionalCondition) {
-    // ignore: use_build_context_synchronously
-    resetSystemNavigation(context,
-        systemNavigationBarColor: Color.alphaBlend(
-            Colors.black54,
-            // ignore: use_build_context_synchronously
-            Theme.of(context).colorScheme.surface));
     await showDialog(
         context: context,
         builder: (context) {
@@ -741,8 +732,6 @@ Future<bool> deleteChatDialog(BuildContext context, Function setState,
                 ]);
           });
         });
-    // ignore: use_build_context_synchronously
-    resetSystemNavigation(context);
   } else {
     delete(context);
   }

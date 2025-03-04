@@ -5,6 +5,7 @@ version: 1.2.0+9
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
+  flutter: 3.29.0
 
 dependencies:
   flutter:
@@ -30,7 +31,7 @@ dependencies:
   file_picker: ^8.0.3
   file_selector: ^1.0.3
   bitsdojo_window: ^0.1.6
-  install_referrer: ^1.2.1
+  flutter_install_referrer: ^2.0.2
   package_info_plus: ^8.0.0
   version: ^3.0.2
   flutter_displaymode: ^0.6.0

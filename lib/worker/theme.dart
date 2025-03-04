@@ -1,53 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 import '../main.dart';
 
 ColorScheme? colorSchemeLight;
 ColorScheme? colorSchemeDark;
 
-void resetSystemNavigation(BuildContext context,
-    {Color? color,
-    Color? statusBarColor,
-    Color? systemNavigationBarColor,
-    Duration? delay}) {
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    if (delay != null) {
-      await Future.delayed(delay);
-    }
-    // ignore: use_build_context_synchronously
-    color ??= themeCurrent(context).colorScheme.surface;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness:
-          (((statusBarColor != null) ? statusBarColor : color)!
-                      .computeLuminance() >
-                  0.179)
-              ? Brightness.dark
-              : Brightness.light,
-      statusBarColor:
-          ((((statusBarColor != null) ? statusBarColor : color)!.value !=
-                      // ignore: use_build_context_synchronously
-                      themeCurrent(context).colorScheme.surface.value) ||
-                  kIsWeb)
-              ? (statusBarColor != null)
-                  ? statusBarColor
-                  : color
-              : Colors.transparent,
-      systemNavigationBarColor:
-          (systemNavigationBarColor != null) ? systemNavigationBarColor : color,
-    ));
-  });
-}
-
 ThemeData themeModifier(ThemeData theme) {
   return theme.copyWith(
       // https://docs.flutter.dev/platform-integration/android/predictive-back#set-up-your-app
       pageTransitionsTheme: const PageTransitionsTheme(
-    builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
-    },
-  ));
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        },
+      ),
+      sliderTheme: theme.sliderTheme.copyWith(year2023: false));
 }
 
 ThemeData themeCurrent(BuildContext context) {

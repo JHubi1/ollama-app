@@ -8,7 +8,8 @@ import 'worker/haptic.dart';
 import 'worker/update.dart';
 import 'worker/desktop.dart';
 import 'worker/setter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
 import 'settings/behavior.dart';
 import 'settings/interface.dart';

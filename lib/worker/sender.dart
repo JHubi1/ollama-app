@@ -7,7 +7,8 @@ import 'package:ollama_app/worker/clients.dart';
 import 'haptic.dart';
 import 'setter.dart';
 import '../main.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
 import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:dartx/dartx.dart';
