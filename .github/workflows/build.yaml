@@ -32,7 +32,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.29.0
+          channel: stable
+          flutter-version-file: pubspec.yaml
+          cache: true
       - name: Get flutter version
         id: version
         uses: mikefarah/yq@master
@@ -51,7 +53,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.29.0
+          channel: stable
+          flutter-version-file: pubspec.yaml
+          cache: true
       - uses: actions/setup-java@v4
         with:
           distribution: "adopt"
@@ -89,13 +93,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.29.0
+          channel: stable
+          flutter-version-file: pubspec.yaml
+          cache: true
       - name: Get flutter version
         id: version
         shell: pwsh
         run: |
-          Invoke-WebRequest -Uri "https://github.com/mikefarah/yq/releases/latest/download/yq_windows_amd64.exe" -OutFile "yq.exe"
-          $flutterVersion = .\yq.exe -r '.version' pubspec.yaml
+          $flutterVersion = yq.exe -r '.version' pubspec.yaml
           Write-Output "::set-output name=flutter_version::$flutterVersion"
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
@@ -121,7 +126,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.29.0
+          channel: stable
+          flutter-version-file: pubspec.yaml
+          cache: true
       - name: Get flutter version
         id: version
         uses: mikefarah/yq@master
