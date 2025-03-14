@@ -30,7 +30,7 @@ jobs:
       result: ${{ steps.version.outputs.result }}
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2.18.0
         with:
           channel: stable
           flutter-version-file: pubspec.yaml
@@ -51,7 +51,7 @@ jobs:
     needs: analyze
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2.18.0
         with:
           channel: stable
           flutter-version-file: pubspec.yaml
@@ -65,11 +65,6 @@ jobs:
           echo $'storePassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}\nkeyPassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}\nkeyAlias=upload\nstoreFile=upload-keystore.jks\n' > ./android/key.properties
           echo "${{ secrets.ANDROID_KEYSTORE }}" > ./android/app/upload-keystore.jks.asc
           gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch ./android/app/upload-keystore.jks.asc > ./android/app/upload-keystore.jks
-      - name: Get flutter version
-        id: version
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq -r '.version' 'pubspec.yaml'
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Running build
@@ -91,17 +86,11 @@ jobs:
     needs: analyze
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2.18.0
         with:
           channel: stable
           flutter-version-file: pubspec.yaml
           cache: true
-      - name: Get flutter version
-        id: version
-        shell: pwsh
-        run: |
-          $flutterVersion = yq.exe -r '.version' pubspec.yaml
-          Write-Output "::set-output name=flutter_version::$flutterVersion"
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Running build
@@ -124,16 +113,11 @@ jobs:
     needs: analyze
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2.18.0
         with:
           channel: stable
           flutter-version-file: pubspec.yaml
           cache: true
-      - name: Get flutter version
-        id: version
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq -r '.version' 'pubspec.yaml'
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Installing linux dependencies
