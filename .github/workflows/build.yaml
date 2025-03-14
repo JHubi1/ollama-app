@@ -90,11 +90,13 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.24.5
-      - name: Get flutter version
+      - name: Get flutter version with yq in one step
         id: version
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq -r '.version' 'pubspec.yaml'
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/mikefarah/yq/releases/latest/download/yq_windows_amd64.exe" -OutFile "yq.exe"
+          $flutterVersion = .\yq.exe -r '.version' pubspec.yaml
+          Write-Output "::set-output name=flutter_version::$flutterVersion"
       - name: Disabling flutter analytics
         run: flutter config --no-analytics
       - name: Running build
