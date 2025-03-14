@@ -110,7 +110,7 @@ procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
         case CurUninstallStep of                   
         usPostUninstall:
             begin
-                mres := MsgBox('Do you want to Remove settings?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2)
+                mres := SuppressibleMsgBox('Do you want to Remove settings?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2)
                 if mres = IDYES then
                     DelTree(ExpandConstant('{userappdata}\JHubi1\Ollama App'), True, True, True);
         end;
