@@ -40,9 +40,8 @@ void setModel(BuildContext context, Function setState) {
         models.add(list.models![i].model!.split(":")[0]);
         modelsReal.add(list.models![i].model!);
         var families = list.models![i].details!.families ?? [];
-        var modelInfo = list.models![i].details!.model_info ?? {};
         var visionModelFamilies = ["clip", "gemma3"];
-        if (families.any((family) => visionModelFamilies.contains(family)) || modelInfo.keys.any((key) => key.contains("vision"))) {
+        if (families.any((family) => visionModelFamilies.contains(family))) {
           modal.add(true);
         }
         else {
