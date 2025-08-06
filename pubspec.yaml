@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  ollama_dart: ^0.2.1
+  ollama_dart: ^0.2.4
   intl: any
   shared_preferences: ^2.2.3
   flutter_chat_ui: ^1.6.13

@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:ollama_app/worker/clients.dart';
 import 'desktop.dart';
 import 'haptic.dart';
 import '../main.dart';
 import 'sender.dart';
 import 'theme.dart';
+import 'clients.dart';
 
 import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
@@ -37,16 +37,21 @@ void setModel(BuildContext context, Function setState) {
           seconds:
               (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0)).round()));
       for (var i = 0; i < list.models!.length; i++) {
+        var details = await ollamaClient.showModelInfo(
+            request: llama.ModelInfoRequest(model: list.models![i].model!));
         models.add(list.models![i].model!.split(":")[0]);
         modelsReal.add(list.models![i].model!);
-        modal.add((list.models![i].details!.families ?? []).contains("clip"));
+        modal.add((list.models![i].details!.families ?? []).contains("clip") ||
+            (details.capabilities ?? []).contains("vision"));
       }
+
       addIndex = models.length;
       // ignore: use_build_context_synchronously
       models.add(AppLocalizations.of(context)!.modelDialogAddModel);
       // ignore: use_build_context_synchronously
       modelsReal.add(AppLocalizations.of(context)!.modelDialogAddModel);
       modal.add(false);
+
       for (var i = 0; i < modelsReal.length; i++) {
         if (modelsReal[i] == model) {
           usedIndex = i;
