@@ -87,7 +87,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noModelSelected => 'Model seçilmedi';
 
   @override
-  String get noHostSelected => 'Ana bilgisayar seçilmedi, ayarları açıp bir tane belirleyin';
+  String get noHostSelected =>
+      'Ana bilgisayar seçilmedi, ayarları açıp bir tane belirleyin';
 
   @override
   String get noSelectedModel => '<seçici>';
@@ -102,7 +103,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get modelDialogAddPromptTitle => 'Yeni model ekle';
 
   @override
-  String get modelDialogAddPromptDescription => 'Bu normal bir isim (örneğin \'llama3\') ya da isim ve etiket (örneğin \'llama3:70b\') olabilir.';
+  String get modelDialogAddPromptDescription =>
+      'Bu normal bir isim (örneğin \'llama3\') ya da isim ve etiket (örneğin \'llama3:70b\') olabilir.';
 
   @override
   String get modelDialogAddPromptAlreadyExists => 'Model zaten mevcut';
@@ -114,7 +116,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get modelDialogAddAllowanceTitle => 'Proxy\'e İzin Ver';
 
   @override
-  String get modelDialogAddAllowanceDescription => 'Ollama Uygulaması, girilen modelin geçerli olup olmadığını kontrol etmelidir. Bunun için normalde Ollama model listesine bir web isteği gönderir ve durum kodunu kontrol ederiz, ancak siz web istemcisini kullandığınız için bunu doğrudan yapamayız. Bunun yerine, uygulama bizim için kontrol etmek amacıyla JHubi1 tarafından barındırılan farklı bir API\'ye istek gönderecek. \nBu, yalnızca bir kez yapılan bir istektir ve yalnızca yeni bir model eklediğinizde gönderilecektir. \nIP adresiniz istekle birlikte gönderilecek ve olası zararlı niyetlerle spam yapılmasını önlemek amacıyla on dakikaya kadar saklanabilir. \nKabul ederseniz, seçiminiz gelecekte hatırlanacaktır; kabul etmezseniz, hiçbir şey gönderilmeyecek ve model eklenmeyecektir.';
+  String get modelDialogAddAllowanceDescription =>
+      'Ollama Uygulaması, girilen modelin geçerli olup olmadığını kontrol etmelidir. Bunun için normalde Ollama model listesine bir web isteği gönderir ve durum kodunu kontrol ederiz, ancak siz web istemcisini kullandığınız için bunu doğrudan yapamayız. Bunun yerine, uygulama bizim için kontrol etmek amacıyla JHubi1 tarafından barındırılan farklı bir API\'ye istek gönderecek. \nBu, yalnızca bir kez yapılan bir istektir ve yalnızca yeni bir model eklediğinizde gönderilecektir. \nIP adresiniz istekle birlikte gönderilecek ve olası zararlı niyetlerle spam yapılmasını önlemek amacıyla on dakikaya kadar saklanabilir. \nKabul ederseniz, seçiminiz gelecekte hatırlanacaktır; kabul etmezseniz, hiçbir şey gönderilmeyecek ve model eklenmeyecektir.';
 
   @override
   String get modelDialogAddAllowanceAllow => 'İzin ver';
@@ -147,7 +150,8 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get modelDialogAddDownloadFailed => 'Bağlantı kesildi, yeniden deneyin';
+  String get modelDialogAddDownloadFailed =>
+      'Bağlantı kesildi, yeniden deneyin';
 
   @override
   String get modelDialogAddDownloadSuccess => 'İndirme tamamlandı';
@@ -156,7 +160,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get deleteDialogTitle => 'Sohbeti Sil';
 
   @override
-  String get deleteDialogDescription => 'Devam etmek istediğinizden emin misiniz? Bu işlem, bu sohbetin tüm hafızasını silecek ve geri alınamaz.\nBu dialogu devre dışı bırakmak için ayarları ziyaret edin.';
+  String get deleteDialogDescription =>
+      'Devam etmek istediğinizden emin misiniz? Bu işlem, bu sohbetin tüm hafızasını silecek ve geri alınamaz.\nBu dialogu devre dışı bırakmak için ayarları ziyaret edin.';
 
   @override
   String get deleteDialogDelete => 'Sil';
@@ -174,31 +179,36 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsTitleBehavior => 'Davranış';
 
   @override
-  String get settingsDescriptionBehavior => 'Yapay zekanın davranışını istediğiniz gibi değiştirin.';
+  String get settingsDescriptionBehavior =>
+      'Yapay zekanın davranışını istediğiniz gibi değiştirin.';
 
   @override
   String get settingsTitleInterface => 'Arayüz';
 
   @override
-  String get settingsDescriptionInterface => 'Ollama Uygulamasının görünümünü ve davranışını düzenleyin.';
+  String get settingsDescriptionInterface =>
+      'Ollama Uygulamasının görünümünü ve davranışını düzenleyin.';
 
   @override
   String get settingsTitleVoice => 'Ses';
 
   @override
-  String get settingsDescriptionVoice => 'Ses modunu etkinleştirin ve ses ayarlarını yapılandırın.';
+  String get settingsDescriptionVoice =>
+      'Ses modunu etkinleştirin ve ses ayarlarını yapılandırın.';
 
   @override
   String get settingsTitleExport => 'Dışa Aktar';
 
   @override
-  String get settingsDescriptionExport => 'Sohbet geçmişinizi dışa ve içe aktarın.';
+  String get settingsDescriptionExport =>
+      'Sohbet geçmişinizi dışa ve içe aktarın.';
 
   @override
   String get settingsTitleAbout => 'Hakkında';
 
   @override
-  String get settingsDescriptionAbout => 'Güncellemeleri kontrol edin ve Ollama Uygulaması hakkında daha fazla bilgi edinin.';
+  String get settingsDescriptionAbout =>
+      'Güncellemeleri kontrol edin ve Ollama Uygulaması hakkında daha fazla bilgi edinin.';
 
   @override
   String get settingsSavedAutomatically => 'Ayarlar otomatik olarak kaydedilir';
@@ -207,28 +217,34 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsExperimentalAlpha => 'alfa';
 
   @override
-  String get settingsExperimentalAlphaDescription => 'Bu özellik alfa aşamasındadır ve beklendiği gibi çalışmayabilir.\nKritik sorunlar ve/veya cihaza ve/veya kullanılan hizmetlere kalıcı kritik hasar verilebilme ihtimali göz ardı edilemez.\nKendi sorumluluğunuzda kullanın. Uygulama yazarının hiçbir sorumluluğu yoktur.';
+  String get settingsExperimentalAlphaDescription =>
+      'Bu özellik alfa aşamasındadır ve beklendiği gibi çalışmayabilir.\nKritik sorunlar ve/veya cihaza ve/veya kullanılan hizmetlere kalıcı kritik hasar verilebilme ihtimali göz ardı edilemez.\nKendi sorumluluğunuzda kullanın. Uygulama yazarının hiçbir sorumluluğu yoktur.';
 
   @override
-  String get settingsExperimentalAlphaFeature => 'Alfa özelliği, daha fazla bilgi için basılı tutun';
+  String get settingsExperimentalAlphaFeature =>
+      'Alfa özelliği, daha fazla bilgi için basılı tutun';
 
   @override
   String get settingsExperimentalBeta => 'beta';
 
   @override
-  String get settingsExperimentalBetaDescription => 'Bu özellik beta aşamasındadır ve beklendiği gibi çalışmayabilir.\nDaha az ciddi sorunlar ortaya çıkabilir. Hasar kritik olmamalıdır.\nKendi sorumluluğunuzda kullanın.';
+  String get settingsExperimentalBetaDescription =>
+      'Bu özellik beta aşamasındadır ve beklendiği gibi çalışmayabilir.\nDaha az ciddi sorunlar ortaya çıkabilir. Hasar kritik olmamalıdır.\nKendi sorumluluğunuzda kullanın.';
 
   @override
-  String get settingsExperimentalBetaFeature => 'Beta özelliği, daha fazla bilgi için basılı tutun';
+  String get settingsExperimentalBetaFeature =>
+      'Beta özelliği, daha fazla bilgi için basılı tutun';
 
   @override
   String get settingsExperimentalDeprecated => 'kullanım dışı';
 
   @override
-  String get settingsExperimentalDeprecatedDescription => 'Bu özellik kullanımdan kaldırılmıştır ve gelecekteki bir sürümde kaldırılacaktır.\nAmaçlandığı veya beklendiği gibi çalışmayabilir. Kullanım riski size aittir.';
+  String get settingsExperimentalDeprecatedDescription =>
+      'Bu özellik kullanımdan kaldırılmıştır ve gelecekteki bir sürümde kaldırılacaktır.\nAmaçlandığı veya beklendiği gibi çalışmayabilir. Kullanım riski size aittir.';
 
   @override
-  String get settingsExperimentalDeprecatedFeature => 'Kullanımdan kaldırılan özellik, daha fazla bilgi için bekleyin';
+  String get settingsExperimentalDeprecatedFeature =>
+      'Kullanımdan kaldırılan özellik, daha fazla bilgi için bekleyin';
 
   @override
   String get settingsHost => 'Ana bilgisayar';
@@ -258,7 +274,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsHostHeaderTitle => 'Ana bilgisayar başlığını ayarla';
 
   @override
-  String get settingsHostHeaderInvalid => 'Girilen metin geçerli bir başlık JSON nesnesi değil';
+  String get settingsHostHeaderInvalid =>
+      'Girilen metin geçerli bir başlık JSON nesnesi değil';
 
   @override
   String settingsHostInvalidDetailed(String type) {
@@ -266,7 +283,8 @@ class AppLocalizationsTr extends AppLocalizations {
       type,
       {
         'url': 'Girdiğiniz URL geçersiz. Standart bir URL formatında değil.',
-        'other': 'Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.',
+        'other':
+            'Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.',
       },
     );
     return '$_temp0';
@@ -279,13 +297,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsUseSystem => 'Sistem mesajını kullan';
 
   @override
-  String get settingsUseSystemDescription => 'Yukarıdaki sistem mesajını ayarlamayı devre dışı bırakır ve bunun yerine modelin mesajını kullanır. Model dosyaları olan modeller için yararlı olabilir';
+  String get settingsUseSystemDescription =>
+      'Yukarıdaki sistem mesajını ayarlamayı devre dışı bırakır ve bunun yerine modelin mesajını kullanır. Model dosyaları olan modeller için yararlı olabilir';
 
   @override
   String get settingsDisableMarkdown => 'Markdown\'\'ı devre dışı bırak';
 
   @override
-  String get settingsBehaviorNotUpdatedForOlderChats => 'Davranış ayarları eski sohbetler için güncellenmez';
+  String get settingsBehaviorNotUpdatedForOlderChats =>
+      'Davranış ayarları eski sohbetler için güncellenmez';
 
   @override
   String get settingsShowModelTags => 'Model etiketlerini göster';
@@ -321,7 +341,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsKeepModelLoadedNever => 'Modeli yüklü tutma';
 
   @override
-  String get settingsKeepModelLoadedFor => 'Modelin yüklü kalacağı belirli bir süre ayarla';
+  String get settingsKeepModelLoadedFor =>
+      'Modelin yüklü kalacağı belirli bir süre ayarla';
 
   @override
   String settingsKeepModelLoadedSet(String minutes) {
@@ -332,13 +353,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsTimeoutMultiplier => 'Zaman aşımı çarpanı';
 
   @override
-  String get settingsTimeoutMultiplierDescription => 'Uygulamadaki her zaman aşımı değerine uygulanacak çarpanı seçin. Yavaş bir internet bağlantısı veya yavaş bir ana bilgisayar ile yararlı olabilir.';
+  String get settingsTimeoutMultiplierDescription =>
+      'Uygulamadaki her zaman aşımı değerine uygulanacak çarpanı seçin. Yavaş bir internet bağlantısı veya yavaş bir ana bilgisayar ile yararlı olabilir.';
 
   @override
   String get settingsTimeoutMultiplierExample => 'Örn. mesaj zaman aşımı:';
 
   @override
-  String get settingsEnableHapticFeedback => 'Dokunsal geri bildirimi etkinleştir';
+  String get settingsEnableHapticFeedback =>
+      'Dokunsal geri bildirimi etkinleştir';
 
   @override
   String get settingsMaximizeOnStart => 'Başlangıçta maksimize et';
@@ -362,13 +385,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsTemporaryFixes => 'Geçici arayüz düzeltmeleri';
 
   @override
-  String get settingsTemporaryFixesDescription => 'Arayüz sorunları için geçici düzeltmeleri etkinleştirin. \nDaha fazla bilgi edinmek için tek tek seçeneklere uzun basın.';
+  String get settingsTemporaryFixesDescription =>
+      'Arayüz sorunları için geçici düzeltmeleri etkinleştirin. \nDaha fazla bilgi edinmek için tek tek seçeneklere uzun basın.';
 
   @override
-  String get settingsTemporaryFixesInstructions => 'Ne yaptığınızı bilmiyorsanız bu ayarlardan herhangi birini değiştirmeyin! Verilen çözümler beklendiği gibi çalışmayabilir.\nBunlar nihai olarak görülemez veya bu şekilde değerlendirilmemelidir. Sorunlar ortaya çıkabilir.';
+  String get settingsTemporaryFixesInstructions =>
+      'Ne yaptığınızı bilmiyorsanız bu ayarlardan herhangi birini değiştirmeyin! Verilen çözümler beklendiği gibi çalışmayabilir.\nBunlar nihai olarak görülemez veya bu şekilde değerlendirilmemelidir. Sorunlar ortaya çıkabilir.';
 
   @override
-  String get settingsTemporaryFixesNoFixes => 'Herhangi bir düzeltme mevcut değil';
+  String get settingsTemporaryFixesNoFixes =>
+      'Herhangi bir düzeltme mevcut değil';
 
   @override
   String get settingsVoicePermissionLoading => 'Ses izinleri yükleniyor ...';
@@ -377,7 +403,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsVoiceTtsNotSupported => 'Metinden sese desteklenmiyor';
 
   @override
-  String get settingsVoiceTtsNotSupportedDescription => 'Metinden sese hizmetleri seçilen dil için desteklenmiyor. Bunları yeniden etkinleştirmek için dil çekmecesinde farklı bir dil seçin.\nSes tanıma ve yapay zeka ile düşünme gibi diğer hizmetler her zamanki gibi çalışmaya devam eder, ancak etkileşim o kadar akıcı olmayabilir.';
+  String get settingsVoiceTtsNotSupportedDescription =>
+      'Metinden sese hizmetleri seçilen dil için desteklenmiyor. Bunları yeniden etkinleştirmek için dil çekmecesinde farklı bir dil seçin.\nSes tanıma ve yapay zeka ile düşünme gibi diğer hizmetler her zamanki gibi çalışmaya devam eder, ancak etkileşim o kadar akıcı olmayabilir.';
 
   @override
   String get settingsVoicePermissionNot => 'İzinler verilmedi';
@@ -398,7 +425,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsVoiceLimitLanguage => 'Seçili dille sınırla';
 
   @override
-  String get settingsVoicePunctuation => 'Yapay zeka noktalama işaretlerini etkinleştir';
+  String get settingsVoicePunctuation =>
+      'Yapay zeka noktalama işaretlerini etkinleştir';
 
   @override
   String get settingsExportChats => 'Sohbetleri dışa aktar';
@@ -413,7 +441,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsImportChatsTitle => 'İçe Aktar';
 
   @override
-  String get settingsImportChatsDescription => 'Sonraki adım, seçilen dosyadan sohbetleri içe aktaracaktır. Bu işlem, şu anda mevcut olan tüm sohbetlerin üzerine yazacaktır.\nDevam etmek istiyor musunuz?';
+  String get settingsImportChatsDescription =>
+      'Sonraki adım, seçilen dosyadan sohbetleri içe aktaracaktır. Bu işlem, şu anda mevcut olan tüm sohbetlerin üzerine yazacaktır.\nDevam etmek istiyor musunuz?';
 
   @override
   String get settingsImportChatsImport => 'İçe Aktar ve Sil';
@@ -425,10 +454,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsImportChatsSuccess => 'Sohbetler başarıyla içe aktarıldı';
 
   @override
-  String get settingsExportInfo => 'Bu seçenekler, sohbet geçmişinizi dışa ve içe aktarmanıza olanak tanır. Bu, sohbet geçmişinizi başka bir cihaza aktarmak veya yedeklemek istediğinizde kullanışlı olabilir';
+  String get settingsExportInfo =>
+      'Bu seçenekler, sohbet geçmişinizi dışa ve içe aktarmanıza olanak tanır. Bu, sohbet geçmişinizi başka bir cihaza aktarmak veya yedeklemek istediğinizde kullanışlı olabilir';
 
   @override
-  String get settingsExportWarning => 'Birden fazla sohbet geçmişi birleştirilmeyecek! Yeni bir sohbet geçmişi içe aktarırsanız mevcut sohbet geçmişinizi kaybedeceksiniz';
+  String get settingsExportWarning =>
+      'Birden fazla sohbet geçmişi birleştirilmeyecek! Yeni bir sohbet geçmişi içe aktarırsanız mevcut sohbet geçmişinizi kaybedeceksiniz';
 
   @override
   String get settingsUpdateCheck => 'Güncellemeleri kontrol et';
@@ -445,7 +476,8 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get settingsUpdateRateLimit => 'Kontrol edilemiyor, API hız sınırı aşıldı';
+  String get settingsUpdateRateLimit =>
+      'Kontrol edilemiyor, API hız sınırı aşıldı';
 
   @override
   String get settingsUpdateIssue => 'Bir sorun oluştu';
@@ -454,7 +486,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsUpdateDialogTitle => 'Yeni sürüm mevcut';
 
   @override
-  String get settingsUpdateDialogDescription => 'Ollama\'\'nın yeni bir sürümü mevcut. Şimdi indirip kurmak istiyor musunuz?';
+  String get settingsUpdateDialogDescription =>
+      'Ollama\'\'nın yeni bir sürümü mevcut. Şimdi indirip kurmak istiyor musunuz?';
 
   @override
   String get settingsUpdateChangeLog => 'Değişiklik Günlüğü';

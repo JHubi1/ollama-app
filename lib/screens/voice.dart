@@ -1,17 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:ollama_app/worker/clients.dart';
-
-import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:datetime_loop/datetime_loop.dart';
+import 'package:flutter/material.dart';
+import 'package:ollama_dart/ollama_dart.dart' as llama;
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
-import 'main.dart';
-import 'worker/sender.dart';
-import 'worker/haptic.dart';
-import 'worker/setter.dart';
-import 'worker/theme.dart';
+import '../l10n/gen/app_localizations.dart';
+import '../main.dart';
+import '../services/clients.dart';
+import '../services/haptic.dart';
+import '../services/sender.dart';
+import '../services/setter.dart';
+import '../services/theme.dart';
 import 'settings/voice.dart';
 
 class ScreenVoice extends StatefulWidget {
@@ -34,7 +32,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
 
   bool intendedStop = false;
 
-  void process() async {
+  Future<void> process() async {
     setState(() {
       speaking = true;
       sttDone = false;
@@ -44,7 +42,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
     text = "";
 
     speech.listen(
-        localeId: (prefs!.getString("voiceLanguage") ?? "en-US"),
+        localeId: prefs!.getString("voiceLanguage") ?? "en-US",
         listenOptions:
             stt.SpeechListenOptions(listenMode: stt.ListenMode.dictation),
         onResult: (result) {
@@ -57,15 +55,15 @@ class _ScreenVoiceState extends State<ScreenVoice> {
         },
         pauseFor: const Duration(seconds: 3));
 
-    DateTime start = DateTime.now();
-    bool timeout = false;
+    var start = DateTime.now();
+    var timeout = false;
     await Future.doWhile(() =>
         Future.delayed(const Duration(milliseconds: 1)).then((_) {
           if (textOld != text) {
             start = DateTime.now();
           }
           timeout =
-              (DateTime.now().difference(start) >= const Duration(seconds: 3));
+              DateTime.now().difference(start) >= const Duration(seconds: 3);
           textOld = text;
           return !sttDone && speaking && !timeout;
         }));
@@ -105,7 +103,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
     aiThinking = true;
     try {
       if (prefs!.getBool("aiPunctuation") ?? true) {
-        final generated = await ollamaClient
+        var generated = await ollamaClient
             .generateCompletion(
               request: llama.GenerateCompletionRequest(
                   model: model!,
@@ -145,19 +143,20 @@ class _ScreenVoiceState extends State<ScreenVoice> {
         if ((await voice.getLanguages as List).contains(
             (prefs!.getString("voiceLanguage") ?? "en_US")
                 .replaceAll("_", "-"))) {
-          voice.setLanguage((prefs!.getString("voiceLanguage") ?? "en_US")
-              .replaceAll("_", "-"));
-          voice.setSpeechRate(0.6);
-          voice.setCompletionHandler(() async {
-            speaking = false;
-            try {
-              setState(() {});
-            } catch (_) {}
-            process();
-          });
-          var tmp = aiText;
-          tmp.replaceAll("-", ".");
-          tmp.replaceAll("*", ".");
+          voice
+            ..setLanguage((prefs!.getString("voiceLanguage") ?? "en_US")
+                .replaceAll("_", "-"))
+            ..setSpeechRate(0.6)
+            ..setCompletionHandler(() async {
+              speaking = false;
+              try {
+                setState(() {});
+              } catch (_) {}
+              process();
+            });
+          var tmp = aiText
+            ..replaceAll("-", ".")
+            ..replaceAll("*", ".");
 
           voice.speak(tmp);
         }
@@ -181,11 +180,9 @@ class _ScreenVoiceState extends State<ScreenVoice> {
   void initState() {
     super.initState();
 
-    scrollController.addListener(() {
-      updateScrollState();
-    });
+    scrollController.addListener(updateScrollState);
 
-    void load() async {
+    Future<void> load() async {
       var tmp = await speech.locales();
       languageOptionIds = tmp.map((e) => e.localeId);
       languageOptions = tmp.map((e) => e.name);
@@ -194,7 +191,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
 
     load();
 
-    void loadProcess() async {
+    Future<void> loadProcess() async {
       await Future.delayed(const Duration(milliseconds: 500));
       process();
     }
@@ -234,7 +231,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                         Expanded(
                             child: Text(
                                 (model ??
-                                        AppLocalizations.of(context)!
+                                        AppLocalizations.of(context)
                                             .noSelectedModel)
                                     .split(":")[0],
                                 textAlign: TextAlign.center,
@@ -288,7 +285,7 @@ class _ScreenVoiceState extends State<ScreenVoice> {
                                     child: AnimatedScale(
                                         scale: speaking
                                             ? aiThinking
-                                                ? (dateTime.second).isEven
+                                                ? dateTime.second.isEven
                                                     ? 2.4
                                                     : 2
                                                 : 2

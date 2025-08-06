@@ -2,43 +2,41 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
-import 'screen_settings.dart';
-import 'screen_voice.dart';
-import 'screen_welcome.dart';
-import 'worker/setter.dart';
-import 'worker/haptic.dart';
-import 'worker/sender.dart';
-import 'worker/desktop.dart';
-import 'worker/theme.dart';
-import 'worker/update.dart';
-import 'worker/clients.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:uuid/uuid.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
 import 'package:markdown/markdown.dart' as md;
-import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:dynamic_color/dynamic_color.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:version/version.dart';
 import 'package:pwa_install/pwa_install.dart' as pwa;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:universal_html/html.dart' as html;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
+import 'package:version/version.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+
+import 'l10n/gen/app_localizations.dart';
+import 'screens/settings.dart';
+import 'screens/voice.dart';
+import 'screens/welcome.dart';
+import 'services/clients.dart';
+import 'services/desktop.dart';
+import 'services/haptic.dart';
+import 'services/sender.dart';
+import 'services/setter.dart';
+import 'services/theme.dart';
+import 'services/update.dart';
 
 // client configuration
 
@@ -128,13 +126,13 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
 
-    void load() async {
+    Future<void> load() async {
       try {
         await FlutterDisplayMode.setHighRefreshRate();
       } catch (_) {}
 
       SharedPreferences.setPrefix("ollama.");
-      SharedPreferences tmp = await SharedPreferences.getInstance();
+      var tmp = await SharedPreferences.getInstance();
       setState(() {
         prefs = tmp;
       });
@@ -169,7 +167,7 @@ class _AppState extends State<App> {
             supportedLocales: AppLocalizations.supportedLocales,
             localeListResolutionCallback: (deviceLocales, supportedLocales) {
               if (deviceLocales != null) {
-                for (final locale in deviceLocales) {
+                for (var locale in deviceLocales) {
                   var newLocale = Locale(locale.languageCode);
                   if (supportedLocales.contains(newLocale)) {
                     return locale;
@@ -179,7 +177,7 @@ class _AppState extends State<App> {
               return const Locale("en");
             },
             onGenerateTitle: (context) {
-              return AppLocalizations.of(context)!.appTitle;
+              return AppLocalizations.of(context).appTitle;
             },
             theme: themeLight(),
             darkTheme: themeDark(),
@@ -244,7 +242,7 @@ class _MainAppState extends State<MainApp> {
                                 child: const ImageIcon(
                                     AssetImage("assets/logo512.png")))),
                         Expanded(
-                          child: Text(AppLocalizations.of(context)!.appTitle,
+                          child: Text(AppLocalizations.of(context).appTitle,
                               softWrap: false,
                               overflow: TextOverflow.fade,
                               style:
@@ -259,7 +257,7 @@ class _MainAppState extends State<MainApp> {
               color: desktopLayout(context)
                   ? Theme.of(context).colorScheme.onSurface.withAlpha(20)
                   : null),
-      (allowMultipleChats)
+      allowMultipleChats
           ? (Padding(
               padding: padding,
               child: InkWell(
@@ -284,7 +282,7 @@ class _MainAppState extends State<MainApp> {
                             child: Icon(Icons.add_rounded)),
                         Expanded(
                           child: Text(
-                              AppLocalizations.of(context)!.optionNewChat,
+                              AppLocalizations.of(context).optionNewChat,
                               softWrap: false,
                               overflow: TextOverflow.fade,
                               style:
@@ -293,7 +291,7 @@ class _MainAppState extends State<MainApp> {
                         const SizedBox(width: 16),
                       ])))))
           : const SizedBox.shrink(),
-      (allowSettings)
+      allowSettings
           ? (Padding(
               padding: padding,
               child: InkWell(
@@ -327,7 +325,7 @@ class _MainAppState extends State<MainApp> {
                                 : const Icon(Icons.dns_rounded)),
                         Expanded(
                           child: Text(
-                              AppLocalizations.of(context)!.optionSettings,
+                              AppLocalizations.of(context).optionSettings,
                               softWrap: false,
                               overflow: TextOverflow.fade,
                               style:
@@ -368,7 +366,7 @@ class _MainAppState extends State<MainApp> {
                                 : const Icon(Icons.install_mobile_rounded)),
                         Expanded(
                           child: Text(
-                              AppLocalizations.of(context)!.optionInstallPwa,
+                              AppLocalizations.of(context).optionInstallPwa,
                               softWrap: false,
                               overflow: TextOverflow.fade,
                               style:
@@ -392,9 +390,7 @@ class _MainAppState extends State<MainApp> {
                   enableFeedback: false,
                   customBorder: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(50))),
-                  onTap: () {
-                    selectionHaptic();
-                  },
+                  onTap: selectionHaptic,
                   child: Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
                       child: Row(children: [
@@ -404,7 +400,7 @@ class _MainAppState extends State<MainApp> {
                                 color: Colors.grey)),
                         Expanded(
                           child: Text(
-                              AppLocalizations.of(context)!.optionNoChatFound,
+                              AppLocalizations.of(context).optionNoChatFound,
                               softWrap: false,
                               overflow: TextOverflow.fade,
                               style: const TextStyle(
@@ -414,15 +410,15 @@ class _MainAppState extends State<MainApp> {
                         const SizedBox(width: 16),
                       ]))))),
       Builder(builder: (context) {
-        String tip = (tipId == 0)
-            ? AppLocalizations.of(context)!.tip0
+        var tip = (tipId == 0)
+            ? AppLocalizations.of(context).tip0
             : (tipId == 1)
-                ? AppLocalizations.of(context)!.tip1
+                ? AppLocalizations.of(context).tip1
                 : (tipId == 2)
-                    ? AppLocalizations.of(context)!.tip2
+                    ? AppLocalizations.of(context).tip2
                     : (tipId == 3)
-                        ? AppLocalizations.of(context)!.tip3
-                        : AppLocalizations.of(context)!.tip4;
+                        ? AppLocalizations.of(context).tip3
+                        : AppLocalizations.of(context).tip4;
         return (!(prefs?.getBool("tips") ?? true) ||
                 (prefs?.getStringList("chats") ?? []).isNotEmpty ||
                 !allowSettings)
@@ -451,7 +447,7 @@ class _MainAppState extends State<MainApp> {
                                 color: Colors.grey)),
                         Expanded(
                           child: Text(
-                              AppLocalizations.of(context)!.tipPrefix + tip,
+                              AppLocalizations.of(context).tipPrefix + tip,
                               softWrap: true,
                               maxLines: 3,
                               overflow: TextOverflow.fade,
@@ -502,11 +498,11 @@ class _MainAppState extends State<MainApp> {
                         if (!allowSettings) return;
                         String oldTitle = jsonDecode(item)["title"];
                         var newTitle = await prompt(context,
-                            title: AppLocalizations.of(context)!
+                            title: AppLocalizations.of(context)
                                 .dialogEnterNewTitle,
                             value: oldTitle,
                             uuid: jsonDecode(item)["uuid"]);
-                        var tmp = (prefs!.getStringList("chats") ?? []);
+                        var tmp = prefs!.getStringList("chats") ?? [];
                         for (var i = 0; i < tmp.length; i++) {
                           if (jsonDecode((prefs!.getStringList("chats") ??
                                   [])[i])["uuid"] ==
@@ -558,13 +554,11 @@ class _MainAppState extends State<MainApp> {
                                         child: IconButton(
                                           tooltip: allowMultipleChats
                                               ? allowSettings
-                                                  ? AppLocalizations.of(
-                                                          context)!
+                                                  ? AppLocalizations.of(context)
                                                       .tooltipOptions
-                                                  : AppLocalizations.of(
-                                                          context)!
+                                                  : AppLocalizations.of(context)
                                                       .deleteChat
-                                              : AppLocalizations.of(context)!
+                                              : AppLocalizations.of(context)
                                                   .tooltipReset,
                                           onPressed: () {
                                             if (!chatAllowed &&
@@ -585,9 +579,9 @@ class _MainAppState extends State<MainApp> {
                                                                 "chats") ??
                                                         [])[i])["uuid"] ==
                                                     jsonDecode(item)["uuid"]) {
-                                                  List<String> tmp = prefs!
-                                                      .getStringList("chats")!;
-                                                  tmp.removeAt(i);
+                                                  var tmp = prefs!
+                                                      .getStringList("chats")!
+                                                    ..removeAt(i);
                                                   prefs!.setStringList(
                                                       "chats", tmp);
                                                   break;
@@ -646,7 +640,7 @@ class _MainAppState extends State<MainApp> {
                                                                         icon: const Icon(Icons
                                                                             .delete_forever_rounded),
                                                                         label: Text(
-                                                                            AppLocalizations.of(context)!.deleteChat))),
+                                                                            AppLocalizations.of(context).deleteChat))),
                                                             const SizedBox(
                                                                 height: 8),
                                                             SizedBox(
@@ -663,11 +657,11 @@ class _MainAppState extends State<MainApp> {
                                                                               jsonDecode(item)["title"];
                                                                           var newTitle = await prompt(
                                                                               context,
-                                                                              title: AppLocalizations.of(context)!.dialogEnterNewTitle,
+                                                                              title: AppLocalizations.of(context).dialogEnterNewTitle,
                                                                               value: oldTitle,
                                                                               uuid: jsonDecode(item)["uuid"]);
                                                                           var tmp =
-                                                                              (prefs!.getStringList("chats") ?? []);
+                                                                              prefs!.getStringList("chats") ?? [];
                                                                           for (var i = 0;
                                                                               i < tmp.length;
                                                                               i++) {
@@ -688,7 +682,7 @@ class _MainAppState extends State<MainApp> {
                                                                         icon: const Icon(Icons
                                                                             .edit_rounded),
                                                                         label: Text(
-                                                                            AppLocalizations.of(context)!.renameChat))),
+                                                                            AppLocalizations.of(context).renameChat))),
                                                             const SizedBox(
                                                                 height: 16)
                                                           ]));
@@ -716,15 +710,14 @@ class _MainAppState extends State<MainApp> {
             ? child
             : Dismissible(
                 key: Key(jsonDecode(item)["uuid"]),
-                direction: (chatAllowed)
+                direction: chatAllowed
                     ? DismissDirection.startToEnd
                     : DismissDirection.none,
                 confirmDismiss: (direction) async {
                   if (!chatAllowed && chatUuid == jsonDecode(item)["uuid"]) {
                     return false;
                   }
-                  return await deleteChatDialog(context, setState,
-                      takeAction: false);
+                  return deleteChatDialog(context, setState, takeAction: false);
                 },
                 onDismissed: (direction) {
                   selectionHaptic();
@@ -734,8 +727,7 @@ class _MainAppState extends State<MainApp> {
                     if (jsonDecode(
                             (prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
                         jsonDecode(item)["uuid"]) {
-                      List<String> tmp = prefs!.getStringList("chats")!;
-                      tmp.removeAt(i);
+                      var tmp = prefs!.getStringList("chats")!..removeAt(i);
                       prefs!.setStringList("chats", tmp);
                       break;
                     }
@@ -820,7 +812,7 @@ class _MainAppState extends State<MainApp> {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               // ignore: use_build_context_synchronously
-              content: Text(AppLocalizations.of(context)!.noHostSelected),
+              content: Text(AppLocalizations.of(context).noHostSelected),
               showCloseIcon: true));
         }
 
@@ -840,7 +832,7 @@ class _MainAppState extends State<MainApp> {
                 if (host == null) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content:
-                          Text(AppLocalizations.of(context)!.noHostSelected),
+                          Text(AppLocalizations.of(context).noHostSelected),
                       showCloseIcon: true));
                   return;
                 }
@@ -860,7 +852,7 @@ class _MainAppState extends State<MainApp> {
                   Flexible(
                       child: Text(
                           (model ??
-                                  AppLocalizations.of(context)!.noSelectedModel)
+                                  AppLocalizations.of(context).noSelectedModel)
                               .split(":")[0],
                           overflow: TextOverflow.fade,
                           style: const TextStyle(
@@ -897,7 +889,7 @@ class _MainAppState extends State<MainApp> {
                                 opacity: desktopTitleVisible ? 1.0 : 0.0,
                                 duration: desktopTitleVisible
                                     ? const Duration(milliseconds: 300)
-                                    : const Duration(milliseconds: 0),
+                                    : Duration.zero,
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: selector,
@@ -938,7 +930,7 @@ class _MainAppState extends State<MainApp> {
                                 opacity: desktopTitleVisible ? 1.0 : 0.0,
                                 duration: desktopTitleVisible
                                     ? const Duration(milliseconds: 300)
-                                    : const Duration(milliseconds: 0),
+                                    : Duration.zero,
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: selector,
@@ -1025,8 +1017,8 @@ class _MainAppState extends State<MainApp> {
                                   {required messageWidth, required showName}) {
                                 var white =
                                     const TextStyle(color: Colors.white);
-                                bool greyed = false;
-                                String text = p0.text;
+                                var greyed = false;
+                                var text = p0.text;
                                 if (text.trim() == "") {
                                   text =
                                       "_Empty AI response, try restarting conversation_";
@@ -1066,7 +1058,7 @@ class _MainAppState extends State<MainApp> {
                                                       content: Text(
                                                           AppLocalizations.of(
                                                                   // ignore: use_build_context_synchronously
-                                                                  context)!
+                                                                  context)
                                                               .settingsHostInvalid(
                                                                   "url")),
                                                       showCloseIcon: true));
@@ -1089,7 +1081,7 @@ class _MainAppState extends State<MainApp> {
                                                       .showSnackBar(SnackBar(
                                                           content: Text(
                                                               AppLocalizations.of(
-                                                                      context)!
+                                                                      context)
                                                                   .notAValidImage),
                                                           showCloseIcon: true));
                                                 },
@@ -1232,13 +1224,13 @@ class _MainAppState extends State<MainApp> {
                                 if (p1.author == assistant) return;
                                 for (var i = 0; i < messages.length; i++) {
                                   if (messages[i].id == p1.id) {
-                                    List messageList =
+                                    var messageList =
                                         (jsonDecode(jsonEncode(messages))
                                                 as List)
                                             .reversed
                                             .toList();
-                                    bool found = false;
-                                    List index = [];
+                                    var found = false;
+                                    var index = [];
                                     for (var j = 0;
                                         j < messageList.length;
                                         j++) {
@@ -1285,7 +1277,7 @@ class _MainAppState extends State<MainApp> {
                                     (messages[index] as types.TextMessage).text;
                                 var input = await prompt(
                                   context,
-                                  title: AppLocalizations.of(context)!
+                                  title: AppLocalizations.of(context)
                                       .dialogEditMessageTitle,
                                   value: text,
                                   keyboard: TextInputType.multiline,
@@ -1390,7 +1382,7 @@ class _MainAppState extends State<MainApp> {
                                                                           Icons
                                                                               .headphones_rounded),
                                                                       label: Text(
-                                                                          AppLocalizations.of(context)!
+                                                                          AppLocalizations.of(context)
                                                                               .settingsTitleVoice)))
                                                           : const SizedBox
                                                               .shrink(),
@@ -1413,7 +1405,7 @@ class _MainAppState extends State<MainApp> {
                                                                     Navigator.of(
                                                                             context)
                                                                         .pop();
-                                                                    final result =
+                                                                    var result =
                                                                         await ImagePicker()
                                                                             .pickImage(
                                                                       source: ImageSource
@@ -1424,14 +1416,14 @@ class _MainAppState extends State<MainApp> {
                                                                       return;
                                                                     }
 
-                                                                    final bytes =
+                                                                    var bytes =
                                                                         await result
                                                                             .readAsBytes();
-                                                                    final image =
+                                                                    var image =
                                                                         await decodeImageFromList(
                                                                             bytes);
 
-                                                                    final message =
+                                                                    var message =
                                                                         types
                                                                             .ImageMessage(
                                                                       author:
@@ -1466,7 +1458,7 @@ class _MainAppState extends State<MainApp> {
                                                                       Icons
                                                                           .photo_camera_rounded),
                                                                   label: Text(AppLocalizations.of(
-                                                                          context)!
+                                                                          context)
                                                                       .takeImage))),
                                                       const SizedBox(height: 8),
                                                       SizedBox(
@@ -1481,7 +1473,7 @@ class _MainAppState extends State<MainApp> {
                                                                     Navigator.of(
                                                                             context)
                                                                         .pop();
-                                                                    final result =
+                                                                    var result =
                                                                         await ImagePicker()
                                                                             .pickImage(
                                                                       source: ImageSource
@@ -1492,14 +1484,14 @@ class _MainAppState extends State<MainApp> {
                                                                       return;
                                                                     }
 
-                                                                    final bytes =
+                                                                    var bytes =
                                                                         await result
                                                                             .readAsBytes();
-                                                                    final image =
+                                                                    var image =
                                                                         await decodeImageFromList(
                                                                             bytes);
 
-                                                                    final message =
+                                                                    var message =
                                                                         types
                                                                             .ImageMessage(
                                                                       author:
@@ -1534,20 +1526,19 @@ class _MainAppState extends State<MainApp> {
                                                                       Icons
                                                                           .image_rounded),
                                                                   label: Text(AppLocalizations.of(
-                                                                          context)!
+                                                                          context)
                                                                       .uploadImage)))
                                                     ]));
                                           });
                                     },
                               l10n: ChatL10nEn(
-                                  inputPlaceholder: AppLocalizations.of(context)!
+                                  inputPlaceholder: AppLocalizations.of(context)
                                       .messageInputPlaceholder,
                                   attachmentButtonAccessibilityLabel:
-                                      AppLocalizations.of(context)!
+                                      AppLocalizations.of(context)
                                           .tooltipAttachment,
                                   sendButtonAccessibilityLabel:
-                                      AppLocalizations.of(context)!
-                                          .tooltipSend),
+                                      AppLocalizations.of(context).tooltipSend),
                               inputOptions: InputOptions(
                                   keyboardType: TextInputType.multiline,
                                   onTextChanged: (p0) {
@@ -1557,7 +1548,7 @@ class _MainAppState extends State<MainApp> {
                                   },
                                   sendButtonVisibilityMode: desktopFeature()
                                       ? SendButtonVisibilityMode.always
-                                      : (sendable)
+                                      : sendable
                                           ? SendButtonVisibilityMode.always
                                           : SendButtonVisibilityMode.hidden),
                               user: user,

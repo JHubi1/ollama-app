@@ -1,17 +1,15 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:ollama_app/worker/haptic.dart';
-import 'package:ollama_app/worker/theme.dart';
-
-import '../main.dart';
-import '../screen_settings.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../../l10n/gen/app_localizations.dart';
+import '../../main.dart';
+import '../../services/haptic.dart';
+import '../../services/theme.dart';
+import '../settings.dart';
 
 class ScreenSettingsVoice extends StatefulWidget {
   const ScreenSettingsVoice({super.key});
@@ -44,7 +42,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
 
     voiceLanguageOptions = await voice.getLanguages as List;
 
-    for (int i = 0; i < languageOptionIds.length; i++) {
+    for (var i = 0; i < languageOptionIds.length; i++) {
       if (voiceLanguageOptions
           .contains(languageOptionIds.elementAt(i).replaceAll("_", "-"))) {
         voiceLanguageOptionsAvailable.add(languageOptionIds.elementAt(i));
@@ -68,12 +66,12 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
           appBar: AppBar(
               title: Badge(
                   label: Text(
-                      AppLocalizations.of(context)!.settingsExperimentalBeta),
+                      AppLocalizations.of(context).settingsExperimentalBeta),
                   offset: const Offset(20, -4),
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   textColor: Theme.of(context).colorScheme.onPrimary,
                   child:
-                      Text(AppLocalizations.of(context)!.settingsTitleVoice))),
+                      Text(AppLocalizations.of(context).settingsTitleVoice))),
           body: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Column(children: [
@@ -84,31 +82,30 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                 permissionRecord &&
                                 voiceSupported &&
                                 voiceLanguageOptionsAvailable.contains(
-                                    (prefs!.getString("voiceLanguage") ??
-                                        "en_US"))))
+                                    prefs!.getString("voiceLanguage") ??
+                                        "en_US")))
                         ? const SizedBox.shrink()
                         : button(
                             permissionLoading
-                                ? AppLocalizations.of(context)!
+                                ? AppLocalizations.of(context)
                                     .settingsVoicePermissionLoading
                                 : (!voiceLanguageOptionsAvailable.contains(
-                                            (prefs!.getString(
-                                                    "voiceLanguage") ??
-                                                "en_US")) &&
+                                            prefs!.getString("voiceLanguage") ??
+                                                "en_US") &&
                                         (prefs!.getBool("voiceModeEnabled") ??
                                             false))
-                                    ? AppLocalizations.of(context)!
+                                    ? AppLocalizations.of(context)
                                         .settingsVoiceTtsNotSupported
                                     : !(permissionBluetooth && permissionRecord)
-                                        ? AppLocalizations.of(context)!
+                                        ? AppLocalizations.of(context)
                                             .settingsVoicePermissionNot
-                                        : AppLocalizations.of(context)!
+                                        : AppLocalizations.of(context)
                                             .settingsVoiceNotSupported,
                             Icons.info_rounded, () {
                             selectionHaptic();
                             if (permissionLoading) return;
                             if (!(permissionBluetooth && permissionRecord)) {
-                              void load() async {
+                              Future<void> load() async {
                                 try {
                                   if (await Permission
                                           .bluetooth.isPermanentlyDenied ||
@@ -140,18 +137,17 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
 
                               load();
                             } else if (!voiceLanguageOptions.contains(
-                                (prefs!.getString("voiceLanguage") ??
-                                    "en_US"))) {
+                                prefs!.getString("voiceLanguage") ?? "en_US")) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(AppLocalizations.of(context)!
+                                  content: Text(AppLocalizations.of(context)
                                       .settingsVoiceTtsNotSupportedDescription),
                                   showCloseIcon: true));
                             }
                           }),
                     toggle(
                         context,
-                        AppLocalizations.of(context)!.settingsVoiceEnable,
-                        (prefs!.getBool("voiceModeEnabled") ?? false), (value) {
+                        AppLocalizations.of(context).settingsVoiceEnable,
+                        prefs!.getBool("voiceModeEnabled") ?? false, (value) {
                       selectionHaptic();
                       prefs!.setBool("voiceModeEnabled", value);
                       setState(() {});
@@ -159,10 +155,10 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                     button(
                         ((prefs!.getString("voiceLanguage") ?? "") == "" ||
                                 languageOptions.isEmpty)
-                            ? AppLocalizations.of(context)!
+                            ? AppLocalizations.of(context)
                                 .settingsVoiceNoLanguage
                             : () {
-                                for (int i = 0;
+                                for (var i = 0;
                                     i < languageOptionIds.length;
                                     i++) {
                                   if (languageOptionIds.elementAt(i) ==
@@ -173,7 +169,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                 return "";
                               }(),
                         Icons.language_rounded, () {
-                      int usedIndex = -1;
+                      var usedIndex = -1;
                       Function? setModalState;
 
                       selectionHaptic();
@@ -185,12 +181,12 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                       builder: (context, setLocalState) {
                                     setModalState = setLocalState;
 
-                                    void loadSelected() async {
+                                    Future<void> loadSelected() async {
                                       await load();
                                       if ((prefs!.getString("voiceLanguage") ??
                                               "") !=
                                           "") {
-                                        for (int i = 0;
+                                        for (var i = 0;
                                             i < languageOptionIds.length;
                                             i++) {
                                           if (languageOptionIds.elementAt(i) ==
@@ -318,36 +314,34 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                                                 ])));
                                   }));
                     },
-                        disabled: (!voiceSupported ||
-                            !(prefs!.getBool("voiceModeEnabled") ?? false))),
+                        disabled: !voiceSupported ||
+                            !(prefs!.getBool("voiceModeEnabled") ?? false)),
                     titleDivider(),
                     toggle(
                         context,
-                        AppLocalizations.of(context)!
-                            .settingsVoiceLimitLanguage,
-                        (prefs!.getBool("voiceLimitLanguage") ?? true),
-                        (value) {
+                        AppLocalizations.of(context).settingsVoiceLimitLanguage,
+                        prefs!.getBool("voiceLimitLanguage") ?? true, (value) {
                       selectionHaptic();
                       prefs!.setBool("voiceLimitLanguage", value);
                       setState(() {});
                     },
-                        disabled: (!voiceSupported ||
-                            !(prefs!.getBool("voiceModeEnabled") ?? false))),
+                        disabled: !voiceSupported ||
+                            !(prefs!.getBool("voiceModeEnabled") ?? false)),
                     toggle(
                         context,
-                        AppLocalizations.of(context)!.settingsVoicePunctuation,
-                        (prefs!.getBool("aiPunctuation") ?? true), (value) {
+                        AppLocalizations.of(context).settingsVoicePunctuation,
+                        prefs!.getBool("aiPunctuation") ?? true, (value) {
                       selectionHaptic();
                       prefs!.setBool("aiPunctuation", value);
                       setState(() {});
                     },
-                        disabled: (!voiceSupported ||
-                            !(prefs!.getBool("voiceModeEnabled") ?? false)))
+                        disabled: !voiceSupported ||
+                            !(prefs!.getBool("voiceModeEnabled") ?? false))
                   ]),
                 ),
                 const SizedBox(height: 8),
                 button(
-                    AppLocalizations.of(context)!
+                    AppLocalizations.of(context)
                         .settingsExperimentalBetaFeature,
                     Icons.warning_rounded,
                     null,
@@ -356,7 +350,7 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
                     onLongTap: () {
                   selectionHaptic();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(AppLocalizations.of(context)!
+                      content: Text(AppLocalizations.of(context)
                           .settingsExperimentalBetaDescription),
                       showCloseIcon: true));
                 })

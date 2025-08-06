@@ -18,7 +18,6 @@ dependencies:
   flutter_chat_ui: ^1.6.13
   scroll_to_index: ^3.0.1
   uuid: ^4.4.0
-  animated_text_kit: ^4.2.2
   image_picker: ^1.1.1
   visibility_detector: ^0.4.0+2
   http: ^1.2.1
@@ -44,10 +43,11 @@ dependencies:
   permission_handler: ^11.3.1
   datetime_loop: ^1.2.0
   dynamic_color: ^1.7.0
-  volume_controller: ^3.3.1
   universal_html: ^2.2.4
   pwa_install: ^0.0.5
 
+  flutter_chat_types: any
+  markdown: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

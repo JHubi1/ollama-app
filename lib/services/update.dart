@@ -2,20 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ollama_app/worker/clients.dart';
-import 'package:ollama_app/worker/desktop.dart';
-
-import 'haptic.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
-import '../main.dart';
-
 import 'package:flutter_install_referrer/flutter_install_referrer.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
+
+import '../l10n/gen/app_localizations.dart';
+import '../main.dart';
+import 'clients.dart';
+import 'desktop.dart';
+import 'haptic.dart';
 
 const repoUrl = "https://github.com/JHubi1/ollama-app";
 
@@ -28,7 +25,7 @@ String? currentVersion;
 String? updateChangeLog;
 Future<bool> updatesSupported(Function setState,
     [bool takeAction = false]) async {
-  bool returnValue = true;
+  var returnValue = true;
   var installerApps = [
     "org.fdroid.fdroid",
     "org.gdroid.gdroid",
@@ -122,22 +119,21 @@ Future<bool> checkUpdate(Function setState) async {
       updateLoading = false;
     });
   }
-  return (updateStatus == "ok" &&
+  return updateStatus == "ok" &&
       (Version.parse(latestVersion ?? "1.0.0") >
-          Version.parse(currentVersion ?? "2.0.0")));
+          Version.parse(currentVersion ?? "2.0.0"));
 }
 
-void updateDialog(BuildContext context, Function title) async {
+Future<void> updateDialog(BuildContext context, Function title) async {
   await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-            title:
-                Text(AppLocalizations.of(context)!.settingsUpdateDialogTitle),
+            title: Text(AppLocalizations.of(context).settingsUpdateDialogTitle),
             content: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text(AppLocalizations.of(context)!
-                  .settingsUpdateDialogDescription),
-              title(AppLocalizations.of(context)!.settingsUpdateChangeLog),
+              Text(
+                  AppLocalizations.of(context).settingsUpdateDialogDescription),
+              title(AppLocalizations.of(context).settingsUpdateChangeLog),
               Flexible(
                   child: SingleChildScrollView(
                       child: Container(
@@ -153,8 +149,8 @@ void updateDialog(BuildContext context, Function title) async {
                     selectionHaptic();
                     Navigator.of(context).pop();
                   },
-                  child: Text(AppLocalizations.of(context)!
-                      .settingsUpdateDialogCancel)),
+                  child: Text(
+                      AppLocalizations.of(context).settingsUpdateDialogCancel)),
               TextButton(
                   onPressed: () {
                     selectionHaptic();
@@ -164,7 +160,7 @@ void updateDialog(BuildContext context, Function title) async {
                         Uri.parse(updateUrl!));
                   },
                   child: Text(
-                      AppLocalizations.of(context)!.settingsUpdateDialogUpdate))
+                      AppLocalizations.of(context).settingsUpdateDialogUpdate))
             ]);
       });
 }

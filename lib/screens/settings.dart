@@ -1,28 +1,25 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
-import 'main.dart';
-import 'worker/haptic.dart';
-import 'worker/update.dart';
-import 'worker/desktop.dart';
-import 'worker/setter.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
-import 'settings/behavior.dart';
-import 'settings/interface.dart';
-import 'settings/voice.dart';
-import 'settings/export.dart';
-import 'settings/about.dart';
-
-import 'package:dartx/dartx.dart';
-import 'package:http/http.dart' as http;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dartx/dartx.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:transparent_image/transparent_image.dart';
 import 'package:version/version.dart';
+
+import '../l10n/gen/app_localizations.dart';
+import '../main.dart';
+import '../services/desktop.dart';
+import '../services/haptic.dart';
+import '../services/setter.dart';
+import '../services/update.dart';
+import 'settings/about.dart';
+import 'settings/behavior.dart';
+import 'settings/export.dart';
+import 'settings/interface.dart';
+import 'settings/voice.dart';
 
 Widget toggle(BuildContext context, String text, bool value,
     Function(bool value) onChanged,
@@ -191,9 +188,7 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                 }
               }
             : (onPressed == null && (onLongTap != null || onDoubleTap != null))
-                ? () {
-                    selectionHaptic();
-                  }
+                ? selectionHaptic
                 : onPressed,
         onLongPress: (description != null && context != null)
             ? (desktopLayoutNotRequired(context) && !alwaysMobileDescription) ||
@@ -321,13 +316,13 @@ class ScreenSettings extends StatefulWidget {
 
 class _ScreenSettingsState extends State<ScreenSettings> {
   final hostInputController = TextEditingController(
-      text: (useHost)
+      text: useHost
           ? fixedHost
           : (prefs?.getString("host") ?? "http://localhost:11434"));
   bool hostLoading = false;
   bool hostInvalidUrl = false;
   bool hostInvalidHost = false;
-  void checkHost() async {
+  Future<void> checkHost() async {
     setState(() {
       hostLoading = true;
       hostInvalidUrl = false;
@@ -347,7 +342,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     try {
       // don't use centralized client because of unexplainable inconsistency
       // between the ways of calling a request
-      final requestBase = http.Request("get", Uri.parse(tmpHost))
+      var requestBase = http.Request("get", Uri.parse(tmpHost))
         ..headers.addAll(
           (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
               .cast<String, String>(),
@@ -395,9 +390,9 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    if ((Uri.parse(hostInputController.text.trim().removeSuffix("/").trim())
+    if (Uri.parse(hostInputController.text.trim().removeSuffix("/").trim())
             .toString() !=
-        fixedHost)) {
+        fixedHost) {
       checkHost();
     }
   }
@@ -425,7 +420,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
             child: Scaffold(
                 appBar: AppBar(
                     title: Row(children: [
-                      Text(AppLocalizations.of(context)!.optionSettings),
+                      Text(AppLocalizations.of(context).optionSettings),
                       Expanded(
                           child: SizedBox(height: 200, child: MoveWindow()))
                     ]),
@@ -452,23 +447,23 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                 checkHost();
                               },
                               decoration: InputDecoration(
-                                  labelText: AppLocalizations.of(context)!
-                                      .settingsHost,
+                                  labelText:
+                                      AppLocalizations.of(context).settingsHost,
                                   hintText: "http://localhost:11434",
                                   prefixIcon: IconButton(
                                       enableFeedback: false,
-                                      tooltip: AppLocalizations.of(context)!
+                                      tooltip: AppLocalizations.of(context)
                                           .tooltipAddHostHeaders,
                                       onPressed: () async {
                                         selectionHaptic();
-                                        String tmp = await prompt(context,
+                                        var tmp = await prompt(context,
                                             placeholder:
-                                                "{\"Authorization\": \"Bearer ...\"}",
-                                            title: AppLocalizations.of(context)!
+                                                '{"Authorization": "Bearer ..."}',
+                                            title: AppLocalizations.of(context)
                                                 .settingsHostHeaderTitle,
-                                            value: (prefs!
+                                            value: prefs!
                                                     .getString("hostHeaders") ??
-                                                ""),
+                                                "",
                                             enableSuggestions: false,
                                             valueIfCanceled: "{}",
                                             validator: (content) async {
@@ -481,7 +476,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                           }
                                         },
                                             validatorError:
-                                                AppLocalizations.of(context)!
+                                                AppLocalizations.of(context)
                                                     .settingsHostHeaderInvalid,
                                             prefill: !((prefs!.getString(
                                                         "hostHeaders") ??
@@ -500,7 +495,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                           : IconButton(
                                               enableFeedback: false,
                                               tooltip:
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .tooltipSave,
                                               onPressed: () {
                                                 selectionHaptic();
@@ -517,7 +512,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     content: Text(AppLocalizations
-                                                            .of(context)!
+                                                            .of(context)
                                                         .settingsHostInvalidDetailed(
                                                             hostInvalidHost
                                                                 ? "host"
@@ -535,7 +530,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                       .error),
                                               const SizedBox(width: 8),
                                               Text(
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .settingsHostInvalid(
                                                           hostInvalidHost
                                                               ? "host"
@@ -548,9 +543,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                           ))
                                       : null,
                                   helper: InkWell(
-                                      onTap: () {
-                                        selectionHaptic();
-                                      },
+                                      onTap: selectionHaptic,
                                       splashFactory: NoSplash.splashFactory,
                                       highlightColor: Colors.transparent,
                                       hoverColor: Colors.transparent,
@@ -561,8 +554,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                     color: Colors.grey),
                                                 const SizedBox(width: 8),
                                                 Text(
-                                                    AppLocalizations.of(
-                                                            context)!
+                                                    AppLocalizations.of(context)
                                                         .settingsHostChecking,
                                                     style: const TextStyle(
                                                         color: Colors.grey,
@@ -580,8 +572,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                                 .primary)),
                                                 const SizedBox(width: 8),
                                                 Text(
-                                                    AppLocalizations.of(
-                                                            context)!
+                                                    AppLocalizations.of(context)
                                                         .settingsHostValid,
                                                     style: TextStyle(
                                                         color: Colors.green
@@ -598,7 +589,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                         var column2 =
                             Column(mainAxisSize: MainAxisSize.min, children: [
                           button(
-                              AppLocalizations.of(context)!
+                              AppLocalizations.of(context)
                                   .settingsTitleBehavior,
                               Icons.psychology_rounded, () {
                             selectionHaptic();
@@ -610,9 +601,9 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           },
                               context: context,
                               description:
-                                  "\n${AppLocalizations.of(context)!.settingsDescriptionBehavior}"),
+                                  "\n${AppLocalizations.of(context).settingsDescriptionBehavior}"),
                           button(
-                              AppLocalizations.of(context)!
+                              AppLocalizations.of(context)
                                   .settingsTitleInterface,
                               Icons.web_asset_rounded, () {
                             selectionHaptic();
@@ -624,10 +615,10 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           },
                               context: context,
                               description:
-                                  "\n${AppLocalizations.of(context)!.settingsDescriptionInterface}"),
+                                  "\n${AppLocalizations.of(context).settingsDescriptionInterface}"),
                           (!desktopFeature(web: true))
                               ? button(
-                                  AppLocalizations.of(context)!
+                                  AppLocalizations.of(context)
                                       .settingsTitleVoice,
                                   Icons.headphones_rounded, () {
                                   selectionHaptic();
@@ -639,12 +630,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                 },
                                   context: context,
                                   description:
-                                      "\n${AppLocalizations.of(context)!.settingsDescriptionVoice}",
-                                  badge: AppLocalizations.of(context)!
+                                      "\n${AppLocalizations.of(context).settingsDescriptionVoice}",
+                                  badge: AppLocalizations.of(context)
                                       .settingsExperimentalBeta)
                               : const SizedBox.shrink(),
                           button(
-                              AppLocalizations.of(context)!.settingsTitleExport,
+                              AppLocalizations.of(context).settingsTitleExport,
                               Icons.share_rounded, () {
                             selectionHaptic();
                             Navigator.push(
@@ -655,11 +646,10 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           },
                               context: context,
                               description:
-                                  "\n${AppLocalizations.of(context)!.settingsDescriptionExport}"),
+                                  "\n${AppLocalizations.of(context).settingsDescriptionExport}"),
                           Builder(builder: (context) {
                             return button(
-                                AppLocalizations.of(context)!
-                                    .settingsTitleAbout,
+                                AppLocalizations.of(context).settingsTitleAbout,
                                 Icons.help_rounded, () {
                               selectionHaptic();
                               Navigator.push(
@@ -670,7 +660,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                             },
                                 context: context,
                                 description:
-                                    "\n${AppLocalizations.of(context)!.settingsDescriptionAbout}",
+                                    "\n${AppLocalizations.of(context).settingsDescriptionAbout}",
                                 iconBadge: (updateStatus == "ok" &&
                                         updateDetectedOnStart &&
                                         (Version.parse(
@@ -739,7 +729,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                   offset: const Offset(0, 8),
                                                   child: button(
                                                       AppLocalizations.of(
-                                                              context)!
+                                                              context)
                                                           .settingsSavedAutomatically,
                                                       Icons.info_rounded,
                                                       null,
@@ -771,7 +761,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                           desktopLayoutNotRequired(context)
                               ? const SizedBox.shrink()
                               : button(
-                                  AppLocalizations.of(context)!
+                                  AppLocalizations.of(context)
                                       .settingsSavedAutomatically,
                                   Icons.info_rounded,
                                   null,

@@ -1,18 +1,16 @@
-import 'package:flutter/material.dart';
-
-import '../main.dart';
-import '../screen_settings.dart';
-import '../worker/haptic.dart';
-import '../worker/update.dart';
-import '../worker/desktop.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:simple_icons/simple_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
+
+import '../../l10n/gen/app_localizations.dart';
+import '../../main.dart';
+import '../../services/desktop.dart';
+import '../../services/haptic.dart';
+import '../../services/update.dart';
+import '../settings.dart';
 
 class ScreenSettingsAbout extends StatefulWidget {
   const ScreenSettingsAbout({super.key});
@@ -29,7 +27,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
     updatesSupported(setState, true);
     setState(() {});
 
-    void setCurrentVersion(Function setState) async {
+    Future<void> setCurrentVersion(Function setState) async {
       currentVersion = (await PackageInfo.fromPlatform()).version;
       setState(() {});
     }
@@ -46,7 +44,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
       child: Scaffold(
           appBar: AppBar(
               title: Row(children: [
-                Text(AppLocalizations.of(context)!.settingsTitleAbout),
+                Text(AppLocalizations.of(context).settingsTitleAbout),
                 Expanded(child: SizedBox(height: 200, child: MoveWindow()))
               ]),
               actions: desktopControlsActions(context)),
@@ -59,7 +57,7 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                     child: ListView(children: [
                       // const SizedBox(height: 8),
                       button(
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .settingsVersion(currentVersion ?? ""),
                           Icons.verified_rounded,
                           null),
@@ -67,26 +65,26 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                           ? const SizedBox.shrink()
                           : button(
                               (!updateChecked
-                                  ? AppLocalizations.of(context)!
+                                  ? AppLocalizations.of(context)
                                       .settingsUpdateCheck
                                   : updateLoading
-                                      ? AppLocalizations.of(context)!
+                                      ? AppLocalizations.of(context)
                                           .settingsUpdateChecking
                                       : (updateStatus == "rateLimit")
-                                          ? AppLocalizations.of(context)!
+                                          ? AppLocalizations.of(context)
                                               .settingsUpdateRateLimit
                                           : (updateStatus != "ok")
-                                              ? AppLocalizations.of(context)!
+                                              ? AppLocalizations.of(context)
                                                   .settingsUpdateIssue
                                               : (Version.parse(latestVersion ??
                                                           "1.0.0") >
                                                       Version.parse(
                                                           currentVersion ??
                                                               "2.0.0"))
-                                                  ? AppLocalizations.of(context)!
+                                                  ? AppLocalizations.of(context)
                                                       .settingsUpdateAvailable(
                                                           latestVersion!)
-                                                  : AppLocalizations.of(context)!
+                                                  : AppLocalizations.of(context)
                                                       .settingsUpdateLatest),
                               ((updateStatus != "ok")
                                   ? Icons.warning_rounded
@@ -110,41 +108,42 @@ class _ScreenSettingsAboutState extends State<ScreenSettingsAbout> {
                               iconBadge: (updateStatus == "ok" &&
                                       updateDetectedOnStart &&
                                       (Version.parse(latestVersion ?? "1.0.0") >
-                                          Version.parse(currentVersion ?? "2.0.0")))
+                                          Version.parse(
+                                              currentVersion ?? "2.0.0")))
                                   ? ""
                                   : null),
                       (updateStatus == "notAvailable")
                           ? const SizedBox.shrink()
                           : toggle(
                               context,
-                              AppLocalizations.of(context)!
+                              AppLocalizations.of(context)
                                   .settingsCheckForUpdates,
-                              (prefs!.getBool("checkUpdateOnSettingsOpen") ??
-                                  true), (value) {
+                              prefs!.getBool("checkUpdateOnSettingsOpen") ??
+                                  true, (value) {
                               selectionHaptic();
                               prefs!
                                   .setBool("checkUpdateOnSettingsOpen", value);
                               setState(() {});
                             }),
                       titleDivider(context: context),
-                      button(AppLocalizations.of(context)!.settingsGithub,
+                      button(AppLocalizations.of(context).settingsGithub,
                           SimpleIcons.github, () {
                         selectionHaptic();
                         launchUrl(
                             mode: LaunchMode.inAppBrowserView,
                             Uri.parse(repoUrl));
                       }),
-                      button(AppLocalizations.of(context)!.settingsReportIssue,
+                      button(AppLocalizations.of(context).settingsReportIssue,
                           Icons.report_rounded, () {
                         selectionHaptic();
                         launchUrl(
                             mode: LaunchMode.inAppBrowserView,
                             Uri.parse("$repoUrl/issues"));
                       }),
-                      button(AppLocalizations.of(context)!.settingsLicenses,
+                      button(AppLocalizations.of(context).settingsLicenses,
                           Icons.gavel_rounded, () {
                         selectionHaptic();
-                        String legal = "Copyright 2024 JHubi1";
+                        var legal = "Copyright 2024 JHubi1";
                         Widget icon = const Padding(
                           padding: EdgeInsets.all(16),
                           child: ImageIcon(AssetImage("assets/logo512.png"),

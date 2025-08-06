@@ -1,19 +1,16 @@
-import 'package:flutter/material.dart';
-
-import '../main.dart';
-import '../worker/haptic.dart';
-import '../worker/desktop.dart';
-import '../worker/theme.dart';
-import '../screen_settings.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dartx/dartx.dart';
 import 'package:duration_picker/duration_picker.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../l10n/gen/app_localizations.dart';
+import '../../main.dart';
+import '../../services/desktop.dart';
+import '../../services/haptic.dart';
+import '../../services/theme.dart';
+import '../settings.dart';
 
 class ScreenSettingsInterface extends StatefulWidget {
   const ScreenSettingsInterface({super.key});
@@ -50,7 +47,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
       child: Scaffold(
           appBar: AppBar(
               title: Row(children: [
-                Text(AppLocalizations.of(context)!.settingsTitleInterface),
+                Text(AppLocalizations.of(context).settingsTitleInterface),
                 Expanded(child: SizedBox(height: 200, child: MoveWindow()))
               ]),
               actions: desktopControlsActions(context)),
@@ -64,25 +61,25 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       // const SizedBox(height: 8),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsShowModelTags,
-                          (prefs!.getBool("modelTags") ?? false), (value) {
+                          AppLocalizations.of(context).settingsShowModelTags,
+                          prefs!.getBool("modelTags") ?? false, (value) {
                         selectionHaptic();
                         prefs!.setBool("modelTags", value);
                         setState(() {});
                       }),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsPreloadModels,
-                          (prefs!.getBool("preloadModel") ?? true), (value) {
+                          AppLocalizations.of(context).settingsPreloadModels,
+                          prefs!.getBool("preloadModel") ?? true, (value) {
                         selectionHaptic();
                         prefs!.setBool("preloadModel", value);
                         setState(() {});
                       }),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .settingsResetOnModelChange,
-                          (prefs!.getBool("resetOnModelSelect") ?? true),
+                          prefs!.getBool("resetOnModelSelect") ?? true,
                           (value) {
                         selectionHaptic();
                         prefs!.setBool("resetOnModelSelect", value);
@@ -95,12 +92,12 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           segments: [
                             ButtonSegment(
                                 value: "stream",
-                                label: Text(AppLocalizations.of(context)!
+                                label: Text(AppLocalizations.of(context)
                                     .settingsRequestTypeStream),
                                 icon: const Icon(Icons.stream_rounded)),
                             ButtonSegment(
                                 value: "request",
-                                label: Text(AppLocalizations.of(context)!
+                                label: Text(AppLocalizations.of(context)
                                     .settingsRequestTypeRequest),
                                 icon: const Icon(Icons.send_rounded))
                           ],
@@ -116,24 +113,24 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       const SizedBox(height: 16),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsGenerateTitles,
-                          (prefs!.getBool("generateTitles") ?? true), (value) {
+                          AppLocalizations.of(context).settingsGenerateTitles,
+                          prefs!.getBool("generateTitles") ?? true, (value) {
                         selectionHaptic();
                         prefs!.setBool("generateTitles", value);
                         setState(() {});
                       }),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsEnableEditing,
-                          (prefs!.getBool("enableEditing") ?? true), (value) {
+                          AppLocalizations.of(context).settingsEnableEditing,
+                          prefs!.getBool("enableEditing") ?? true, (value) {
                         selectionHaptic();
                         prefs!.setBool("enableEditing", value);
                         setState(() {});
                       }),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsAskBeforeDelete,
-                          (prefs!.getBool("askBeforeDeletion") ?? false),
+                          AppLocalizations.of(context).settingsAskBeforeDelete,
+                          prefs!.getBool("askBeforeDeletion") ?? false,
                           (value) {
                         selectionHaptic();
                         prefs!.setBool("askBeforeDeletion", value);
@@ -141,8 +138,8 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       }),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsShowTips,
-                          (prefs!.getBool("tips") ?? true), (value) {
+                          AppLocalizations.of(context).settingsShowTips,
+                          prefs!.getBool("tips") ?? true, (value) {
                         selectionHaptic();
                         prefs!.setBool("tips", value);
                         setState(() {});
@@ -150,7 +147,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       titleDivider(context: context),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .settingsKeepModelLoadedAlways,
                           int.parse(prefs!.getString("keepAlive") ?? "300") ==
                               -1, (value) {
@@ -165,7 +162,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       }),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .settingsKeepModelLoadedNever,
                           int.parse(prefs!.getString("keepAlive") ?? "300") ==
                               0, (value) {
@@ -181,17 +178,17 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       button(
                           (int.parse(prefs!.getString("keepAlive") ?? "300") >
                                   0)
-                              ? AppLocalizations.of(context)!
+                              ? AppLocalizations.of(context)
                                   .settingsKeepModelLoadedSet((int.parse(
                                               prefs!.getString("keepAlive") ??
                                                   "300") ~/
                                           60)
                                       .toString())
-                              : AppLocalizations.of(context)!
+                              : AppLocalizations.of(context)
                                   .settingsKeepModelLoadedFor,
                           Icons.snooze_rounded, () async {
                         selectionHaptic();
-                        bool loaded = false;
+                        var loaded = false;
                         await showDialog(
                             context: context,
                             builder: (context) {
@@ -210,7 +207,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                       WidgetsBinding.instance
                                           .addPostFrameCallback((timeStamp) {
                                         setLocalState(() {});
-                                        void load() async {
+                                        Future<void> load() async {
                                           try {
                                             while (int.parse(prefs!
                                                     .getString("keepAlive")!) <
@@ -283,7 +280,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       }),
                       titleDivider(context: context),
                       button(
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .settingsTimeoutMultiplier,
                           Icons.info_rounded,
                           null,
@@ -291,9 +288,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           context: context,
                           alwaysMobileDescription: true,
                           description:
-                              "\n${AppLocalizations.of(context)!.settingsTimeoutMultiplierDescription}"),
+                              "\n${AppLocalizations.of(context).settingsTimeoutMultiplierDescription}"),
                       Slider(
-                          value: (prefs!.getDouble("timeoutMultiplier") ?? 1),
+                          value: prefs!.getDouble("timeoutMultiplier") ?? 1,
                           min: 0.5,
                           divisions: 19,
                           max: 10,
@@ -306,7 +303,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                             setState(() {});
                           }),
                       button(
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .settingsTimeoutMultiplierExample,
                           Icons.calculate_rounded,
                           null,
@@ -314,7 +311,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           // making it complicated because web is weird and doesn't like to round numbers
                           description: "\n${() {
                             var value =
-                                (prefs!.getDouble("timeoutMultiplier") ?? 1);
+                                prefs!.getDouble("timeoutMultiplier") ?? 1;
                             if (value == 10) {
                               return "${value.round()}.";
                             } else {
@@ -327,9 +324,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       titleDivider(context: context),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .settingsEnableHapticFeedback,
-                          (prefs!.getBool("enableHaptic") ?? true), (value) {
+                          prefs!.getBool("enableHaptic") ?? true, (value) {
                         prefs!.setBool("enableHaptic", value);
                         selectionHaptic();
                         setState(() {});
@@ -337,9 +334,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                       desktopFeature()
                           ? toggle(
                               context,
-                              AppLocalizations.of(context)!
+                              AppLocalizations.of(context)
                                   .settingsMaximizeOnStart,
-                              (prefs!.getBool("maximizeOnStart") ?? false),
+                              prefs!.getBool("maximizeOnStart") ?? false,
                               (value) {
                               selectionHaptic();
                               prefs!.setBool("maximizeOnStart", value);
@@ -351,18 +348,18 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           segments: [
                             ButtonSegment(
                                 value: "dark",
-                                label: Text(AppLocalizations.of(context)!
+                                label: Text(AppLocalizations.of(context)
                                     .settingsBrightnessDark),
                                 icon: const Icon(Icons.brightness_4_rounded)),
                             ButtonSegment(
                                 value: "system",
-                                label: Text(AppLocalizations.of(context)!
+                                label: Text(AppLocalizations.of(context)
                                     .settingsBrightnessSystem),
                                 icon:
                                     const Icon(Icons.brightness_auto_rounded)),
                             ButtonSegment(
                                 value: "light",
-                                label: Text(AppLocalizations.of(context)!
+                                label: Text(AppLocalizations.of(context)
                                     .settingsBrightnessLight),
                                 icon: const Icon(Icons.brightness_high_rounded))
                           ],
@@ -384,12 +381,12 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                               segments: [
                                   ButtonSegment(
                                       value: "device",
-                                      label: Text(AppLocalizations.of(context)!
+                                      label: Text(AppLocalizations.of(context)
                                           .settingsThemeDevice),
                                       icon: const Icon(Icons.devices_rounded)),
                                   ButtonSegment(
                                       value: "ollama",
-                                      label: Text(AppLocalizations.of(context)!
+                                      label: Text(AppLocalizations.of(context)
                                           .settingsThemeOllama),
                                       icon: const ImageIcon(
                                           AssetImage("assets/logo512.png")))
@@ -409,7 +406,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                           : const SizedBox.shrink(),
                       titleDivider(),
                       button(
-                          AppLocalizations.of(context)!.settingsTemporaryFixes,
+                          AppLocalizations.of(context).settingsTemporaryFixes,
                           Icons.fast_forward_rounded, () {
                         selectionHaptic();
                         showModalBottomSheet(
@@ -428,7 +425,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         button(
-                                            AppLocalizations.of(context)!
+                                            AppLocalizations.of(context)
                                                 .settingsTemporaryFixesDescription,
                                             Icons.info_rounded,
                                             null,
@@ -437,7 +434,7 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                                     .colorScheme
                                                     .primary)),
                                         button(
-                                            AppLocalizations.of(context)!
+                                            AppLocalizations.of(context)
                                                 .settingsTemporaryFixesInstructions,
                                             Icons.warning_rounded,
                                             null,
@@ -454,9 +451,9 @@ class _ScreenSettingsInterfaceState extends State<ScreenSettingsInterface> {
                                         toggle(
                                             context,
                                             "Fixing code block not scrollable",
-                                            (prefs!.getBool(
+                                            prefs!.getBool(
                                                     "fixCodeblockScroll") ??
-                                                false), (value) {
+                                                false, (value) {
                                           selectionHaptic();
                                           prefs!.setBool(
                                               "fixCodeblockScroll", value);

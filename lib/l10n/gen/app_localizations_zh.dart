@@ -102,7 +102,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get modelDialogAddPromptTitle => '添加新模型';
 
   @override
-  String get modelDialogAddPromptDescription => '可以是一个普通名称(如：\'llama3\')，也可以是名称加标签(如：\'llama3:70b\')。';
+  String get modelDialogAddPromptDescription =>
+      '可以是一个普通名称(如：\'llama3\')，也可以是名称加标签(如：\'llama3:70b\')。';
 
   @override
   String get modelDialogAddPromptAlreadyExists => '模型已存在';
@@ -114,7 +115,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get modelDialogAddAllowanceTitle => '允许代理服务器';
 
   @override
-  String get modelDialogAddAllowanceDescription => 'Ollama 应用程序必须检查输入的模型是否有效。 为此，我们通常向Ollama模型列表发送一个网络请求并检查状态。 由于您正在使用 Web 客户端，我们不能直接做到这一点。 因此，应用将把请求发送到另一个由 JHubi 1 部署的api 上进行检查。\n这是一个一次性请求，只有当您添加一个新模型时才会发送。\n您的IP地址将与请求一起发送，可能会被存储长达10分钟，以防止潜在的有害故障。\n如果您接受，您的选择将在将来被记住；如果不接受，将不会发送任何内容，也不会添加模型。';
+  String get modelDialogAddAllowanceDescription =>
+      'Ollama 应用程序必须检查输入的模型是否有效。 为此，我们通常向Ollama模型列表发送一个网络请求并检查状态。 由于您正在使用 Web 客户端，我们不能直接做到这一点。 因此，应用将把请求发送到另一个由 JHubi 1 部署的api 上进行检查。\n这是一个一次性请求，只有当您添加一个新模型时才会发送。\n您的IP地址将与请求一起发送，可能会被存储长达10分钟，以防止潜在的有害故障。\n如果您接受，您的选择将在将来被记住；如果不接受，将不会发送任何内容，也不会添加模型。';
 
   @override
   String get modelDialogAddAllowanceAllow => '允许';
@@ -156,7 +158,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteDialogTitle => '删除聊天';
 
   @override
-  String get deleteDialogDescription => '您确定要继续吗？这将删除此聊天的所有记录，且无法撤消。\n要禁用此对话框，请访问设置。';
+  String get deleteDialogDescription =>
+      '您确定要继续吗？这将删除此聊天的所有记录，且无法撤消。\n要禁用此对话框，请访问设置。';
 
   @override
   String get deleteDialogDelete => '删除';
@@ -207,7 +210,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsExperimentalAlpha => 'alpha';
 
   @override
-  String get settingsExperimentalAlphaDescription => '此功能处于 Alpha 测试阶段，可能无法按预期工作。\n无法排除会对设备、服务造成严重问题或永久性重大损害。\n使用需自行承担风险。应用作者不承担任何责任。';
+  String get settingsExperimentalAlphaDescription =>
+      '此功能处于 Alpha 测试阶段，可能无法按预期工作。\n无法排除会对设备、服务造成严重问题或永久性重大损害。\n使用需自行承担风险。应用作者不承担任何责任。';
 
   @override
   String get settingsExperimentalAlphaFeature => 'Alpha功能，按住以了解更多';
@@ -216,7 +220,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsExperimentalBeta => 'beta';
 
   @override
-  String get settingsExperimentalBetaDescription => '此功能处于 Beta 测试阶段，可能无法按预期工作。\n可能会出现较轻微的问题，损害预期不严重。\n使用需自行承担风险。';
+  String get settingsExperimentalBetaDescription =>
+      '此功能处于 Beta 测试阶段，可能无法按预期工作。\n可能会出现较轻微的问题，损害预期不严重。\n使用需自行承担风险。';
 
   @override
   String get settingsExperimentalBetaFeature => 'Beta测试版功能，按住以了解更多';
@@ -225,7 +230,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsExperimentalDeprecated => '已弃用';
 
   @override
-  String get settingsExperimentalDeprecatedDescription => '此功能已被弃用，并将在将来的版本中删除。\n它可能无法像预期的那样工作。请自行承担风险。';
+  String get settingsExperimentalDeprecatedDescription =>
+      '此功能已被弃用，并将在将来的版本中删除。\n它可能无法像预期的那样工作。请自行承担风险。';
 
   @override
   String get settingsExperimentalDeprecatedFeature => '已弃用的功能，按住以了解更多';
@@ -278,7 +284,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsUseSystem => '使用系统信息';
 
   @override
-  String get settingsUseSystemDescription => '使用模型内嵌代替系统级别的消息。对于具有模型描述文件的模型可能会有用。';
+  String get settingsUseSystemDescription =>
+      '使用模型内嵌代替系统级别的消息。对于具有模型描述文件的模型可能会有用。';
 
   @override
   String get settingsDisableMarkdown => '禁用Markdown';
@@ -331,7 +338,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsTimeoutMultiplier => '超时时间倍倍数';
 
   @override
-  String get settingsTimeoutMultiplierDescription => '选择应用程序中每个超时时间的倍数。适用于较慢的网络连接或远程主机。';
+  String get settingsTimeoutMultiplierDescription =>
+      '选择应用程序中每个超时时间的倍数。适用于较慢的网络连接或远程主机。';
 
   @override
   String get settingsTimeoutMultiplierExample => '例如：消息超时：';
@@ -364,7 +372,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsTemporaryFixesDescription => '启用界面问题的临时修复。\n长按选项以了解更多信息。';
 
   @override
-  String get settingsTemporaryFixesInstructions => '不要切换这些设置，除非你知道自己在做什么！描述的行为可能不会按照预期工作。\n它们不能被视为最终结果。可能会导致一些问题。';
+  String get settingsTemporaryFixesInstructions =>
+      '不要切换这些设置，除非你知道自己在做什么！描述的行为可能不会按照预期工作。\n它们不能被视为最终结果。可能会导致一些问题。';
 
   @override
   String get settingsTemporaryFixesNoFixes => '没有可用的修复';
@@ -376,7 +385,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsVoiceTtsNotSupported => '不支持文本转语音';
 
   @override
-  String get settingsVoiceTtsNotSupportedDescription => '所选的语言不支持文字转语音服务，您可能需要选择其他语言以启用该功能。\n语音识别和 AI 等其他服务仍可正常工作，但交互可能无法流畅运行。';
+  String get settingsVoiceTtsNotSupportedDescription =>
+      '所选的语言不支持文字转语音服务，您可能需要选择其他语言以启用该功能。\n语音识别和 AI 等其他服务仍可正常工作，但交互可能无法流畅运行。';
 
   @override
   String get settingsVoicePermissionNot => '未授予权限';
@@ -412,7 +422,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsImportChatsTitle => '导入';
 
   @override
-  String get settingsImportChatsDescription => '以下步骤将从所选文件导入聊天记录。这将覆盖所有当前的聊天记录。\n您要继续吗？';
+  String get settingsImportChatsDescription =>
+      '以下步骤将从所选文件导入聊天记录。这将覆盖所有当前的聊天记录。\n您要继续吗？';
 
   @override
   String get settingsImportChatsImport => '导入并删除';
@@ -424,7 +435,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsImportChatsSuccess => '聊天记录导入成功';
 
   @override
-  String get settingsExportInfo => '这个选项允许您导出和导入您的聊天记录。如果您想将聊天记录转移到另一台设备或备份您的聊天记录，这可能会很有用。';
+  String get settingsExportInfo =>
+      '这个选项允许您导出和导入您的聊天记录。如果您想将聊天记录转移到另一台设备或备份您的聊天记录，这可能会很有用。';
 
   @override
   String get settingsExportWarning => '多个聊天记录将不会合并！如果导入新的聊天记录，您将丢失当前的聊天记录';

@@ -1,14 +1,12 @@
-import 'package:flutter/material.dart';
-
-import '../main.dart';
-import '../worker/haptic.dart';
-import '../worker/desktop.dart';
-import '../screen_settings.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/material.dart';
+
+import '../../l10n/gen/app_localizations.dart';
+import '../../main.dart';
+import '../../services/desktop.dart';
+import '../../services/haptic.dart';
+import '../settings.dart';
 
 class ScreenSettingsBehavior extends StatefulWidget {
   const ScreenSettingsBehavior({super.key});
@@ -34,7 +32,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
       child: Scaffold(
           appBar: AppBar(
               title: Row(children: [
-                Text(AppLocalizations.of(context)!.settingsTitleBehavior),
+                Text(AppLocalizations.of(context).settingsTitleBehavior),
                 Expanded(child: SizedBox(height: 200, child: MoveWindow()))
               ]),
               actions: desktopControlsActions(context)),
@@ -51,14 +49,14 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                           keyboardType: TextInputType.multiline,
                           maxLines: desktopLayoutNotRequired(context) ? 5 : 2,
                           decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)!
+                              labelText: AppLocalizations.of(context)
                                   .settingsSystemMessage,
                               alignLabelWithHint: true,
                               hintText: "You are a helpful assistant",
                               suffixIcon: IconButton(
                                 enableFeedback: false,
                                 tooltip:
-                                    AppLocalizations.of(context)!.tooltipSave,
+                                    AppLocalizations.of(context).tooltipSave,
                                 onPressed: () {
                                   selectionHaptic();
                                   prefs?.setString(
@@ -73,8 +71,8 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                       const SizedBox(height: 16),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsUseSystem,
-                          (prefs!.getBool("useSystem") ?? true),
+                          AppLocalizations.of(context).settingsUseSystem,
+                          prefs!.getBool("useSystem") ?? true,
                           (value) {
                             selectionHaptic();
                             prefs!.setBool("useSystem", value);
@@ -86,14 +84,14 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                           onLongTap: () {
                             selectionHaptic();
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)!
+                                content: Text(AppLocalizations.of(context)
                                     .settingsUseSystemDescription),
                                 showCloseIcon: true));
                           }),
                       toggle(
                           context,
-                          AppLocalizations.of(context)!.settingsDisableMarkdown,
-                          (prefs!.getBool("noMarkdown") ?? false), (value) {
+                          AppLocalizations.of(context).settingsDisableMarkdown,
+                          prefs!.getBool("noMarkdown") ?? false, (value) {
                         selectionHaptic();
                         prefs!.setBool("noMarkdown", value);
                         setState(() {});
@@ -102,7 +100,7 @@ class _ScreenSettingsBehaviorState extends State<ScreenSettingsBehavior> {
                   ),
                   const SizedBox(height: 8),
                   button(
-                      AppLocalizations.of(context)!
+                      AppLocalizations.of(context)
                           .settingsBehaviorNotUpdatedForOlderChats,
                       Icons.info_rounded,
                       null,

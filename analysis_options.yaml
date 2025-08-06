@@ -1,1 +1,47 @@
 include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Imports and Declarations
+    - combinators_ordering
+    - directives_ordering
+    - omit_local_variable_types
+    - prefer_relative_imports
+    - sort_unnamed_constructors_first
+    - use_named_constants
+    - avoid_setters_without_getters
+
+    # Formatting
+    - avoid_escaping_inner_quotes
+    - avoid_multiple_declarations_per_line
+    - eol_at_end_of_file
+    - leading_newlines_in_multiline_strings
+    - unnecessary_breaks
+    - unnecessary_final
+    - unnecessary_lambdas
+    - unnecessary_parenthesis
+
+    # Async, Errors, Null Safety
+    - avoid_catching_errors
+    - avoid_null_checks_in_equality_operators
+    - avoid_void_async
+    - cancel_subscriptions
+    - cast_nullable_to_non_nullable
+    - unnecessary_await_in_return
+    - use_if_null_to_convert_nulls_to_bools
+    - use_to_and_as_if_applicable
+
+    # Usage Patterns
+    - cascade_invocations
+    - prefer_foreach
+    - prefer_null_aware_method_calls
+    - sized_box_shrink_expand
+    - use_colored_box
+    - use_decorated_box
+    - use_is_even_rather_than_modulo
+
+    # Documentation
+    - deprecated_consistency
+    - document_ignores
+    - prefer_asserts_with_message
+    - provide_deprecation_message

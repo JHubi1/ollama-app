@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ollama_app/screens/settings.dart';
 
 import 'functions.dart';
-import 'package:ollama_app/screen_settings.dart';
 
 void main() {
   testWidgets("Widget: button", (WidgetTester tester) async {
-    String text = random(10);
-    bool clicked = false;
+    var text = random(10);
+    var clicked = false;
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: button(text, Icons.add_rounded, () {
@@ -23,8 +23,8 @@ void main() {
     expect(clicked, true);
   });
   testWidgets("Widget: toggle", (WidgetTester tester) async {
-    String text = random(10);
-    bool toggled = false;
+    var text = random(10);
+    var toggled = false;
     await tester.pumpWidget(
         MaterialApp(home: Scaffold(body: Builder(builder: (context) {
       return toggle(context, text, toggled, (value) {

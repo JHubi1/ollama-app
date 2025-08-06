@@ -87,7 +87,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noModelSelected => 'Kein Modell ausgewählt';
 
   @override
-  String get noHostSelected => 'Kein Host ausgewählt, öffne zum Auswählen die Einstellungen';
+  String get noHostSelected =>
+      'Kein Host ausgewählt, öffne zum Auswählen die Einstellungen';
 
   @override
   String get noSelectedModel => '<selektor>';
@@ -102,7 +103,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get modelDialogAddPromptTitle => 'Neues Modell hinzufügen';
 
   @override
-  String get modelDialogAddPromptDescription => 'Das kann entweder ein normaler Name (z.B. \'llama3\') oder Name und Tag (z.B. \'llama3:70b\') sein.';
+  String get modelDialogAddPromptDescription =>
+      'Das kann entweder ein normaler Name (z.B. \'llama3\') oder Name und Tag (z.B. \'llama3:70b\') sein.';
 
   @override
   String get modelDialogAddPromptAlreadyExists => 'Modell existiert bereits';
@@ -114,7 +116,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get modelDialogAddAllowanceTitle => 'Proxy erlauben';
 
   @override
-  String get modelDialogAddAllowanceDescription => 'Ollama App muss überprüfen, ob das eingegebene Modell gültig ist. Dafür senden wir normalerweise eine Webanfrage an die Ollama-Modellliste und überprüfen den Statuscode, aber da gerade der Webclient verwendet wird, können wir das nicht direkt tun. Stattdessen sendet die App die Anfrage an eine andere API, gehostet von JHubi1, um dies für uns zu überprüfen.\nDies ist eine einmalige Anfrage und wird nur gesendet, wenn du ein neues Modell hinzufügst.\nIhre IP-Adresse wird mit der Anfrage gesendet und kann bis zu zehn Minuten gespeichert werden, um Spamming mit potenziell schädlichen Absichten zu verhindern.\nWenn du zustimmst, wird deine Auswahl für die Zukunft gespeichert; wenn nicht, wird nichts gesendet und das Modell wird nicht hinzugefügt.';
+  String get modelDialogAddAllowanceDescription =>
+      'Ollama App muss überprüfen, ob das eingegebene Modell gültig ist. Dafür senden wir normalerweise eine Webanfrage an die Ollama-Modellliste und überprüfen den Statuscode, aber da gerade der Webclient verwendet wird, können wir das nicht direkt tun. Stattdessen sendet die App die Anfrage an eine andere API, gehostet von JHubi1, um dies für uns zu überprüfen.\nDies ist eine einmalige Anfrage und wird nur gesendet, wenn du ein neues Modell hinzufügst.\nIhre IP-Adresse wird mit der Anfrage gesendet und kann bis zu zehn Minuten gespeichert werden, um Spamming mit potenziell schädlichen Absichten zu verhindern.\nWenn du zustimmst, wird deine Auswahl für die Zukunft gespeichert; wenn nicht, wird nichts gesendet und das Modell wird nicht hinzugefügt.';
 
   @override
   String get modelDialogAddAllowanceAllow => 'Erlauben';
@@ -156,7 +159,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deleteDialogTitle => 'Chat löschen';
 
   @override
-  String get deleteDialogDescription => 'Bist du sicher, dass du fortfahren möchtest? Dies wird alle Erinnerungen dieses Chats löschen und kann nicht rückgängig gemacht werden.\nUm diesen Dialog zu deaktivieren, besuche die Einstellungen.';
+  String get deleteDialogDescription =>
+      'Bist du sicher, dass du fortfahren möchtest? Dies wird alle Erinnerungen dieses Chats löschen und kann nicht rückgängig gemacht werden.\nUm diesen Dialog zu deaktivieren, besuche die Einstellungen.';
 
   @override
   String get deleteDialogDelete => 'Löschen';
@@ -174,61 +178,73 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsTitleBehavior => 'Verhalten';
 
   @override
-  String get settingsDescriptionBehavior => 'Ändere das Verhalten der KI nach deinen Wünschen.';
+  String get settingsDescriptionBehavior =>
+      'Ändere das Verhalten der KI nach deinen Wünschen.';
 
   @override
   String get settingsTitleInterface => 'Oberfläche';
 
   @override
-  String get settingsDescriptionInterface => 'Bearbeite das Aussehen und Verhalten von Ollama App.';
+  String get settingsDescriptionInterface =>
+      'Bearbeite das Aussehen und Verhalten von Ollama App.';
 
   @override
   String get settingsTitleVoice => 'Voice';
 
   @override
-  String get settingsDescriptionVoice => 'Voice Mode aktivieren und Spracheinstellungen anpassen.';
+  String get settingsDescriptionVoice =>
+      'Voice Mode aktivieren und Spracheinstellungen anpassen.';
 
   @override
   String get settingsTitleExport => 'Exportieren';
 
   @override
-  String get settingsDescriptionExport => 'Exportiere und importiere deinen Chat-Verlauf.';
+  String get settingsDescriptionExport =>
+      'Exportiere und importiere deinen Chat-Verlauf.';
 
   @override
   String get settingsTitleAbout => 'Über';
 
   @override
-  String get settingsDescriptionAbout => 'Suche nach Updates und erfahre mehr über Ollama App.';
+  String get settingsDescriptionAbout =>
+      'Suche nach Updates und erfahre mehr über Ollama App.';
 
   @override
-  String get settingsSavedAutomatically => 'Einstellungen werden automatisch gespeichert';
+  String get settingsSavedAutomatically =>
+      'Einstellungen werden automatisch gespeichert';
 
   @override
   String get settingsExperimentalAlpha => 'alpha';
 
   @override
-  String get settingsExperimentalAlphaDescription => 'Diese Funktion befindet sich im Alpha-Status und funktioniert möglicherweise nicht wie beabsichtigt oder erwartet.\nKritische Probleme und/oder dauerhafte kritische Schäden am Gerät und/oder den verwendeten Diensten können nicht ausgeschlossen werden.\nBenutzung auf eigene Gefahr. Keine Haftung seitens des App-Autors.';
+  String get settingsExperimentalAlphaDescription =>
+      'Diese Funktion befindet sich im Alpha-Status und funktioniert möglicherweise nicht wie beabsichtigt oder erwartet.\nKritische Probleme und/oder dauerhafte kritische Schäden am Gerät und/oder den verwendeten Diensten können nicht ausgeschlossen werden.\nBenutzung auf eigene Gefahr. Keine Haftung seitens des App-Autors.';
 
   @override
-  String get settingsExperimentalAlphaFeature => 'Alpha-Funktion, halte, um mehr zu erfahren';
+  String get settingsExperimentalAlphaFeature =>
+      'Alpha-Funktion, halte, um mehr zu erfahren';
 
   @override
   String get settingsExperimentalBeta => 'beta';
 
   @override
-  String get settingsExperimentalBetaDescription => 'Diese Funktion befindet sich im Beta-Test und funktioniert möglicherweise nicht wie beabsichtigt oder erwartet.\nWeniger schwerwiegende Probleme können auftreten oder auch nicht. Schäden sollten nicht kritisch sein.\nVerwendung auf eigene Gefahr.';
+  String get settingsExperimentalBetaDescription =>
+      'Diese Funktion befindet sich im Beta-Test und funktioniert möglicherweise nicht wie beabsichtigt oder erwartet.\nWeniger schwerwiegende Probleme können auftreten oder auch nicht. Schäden sollten nicht kritisch sein.\nVerwendung auf eigene Gefahr.';
 
   @override
-  String get settingsExperimentalBetaFeature => 'Beta-Funktion, halte, um mehr zu erfahren';
+  String get settingsExperimentalBetaFeature =>
+      'Beta-Funktion, halte, um mehr zu erfahren';
 
   @override
   String get settingsExperimentalDeprecated => 'veraltet';
 
   @override
-  String get settingsExperimentalDeprecatedDescription => 'Diese Funktion ist veraltet und wird in einer zukünftigen Version entfernt werden.\nEs funktioniert möglicherweise nicht wie beabsichtigt oder erwartet. Benutzung auf eigenes Gefahr.';
+  String get settingsExperimentalDeprecatedDescription =>
+      'Diese Funktion ist veraltet und wird in einer zukünftigen Version entfernt werden.\nEs funktioniert möglicherweise nicht wie beabsichtigt oder erwartet. Benutzung auf eigenes Gefahr.';
 
   @override
-  String get settingsExperimentalDeprecatedFeature => 'Veraltete Funktion, halte, um mehr zu erfahren';
+  String get settingsExperimentalDeprecatedFeature =>
+      'Veraltete Funktion, halte, um mehr zu erfahren';
 
   @override
   String get settingsHost => 'Host';
@@ -258,15 +274,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsHostHeaderTitle => 'Host-Header festlegen';
 
   @override
-  String get settingsHostHeaderInvalid => 'Der eingegebene Text ist kein gültiges Header-JSON-Objekt';
+  String get settingsHostHeaderInvalid =>
+      'Der eingegebene Text ist kein gültiges Header-JSON-Objekt';
 
   @override
   String settingsHostInvalidDetailed(String type) {
     String _temp0 = intl.Intl.selectLogic(
       type,
       {
-        'url': 'Die eingegebene URL ist ungültig. Es handelt sich nicht um ein standardisiertes URL-Format.',
-        'other': 'Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.',
+        'url':
+            'Die eingegebene URL ist ungültig. Es handelt sich nicht um ein standardisiertes URL-Format.',
+        'other':
+            'Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.',
       },
     );
     return '$_temp0';
@@ -279,13 +298,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsUseSystem => 'Systemnachricht verwenden';
 
   @override
-  String get settingsUseSystemDescription => 'Deaktiviere das Setzen der obigen Systemnachricht und benutze stattdessen die des Modells. Kann nützlich für Modelle mit Model-Files sein';
+  String get settingsUseSystemDescription =>
+      'Deaktiviere das Setzen der obigen Systemnachricht und benutze stattdessen die des Modells. Kann nützlich für Modelle mit Model-Files sein';
 
   @override
   String get settingsDisableMarkdown => 'Markdown deaktivieren';
 
   @override
-  String get settingsBehaviorNotUpdatedForOlderChats => 'Verhaltenseinstellungen werden nicht für ältere Chats aktualisiert';
+  String get settingsBehaviorNotUpdatedForOlderChats =>
+      'Verhaltenseinstellungen werden nicht für ältere Chats aktualisiert';
 
   @override
   String get settingsShowModelTags => 'Model-Tags anzeigen';
@@ -321,7 +342,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsKeepModelLoadedNever => 'Modell nicht dauerhaft laden';
 
   @override
-  String get settingsKeepModelLoadedFor => 'Bestimmte Modell-Ladedauer festlegen';
+  String get settingsKeepModelLoadedFor =>
+      'Bestimmte Modell-Ladedauer festlegen';
 
   @override
   String settingsKeepModelLoadedSet(String minutes) {
@@ -332,7 +354,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsTimeoutMultiplier => 'Timeout Multiplikator';
 
   @override
-  String get settingsTimeoutMultiplierDescription => 'Wähle den Multiplikator aus, der auf jeden Timeout-Wert in der App angewendet wird. Kann bei einer langsamen Internetverbindung oder einem langsamen Host nützlich sein.';
+  String get settingsTimeoutMultiplierDescription =>
+      'Wähle den Multiplikator aus, der auf jeden Timeout-Wert in der App angewendet wird. Kann bei einer langsamen Internetverbindung oder einem langsamen Host nützlich sein.';
 
   @override
   String get settingsTimeoutMultiplierExample => 'Z.b. Nachrichten-Timeout:';
@@ -362,10 +385,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsTemporaryFixes => 'Temporäre Interface Korrekturen';
 
   @override
-  String get settingsTemporaryFixesDescription => 'Temporäre Korrekturen für Interface-Probleme aktivieren.\nDrücke lange auf die einzelnen Optionen, um mehr zu erfahren.';
+  String get settingsTemporaryFixesDescription =>
+      'Temporäre Korrekturen für Interface-Probleme aktivieren.\nDrücke lange auf die einzelnen Optionen, um mehr zu erfahren.';
 
   @override
-  String get settingsTemporaryFixesInstructions => 'Aktiviere keine dieser Einstellungen, solltest du nicht wissen, was sie machen! Die gegebene Lösung funktioniert möglicherweise nicht wie erwartet.\nSie können nicht als final gesehen werden und sollten nicht als dieses bewertet werden. Probleme können auftreten.';
+  String get settingsTemporaryFixesInstructions =>
+      'Aktiviere keine dieser Einstellungen, solltest du nicht wissen, was sie machen! Die gegebene Lösung funktioniert möglicherweise nicht wie erwartet.\nSie können nicht als final gesehen werden und sollten nicht als dieses bewertet werden. Probleme können auftreten.';
 
   @override
   String get settingsTemporaryFixesNoFixes => 'Keine Korrekturen verfügbar';
@@ -377,7 +402,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsVoiceTtsNotSupported => 'Sprachausgabe nicht unterstützt';
 
   @override
-  String get settingsVoiceTtsNotSupportedDescription => 'Sprachausgabedienste sind nicht für die ausgewählte Sprache verfügbar. Wähle eine andere Sprache im Sprachwähler, um diese wieder zu aktivieren.\nAndere Dienste, wie Spracherkennung und KI-Denken werden noch immer wie gewohnt funktionieren, doch die Interaktion könnte möglicherweise nicht gleich fließend sein.';
+  String get settingsVoiceTtsNotSupportedDescription =>
+      'Sprachausgabedienste sind nicht für die ausgewählte Sprache verfügbar. Wähle eine andere Sprache im Sprachwähler, um diese wieder zu aktivieren.\nAndere Dienste, wie Spracherkennung und KI-Denken werden noch immer wie gewohnt funktionieren, doch die Interaktion könnte möglicherweise nicht gleich fließend sein.';
 
   @override
   String get settingsVoicePermissionNot => 'Berechtigungen nicht erteilt';
@@ -413,7 +439,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsImportChatsTitle => 'Importieren';
 
   @override
-  String get settingsImportChatsDescription => 'Der folgende Schritt importiert die Chats aus der ausgewählten Datei. Dadurch werden alle aktuell verfügbaren Chats überschrieben.\nMöchtest du fortfahren?';
+  String get settingsImportChatsDescription =>
+      'Der folgende Schritt importiert die Chats aus der ausgewählten Datei. Dadurch werden alle aktuell verfügbaren Chats überschrieben.\nMöchtest du fortfahren?';
 
   @override
   String get settingsImportChatsImport => 'Importieren und Löschen';
@@ -425,10 +452,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsImportChatsSuccess => 'Chats erfolgreich importiert';
 
   @override
-  String get settingsExportInfo => 'Diese Optionen ermöglichen es dir, deinen Chat-Verlauf zu exportieren und zu importieren. Dies kann nützlich sein, wenn du deinen Chat-Verlauf auf ein anderes Gerät übertragen oder deinen Chat-Verlauf sichern möchtest';
+  String get settingsExportInfo =>
+      'Diese Optionen ermöglichen es dir, deinen Chat-Verlauf zu exportieren und zu importieren. Dies kann nützlich sein, wenn du deinen Chat-Verlauf auf ein anderes Gerät übertragen oder deinen Chat-Verlauf sichern möchtest';
 
   @override
-  String get settingsExportWarning => 'Mehrere Chatverläufe werden nicht zusammengeführt! Du verlierst deinen aktuellen Chatverlauf, wenn du einen neuen importierst';
+  String get settingsExportWarning =>
+      'Mehrere Chatverläufe werden nicht zusammengeführt! Du verlierst deinen aktuellen Chatverlauf, wenn du einen neuen importierst';
 
   @override
   String get settingsUpdateCheck => 'Nach Updates suchen';
@@ -454,7 +483,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsUpdateDialogTitle => 'Neue Version verfügbar';
 
   @override
-  String get settingsUpdateDialogDescription => 'Eine neue Version von Ollama ist verfügbar. Möchtest du sie jetzt herunterladen und installieren?';
+  String get settingsUpdateDialogDescription =>
+      'Eine neue Version von Ollama ist verfügbar. Möchtest du sie jetzt herunterladen und installieren?';
 
   @override
   String get settingsUpdateChangeLog => 'Versionshinweise';

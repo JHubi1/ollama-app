@@ -1,20 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:ollama_app/worker/clients.dart';
-
-import 'haptic.dart';
-import 'setter.dart';
-import '../main.dart';
-
-import 'package:ollama_app/l10n/gen/app_localizations.dart';
-
-import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:dartx/dartx.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
+// not creating another dependency for this
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:ollama_dart/ollama_dart.dart' as llama;
+import 'package:uuid/uuid.dart';
+
+import '../l10n/gen/app_localizations.dart';
+import '../main.dart';
+import 'clients.dart';
+import 'haptic.dart';
+import 'setter.dart';
 // import 'package:scroll_to_index/scroll_to_index.dart';
 
 List<String> images = [];
@@ -28,10 +27,10 @@ Future<List<llama.Message>> getHistory([String? addToSystem]) async {
     system += "\n$addToSystem";
   }
 
-  List<llama.Message> history = (prefs!.getBool("useSystem") ?? true)
+  var history = (prefs!.getBool("useSystem") ?? true)
       ? [llama.Message(role: llama.MessageRole.system, content: system)]
-      : [];
-  List<llama.Message> history2 = [];
+      : <llama.Message>[];
+  var history2 = <llama.Message>[];
   images = [];
   for (var i = 0; i < messages.length; i++) {
     if (jsonDecode(jsonEncode(messages[i]))["text"] != null) {
@@ -44,7 +43,7 @@ Future<List<llama.Message>> getHistory([String? addToSystem]) async {
       images = [];
     } else {
       var uri = jsonDecode(jsonEncode(messages[i]))["uri"] as String;
-      String content = (uri.startsWith("data:image/png;base64,"))
+      var content = (uri.startsWith("data:image/png;base64,"))
           ? uri.removePrefix("data:image/png;base64,")
           : base64.encode(await File(uri).readAsBytes());
       uri = uri.removePrefix("data:image/png;base64,");
@@ -58,7 +57,7 @@ Future<List<llama.Message>> getHistory([String? addToSystem]) async {
 
 List getHistoryString([String? uuid]) {
   uuid ??= chatUuid!;
-  List messages = [];
+  var messages = [];
   for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
     if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] == uuid) {
       messages = jsonDecode(
@@ -83,7 +82,7 @@ List getHistoryString([String? uuid]) {
 }
 
 Future<String> getTitleAi(List history) async {
-  final generated = await ollamaClient
+  var generated = await ollamaClient
       .generateChatCompletion(
         request: llama.GenerateChatCompletionRequest(
             model: model!,
@@ -105,7 +104,7 @@ Future<String> getTitleAi(List history) async {
   title = title.replaceAll("\n", " ");
 
   var terms = [
-    "\"",
+    '"',
     "'",
     "*",
     "_",
@@ -140,7 +139,7 @@ Future<String> getTitleAi(List history) async {
 Future<void> setTitleAi(List history) async {
   try {
     var title = await getTitleAi(history);
-    var tmp = (prefs!.getStringList("chats") ?? []);
+    var tmp = prefs!.getStringList("chats") ?? [];
     for (var i = 0; i < tmp.length; i++) {
       if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
           chatUuid) {
@@ -164,7 +163,7 @@ Future<String> send(String value, BuildContext context, Function setState,
 
   if (host == null) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.noHostSelected),
+        content: Text(AppLocalizations.of(context).noHostSelected),
         showCloseIcon: true));
     if (onStream != null) {
       onStream("", true);
@@ -175,7 +174,7 @@ Future<String> send(String value, BuildContext context, Function setState,
   if (!chatAllowed || model == null) {
     if (model == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.noModelSelected),
+          content: Text(AppLocalizations.of(context).noModelSelected),
           showCloseIcon: true));
     }
     if (onStream != null) {
@@ -184,7 +183,7 @@ Future<String> send(String value, BuildContext context, Function setState,
     return "";
   }
 
-  bool newChat = false;
+  var newChat = false;
   if (chatUuid == null) {
     newChat = true;
     chatUuid = const Uuid().v4();
@@ -192,7 +191,7 @@ Future<String> send(String value, BuildContext context, Function setState,
         "chats",
         (prefs!.getStringList("chats") ?? []).append([
           jsonEncode({
-            "title": AppLocalizations.of(context)!.newChatTitle,
+            "title": AppLocalizations.of(context).newChatTitle,
             "uuid": chatUuid,
             "messages": []
           })
@@ -215,12 +214,12 @@ Future<String> send(String value, BuildContext context, Function setState,
   setState(() {});
   chatAllowed = false;
 
-  String text = "";
-  String newId = const Uuid().v4();
+  var text = "";
+  var newId = const Uuid().v4();
 
   try {
     if ((prefs!.getString("requestType") ?? "stream") == "stream") {
-      final stream = ollamaClient
+      var stream = ollamaClient
           .generateChatCompletionStream(
             request: llama.GenerateChatCompletionRequest(
                 model: model!,
@@ -231,8 +230,8 @@ Future<String> send(String value, BuildContext context, Function setState,
               seconds: (30.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
                   .round()));
 
-      await for (final res in stream) {
-        text += (res.message.content);
+      await for (var res in stream) {
+        text += res.message.content;
         for (var i = 0; i < messages.length; i++) {
           if (messages[i].id == newId) {
             messages.removeAt(i);
@@ -284,7 +283,7 @@ Future<String> send(String value, BuildContext context, Function setState,
       chatAllowed = true;
       messages.removeAt(0);
       if (messages.isEmpty) {
-        var tmp = (prefs!.getStringList("chats") ?? []);
+        var tmp = prefs!.getStringList("chats") ?? [];
         for (var i = 0; i < tmp.length; i++) {
           if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
               chatUuid) {
@@ -300,7 +299,7 @@ Future<String> send(String value, BuildContext context, Function setState,
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:
             // ignore: use_build_context_synchronously
-            Text(AppLocalizations.of(context)!.settingsHostInvalid("timeout")),
+            Text(AppLocalizations.of(context).settingsHostInvalid("timeout")),
         showCloseIcon: true));
     return "";
   }
@@ -316,7 +315,7 @@ Future<String> send(String value, BuildContext context, Function setState,
   saveChat(chatUuid!, setState);
 
   if (newChat && (prefs!.getBool("generateTitles") ?? true)) {
-    void setTitle() async {
+    Future<void> setTitle() async {
       await setTitleAi(getHistoryString());
       setState(() {});
     }

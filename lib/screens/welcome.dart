@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'main.dart';
-import 'worker/theme.dart';
-
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+import '../main.dart';
+import '../services/theme.dart';
 
 class ScreenWelcome extends StatefulWidget {
   const ScreenWelcome({super.key});
