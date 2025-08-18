@@ -11,9 +11,10 @@ body:
           required: true
         - label: I have confirmed this bug exists on the latest version of the app
           required: true
-  - type: dropdown
+  - id: platforms
+    type: dropdown
     attributes:
-      label: "Platform"
+      label: "Platforms"
       description: "The platforms on which the bug occurs or had occurred. Select all that apply."
       multiple: true
       options:
@@ -23,7 +24,8 @@ body:
         - Web
     validations:
       required: true
-  - type: input
+  - id: description
+    type: input
     attributes:
       label: "Description"
       description: "A short description of what the bug is."
@@ -51,7 +53,8 @@ body:
       placeholder: "Instead, I saw..."
     validations:
       required: true
-  - type: textarea
+  - id: context
+    type: textarea
     attributes:
       label: "Screenshots or additional context"
       description: "If applicable, add screenshots to help explain your problem."
