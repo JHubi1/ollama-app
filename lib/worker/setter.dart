@@ -42,7 +42,7 @@ void setModel(BuildContext context, Function setState) {
         models.add(list.models![i].model!.split(":")[0]);
         modelsReal.add(list.models![i].model!);
         modal.add((list.models![i].details!.families ?? []).contains("clip") ||
-            (details.capabilities ?? []).contains("vision"));
+            (details.capabilities ?? []).contains(llama.Capability.vision));
       }
 
       addIndex = models.length;
