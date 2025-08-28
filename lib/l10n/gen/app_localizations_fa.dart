@@ -75,9 +75,6 @@ class AppLocalizationsFa extends AppLocalizations {
   String get tooltipLetAIThink => 'Let AI think';
 
   @override
-  String get tooltipAddHostHeaders => 'Add host headers';
-
-  @override
   String get tooltipReset => 'Reset current chat';
 
   @override
@@ -168,6 +165,21 @@ class AppLocalizationsFa extends AppLocalizations {
   String get deleteDialogCancel => 'Cancel';
 
   @override
+  String get errorGuardTitle => 'ErrorGuard';
+
+  @override
+  String get errorGuardDetails => 'Details';
+
+  @override
+  String get errorGuardException => 'Exception';
+
+  @override
+  String get errorGuardStackTrace => 'Stack Trace';
+
+  @override
+  String get errorGuardReport => 'Report';
+
+  @override
   String get dialogEnterNewTitle => 'Enter new title';
 
   @override
@@ -255,18 +267,18 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String settingsHostInvalid(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url': 'Invalid URL',
-        'host': 'Invalid Host',
-        'timeout': 'Request Failed. Server issues',
-        'ratelimit': 'Too many requests',
-        'other': 'Request Failed',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url': 'Invalid URL',
+      'host': 'Invalid Host',
+      'timeout': 'Request Failed. Server issues',
+      'ratelimit': 'Too many requests',
+      'other': 'Request Failed',
+    });
     return 'Issue: $_temp0';
   }
+
+  @override
+  String get tooltipAddHostHeaders => 'Add host headers';
 
   @override
   String get settingsHostHeaderTitle => 'Set host header';
@@ -277,15 +289,12 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String settingsHostInvalidDetailed(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url':
-            'The URL you entered is invalid. It isn\'t an a standardized URL format.',
-        'other':
-            'The host you entered is invalid. It cannot be reached. Please check the host and try again.',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url':
+          'The URL you entered is invalid. It isn\'t an a standardized URL format.',
+      'other':
+          'The host you entered is invalid. It cannot be reached. Please check the host and try again.',
+    });
     return '$_temp0';
   }
 

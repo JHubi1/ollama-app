@@ -75,9 +75,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tooltipLetAIThink => '让AI思考';
 
   @override
-  String get tooltipAddHostHeaders => '设置主机请求头';
-
-  @override
   String get tooltipReset => '重置当前聊天';
 
   @override
@@ -168,6 +165,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteDialogCancel => '取消';
 
   @override
+  String get errorGuardTitle => 'ErrorGuard';
+
+  @override
+  String get errorGuardDetails => 'Details';
+
+  @override
+  String get errorGuardException => 'Exception';
+
+  @override
+  String get errorGuardStackTrace => 'Stack Trace';
+
+  @override
+  String get errorGuardReport => 'Report';
+
+  @override
   String get dialogEnterNewTitle => '输入新标题';
 
   @override
@@ -247,17 +259,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String settingsHostInvalid(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url': '无效的URL',
-        'host': '无效的主机地址',
-        'timeout': '请求失败。服务器问题',
-        'other': '请求失败',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url': '无效的URL',
+      'host': '无效的主机地址',
+      'timeout': '请求失败。服务器问题',
+      'other': '请求失败',
+    });
     return '问题：$_temp0';
   }
+
+  @override
+  String get tooltipAddHostHeaders => '设置主机请求头';
 
   @override
   String get settingsHostHeaderTitle => '设置主机请求头';
@@ -267,13 +279,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String settingsHostInvalidDetailed(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url': '您输入的 URL 无效。它不是一个标准的 URL 格式。',
-        'other': '您输入的主机地址无效。无法连接。请检查主机地址并再试一次',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url': '您输入的 URL 无效。它不是一个标准的 URL 格式。',
+      'other': '您输入的主机地址无效。无法连接。请检查主机地址并再试一次',
+    });
     return '$_temp0';
   }
 

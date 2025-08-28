@@ -12,8 +12,8 @@ import 'package:universal_html/html.dart' as html;
 
 import '../../l10n/gen/app_localizations.dart';
 import '../../main.dart';
-import '../../services/desktop.dart';
-import '../../services/haptic.dart';
+import '../../worker/desktop.dart';
+import '../../worker/haptic.dart';
 import '../settings.dart';
 
 class ScreenSettingsExport extends StatefulWidget {

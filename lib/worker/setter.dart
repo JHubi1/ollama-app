@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:http/http.dart' as http;
 import 'package:ollama_dart/ollama_dart.dart' as llama;
@@ -12,7 +11,7 @@ import 'package:uuid/uuid.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../main.dart';
-import 'clients.dart';
+import '../services/clients.dart';
 import 'desktop.dart';
 import 'haptic.dart';
 import 'sender.dart';
@@ -44,9 +43,7 @@ void setModel(BuildContext context, Function setState) {
       }
 
       addIndex = models.length;
-      // ignore: use_build_context_synchronously
       models.add(AppLocalizations.of(context).modelDialogAddModel);
-      // ignore: use_build_context_synchronously
       modelsReal.add(AppLocalizations.of(context).modelDialogAddModel);
       modal.add(false);
 
@@ -669,74 +666,6 @@ void loadChat(String uuid, Function setState) {
   }
   model = jsonDecode((prefs!.getStringList("chats") ?? [])[index])["model"];
   setState(() {});
-}
-
-Future<bool> deleteChatDialog(BuildContext context, Function setState,
-    {bool takeAction = true,
-    bool? additionalCondition,
-    String? uuid,
-    bool popSidebar = false}) async {
-  additionalCondition ??= true;
-  uuid ??= chatUuid;
-
-  var returnValue = false;
-  void delete(BuildContext context) {
-    returnValue = true;
-    if (takeAction) {
-      for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
-        if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
-            uuid) {
-          var tmp = prefs!.getStringList("chats")!..removeAt(i);
-          prefs!.setStringList("chats", tmp);
-          break;
-        }
-      }
-      if (chatUuid == uuid) {
-        messages = [];
-        chatUuid = null;
-        if (!desktopLayoutRequired(context) &&
-            Navigator.of(context).canPop() &&
-            popSidebar) {
-          Navigator.of(context).pop();
-        }
-      }
-    }
-  }
-
-  if ((prefs!.getBool("askBeforeDeletion") ?? false) && additionalCondition) {
-    await showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setLocalState) {
-            return AlertDialog(
-                title: Text(AppLocalizations.of(context).deleteDialogTitle),
-                content: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text(AppLocalizations.of(context).deleteDialogDescription),
-                ]),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        selectionHaptic();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                          AppLocalizations.of(context).deleteDialogCancel)),
-                  TextButton(
-                      onPressed: () {
-                        selectionHaptic();
-                        Navigator.of(context).pop();
-                        delete(context);
-                      },
-                      child:
-                          Text(AppLocalizations.of(context).deleteDialogDelete))
-                ]);
-          });
-        });
-  } else {
-    delete(context);
-  }
-  setState(() {});
-  return returnValue;
 }
 
 Future<String> prompt(BuildContext context,

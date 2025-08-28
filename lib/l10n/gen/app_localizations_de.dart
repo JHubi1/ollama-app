@@ -75,9 +75,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tooltipLetAIThink => 'Lass KI denken';
 
   @override
-  String get tooltipAddHostHeaders => 'Host-Header festlegen';
-
-  @override
   String get tooltipReset => 'Aktuellen Chat zurücksetzen';
 
   @override
@@ -169,6 +166,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deleteDialogCancel => 'Abbrechen';
 
   @override
+  String get errorGuardTitle => 'ErrorGuard';
+
+  @override
+  String get errorGuardDetails => 'Details';
+
+  @override
+  String get errorGuardException => 'Exception';
+
+  @override
+  String get errorGuardStackTrace => 'Stack Trace';
+
+  @override
+  String get errorGuardReport => 'Report';
+
+  @override
   String get dialogEnterNewTitle => 'Gib bitte einen neuen Titel ein';
 
   @override
@@ -257,18 +269,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String settingsHostInvalid(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url': 'Ungültige URL',
-        'host': 'Ungültiger Host',
-        'timeout': 'Request Fehlgeschlagen. Server Fehler',
-        'ratelimit': 'Zu viele Anfragen',
-        'other': 'Request Fehlgeschlagen',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url': 'Ungültige URL',
+      'host': 'Ungültiger Host',
+      'timeout': 'Request Fehlgeschlagen. Server Fehler',
+      'ratelimit': 'Zu viele Anfragen',
+      'other': 'Request Fehlgeschlagen',
+    });
     return 'Fehler: $_temp0';
   }
+
+  @override
+  String get tooltipAddHostHeaders => 'Host-Header festlegen';
 
   @override
   String get settingsHostHeaderTitle => 'Host-Header festlegen';
@@ -279,15 +291,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String settingsHostInvalidDetailed(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url':
-            'Die eingegebene URL ist ungültig. Es handelt sich nicht um ein standardisiertes URL-Format.',
-        'other':
-            'Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url':
+          'Die eingegebene URL ist ungültig. Es handelt sich nicht um ein standardisiertes URL-Format.',
+      'other':
+          'Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.',
+    });
     return '$_temp0';
   }
 

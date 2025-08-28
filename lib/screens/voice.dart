@@ -6,10 +6,10 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../l10n/gen/app_localizations.dart';
 import '../main.dart';
 import '../services/clients.dart';
-import '../services/haptic.dart';
-import '../services/sender.dart';
-import '../services/setter.dart';
-import '../services/theme.dart';
+import '../worker/haptic.dart';
+import '../worker/sender.dart';
+import '../worker/setter.dart';
+import '../worker/theme.dart';
 import 'settings/voice.dart';
 
 class ScreenVoice extends StatefulWidget {

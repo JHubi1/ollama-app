@@ -3,197 +3,192 @@
     "appTitle": "Ollama",
     "@appTitle": {
         "description": "Title of the application",
-        "context": "Visible in the side bar"
+        "context": "app:sidebar"
     },
     "optionNewChat": "New Chat",
     "@optionNewChat": {
         "description": "Text displayed for new chat option",
-        "context": "Visible in the side bar"
+        "context": "app:sidebar"
     },
     "optionSettings": "Settings",
     "@optionSettings": {
         "description": "Text displayed for settings option",
-        "context": "Visible in the side bar"
+        "context": "app:sidebar"
     },
     "optionInstallPwa": "Install Webapp",
     "@optionInstallPwa": {
         "description": "Text displayed for install PWA option",
-        "context": "Visible in the side bar"
+        "context": "app:sidebar"
     },
     "optionNoChatFound": "No chats found",
     "@optionNoChatFound": {
         "description": "Text displayed when no chats are found",
-        "context": "Visible in the side bar"
+        "context": "app:sidebar"
     },
     "tipPrefix": "Tip: ",
     "@tipPrefix": {
         "description": "Prefix for tips",
-        "context": "Visible in the sidebar"
+        "context": "app:sidebar"
     },
-    "tip0": "Edit messages by long taping on them",
+    "tip0": "Edit messages by long tapping on them",
     "@tip0": {
         "description": "First tip displayed in the sidebar",
-        "context": "Visible in the sidebar"
+        "context": "app:sidebar"
     },
     "tip1": "Delete messages by double tapping on them",
     "@tip1": {
         "description": "Second tip displayed in the sidebar",
-        "context": "Visible in the sidebar"
+        "context": "app:sidebar"
     },
     "tip2": "You can change the theme in settings",
     "@tip2": {
         "description": "Third tip displayed in the sidebar",
-        "context": "Visible in the sidebar"
+        "context": "app:sidebar"
     },
     "tip3": "Select a multimodal model to input images",
     "@tip3": {
         "description": "Fourth tip displayed in the sidebar",
-        "context": "Visible in the sidebar"
+        "context": "app:sidebar"
     },
     "tip4": "Chats are automatically saved",
     "@tip4": {
         "description": "Fifth tip displayed in the sidebar",
-        "context": "Visible in the sidebar"
+        "context": "app:sidebar"
     },
     "deleteChat": "Delete",
     "@deleteChat": {
         "description": "Text displayed for delete chat option",
-        "context": "Visible in the chat view, desktop only"
+        "context": "app:sidebar"
     },
     "renameChat": "Rename",
     "@renameChat": {
         "description": "Text displayed for rename chat option",
-        "context": "Visible in the chat view, desktop only"
+        "context": "app:sidebar"
     },
     "takeImage": "Take Image",
     "@takeImage": {
         "description": "Text displayed for take image button",
-        "context": "Visible in attachment menu"
+        "context": "app:chat:attachment"
     },
     "uploadImage": "Upload Image",
     "@uploadImage": {
         "description": "Text displayed for image upload button",
-        "context": "Visible in attachment menu"
+        "context": "app:chat:attachment"
     },
     "notAValidImage": "Not a valid image",
     "@notAValidImage": {
         "description": "Text displayed when an image is not valid",
-        "context": "Visible in the chat view"
+        "context": "app:chat:attachment"
     },
     "imageOnlyConversation": "Image Only Conversation",
     "@imageOnlyConversation": {
         "description": "Title, if 'Generate Title' is executed on a conversation with no text messages",
-        "context": "Visible in the chat view"
+        "context": "app:chat:title"
     },
     "messageInputPlaceholder": "Message",
     "@messageInputPlaceholder": {
         "description": "Placeholder text for message input",
-        "context": "Visible in the chat view"
+        "context": "app:chat:input"
     },
     "tooltipAttachment": "Add attachment",
     "@tooltipAttachment": {
         "description": "Tooltip for attachment button",
-        "context": "Visible in the chat view"
+        "context": "app:chat:tooltips"
     },
     "tooltipSend": "Send",
     "@tooltipSend": {
         "description": "Tooltip for send button",
-        "context": "Visible in the chat view"
+        "context": "app:chat:tooltips"
     },
     "tooltipSave": "Save",
     "@tooltipSave": {
         "description": "Tooltip for save button",
-        "context": "Visible in the chat view"
+        "context": "app:chat:tooltips"
     },
     "tooltipLetAIThink": "Let AI think",
     "@tooltipLetAIThink": {
         "description": "Tooltip for let AI think button",
-        "context": "Visible in the chat view"
-    },
-    "tooltipAddHostHeaders": "Add host headers",
-    "@tooltipAddHostHeaders": {
-        "description": "Tooltip for add host headers button",
-        "context": "Visible in settings view"
+        "context": "app:chat:tooltips"
     },
     "tooltipReset": "Reset current chat",
     "@tooltipReset": {
         "description": "Tooltip for reset button",
-        "context": "Visible in the chat view"
+        "context": "app:chat:tooltips"
     },
     "tooltipOptions": "Show options",
     "@tooltipOptions": {
         "description": "Tooltip for options button",
-        "context": "Visible in the chat view"
+        "context": "app:chat:tooltips"
     },
     "noModelSelected": "No model selected",
     "@noModelSelected": {
         "description": "Text displayed when no model is selected",
-        "context": "Visible in the chat view"
+        "context": "app:chat"
     },
-    "noHostSelected": "No host selected, open setting to set one",
+    "noHostSelected": "No host selected, open settings to set one",
     "@noHostSelected": {
         "description": "Text displayed when no host is selected",
-        "context": "Visible in the chat view, opens the settings dialog when clicked"
+        "context": "app:chat"
     },
     "noSelectedModel": "<selector>",
     "@noSelectedModel": {
         "description": "Text displayed when no model is selected",
-        "context": "Visible in the chat view, opens the model dialog when clicked"
+        "context": "app:chat"
     },
     "newChatTitle": "Unnamed Chat",
     "@newChatTitle": {
         "description": "Title of a new chat",
-        "context": "Visible in the new chat dialog"
+        "context": "app:chat:title"
     },
     "modelDialogAddModel": "Add",
     "@modelDialogAddModel": {
         "description": "Text displayed for add model button",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddPromptTitle": "Add new model",
     "@modelDialogAddPromptTitle": {
         "description": "Title of the add model dialog",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
-    "modelDialogAddPromptDescription": "This can have either be a normal name (e.g. 'llama3') or name and tag (e.g. 'llama3:70b').",
+    "modelDialogAddPromptDescription": "This can either be a normal name (e.g. 'llama3') or a name and tag (e.g. 'llama3:70b').",
     "@modelDialogAddPromptDescription": {
         "description": "Description of the add model dialog",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddPromptAlreadyExists": "Model already exists",
     "@modelDialogAddPromptAlreadyExists": {
         "description": "Text displayed when the model already exists",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddPromptInvalid": "Invalid model name",
     "@modelDialogAddPromptInvalid": {
         "description": "Text displayed when the model name is invalid",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddAllowanceTitle": "Allow Proxy",
     "@modelDialogAddAllowanceTitle": {
         "description": "Title of the allow proxy dialog",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
-    "modelDialogAddAllowanceDescription": "Ollama App must check if the entered model is valid. For that, we normally send a web request to the Ollama model list and check the status code, but because you're using the web client, we can't do that directly. Instead, the app will send the request to a different api, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potential harmful intentions.\nIf you accept, your selection will be remembered in the future; if not, nothing will be sent and the model won't be added.",
+    "modelDialogAddAllowanceDescription": "Ollama App must check if the entered model is valid. To do that, we normally send a web request to the Ollama model list and check the status code, but because you're using the web client, we can't do that directly. Instead, the app will send the request to a different API, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potentially harmful intentions.\nIf you accept, your selection will be remembered for the future; if not, nothing will be sent and the model won't be added.",
     "@modelDialogAddAllowanceDescription": {
         "description": "Description of the allow proxy dialog",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddAllowanceAllow": "Allow",
     "@modelDialogAddAllowanceAllow": {
         "description": "Text displayed for allow button, should be capitalized",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddAllowanceDeny": "Deny",
     "@modelDialogAddAllowanceDeny": {
         "description": "Text displayed for deny button, should be capitalized",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddAssuranceTitle": "Add {model}?",
     "@modelDialogAddAssuranceTitle": {
         "description": "Title of the add model assurance dialog",
-        "context": "Visible in the model dialog",
+        "context": "app:modelDialog",
         "placeholders": {
             "model": {
                 "type": "String",
@@ -201,10 +196,10 @@
             }
         }
     },
-    "modelDialogAddAssuranceDescription": "Pressing 'Add' will download the model '{model}' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it'll resume if you enter the name into the model dialog again.",
+    "modelDialogAddAssuranceDescription": "Pressing 'Add' will download the model '{model}' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it will resume if you enter the name into the model dialog again.",
     "@modelDialogAddAssuranceDescription": {
         "description": "Description of the add model assurance dialog",
-        "context": "Visible in the model dialog",
+        "context": "app:modelDialog",
         "placeholders": {
             "model": {
                 "type": "String",
@@ -215,22 +210,22 @@
     "modelDialogAddAssuranceAdd": "Add",
     "@modelDialogAddAssuranceAdd": {
         "description": "Text displayed for add button, should be capitalized",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddAssuranceCancel": "Cancel",
     "@modelDialogAddAssuranceCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog"
     },
     "modelDialogAddDownloadPercentLoading": "loading progress",
     "@modelDialogAddDownloadPercentLoading": {
         "description": "Text displayed while loading the download progress",
-        "context": "Visible in the model dialog; 'loading progress in the moment'"
+        "context": "app:modelDialog:download"
     },
     "modelDialogAddDownloadPercent": "download at {percent}%",
     "@modelDialogAddDownloadPercent": {
         "description": "Text displayed while downloading a model",
-        "context": "Visible in the model dialog; download is at x percent",
+        "context": "app:modelDialog:download",
         "placeholders": {
             "percent": {
                 "type": "String",
@@ -241,162 +236,187 @@
     "modelDialogAddDownloadFailed": "Disconnected, try again",
     "@modelDialogAddDownloadFailed": {
         "description": "Text displayed when the download of a model fails",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog:download"
     },
     "modelDialogAddDownloadSuccess": "Download successful",
     "@modelDialogAddDownloadSuccess": {
         "description": "Text displayed when the download of a model is successful",
-        "context": "Visible in the model dialog"
+        "context": "app:modelDialog:download"
     },
     "deleteDialogTitle": "Delete Chat",
     "@deleteDialogTitle": {
         "description": "Title of the delete dialog",
-        "context": "Visible in the delete dialog"
+        "context": "app:deleteDialog"
     },
     "deleteDialogDescription": "Are you sure you want to continue? This will wipe all memory of this chat and cannot be undone.\nTo disable this dialog, visit the settings.",
     "@deleteDialogDescription": {
         "description": "Description of the delete dialog",
-        "context": "Visible in the delete dialog"
+        "context": "app:deleteDialog"
     },
     "deleteDialogDelete": "Delete",
     "@deleteDialogDelete": {
         "description": "Text displayed for delete button, should be capitalized",
-        "context": "Visible in the delete dialog"
+        "context": "app:deleteDialog"
     },
     "deleteDialogCancel": "Cancel",
     "@deleteDialogCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the delete dialog"
+        "context": "app:deleteDialog"
+    },
+    "errorGuardTitle": "ErrorGuard",
+    "@errorGuardTitle": {
+        "description": "Title of the error guard dialog. Do not translate if not required!",
+        "context": "app:errorGuard"
+    },
+    "errorGuardDetails": "Details",
+    "@errorGuardDetails": {
+        "description": "Text displayed for details button and the details section in the error guard dialog",
+        "context": "app:errorGuard"
+    },
+    "errorGuardException": "Exception",
+    "@errorGuardException": {
+        "description": "Text displayed for exception section in the error guard dialog. Reference: https://en.wikipedia.org/wiki/Exception_handling",
+        "context": "app:errorGuard"
+    },
+    "errorGuardStackTrace": "Stack Trace",
+    "@errorGuardStackTrace": {
+        "description": "Text displayed for stack trace section in the error guard dialog. Use the commonly agreed on spelling in your language, e.g. 'Stacktrace' in German; use Wikipedia as reference: https://en.wikipedia.org/wiki/Stack_trace",
+        "context": "app:errorGuard"
+    },
+    "errorGuardReport": "Report",
+    "@errorGuardReport": {
+        "description": "Text displayed for report button in the error guard dialog",
+        "context": "app:errorGuard"
     },
     "dialogEnterNewTitle": "Enter new title",
     "@dialogEnterNewTitle": {
         "description": "Text displayed as description for new title input",
-        "context": "Visible in the rename dialog"
+        "context": "app:renameDialog"
     },
     "dialogEditMessageTitle": "Edit message",
     "@dialogEditMessageTitle": {
         "description": "Title of the edit message dialog",
-        "context": "Visible in the edit message dialog"
+        "context": "app:editMessageDialog"
     },
     "settingsTitleBehavior": "Behavior",
     "@settingsTitleBehavior": {
         "description": "Title of the behavior settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsDescriptionBehavior": "Change the behavior of the AI to your liking.",
     "@settingsDescriptionBehavior": {
         "description": "Description of the behavior settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsTitleInterface": "Interface",
     "@settingsTitleInterface": {
         "description": "Title of the interface settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsDescriptionInterface": "Edit how Ollama App looks and behaves.",
     "@settingsDescriptionInterface": {
         "description": "Description of the interface settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsTitleVoice": "Voice",
     "@settingsTitleVoice": {
         "description": "Title of the voice settings section. Do not translate if not required!",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsDescriptionVoice": "Enable voice mode and configure voice settings.",
     "@settingsDescriptionVoice": {
         "description": "Description of the voice settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsTitleExport": "Export",
     "@settingsTitleExport": {
         "description": "Title of the export settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsDescriptionExport": "Export and import your chat history.",
     "@settingsDescriptionExport": {
         "description": "Description of the export settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsTitleAbout": "About",
     "@settingsTitleAbout": {
         "description": "Title of the about settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsDescriptionAbout": "Check for updates and learn more about Ollama App.",
     "@settingsDescriptionAbout": {
         "description": "Description of the about settings section",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsSavedAutomatically": "Settings are saved automatically",
     "@settingsSavedAutomatically": {
         "description": "Text displayed when settings are saved automatically",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsExperimentalAlpha": "alpha",
     "@settingsExperimentalAlpha": {
-        "description": "Text displayed when a feature is in alpha",
-        "context": "Visible in the settings view"
+        "description": "Text displayed when a feature is in alpha phase",
+        "context": "app:settings"
     },
     "settingsExperimentalAlphaDescription": "This feature is in alpha and may not work as intended or expected.\nCritical issues and/or permanent critical damage to device and/or used services cannot be ruled out.\nUse at your own risk. No liability on the part of the app author.",
     "@settingsExperimentalAlphaDescription": {
         "description": "Description of the alpha feature",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsExperimentalAlphaFeature": "Alpha feature, hold to learn more",
     "@settingsExperimentalAlphaFeature": {
         "description": "Text displayed when a feature is in alpha",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsExperimentalBeta": "beta",
     "@settingsExperimentalBeta": {
         "description": "Text displayed when a feature is in beta",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
-    "settingsExperimentalBetaDescription": "This feature is in beta and may not work intended or expected.\nLess severe issues may or may not occur. Damage shouldn't be critical.\nUse at your own risk.",
+    "settingsExperimentalBetaDescription": "This feature is in beta and may not work as intended or expected.\nLess severe issues may or may not occur. Damage shouldn't be critical.\nUse at your own risk.",
     "@settingsExperimentalBetaDescription": {
         "description": "Description of the beta feature",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsExperimentalBetaFeature": "Beta feature, hold to learn more",
     "@settingsExperimentalBetaFeature": {
         "description": "Text displayed when a feature is in beta",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsExperimentalDeprecated": "deprecated",
     "@settingsExperimentalDeprecated": {
         "description": "Text displayed when a feature is deprecated",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsExperimentalDeprecatedDescription": "This feature is deprecated and will be removed in a future version.\nIt may not work as intended or expected. Use at your own risk.",
     "@settingsExperimentalDeprecatedDescription": {
         "description": "Description of the deprecated feature",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsExperimentalDeprecatedFeature": "Deprecated feature, hold to learn more",
     "@settingsExperimentalDeprecatedFeature": {
         "description": "Text displayed when a feature is deprecated",
-        "context": "Visible in the settings view"
+        "context": "app:settings"
     },
     "settingsHost": "Host",
     "@settingsHost": {
         "description": "Text displayed as description for host input",
-        "context": "Visible in the settings view"
+        "context": "app:settings:host"
     },
     "settingsHostValid": "Valid Host",
     "@settingsHostValid": {
         "description": "Text displayed when the host is valid",
-        "context": "Visible in the settings view"
+        "context": "app:settings:host"
     },
     "settingsHostChecking": "Checking Host",
     "@settingsHostChecking": {
         "description": "Text displayed when the host is being checked",
-        "context": "Visible in the settings view"
+        "context": "app:settings:host"
     },
-    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request Failed. Server issues} ratelimit{Too many requests} other{Request Failed}}",
+    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request failed. Server issues} ratelimit{Too many requests} other{Request Failed}}",
     "@settingsHostInvalid": {
         "description": "Text displayed when the host is invalid",
-        "context": "Visible in the settings view",
+        "context": "app:settings:host",
         "placeholders": {
             "type": {
                 "type": "String",
@@ -404,20 +424,25 @@
             }
         }
     },
+    "tooltipAddHostHeaders": "Add host headers",
+    "@tooltipAddHostHeaders": {
+        "description": "Tooltip for add host headers button",
+        "context": "app:settings:host"
+    },
     "settingsHostHeaderTitle": "Set host header",
     "@settingsHostHeaderTitle": {
         "description": "Text displayed as description for host header input",
-        "context": "Visible in the settings view"
+        "context": "app:settings:host"
     },
     "settingsHostHeaderInvalid": "The entered text isn't a valid header JSON object",
     "@settingsHostHeaderInvalid": {
         "description": "Text displayed when the host header is invalid",
-        "context": "Visible in the settings view"
+        "context": "app:settings:host"
     },
-    "settingsHostInvalidDetailed": "{type, select, url{The URL you entered is invalid. It isn't an a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}",
+    "settingsHostInvalidDetailed": "{type, select, url{The URL you entered is invalid. It isn't in a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}",
     "@settingsHostInvalidDetailed": {
         "description": "Text displayed when the host is invalid",
-        "context": "Visible in the settings view",
+        "context": "app:settings:host",
         "placeholders": {
             "type": {
                 "type": "String",
@@ -428,92 +453,92 @@
     "settingsSystemMessage": "System message",
     "@settingsSystemMessage": {
         "description": "Text displayed as description for system message input",
-        "context": "Visible in the settings view"
+        "context": "app:settings:behavior"
     },
     "settingsUseSystem": "Use system message",
     "@settingsUseSystem": {
         "description": "Text displayed as description for use system message toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:behavior"
     },
-    "settingsUseSystemDescription": "Disables setting the system message above and use the one of the model instead. Can be useful for models with model files",
+    "settingsUseSystemDescription": "Disables setting the system message above and uses the one from the model's Modelfile instead. Can be useful for models with model files.",
     "@settingsUseSystemDescription": {
         "description": "Description of the use system message toggle",
-        "context": "Visible in the settings view by long pressing the toggle"
+        "context": "app:settings:behavior"
     },
     "settingsDisableMarkdown": "Disable markdown",
     "@settingsDisableMarkdown": {
         "description": "Text displayed as description for disable markdown toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:behavior"
     },
     "settingsBehaviorNotUpdatedForOlderChats": "Behavior settings are not updated for older chats",
     "@settingsBehaviorNotUpdatedForOlderChats": {
         "description": "Text displayed when behavior settings are not updated for older chats",
-        "context": "Visible in the settings view"
+        "context": "app:settings:behavior"
     },
     "settingsShowModelTags": "Show model tags",
     "@settingsShowModelTags": {
         "description": "Text displayed as description for show model tags toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsPreloadModels": "Preload models",
     "@settingsPreloadModels": {
         "description": "Text displayed as description for preload models toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsResetOnModelChange": "Reset on model change",
     "@settingsResetOnModelChange": {
         "description": "Text displayed as description for reset on model change toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsRequestTypeStream": "Stream",
     "@settingsRequestTypeStream": {
         "description": "Text displayed as description for stream request type. Do not translate if not required!",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:request"
     },
     "settingsRequestTypeRequest": "Request",
     "@settingsRequestTypeRequest": {
         "description": "Text displayed as description for request request type. Do not translate if not required!",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:request"
     },
     "settingsGenerateTitles": "Generate titles",
     "@settingsGenerateTitles": {
         "description": "Text displayed as description for generate titles toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsEnableEditing": "Message editing",
     "@settingsEnableEditing": {
         "description": "Text displayed as description for enable editing toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsAskBeforeDelete": "Ask before chat deletion",
     "@settingsAskBeforeDelete": {
         "description": "Text displayed as description for ask before deletion toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsShowTips": "Show tips in sidebar",
     "@settingsShowTips": {
         "description": "Text displayed as description for show tips toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsKeepModelLoadedAlways": "Keep model always loaded",
     "@settingsKeepModelLoadedAlways": {
         "description": "Text displayed as description for keep model loaded always toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:keepModelLoaded"
     },
     "settingsKeepModelLoadedNever": "Don't keep model loaded",
     "@settingsKeepModelLoadedNever": {
         "description": "Text displayed as description for don't keep model loaded toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:keepModelLoaded"
     },
     "settingsKeepModelLoadedFor": "Set specific time to keep model loaded",
     "@settingsKeepModelLoadedFor": {
         "description": "Text displayed as description for keep model loaded for toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:keepModelLoaded"
     },
     "settingsKeepModelLoadedSet": "Keep model loaded for {minutes} minutes",
     "@settingsKeepModelLoadedSet": {
         "description": "Text displayed as description for keep model loaded for set time toggle",
-        "context": "Visible in the settings view",
+        "context": "app:settings:interface:keepModelLoaded",
         "placeholders": {
             "minutes": {
                 "type": "String",
@@ -524,192 +549,192 @@
     "settingsTimeoutMultiplier": "Timeout multiplier",
     "@settingsTimeoutMultiplier": {
         "description": "Text displayed as title for the timeout multiplier section",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:timeout"
     },
     "settingsTimeoutMultiplierDescription": "Select the multiplier that is applied to every timeout value in the app. Can be useful with a slow internet connection or a slow host.",
     "@settingsTimeoutMultiplierDescription": {
         "description": "Description of the timeout multiplier section",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:timeout"
     },
     "settingsTimeoutMultiplierExample": "E.g. message timeout:",
     "@settingsTimeoutMultiplierExample": {
         "description": "Example for the timeout multiplier",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:timeout"
     },
     "settingsEnableHapticFeedback": "Enable haptic feedback",
     "@settingsEnableHapticFeedback": {
         "description": "Text displayed as description for enable haptic feedback toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsMaximizeOnStart": "Start maximized",
     "@settingsMaximizeOnStart": {
         "description": "Text displayed as description for maximize on start toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface"
     },
     "settingsBrightnessSystem": "System",
     "@settingsBrightnessSystem": {
         "description": "Text displayed as description for system brightness option",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:brightness"
     },
     "settingsBrightnessLight": "Light",
     "@settingsBrightnessLight": {
         "description": "Text displayed as description for light brightness option",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:brightness"
     },
     "settingsBrightnessDark": "Dark",
     "@settingsBrightnessDark": {
         "description": "Text displayed as description for dark brightness option",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:brightness"
     },
     "settingsThemeDevice": "Device",
     "@settingsThemeDevice": {
         "description": "Text displayed as description for device theme option",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:theme"
     },
     "settingsThemeOllama": "Ollama",
     "@settingsThemeOllama": {
         "description": "Text displayed as description for Ollama theme option",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:theme"
     },
     "settingsTemporaryFixes": "Temporary interface fixes",
     "@settingsTemporaryFixes": {
         "description": "Text displayed as description for temporary fixes section",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:temporaryFixes"
     },
     "settingsTemporaryFixesDescription": "Enable temporary fixes for interface issues.\nLong press on the individual options to learn more.",
     "@settingsTemporaryFixesDescription": {
         "description": "Description of the temporary fixes section",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:temporaryFixes"
     },
     "settingsTemporaryFixesInstructions": "Do not toggle any of these settings unless you know what you are doing! The given solutions might not work as expected.\nThey cannot be seen as final or should be judged as such. Issues might occur.",
     "@settingsTemporaryFixesInstructions": {
         "description": "Instructions and warnings for the temporary fixes",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:temporaryFixes"
     },
     "settingsTemporaryFixesNoFixes": "No fixes available",
     "@settingsTemporaryFixesNoFixes": {
         "description": "Text displayed when no fixes are available",
-        "context": "Visible in the settings view"
+        "context": "app:settings:interface:temporaryFixes"
     },
     "settingsVoicePermissionLoading": "Loading voice permissions ...",
     "@settingsVoicePermissionLoading": {
         "description": "Text displayed while loading voice permissions",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoiceTtsNotSupported": "Text-to-speech not supported",
     "@settingsVoiceTtsNotSupported": {
         "description": "Text displayed when text-to-speech is not supported",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
-    "settingsVoiceTtsNotSupportedDescription": "Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to reenable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.",
+    "settingsVoiceTtsNotSupportedDescription": "Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to re-enable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.",
     "@settingsVoiceTtsNotSupportedDescription": {
         "description": "Description of the text-to-speech not supported message",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoicePermissionNot": "Permissions not granted",
     "@settingsVoicePermissionNot": {
         "description": "Text displayed when voice permissions are not granted",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoiceNotEnabled": "Voice mode not enabled",
     "@settingsVoiceNotEnabled": {
         "description": "Text displayed when voice mode is not enabled",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoiceNotSupported": "Voice mode not supported",
     "@settingsVoiceNotSupported": {
         "description": "Text displayed when voice mode is not supported",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoiceEnable": "Enable voice mode",
     "@settingsVoiceEnable": {
         "description": "Text displayed as description for enable voice mode toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoiceNoLanguage": "No language selected",
     "@settingsVoiceNoLanguage": {
         "description": "Text displayed when no language is selected",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoiceLimitLanguage": "Limit to selected language",
     "@settingsVoiceLimitLanguage": {
         "description": "Text displayed as description for limit language toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsVoicePunctuation": "Enable AI punctuation",
     "@settingsVoicePunctuation": {
         "description": "Text displayed as description for enable AI punctuation toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:voice"
     },
     "settingsExportChats": "Export chats",
     "@settingsExportChats": {
         "description": "Text displayed as description for export chats button",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsExportChatsSuccess": "Chats exported successfully",
     "@settingsExportChatsSuccess": {
         "description": "Text displayed when chats are exported successfully",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsImportChats": "Import chats",
     "@settingsImportChats": {
         "description": "Text displayed as description for import chats button",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsImportChatsTitle": "Import",
     "@settingsImportChatsTitle": {
         "description": "Title of the import dialog",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsImportChatsDescription": "The following step will import the chats from the selected file. This will overwrite all currently available chats.\nDo you want to continue?",
     "@settingsImportChatsDescription": {
         "description": "Description of the import dialog",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsImportChatsImport": "Import and Erase",
     "@settingsImportChatsImport": {
         "description": "Text displayed for import button, should be capitalized",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsImportChatsCancel": "Cancel",
     "@settingsImportChatsCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsImportChatsSuccess": "Chats imported successfully",
     "@settingsImportChatsSuccess": {
         "description": "Text displayed when chats are imported successfully",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
-    "settingsExportInfo": "This options allows you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or backup your chat history",
+    "settingsExportInfo": "These options allow you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or back up your chat history",
     "@settingsExportInfo": {
         "description": "Information displayed for export and import options",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
-    "settingsExportWarning": "Multiple chat histories won't be merged! You'll loose your current chat history if you import a new one",
+    "settingsExportWarning": "Multiple chat histories won't be merged! You'll lose your current chat history if you import a new one.",
     "@settingsExportWarning": {
         "description": "Warning displayed for export and import options",
-        "context": "Visible in the settings view"
+        "context": "app:settings:export"
     },
     "settingsUpdateCheck": "Check for updates",
     "@settingsUpdateCheck": {
         "description": "Text displayed as description for check for updates button",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateChecking": "Checking for updates ...",
     "@settingsUpdateChecking": {
         "description": "Text displayed while looking for updates",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateLatest": "You are on the latest version",
     "@settingsUpdateLatest": {
         "description": "Text displayed when the app is up to date",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateAvailable": "Update available (v{version})",
     "@settingsUpdateAvailable": {
         "description": "Text displayed when an update is available",
-        "context": "Visible in the settings view",
+        "context": "app:settings:info",
         "placeholders": {
             "version": {
                 "type": "String",
@@ -720,62 +745,62 @@
     "settingsUpdateRateLimit": "Can't check, API rate limit exceeded",
     "@settingsUpdateRateLimit": {
         "description": "Text displayed when the API rate limit is exceeded",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateIssue": "An issue occurred",
     "@settingsUpdateIssue": {
         "description": "Text displayed when an issue occurs while checking for updates",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateDialogTitle": "New version available",
     "@settingsUpdateDialogTitle": {
         "description": "Title of the update dialog",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
-    "settingsUpdateDialogDescription": "A new version of Ollama is available. Do you want to download and install it now?",
+    "settingsUpdateDialogDescription": "A new version of Ollama App is available. Do you want to download and install it now?",
     "@settingsUpdateDialogDescription": {
         "description": "Description of the update dialog",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateChangeLog": "Change Log",
     "@settingsUpdateChangeLog": {
         "description": "Text displayed as description for change log button",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateDialogUpdate": "Update",
     "@settingsUpdateDialogUpdate": {
         "description": "Text displayed for update button, should be capitalized",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsUpdateDialogCancel": "Cancel",
     "@settingsUpdateDialogCancel": {
         "description": "Text displayed for cancel button, should be capitalized",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsCheckForUpdates": "Check for updates on open",
     "@settingsCheckForUpdates": {
         "description": "Text displayed as description for check for updates toggle",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsGithub": "GitHub",
     "@settingsGithub": {
         "description": "Text displayed as description for GitHub button",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsReportIssue": "Report Issue",
     "@settingsReportIssue": {
         "description": "Text displayed as description for report issue button",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsLicenses": "Licenses",
     "@settingsLicenses": {
         "description": "Text displayed as description for licenses button",
-        "context": "Visible in the settings view"
+        "context": "app:settings:info"
     },
     "settingsVersion": "Ollama App v{version}",
     "@settingsVersion": {
         "description": "Text displayed as description for version",
-        "context": "Visible in the settings view",
+        "context": "app:settings:info",
         "placeholders": {
             "version": {
                 "type": "String",

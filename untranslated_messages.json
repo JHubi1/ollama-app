@@ -1,1 +1,41 @@
-{}
+{
+  "de": [
+    "errorGuardTitle",
+    "errorGuardDetails",
+    "errorGuardException",
+    "errorGuardStackTrace",
+    "errorGuardReport"
+  ],
+
+  "fa": [
+    "errorGuardTitle",
+    "errorGuardDetails",
+    "errorGuardException",
+    "errorGuardStackTrace",
+    "errorGuardReport"
+  ],
+
+  "it": [
+    "errorGuardTitle",
+    "errorGuardDetails",
+    "errorGuardException",
+    "errorGuardStackTrace",
+    "errorGuardReport"
+  ],
+
+  "tr": [
+    "errorGuardTitle",
+    "errorGuardDetails",
+    "errorGuardException",
+    "errorGuardStackTrace",
+    "errorGuardReport"
+  ],
+
+  "zh": [
+    "errorGuardTitle",
+    "errorGuardDetails",
+    "errorGuardException",
+    "errorGuardStackTrace",
+    "errorGuardReport"
+  ]
+}

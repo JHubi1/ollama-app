@@ -3,6 +3,5 @@ template-arb-file: app_en.arb
 output-dir: lib/l10n/gen
 preferred-supported-locales: [ en ]
 untranslated-messages-file: untranslated_messages.json
-synthetic-package: false
 nullable-getter: false
 format: true

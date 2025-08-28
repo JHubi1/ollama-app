@@ -75,9 +75,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tooltipLetAIThink => 'AI\'\'nın düşünmesine izin ver';
 
   @override
-  String get tooltipAddHostHeaders => 'Ana bilgisayar başlıkları ekle';
-
-  @override
   String get tooltipReset => 'Mevcut sohbeti sıfırla';
 
   @override
@@ -170,6 +167,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get deleteDialogCancel => 'İptal';
 
   @override
+  String get errorGuardTitle => 'ErrorGuard';
+
+  @override
+  String get errorGuardDetails => 'Details';
+
+  @override
+  String get errorGuardException => 'Exception';
+
+  @override
+  String get errorGuardStackTrace => 'Stack Trace';
+
+  @override
+  String get errorGuardReport => 'Report';
+
+  @override
   String get dialogEnterNewTitle => 'Yeni başlık girin';
 
   @override
@@ -257,18 +269,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String settingsHostInvalid(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url': 'Geçersiz URL',
-        'host': 'Geçersiz Ana Bilgisayar',
-        'timeout': 'İstek Başarısız. Sunucu sorunları',
-        'ratelimit': 'Çok fazla istek',
-        'other': 'İstek Başarısız',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url': 'Geçersiz URL',
+      'host': 'Geçersiz Ana Bilgisayar',
+      'timeout': 'İstek Başarısız. Sunucu sorunları',
+      'ratelimit': 'Çok fazla istek',
+      'other': 'İstek Başarısız',
+    });
     return 'Sorun: $_temp0';
   }
+
+  @override
+  String get tooltipAddHostHeaders => 'Ana bilgisayar başlıkları ekle';
 
   @override
   String get settingsHostHeaderTitle => 'Ana bilgisayar başlığını ayarla';
@@ -279,14 +291,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String settingsHostInvalidDetailed(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url': 'Girdiğiniz URL geçersiz. Standart bir URL formatında değil.',
-        'other':
-            'Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url': 'Girdiğiniz URL geçersiz. Standart bir URL formatında değil.',
+      'other':
+          'Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.',
+    });
     return '$_temp0';
   }
 

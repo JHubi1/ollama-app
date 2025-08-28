@@ -7,9 +7,9 @@ import 'package:version/version.dart';
 
 import '../../l10n/gen/app_localizations.dart';
 import '../../main.dart';
-import '../../services/desktop.dart';
-import '../../services/haptic.dart';
-import '../../services/update.dart';
+import '../../worker/desktop.dart';
+import '../../worker/haptic.dart';
+import '../../worker/update.dart';
 import '../settings.dart';
 
 class ScreenSettingsAbout extends StatefulWidget {

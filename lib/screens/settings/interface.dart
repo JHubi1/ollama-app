@@ -7,9 +7,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../l10n/gen/app_localizations.dart';
 import '../../main.dart';
-import '../../services/desktop.dart';
-import '../../services/haptic.dart';
-import '../../services/theme.dart';
+import '../../worker/desktop.dart';
+import '../../worker/haptic.dart';
+import '../../worker/theme.dart';
 import '../settings.dart';
 
 class ScreenSettingsInterface extends StatefulWidget {

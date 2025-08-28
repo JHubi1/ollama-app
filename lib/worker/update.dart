@@ -10,7 +10,7 @@ import 'package:version/version.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../main.dart';
-import 'clients.dart';
+import '../services/clients.dart';
 import 'desktop.dart';
 import 'haptic.dart';
 

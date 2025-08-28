@@ -3,7 +3,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../main.dart';
-import '../services/theme.dart';
+import '../worker/theme.dart';
+import 'main.dart';
 
 class ScreenWelcome extends StatefulWidget {
   const ScreenWelcome({super.key});
@@ -56,8 +57,10 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
                     curve: Curves.easeInOut);
               } else {
                 prefs!.setBool("welcomeFinished", true);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const MainApp()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ScreenMain()));
               }
             },
             child: (page < 2)

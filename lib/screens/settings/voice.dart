@@ -7,8 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../l10n/gen/app_localizations.dart';
 import '../../main.dart';
-import '../../services/haptic.dart';
-import '../../services/theme.dart';
+import '../../worker/haptic.dart';
+import '../../worker/theme.dart';
 import '../settings.dart';
 
 class ScreenSettingsVoice extends StatefulWidget {

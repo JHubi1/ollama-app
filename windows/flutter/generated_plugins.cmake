@@ -4,10 +4,11 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
-  dynamic_color
+  dynamic_system_colors
   file_selector_windows
   flutter_tts
   permission_handler_windows
+  speech_to_text_windows
   url_launcher_windows
 )
 

@@ -67,7 +67,7 @@ import 'app_localizations_zh.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -90,11 +90,11 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -103,7 +103,7 @@ abstract class AppLocalizations {
     Locale('fa'),
     Locale('it'),
     Locale('tr'),
-    Locale('zh')
+    Locale('zh'),
   ];
 
   /// Title of the application
@@ -145,7 +145,7 @@ abstract class AppLocalizations {
   /// First tip displayed in the sidebar
   ///
   /// In en, this message translates to:
-  /// **'Edit messages by long taping on them'**
+  /// **'Edit messages by long tapping on them'**
   String get tip0;
 
   /// Second tip displayed in the sidebar
@@ -238,12 +238,6 @@ abstract class AppLocalizations {
   /// **'Let AI think'**
   String get tooltipLetAIThink;
 
-  /// Tooltip for add host headers button
-  ///
-  /// In en, this message translates to:
-  /// **'Add host headers'**
-  String get tooltipAddHostHeaders;
-
   /// Tooltip for reset button
   ///
   /// In en, this message translates to:
@@ -265,7 +259,7 @@ abstract class AppLocalizations {
   /// Text displayed when no host is selected
   ///
   /// In en, this message translates to:
-  /// **'No host selected, open setting to set one'**
+  /// **'No host selected, open settings to set one'**
   String get noHostSelected;
 
   /// Text displayed when no model is selected
@@ -295,7 +289,7 @@ abstract class AppLocalizations {
   /// Description of the add model dialog
   ///
   /// In en, this message translates to:
-  /// **'This can have either be a normal name (e.g. \'llama3\') or name and tag (e.g. \'llama3:70b\').'**
+  /// **'This can either be a normal name (e.g. \'llama3\') or a name and tag (e.g. \'llama3:70b\').'**
   String get modelDialogAddPromptDescription;
 
   /// Text displayed when the model already exists
@@ -319,7 +313,7 @@ abstract class AppLocalizations {
   /// Description of the allow proxy dialog
   ///
   /// In en, this message translates to:
-  /// **'Ollama App must check if the entered model is valid. For that, we normally send a web request to the Ollama model list and check the status code, but because you\'re using the web client, we can\'t do that directly. Instead, the app will send the request to a different api, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potential harmful intentions.\nIf you accept, your selection will be remembered in the future; if not, nothing will be sent and the model won\'t be added.'**
+  /// **'Ollama App must check if the entered model is valid. To do that, we normally send a web request to the Ollama model list and check the status code, but because you\'re using the web client, we can\'t do that directly. Instead, the app will send the request to a different API, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potentially harmful intentions.\nIf you accept, your selection will be remembered for the future; if not, nothing will be sent and the model won\'t be added.'**
   String get modelDialogAddAllowanceDescription;
 
   /// Text displayed for allow button, should be capitalized
@@ -343,7 +337,7 @@ abstract class AppLocalizations {
   /// Description of the add model assurance dialog
   ///
   /// In en, this message translates to:
-  /// **'Pressing \'Add\' will download the model \'{model}\' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it\'ll resume if you enter the name into the model dialog again.'**
+  /// **'Pressing \'Add\' will download the model \'{model}\' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it will resume if you enter the name into the model dialog again.'**
   String modelDialogAddAssuranceDescription(String model);
 
   /// Text displayed for add button, should be capitalized
@@ -405,6 +399,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get deleteDialogCancel;
+
+  /// Title of the error guard dialog. Do not translate if not required!
+  ///
+  /// In en, this message translates to:
+  /// **'ErrorGuard'**
+  String get errorGuardTitle;
+
+  /// Text displayed for details button and the details section in the error guard dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get errorGuardDetails;
+
+  /// Text displayed for exception section in the error guard dialog. Reference: https://en.wikipedia.org/wiki/Exception_handling
+  ///
+  /// In en, this message translates to:
+  /// **'Exception'**
+  String get errorGuardException;
+
+  /// Text displayed for stack trace section in the error guard dialog. Use the commonly agreed on spelling in your language, e.g. 'Stacktrace' in German; use Wikipedia as reference: https://en.wikipedia.org/wiki/Stack_trace
+  ///
+  /// In en, this message translates to:
+  /// **'Stack Trace'**
+  String get errorGuardStackTrace;
+
+  /// Text displayed for report button in the error guard dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get errorGuardReport;
 
   /// Text displayed as description for new title input
   ///
@@ -484,7 +508,7 @@ abstract class AppLocalizations {
   /// **'Settings are saved automatically'**
   String get settingsSavedAutomatically;
 
-  /// Text displayed when a feature is in alpha
+  /// Text displayed when a feature is in alpha phase
   ///
   /// In en, this message translates to:
   /// **'alpha'**
@@ -511,7 +535,7 @@ abstract class AppLocalizations {
   /// Description of the beta feature
   ///
   /// In en, this message translates to:
-  /// **'This feature is in beta and may not work intended or expected.\nLess severe issues may or may not occur. Damage shouldn\'t be critical.\nUse at your own risk.'**
+  /// **'This feature is in beta and may not work as intended or expected.\nLess severe issues may or may not occur. Damage shouldn\'t be critical.\nUse at your own risk.'**
   String get settingsExperimentalBetaDescription;
 
   /// Text displayed when a feature is in beta
@@ -559,8 +583,14 @@ abstract class AppLocalizations {
   /// Text displayed when the host is invalid
   ///
   /// In en, this message translates to:
-  /// **'Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request Failed. Server issues} ratelimit{Too many requests} other{Request Failed}}'**
+  /// **'Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request failed. Server issues} ratelimit{Too many requests} other{Request Failed}}'**
   String settingsHostInvalid(String type);
+
+  /// Tooltip for add host headers button
+  ///
+  /// In en, this message translates to:
+  /// **'Add host headers'**
+  String get tooltipAddHostHeaders;
 
   /// Text displayed as description for host header input
   ///
@@ -577,7 +607,7 @@ abstract class AppLocalizations {
   /// Text displayed when the host is invalid
   ///
   /// In en, this message translates to:
-  /// **'{type, select, url{The URL you entered is invalid. It isn\'t an a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}'**
+  /// **'{type, select, url{The URL you entered is invalid. It isn\'t in a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}'**
   String settingsHostInvalidDetailed(String type);
 
   /// Text displayed as description for system message input
@@ -595,7 +625,7 @@ abstract class AppLocalizations {
   /// Description of the use system message toggle
   ///
   /// In en, this message translates to:
-  /// **'Disables setting the system message above and use the one of the model instead. Can be useful for models with model files'**
+  /// **'Disables setting the system message above and uses the one from the model\'s Modelfile instead. Can be useful for models with model files.'**
   String get settingsUseSystemDescription;
 
   /// Text displayed as description for disable markdown toggle
@@ -787,7 +817,7 @@ abstract class AppLocalizations {
   /// Description of the text-to-speech not supported message
   ///
   /// In en, this message translates to:
-  /// **'Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to reenable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.'**
+  /// **'Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to re-enable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.'**
   String get settingsVoiceTtsNotSupportedDescription;
 
   /// Text displayed when voice permissions are not granted
@@ -883,13 +913,13 @@ abstract class AppLocalizations {
   /// Information displayed for export and import options
   ///
   /// In en, this message translates to:
-  /// **'This options allows you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or backup your chat history'**
+  /// **'These options allow you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or back up your chat history'**
   String get settingsExportInfo;
 
   /// Warning displayed for export and import options
   ///
   /// In en, this message translates to:
-  /// **'Multiple chat histories won\'t be merged! You\'ll loose your current chat history if you import a new one'**
+  /// **'Multiple chat histories won\'t be merged! You\'ll lose your current chat history if you import a new one.'**
   String get settingsExportWarning;
 
   /// Text displayed as description for check for updates button
@@ -937,7 +967,7 @@ abstract class AppLocalizations {
   /// Description of the update dialog
   ///
   /// In en, this message translates to:
-  /// **'A new version of Ollama is available. Do you want to download and install it now?'**
+  /// **'A new version of Ollama App is available. Do you want to download and install it now?'**
   String get settingsUpdateDialogDescription;
 
   /// Text displayed as description for change log button
@@ -1000,13 +1030,13 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
-        'de',
-        'en',
-        'fa',
-        'it',
-        'tr',
-        'zh'
-      ].contains(locale.languageCode);
+    'de',
+    'en',
+    'fa',
+    'it',
+    'tr',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1030,8 +1060,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

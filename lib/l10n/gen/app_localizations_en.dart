@@ -27,7 +27,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tipPrefix => 'Tip: ';
 
   @override
-  String get tip0 => 'Edit messages by long taping on them';
+  String get tip0 => 'Edit messages by long tapping on them';
 
   @override
   String get tip1 => 'Delete messages by double tapping on them';
@@ -75,9 +75,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tooltipLetAIThink => 'Let AI think';
 
   @override
-  String get tooltipAddHostHeaders => 'Add host headers';
-
-  @override
   String get tooltipReset => 'Reset current chat';
 
   @override
@@ -87,7 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noModelSelected => 'No model selected';
 
   @override
-  String get noHostSelected => 'No host selected, open setting to set one';
+  String get noHostSelected => 'No host selected, open settings to set one';
 
   @override
   String get noSelectedModel => '<selector>';
@@ -103,7 +100,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get modelDialogAddPromptDescription =>
-      'This can have either be a normal name (e.g. \'llama3\') or name and tag (e.g. \'llama3:70b\').';
+      'This can either be a normal name (e.g. \'llama3\') or a name and tag (e.g. \'llama3:70b\').';
 
   @override
   String get modelDialogAddPromptAlreadyExists => 'Model already exists';
@@ -116,7 +113,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get modelDialogAddAllowanceDescription =>
-      'Ollama App must check if the entered model is valid. For that, we normally send a web request to the Ollama model list and check the status code, but because you\'re using the web client, we can\'t do that directly. Instead, the app will send the request to a different api, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potential harmful intentions.\nIf you accept, your selection will be remembered in the future; if not, nothing will be sent and the model won\'t be added.';
+      'Ollama App must check if the entered model is valid. To do that, we normally send a web request to the Ollama model list and check the status code, but because you\'re using the web client, we can\'t do that directly. Instead, the app will send the request to a different API, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potentially harmful intentions.\nIf you accept, your selection will be remembered for the future; if not, nothing will be sent and the model won\'t be added.';
 
   @override
   String get modelDialogAddAllowanceAllow => 'Allow';
@@ -131,7 +128,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String modelDialogAddAssuranceDescription(String model) {
-    return 'Pressing \'Add\' will download the model \'$model\' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it\'ll resume if you enter the name into the model dialog again.';
+    return 'Pressing \'Add\' will download the model \'$model\' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it will resume if you enter the name into the model dialog again.';
   }
 
   @override
@@ -166,6 +163,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteDialogCancel => 'Cancel';
+
+  @override
+  String get errorGuardTitle => 'ErrorGuard';
+
+  @override
+  String get errorGuardDetails => 'Details';
+
+  @override
+  String get errorGuardException => 'Exception';
+
+  @override
+  String get errorGuardStackTrace => 'Stack Trace';
+
+  @override
+  String get errorGuardReport => 'Report';
 
   @override
   String get dialogEnterNewTitle => 'Enter new title';
@@ -227,7 +239,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsExperimentalBetaDescription =>
-      'This feature is in beta and may not work intended or expected.\nLess severe issues may or may not occur. Damage shouldn\'t be critical.\nUse at your own risk.';
+      'This feature is in beta and may not work as intended or expected.\nLess severe issues may or may not occur. Damage shouldn\'t be critical.\nUse at your own risk.';
 
   @override
   String get settingsExperimentalBetaFeature =>
@@ -255,18 +267,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String settingsHostInvalid(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url': 'Invalid URL',
-        'host': 'Invalid Host',
-        'timeout': 'Request Failed. Server issues',
-        'ratelimit': 'Too many requests',
-        'other': 'Request Failed',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url': 'Invalid URL',
+      'host': 'Invalid Host',
+      'timeout': 'Request failed. Server issues',
+      'ratelimit': 'Too many requests',
+      'other': 'Request Failed',
+    });
     return 'Issue: $_temp0';
   }
+
+  @override
+  String get tooltipAddHostHeaders => 'Add host headers';
 
   @override
   String get settingsHostHeaderTitle => 'Set host header';
@@ -277,15 +289,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String settingsHostInvalidDetailed(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'url':
-            'The URL you entered is invalid. It isn\'t an a standardized URL format.',
-        'other':
-            'The host you entered is invalid. It cannot be reached. Please check the host and try again.',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'url':
+          'The URL you entered is invalid. It isn\'t in a standardized URL format.',
+      'other':
+          'The host you entered is invalid. It cannot be reached. Please check the host and try again.',
+    });
     return '$_temp0';
   }
 
@@ -297,7 +306,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsUseSystemDescription =>
-      'Disables setting the system message above and use the one of the model instead. Can be useful for models with model files';
+      'Disables setting the system message above and uses the one from the model\'s Modelfile instead. Can be useful for models with model files.';
 
   @override
   String get settingsDisableMarkdown => 'Disable markdown';
@@ -401,7 +410,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsVoiceTtsNotSupportedDescription =>
-      'Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to reenable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.';
+      'Text-to-speech services are not supported for the selected language. Select a different language in the language drawer to re-enable them.\nOther services like voice recognition and AI thinking will still work as usual, but interaction might not be as fluent.';
 
   @override
   String get settingsVoicePermissionNot => 'Permissions not granted';
@@ -451,11 +460,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsExportInfo =>
-      'This options allows you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or backup your chat history';
+      'These options allow you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or back up your chat history';
 
   @override
   String get settingsExportWarning =>
-      'Multiple chat histories won\'t be merged! You\'ll loose your current chat history if you import a new one';
+      'Multiple chat histories won\'t be merged! You\'ll lose your current chat history if you import a new one.';
 
   @override
   String get settingsUpdateCheck => 'Check for updates';
@@ -482,7 +491,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsUpdateDialogDescription =>
-      'A new version of Ollama is available. Do you want to download and install it now?';
+      'A new version of Ollama App is available. Do you want to download and install it now?';
 
   @override
   String get settingsUpdateChangeLog => 'Change Log';

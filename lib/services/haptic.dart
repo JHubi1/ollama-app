@@ -1,24 +1,38 @@
 import 'package:flutter/services.dart';
-import '../main.dart';
+
+import 'preferences.dart';
 
 void lightHaptic() {
-  if (!(prefs!.getBool("enableHaptic") ?? true)) return;
+  if (!Preferences.instance.enableHaptic) return;
   HapticFeedback.lightImpact();
 }
 
 void mediumHaptic() {
-  if (!(prefs!.getBool("enableHaptic") ?? true)) return;
+  if (!Preferences.instance.enableHaptic) return;
   HapticFeedback.mediumImpact();
 }
 
 void heavyHaptic() {
-  if (!(prefs!.getBool("enableHaptic") ?? true)) return;
+  if (!Preferences.instance.enableHaptic) return;
   HapticFeedback.heavyImpact();
 }
 
 void selectionHaptic() {
-  if (!(prefs!.getBool("enableHaptic") ?? true)) return;
-  // same name but for better experience, change behavior
-  HapticFeedback.lightImpact();
-  // HapticFeedback.selectionClick();
+  if (!Preferences.instance.enableHaptic) return;
+  HapticFeedback.selectionClick();
+}
+
+// MARK: Chat Haptic
+
+const Duration _hapticChatDelay = Duration(milliseconds: 45);
+DateTime _lastHapticChat = DateTime.fromMillisecondsSinceEpoch(0);
+
+void chatHaptic() {
+  if (!Preferences.instance.enableHaptic) return;
+
+  var now = DateTime.now();
+  if (now.difference(_lastHapticChat) < _hapticChatDelay) return;
+  _lastHapticChat = now;
+
+  HapticFeedback.selectionClick();
 }

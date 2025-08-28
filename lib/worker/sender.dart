@@ -11,7 +11,7 @@ import 'package:uuid/uuid.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../main.dart';
-import 'clients.dart';
+import '../services/clients.dart';
 import 'haptic.dart';
 import 'setter.dart';
 // import 'package:scroll_to_index/scroll_to_index.dart';
