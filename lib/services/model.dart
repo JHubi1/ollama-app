@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
 
-import '../main.dart';
 import 'clients.dart' as clients;
 import 'preferences.dart';
 
 typedef ModelCapability = ollama.Capability;
 
-class Model {
+class Model extends ChangeNotifier {
   final String name;
 
   String _family;
@@ -50,6 +50,7 @@ class Model {
       _families = data.details!.families?.toSet() ?? {};
     }
     _capabilities = data.capabilities!.toSet();
+    notifyListeners();
   }
 
   Future<void> loadIntoMemory() async {
@@ -59,12 +60,9 @@ class Model {
 
     var headers = <String, String>{
       "Content-Type": "application/json",
-      ...(jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map),
+      ...Preferences.instance.hostHeaders,
     };
-    var body = {
-      "model": name,
-      "keep_alive": int.parse(prefs!.getString("keepAlive") ?? "300"),
-    };
+    var body = {"model": name, "keep_alive": Preferences.instance.keepAlive};
 
     await clients.httpClient
         .post(
@@ -76,10 +74,7 @@ class Model {
   }
 
   @override
-  operator ==(Object other) {
-    return other is Model && other.name == name;
-  }
-
+  operator ==(Object other) => other is Model && other.name == name;
   @override
   int get hashCode => name.hashCode;
 }
@@ -111,9 +106,14 @@ class ModelManager extends ChangeNotifier {
 
   Future<void> loadModels({bool fetchCapabilitiesInBackground = true}) async {
     var data = await clients.ollamaClient.listModels();
+
+    for (var model in _models) {
+      model.dispose();
+    }
     _models.clear();
+
     for (var model in data.models!) {
-      _models.add(Model.fromApi(model: model));
+      _models.add(Model.fromApi(model: model)..addListener(notifyListeners));
     }
 
     _initialized = true;

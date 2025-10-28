@@ -3,15 +3,19 @@ import 'dart:io';
 
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:ollama_dart/ollama_dart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/gen/app_localizations.dart';
+import 'markdown.dart';
 
 final _logIdRegex = RegExp(r"^[A-Z0-9]{2,16}$");
+
+String _removeNewlines(String content) =>
+    content.replaceAll(RegExp(r"\s*\n\s*"), " ");
 
 typedef ErrorGuardErrorMessageGenerator = String Function(Object exception);
 typedef ErrorGuardDetailsMessageGenerator =
@@ -24,7 +28,9 @@ String _defaultErrorMessage(Object exception) => switch (exception) {
     exception.toString().split(": ").elementAtOrNull(4) ??
         "An assertion failed",
   TimeoutException _ => "Request timed out",
-  SocketException _ || HttpException _ => "Could not connect to server",
+  SocketException _ ||
+  HttpException _ ||
+  ClientException _ => "Could not connect to server",
   TlsException _ => "Could not establish secure connection",
   StateError _ => "Invalid state encountered",
   _ => "An unknown error occurred",
@@ -34,9 +40,13 @@ String? _defaultDetailsMessage(
   StackTrace stackTrace,
 ) => switch (exception) {
   OllamaClientException e =>
-    e.body.toString().startsWith("ClientException with SocketException")
+    [
+          "SocketException",
+          "HttpException",
+          "ClientException",
+        ].contains(e.body.toString().split(":").first)
         ? "A network error occurred while trying to connect to the server."
-              "\n\nYou may check your network connection or server reachability and try again."
+              "\n\nYou may check your network connection and server reachability and try again."
         : "The Ollama API client received a faulty response with code `${e.code}`."
               "\n\nPlease check your Ollama server or proxy configuration and try again.",
   AssertionError _ =>
@@ -46,9 +56,9 @@ String? _defaultDetailsMessage(
   TimeoutException _ =>
     "Time ran out while waiting for a response from the server."
         "\n\nThis might be caused by a slow or unresponsive server, or a network issue.\nYou may try increasing the Timeout Multiplier in the settings.",
-  SocketException _ || HttpException _ =>
-    "A ${exception.runtimeType.toString().split(RegExp(r"(?=[A-Z])")).join(" ").toLowerCase()} might be caused by a slow or unresponsive server, or a network issue."
-        "\n\nYou may check your network connection and try again.",
+  SocketException _ || HttpException _ || ClientException _ =>
+    "A ${exception.toString().split(":").first} might be caused by a slow or unresponsive server, or a network issue."
+        "\n\nYou may check your network connection and server reachability and try again.",
   TlsException _ =>
     "An error occurred while trying to establish a secure connection via TLS."
         "\n\nThis might be caused by an invalid or expired certificate, though this should not happen. Please report this issue to the developers.",
@@ -254,7 +264,9 @@ Future<T?> errorGuard<T>(
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              _removeNewlines(errorMessageText),
+              _removeNewlines(
+                Markdown(errorMessageText).toTextSpan(context).toPlainText(),
+              ),
               style: TextStyle(color: colorScheme.onErrorContainer),
             ),
             backgroundColor: colorScheme.errorContainer,
@@ -272,9 +284,6 @@ Future<T?> errorGuard<T>(
     return null;
   }
 }
-
-String _removeNewlines(String content) =>
-    content.replaceAll(RegExp(r"\s*\n\s*"), " ");
 
 class _ErrorGuardDetailsDialog extends StatefulWidget {
   final String? logId;
@@ -338,7 +347,7 @@ class _ErrorGuardDetailsDialogState extends State<_ErrorGuardDetailsDialog> {
                 child: Text("@${widget.logId}"),
               ),
 
-            Text.rich(_contentFormat(context, widget.errorMessage)),
+            Text.rich(Markdown(widget.errorMessage).toTextSpan(context)),
             const SizedBox(height: 8),
             if (widget.detailsMessage != null) ...[
               _ErrorGuardDetailsPanel(
@@ -390,167 +399,6 @@ class _ErrorGuardDetailsDialogState extends State<_ErrorGuardDetailsDialog> {
     );
   }
 
-  static TextSpan _contentFormat(BuildContext context, String content) {
-    content = content.trim().split("\n").map((l) => l.trim()).join("\n");
-    if (content.isEmpty) return const TextSpan(text: "");
-    // content = content.replaceAll(RegExp(r"(?=)"), "\u{00AD}");
-
-    var paragraphs = content.split("\n\n").map((p) => p.trim()).toList();
-
-    InlineSpan parseInline(String text) {
-      var root = <String, dynamic>{
-        "type": "root",
-        "children": <Map<String, dynamic>>[],
-      };
-      var stack = <Map<String, dynamic>>[root];
-      var buf = StringBuffer();
-
-      void flushBufferToCurrent() {
-        if (buf.isEmpty) return;
-        var textNode = {"type": "text", "text": buf.toString()};
-        (stack.last["children"] as List).add(textNode);
-        buf.clear();
-      }
-
-      var i = 0;
-      while (i < text.length) {
-        var ch = text[i];
-        if (ch == "\\" && i + 1 < text.length) {
-          buf.write(text[i + 1]);
-          i += 2;
-          continue;
-        }
-
-        var inCode = stack.last["type"] == "code";
-        if (inCode) {
-          if (ch == "`") {
-            flushBufferToCurrent();
-            stack.removeLast();
-            i++;
-          } else {
-            buf.write(ch);
-            i++;
-          }
-          continue;
-        }
-
-        if (ch == '<') {
-          var endIndex = text.indexOf('>', i + 1);
-          if (endIndex != -1) {
-            var url = text.substring(i + 1, endIndex);
-            if (url.startsWith('https://') || url.startsWith('http://')) {
-              flushBufferToCurrent();
-              var linkNode = {"type": "link", "url": url};
-              (stack.last["children"] as List).add(linkNode);
-              i = endIndex + 1;
-              continue;
-            }
-          }
-        }
-
-        if (ch == "`") {
-          flushBufferToCurrent();
-          var codeNode = {"type": "code", "children": <Map<String, dynamic>>[]};
-          (stack.last["children"] as List).add(codeNode);
-          stack.add(codeNode);
-          i++;
-          continue;
-        }
-
-        if (ch == "*") {
-          flushBufferToCurrent();
-          if (stack.last["type"] == "italic") {
-            stack.removeLast();
-          } else {
-            var n = {"type": "italic", "children": <Map<String, dynamic>>[]};
-            (stack.last['children'] as List).add(n);
-            stack.add(n);
-          }
-          i++;
-          continue;
-        }
-
-        buf.write(ch);
-        i++;
-      }
-
-      flushBufferToCurrent();
-
-      InlineSpan build(Map<String, dynamic> node) {
-        var type = node["type"] as String;
-        if (type == "text") {
-          return TextSpan(text: node["text"] as String);
-        }
-
-        if (type == "link") {
-          var url = node["url"] as String;
-          return TextSpan(
-            text: url,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              decoration: TextDecoration.underline,
-            ),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => launchUrl(Uri.parse(url)),
-          );
-        }
-
-        var children = (node["children"] as List)
-            .map<InlineSpan>((c) => build(c as Map<String, dynamic>))
-            .toList();
-
-        switch (type) {
-          case "root":
-            return TextSpan(children: children);
-          case "italic":
-            return TextSpan(
-              children: children,
-              style: const TextStyle(fontStyle: FontStyle.italic),
-            );
-          case "code":
-            var codeText = (node["children"] as List)
-                .where((c) => (c as Map<String, dynamic>)["type"] == "text")
-                .map((c) => (c as Map<String, dynamic>)["text"] as String)
-                .join();
-            var widget = DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).dividerColor),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Text(
-                  codeText,
-                  style: const TextStyle(fontFamily: "monospace"),
-                ),
-              ),
-            );
-            return WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: widget,
-            );
-          default:
-            return TextSpan(children: children);
-        }
-      }
-
-      return build(root);
-    }
-
-    return TextSpan(
-      children: List.generate(paragraphs.length * 2 - 1, (index) {
-        if (index.isOdd) {
-          return const TextSpan(
-            text: "\n\n",
-            style: TextStyle(height: 0.5, color: Colors.transparent),
-          );
-        }
-        var text = paragraphs[index ~/ 2];
-        return parseInline(text);
-      }),
-    );
-  }
-
   String _reportText() =>
       """
 An exception was thrown during the execution of the app.
@@ -590,7 +438,7 @@ The app suggested the following cause of the issue:
     url += "&context=${Uri.encodeComponent(contextText)}";
 
     Clipboard.setData(ClipboardData(text: url));
-    launchUrl(Uri.parse(url));
+    launchUrl(Uri.parse(url), mode: LaunchMode.inAppBrowserView);
   }
 }
 
@@ -680,7 +528,7 @@ class _ErrorGuardDetailsPanelState extends State<_ErrorGuardDetailsPanel>
             leading: widget.icon,
             title: Text(widget.title),
             trailing: ExpandIcon(
-              onPressed: (_) => _toggleAnimation(),
+              onPressed: null,
               isExpanded: _expanded,
               padding: EdgeInsets.zero,
             ),
@@ -706,11 +554,7 @@ class _ErrorGuardDetailsPanelState extends State<_ErrorGuardDetailsPanel>
                         ),
                       )
                     : Text.rich(
-                        _ErrorGuardDetailsDialogState._contentFormat(
-                          context,
-                          widget.content.trim(),
-                        ),
-                        textAlign: TextAlign.justify,
+                        Markdown(widget.content.trim()).toTextSpan(context),
                         style: TextStyle(
                           fontStyle: widget.italic ? FontStyle.italic : null,
                           color: widget.italic ? theme.disabledColor : null,

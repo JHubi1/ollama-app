@@ -26,7 +26,7 @@ class Preferences extends ChangeNotifier {
 
   Map<String, String> get hostHeaders =>
       (jsonDecode(prefs?.getString("hostHeaders") ?? "{}") as Map).cast();
-  set hostHeaders(Map value) {
+  set hostHeaders(Map<String, String> value) {
     if (value.isEmpty) {
       prefs?.remove("hostHeaders");
     } else {
@@ -137,4 +137,10 @@ class TimeoutMultiplier {
 
   /// Very long time interval. Equals 60 seconds with default multiplier.
   static Duration get veryLong => calculate(const Duration(seconds: 60));
+
+  /// Interval intended for streams. Equals 5 minutes with default multiplier.
+  ///
+  /// This one might not be suitable for all models and situations. Use only
+  /// if required.
+  static Duration get stream => calculate(const Duration(minutes: 5));
 }

@@ -12,8 +12,8 @@ typedef ThemeBuilderBuilder =
     );
 
 class ThemeBuilderData {
-  ThemeBuilderData? _current;
-  ThemeBuilderData? get current => _current;
+  static ThemeBuilderData? _current;
+  static ThemeBuilderData? get current => _current;
 
   final ColorScheme? dynamicLight;
   final ColorScheme? dynamicDark;
@@ -67,7 +67,7 @@ class ThemeBuilderData {
           dynamicSchemeVariant: DynamicSchemeVariant.content,
           brightness: Brightness.dark,
         ).copyWith(surface: Colors.black),
-      );
+      ).copyWith(dividerColor: Colors.white30);
     }
   }
 }

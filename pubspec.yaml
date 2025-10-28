@@ -26,7 +26,6 @@ dependencies:
   transparent_image: ^2.0.1
   simple_icons: ^14.6.1
   url_launcher: ^6.2.6
-  flutter_markdown: ^0.7.1
   file_picker: ^8.0.3
   file_selector: ^1.0.3
   bitsdojo_window: ^0.1.6
@@ -42,8 +41,13 @@ dependencies:
   universal_html: ^2.2.4
   pwa_install: ^0.0.5
   flutter_chat_types: any
-  markdown: any
-  hyphenatorx: ^1.5.11
+  markdown: ^7.3.0
+  flutter_math_fork: ^0.7.4
+  flutter_highlight:
+    git:
+      url: https://github.com/JHubi1/highlight.dart
+      path: flutter_highlight
+  ogp_data_extract: ^0.2.2
   
   # dynamic_color: ^1.7.0
   dynamic_system_colors: ^1.8.0

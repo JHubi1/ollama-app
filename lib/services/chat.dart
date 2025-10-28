@@ -15,7 +15,7 @@ import 'preferences.dart';
 
 enum MessageSender { user, assistant }
 
-class Message extends ChangeNotifier {
+abstract class Message extends ChangeNotifier {
   final String id;
 
   final MessageSender sender;
@@ -27,17 +27,13 @@ class Message extends ChangeNotifier {
 
   void modify() => notifyListeners();
 
-  Map<String, dynamic> toJson() =>
-      throw UnimplementedError("toJson() must be implemented in subclasses");
+  Map<String, dynamic> toJson();
 
   @override
   String toString() => toJson().toString();
 
   @override
-  operator ==(Object other) {
-    return other is Message && other.id == id;
-  }
-
+  operator ==(Object other) => other is Message && other.id == id;
   @override
   int get hashCode => id.hashCode;
 }
@@ -75,10 +71,8 @@ class TextMessage extends Message {
     required MessageSender sender,
     Completer<void>? completer,
     void Function(String content)? onContent,
-  }) {
-    return TextMessage("", sender: sender, createdAt: DateTime.now())
-      .._contentFromStream(stream, completer: completer, onContent: onContent);
-  }
+  }) => TextMessage("", sender: sender, createdAt: DateTime.now())
+    .._contentFromStream(stream, completer: completer, onContent: onContent);
 
   Future<void> _contentFromStream(
     Stream<ollama.GenerateChatCompletionResponse> stream, {
@@ -89,14 +83,19 @@ class TextMessage extends Message {
     _locked = true;
 
     try {
-      await for (var response in stream) {
-        if (completer?.isCompleted ?? false) return;
-        _content += response.message.content;
+      StreamSubscription? sub;
+      sub = stream.listen((event) {
+        if (completer?.isCompleted ?? false) {
+          sub?.cancel();
+          return;
+        }
+        _content += event.message.content;
         chatHaptic();
 
         notifyListeners();
         onContent?.call(_content);
-      }
+      });
+      await sub.asFuture();
     } catch (e, s) {
       if (completer?.isCompleted ?? false) return;
       completer?.completeError(e, s);
@@ -132,7 +131,7 @@ class ImageMessage extends Message {
 }
 
 class Chat extends ChangeNotifier {
-  Completer<void>? completer;
+  Completer<void> completer = Completer<void>()..complete();
 
   bool get alive => ChatManager.instance.chats.contains(this);
   bool get active => alive && ChatManager.instance.currentChatId == id;
@@ -186,6 +185,18 @@ class Chat extends ChangeNotifier {
     for (var m in _messages) {
       m.addListener(notifyListeners);
     }
+  }
+
+  @override
+  void dispose() {
+    for (var message in _messages) {
+      message.removeListener(notifyListeners);
+    }
+    if (completer.isCompleted == false) completer.complete();
+    if (ChatManager.instance.currentChatId == id) {
+      ChatManager.instance.currentChatId = null;
+    }
+    super.dispose();
   }
 
   List<ollama.Message> toApi() {
@@ -288,6 +299,8 @@ class Chat extends ChangeNotifier {
       if (alive) Error.throwWithStackTrace(e, s);
       return;
     }
+    if (!alive) return;
+
     var newTitle = generated.message.content;
     newTitle = newTitle.replaceAll("\n", " ");
 
@@ -321,16 +334,28 @@ class Chat extends ChangeNotifier {
     title = newTitle.trim();
   }
 
+  void append(Message message) {
+    assert(alive, "Chat must be alive to be modified.");
+
+    _messages.add(message..addListener(notifyListeners));
+    notifyListeners();
+  }
+
   Future<void> send(
     Message message, {
     bool awaitCompletion = true,
     bool? think,
-    void Function(String)? onContent,
+    void Function(String content)? onContent,
   }) async {
     assert(alive, "Chat must be alive to be modified.");
 
     assert(model != null, "Chat model must be set to send messages.");
     if (model == null) return;
+
+    assert(
+      completer.isCompleted,
+      "Cannot send a message while another message is being sent.",
+    );
 
     _messages.add(message..addListener(notifyListeners));
 
@@ -356,14 +381,13 @@ class Chat extends ChangeNotifier {
       )..addListener(notifyListeners);
       _messages.add(message);
 
-      var future = completer!.future
-          .then((_) => ChatManager.instance.saveChats())
-          .catchError((e, s) {
-            message
-              .._includesError = true
-              ..modify();
-            Error.throwWithStackTrace(e, s);
-          });
+      var future = completer.future.catchError((e, s) {
+        message
+          .._locked = false
+          .._includesError = true
+          ..modify();
+        Error.throwWithStackTrace(e, s);
+      });
       if (awaitCompletion) await future;
     }
 
@@ -378,6 +402,11 @@ class Chat extends ChangeNotifier {
     message.removeListener(notifyListeners);
     notifyListeners();
   }
+
+  @override
+  bool operator ==(Object other) => other is Chat && other.id == id;
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class ChatManager extends ChangeNotifier {
@@ -406,6 +435,15 @@ class ChatManager extends ChangeNotifier {
   Set<Chat> get chats => Set.unmodifiable(_chats);
 
   ChatManager._();
+
+  void clearChats() {
+    for (var chat in _chats) {
+      chat.dispose();
+    }
+    _chats.clear();
+    _currentChatId = null;
+    notifyListeners();
+  }
 
   Future<void> loadChats() async {
     DateTime getDateTimeFromMilliseconds(int? milliseconds) {
@@ -502,8 +540,11 @@ class ChatManager extends ChangeNotifier {
 
   void deleteChat(Chat chat) {
     _chats.remove(chat);
-    if (chat.completer?.isCompleted == false) chat.completer!.complete();
     chat.removeListener(notifyListeners);
+    for (var message in chat.messages) {
+      message.removeListener(chat.notifyListeners);
+    }
+    if (chat.completer.isCompleted == false) chat.completer.complete();
 
     if (_currentChatId == chat.id) _currentChatId = null;
 

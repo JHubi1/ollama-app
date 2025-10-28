@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ollama_dart/ollama_dart.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 // import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 // import 'package:flutter_chat_ui/flutter_chat_ui.dart' as chat_ui;
@@ -18,8 +19,8 @@ import '../l10n/gen/app_localizations.dart';
 import '../main.dart';
 import '../services/chat.dart';
 import '../services/error.dart';
+import '../services/markdown.dart';
 import '../services/model.dart';
-import '../services/theme.dart';
 // import '../services/model.dart';
 // import '../services/preferences.dart';
 // import '../worker/desktop.dart';
@@ -1834,8 +1835,6 @@ class _ScreenMainState extends State<ScreenMain> {
     return Scaffold(
       body: ListView(
         children: [
-          const ListTile(title: ThemeModeSwitch()),
-          const ListTile(title: ThemeSwitch()),
           ...ChatManager.instance.chats.map(
             (chat) => ScreenMainChatTile(chat: chat),
           ),
@@ -1853,7 +1852,7 @@ class _ScreenMainState extends State<ScreenMain> {
                 "M49WC9CW",
                 () async {
                   var msg = TextMessage(
-                    "Hi!", // "Hello! Please explain what you can do.",
+                    "Write a long demo message for all GitHub Flavored Markdown features.",
                     sender: MessageSender.user,
                   );
                   return chat.send(msg);
@@ -1916,11 +1915,20 @@ class _ScreenMainChatTileState extends State<ScreenMainChatTile> {
         widget.chat.title.emptyOn(AppLocalizations.of(context).newChatTitle),
         placeholder: Text(AppLocalizations.of(context).newChatTitle),
       ),
-      subtitle: (widget.chat.messages.isEmpty)
-          ? const SizedBox.shrink()
-          : ChatText(
-              (widget.chat.messages.last as TextMessage).content,
-              placeholder: const Text("<incoming>"),
+      subtitle:
+          (widget.chat.messages.isEmpty ||
+              widget.chat.messages.last.runtimeType != TextMessage)
+          ? null
+          // : ChatText(
+          //     (widget.chat.messages.last as TextMessage).content,
+          //     placeholder: const Text("<incoming>"),
+          //   ),
+          : (widget.chat.messages.last as TextMessage).content.isEmpty
+          ? const LinearProgressIndicator()
+          : Text.rich(
+              Markdown(
+                (widget.chat.messages.last as TextMessage).content,
+              ).toTextSpan(context),
             ),
       onTap: () => ChatManager.instance.deleteChat(widget.chat),
     );
