@@ -6,13 +6,17 @@ import 'functions.dart';
 
 void main() {
   testWidgets("Widget: button", (WidgetTester tester) async {
-    var text = random(10);
+    final text = random(10);
     var clicked = false;
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(
+      MaterialApp(
         home: Scaffold(
-            body: button(text, Icons.add_rounded, () {
-      clicked = true;
-    }))));
+          body: button(text, Icons.add_rounded, () {
+            clicked = true;
+          }),
+        ),
+      ),
+    );
 
     expect(find.text(text), findsOneWidget);
     expect(find.byIcon(Icons.add_rounded), findsOneWidget);
@@ -23,14 +27,21 @@ void main() {
     expect(clicked, true);
   });
   testWidgets("Widget: toggle", (WidgetTester tester) async {
-    var text = random(10);
+    final text = random(10);
     var toggled = false;
     await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Builder(builder: (context) {
-      return toggle(context, text, toggled, (value) {
-        toggled = value;
-      });
-    }))));
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              return toggle(context, text, toggled, (value) {
+                toggled = value;
+              });
+            },
+          ),
+        ),
+      ),
+    );
 
     expect(find.textContaining(text), findsOneWidget);
     expect(find.byType(Switch), findsOneWidget);

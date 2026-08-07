@@ -3,11 +3,15 @@ import 'dart:convert';
 
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
-import 'package:ollama_dart/ollama_dart.dart' as ollama;
+import 'package:image/image.dart' as img;
+import 'package:mime/mime.dart';
+import 'package:ollama_dart/ollama_dart.dart' as llama;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../main.dart';
+import 'chat_database/chat_database.dart';
 import 'clients.dart' as clients;
 import 'haptic.dart';
 import 'model.dart';
@@ -36,6 +40,14 @@ abstract class Message extends ChangeNotifier {
   operator ==(Object other) => other is Message && other.id == id;
   @override
   int get hashCode => id.hashCode;
+
+  static Message Function(Map<String, dynamic> json)? constructorForType(
+    String type,
+  ) => switch (type) {
+    "text" => TextMessage.fromJson,
+    "image" => ImageMessage.fromJson,
+    _ => null,
+  };
 }
 
 class TextMessage extends Message {
@@ -43,6 +55,12 @@ class TextMessage extends Message {
 
   String _content;
   String get content => _content;
+
+  String? _thinking;
+  String? get thinking => _thinking;
+
+  ChatUsageStats? _stats;
+  ChatUsageStats? get stats => _stats;
 
   bool _includesError = false;
   bool get includesError => _includesError;
@@ -62,24 +80,49 @@ class TextMessage extends Message {
     "type": "text",
     "role": sender.name,
     "content": content,
+    "thinking": thinking,
+    "stats": stats?.toJson(),
     "includesError": includesError,
     "createdAt": createdAt.toUtc().millisecondsSinceEpoch,
   };
 
+  TextMessage.fromJson(Map<String, dynamic> json)
+    : _content = json["content"],
+      _thinking = json["thinking"],
+      _stats = json["stats"] != null
+          ? ChatUsageStats.fromJson(json["stats"])
+          : null,
+      _includesError = json["includesError"] ?? false,
+      super(
+        sender: MessageSender.values.byName(json["role"]),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(
+          json["createdAt"],
+          isUtc: true,
+        ),
+      );
+
   factory TextMessage.fromStream(
-    Stream<ollama.GenerateChatCompletionResponse> stream, {
+    Stream<llama.ChatStreamEvent> stream, {
     required MessageSender sender,
     Completer<void>? completer,
     void Function(String content)? onContent,
+    Future<void> Function()? saveChat,
   }) => TextMessage("", sender: sender, createdAt: DateTime.now())
-    .._contentFromStream(stream, completer: completer, onContent: onContent);
+    .._contentFromStream(
+      stream,
+      completer: completer,
+      onContent: onContent,
+      saveChat: saveChat,
+    );
 
   Future<void> _contentFromStream(
-    Stream<ollama.GenerateChatCompletionResponse> stream, {
+    Stream<llama.ChatStreamEvent> stream, {
     Completer<void>? completer,
     void Function(String content)? onContent,
+    Future<void> Function()? saveChat,
   }) async {
     assert(!_locked, "Cannot modify a locked message.");
+    if (_locked) return;
     _locked = true;
 
     try {
@@ -89,11 +132,20 @@ class TextMessage extends Message {
           sub?.cancel();
           return;
         }
-        _content += event.message.content;
+
+        if (event.message?.thinking != null) {
+          _thinking = "${_thinking ?? ""}${event.message?.thinking}";
+        }
+        if (event.done ?? false) {
+          _stats = ChatUsageStats.fromChatResponse(event);
+        }
+
+        _content += event.message!.content!;
         chatHaptic();
 
         notifyListeners();
         onContent?.call(_content);
+        saveChat?.call();
       });
       await sub.asFuture();
     } catch (e, s) {
@@ -110,12 +162,22 @@ class TextMessage extends Message {
 }
 
 class ImageMessage extends Message {
-  final Uri image;
+  Uri _image;
+  Uri get image => _image;
+
   final String? name;
 
+  double? _aspectRatio;
+  double? get aspectRatio => _aspectRatio;
+
+  int? _width;
+  int? get width => _width;
+
   ImageMessage({
-    required this.image,
+    required this._image,
     this.name,
+    this._aspectRatio,
+    this._width,
     required super.sender,
     super.createdAt,
   });
@@ -126,8 +188,128 @@ class ImageMessage extends Message {
     "role": sender.name,
     "image": image.toString(),
     "name": name,
+    "aspectRatio": aspectRatio,
+    "width": width,
     "createdAt": createdAt.toUtc().millisecondsSinceEpoch,
   };
+
+  ImageMessage.fromJson(Map<String, dynamic> json)
+    : _image = json["image"] != null
+          ? Uri.parse(json["image"])
+          : Uri.parse(
+              "data:${lookupMimeType(json["name"])};base64,${json["content"]}",
+            ),
+      name = json["name"],
+      _aspectRatio = (json["aspectRatio"] as num?)?.toDouble(),
+      _width = json["width"],
+      super(
+        sender: MessageSender.values.byName(json["role"]),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(
+          json["createdAt"],
+          isUtc: true,
+        ),
+      );
+
+  Future<void> computeImageMeta() async {
+    try {
+      final data = image.scheme == "ref"
+          ? await (chatDb.select(chatDb.assets)
+                  ..where((a) => a.id.equals(image.authority)))
+                .getSingleOrNull()
+                .then((r) => r?.data)
+          : base64Decode(image.toString().split(",").last);
+      if (data == null) return;
+
+      final decodedImage = img.decodeImage(data);
+      if (decodedImage == null) return;
+
+      _aspectRatio = decodedImage.width / decodedImage.height;
+      _width = decodedImage.width;
+    } catch (_) {}
+  }
+
+  Future<ImageProvider> get imageProvider async {
+    assert(
+      image.scheme == "ref",
+      "Only images with a 'ref' scheme should be used; please await for migration before using images.",
+    );
+
+    if (image.scheme == "ref") {
+      final img = await (chatDb.select(
+        chatDb.assets,
+      )..where((img) => img.id.equals(image.authority))).getSingleOrNull();
+      if (img != null) return MemoryImage(img.data);
+    } else if (image.scheme == "data") {
+      return MemoryImage(base64Decode(image.toString().split(",").last));
+    }
+    return NetworkImage(image.toString());
+  }
+}
+
+class ChatUsageStats {
+  final Duration totalDuration;
+  final Duration? loadDuration;
+  final int promptEvalCount;
+  final Duration? promptEvalDuration;
+  final int evalCount;
+  final Duration? evalDuration;
+
+  ChatUsageStats._({
+    required this.totalDuration,
+    required this.loadDuration,
+    required this.promptEvalCount,
+    required this.promptEvalDuration,
+    required this.evalCount,
+    required this.evalDuration,
+  });
+
+  static ChatUsageStats? fromChatResponse(llama.ChatStreamEvent response) {
+    if (response.totalDuration == null ||
+        response.promptEvalCount == null ||
+        response.evalCount == null) {
+      return null;
+    }
+
+    return ChatUsageStats._(
+      totalDuration: Duration(microseconds: response.totalDuration! ~/ 1000),
+      loadDuration: response.loadDuration != null
+          ? Duration(microseconds: response.loadDuration! ~/ 1000)
+          : null,
+      promptEvalCount: response.promptEvalCount!,
+      promptEvalDuration: response.promptEvalDuration != null
+          ? Duration(microseconds: response.promptEvalDuration! ~/ 1000)
+          : null,
+      evalCount: response.evalCount!,
+      evalDuration: response.evalDuration != null
+          ? Duration(microseconds: response.evalDuration! ~/ 1000)
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "totalDuration": totalDuration.inMicroseconds,
+    "loadDuration": loadDuration?.inMicroseconds,
+    "promptEvalCount": promptEvalCount,
+    "promptEvalDuration": promptEvalDuration?.inMicroseconds,
+    "evalCount": evalCount,
+    "evalDuration": evalDuration?.inMicroseconds,
+  };
+
+  factory ChatUsageStats.fromJson(Map<String, dynamic> json) =>
+      ChatUsageStats._(
+        totalDuration: Duration(microseconds: json["totalDuration"]),
+        loadDuration: json["loadDuration"] != null
+            ? Duration(microseconds: json["loadDuration"])
+            : null,
+        promptEvalCount: json["promptEvalCount"],
+        promptEvalDuration: json["loadDuration"] != null
+            ? Duration(microseconds: json["promptEvalDuration"])
+            : null,
+        evalCount: json["evalCount"],
+        evalDuration: json["loadDuration"] != null
+            ? Duration(microseconds: json["evalDuration"])
+            : null,
+      );
 }
 
 class Chat extends ChangeNotifier {
@@ -143,12 +325,14 @@ class Chat extends ChangeNotifier {
   String? get modelName => _modelName;
   set modelName(String? name) {
     assert(alive, "Chat must be alive to be modified.");
+    if (!alive) return;
 
     _modelName = name;
     if (ChatManager.instance.currentChatId == id) {
       ModelManager.instance.currentModelName = name;
     }
     notifyListeners();
+    saveChat();
   }
 
   Model? get model => ModelManager.instance.models.firstOrNullWhere(
@@ -160,26 +344,28 @@ class Chat extends ChangeNotifier {
   String get title => _title;
   set title(String title) {
     assert(alive, "Chat must be alive to be modified.");
+    if (!alive) return;
 
     _title = title;
     notifyListeners();
+    saveChat();
   }
 
-  final Set<Message> _messages;
-  Set<Message> get messages => Set.unmodifiable(_messages);
+  final List<Message> _messages;
+  List<Message> get messages => List.unmodifiable(_messages);
 
   final String? system;
 
   Chat._({
+    String? id,
     required String? modelName,
-    required String title,
+    required this._title,
     required this.createdAt,
-    Set<Message>? messages,
+    List<Message>? messages,
     String? system,
-  }) : id = const Uuid().v4(),
-       _modelName = modelName,
-       _title = title,
-       _messages = messages ?? {},
+  }) : id = id ?? const Uuid().v4(),
+       _modelName = modelName ?? ModelManager.instance.currentModelName,
+       _messages = messages ?? [],
        system = system ?? Preferences.instance.system {
     addListener(ChatManager.instance.notifyListeners);
     for (var m in _messages) {
@@ -199,31 +385,35 @@ class Chat extends ChangeNotifier {
     super.dispose();
   }
 
-  List<ollama.Message> toApi() {
-    var messages = <ollama.Message>[];
-    var images = <ImageMessage>[];
+  List<llama.ChatMessage> toApi() {
+    final messages = <llama.ChatMessage>[];
+    final images = <ImageMessage>[];
 
-    var systemMessage = system;
+    final systemMessage = system;
     if (systemMessage != null) {
       messages.add(
-        ollama.Message(role: ollama.MessageRole.system, content: systemMessage),
+        llama.ChatMessage(
+          role: llama.MessageRole.system,
+          content: systemMessage,
+        ),
       );
     }
 
     for (var message in _messages) {
       switch (message) {
-        case TextMessage message:
+        case final TextMessage message:
           messages.add(
-            ollama.Message(
+            llama.ChatMessage(
               role: message.sender == MessageSender.user
-                  ? ollama.MessageRole.user
-                  : ollama.MessageRole.assistant,
+                  ? llama.MessageRole.user
+                  : llama.MessageRole.assistant,
               content: message.content,
               images: images.map((e) => e.image.toString()).toList(),
             ),
           );
           images.clear();
-        case ImageMessage message:
+        case final ImageMessage message
+            when message.sender == MessageSender.user:
           images.add(message);
       }
     }
@@ -246,19 +436,20 @@ class Chat extends ChangeNotifier {
   }) async {
     assert(alive, "Chat must be alive to be modified.");
     assert(model != null, "Chat model must be set to generate a title.");
+    if (!alive || model == null) return;
 
     if (_messages.isEmpty ||
         model == null ||
         !Preferences.instance.generateTitles) {
-      _title = AppLocalizations.of(mainContext!).newChatTitle;
+      _title = AppLocalizations.of(context).newChatTitle;
       return;
     }
 
-    var effectiveThink =
+    final effectiveThink =
         (think ?? false) &&
         model!.capabilities.contains(ModelCapability.thinking);
 
-    var content = jsonEncode(
+    final content = jsonEncode(
       (toJson()["messages"] as List<Map<String, dynamic>>)
           .map(
             (e) => e
@@ -268,32 +459,32 @@ class Chat extends ChangeNotifier {
           )
           .toList(),
     );
-    var request = ollama.GenerateChatCompletionRequest(
+    final request = llama.ChatRequest(
       model: modelName!,
       messages: [
-        const ollama.Message(
-          role: ollama.MessageRole.system,
+        const llama.ChatMessage(
+          role: llama.MessageRole.system,
           content:
               "Generate a two to five word title for the conversation provided by the user. "
-              "If an object or person is very important in the conversation, put it in the title as well; keep the focus on the main subject. Also make an assumption about things happening in the conversation following the messages provided. "
-              "You must not put the assistant in the focus and you must not put the word 'assistant' in the title! "
-              "Use a factual, formal tone; don't make the title dramatic using dramatic words. Preferably use nouns and adjectives, not verbs. Also avoid using words like 'simple' or 'easy' to not belittle the user or their problem. "
-              "Do preferably use title case. You must not use markdown or any other formatting language! You must not use emojis or any other symbols! You must not use general clauses like 'assistance', 'help' or 'session' in your title!\n\n"
-              "Example bad titles compared to good titles:\n\n~~User Introduces Themselves~~ -> User Introduction\n~~User Asks for Help with a Problem~~ -> Problem Help\n~~User has a _**big**_ Problem~~ -> Big Problem",
+              "Focus on the main subject or topic. If a specific object, person, or concept is central to the discussion, include it in the title. "
+              "Do not focus on the assistant; never use the word 'assistant' or imply it is the subject. "
+              "Use a factual, neutral tone. Prefer nouns and adjectives over verbs. Do not use dramatic, vague, or belittling words such as 'simple', 'easy', 'big', or 'interesting'. "
+              "Use title case. Do not use markdown, emojis, symbols, or generic terms like 'assistance', 'help', 'session', or 'conversation'.\n\n"
+              "---\n\nExamples (bad -> good):\n\n~~User Introduces Themselves~~ -> User Introduction\n~~User Asks for Help with a Problem~~ -> Problem Troubleshooting\n~~User has a _**big**_ Problem~~ -> Issue Diagnosis\n~~Simple Python Question~~ -> Python Syntax Help",
         ),
-        ollama.Message(
-          role: ollama.MessageRole.user,
+        llama.ChatMessage(
+          role: llama.MessageRole.user,
           content: "```json\n$content\n```",
         ),
       ],
-      keepAlive: Preferences.instance.keepAlive,
-      think: effectiveThink,
+      keepAlive: llama.KeepAlive.number(Preferences.instance.keepAlive),
+      think: llama.ThinkValue.enabled(effectiveThink),
     );
 
-    ollama.GenerateChatCompletionResponse generated;
+    llama.ChatResponse generated;
     try {
-      generated = await clients.ollamaClient
-          .generateChatCompletion(request: request)
+      generated = await clients.ollamaClient.chat
+          .create(request: request)
           .timeout(TimeoutMultiplier.long);
     } catch (e, s) {
       if (alive) Error.throwWithStackTrace(e, s);
@@ -301,7 +492,7 @@ class Chat extends ChangeNotifier {
     }
     if (!alive) return;
 
-    var newTitle = generated.message.content;
+    var newTitle = generated.message!.content!;
     newTitle = newTitle.replaceAll("\n", " ");
 
     for (var term in [
@@ -336,9 +527,11 @@ class Chat extends ChangeNotifier {
 
   void append(Message message) {
     assert(alive, "Chat must be alive to be modified.");
+    if (!alive) return;
 
     _messages.add(message..addListener(notifyListeners));
     notifyListeners();
+    saveChat();
   }
 
   Future<void> send(
@@ -348,6 +541,7 @@ class Chat extends ChangeNotifier {
     void Function(String content)? onContent,
   }) async {
     assert(alive, "Chat must be alive to be modified.");
+    if (!alive) return;
 
     assert(model != null, "Chat model must be set to send messages.");
     if (model == null) return;
@@ -356,32 +550,36 @@ class Chat extends ChangeNotifier {
       completer.isCompleted,
       "Cannot send a message while another message is being sent.",
     );
+    if (!completer.isCompleted) return;
 
     _messages.add(message..addListener(notifyListeners));
 
-    var finalThink =
+    final finalThink =
         (think ?? Preferences.instance.thinking) &&
         model!.capabilities.contains(ModelCapability.thinking);
 
     if (message is TextMessage && message.sender == MessageSender.user) {
       completer = Completer<void>();
-      var message = TextMessage.fromStream(
-        clients.ollamaClient.generateChatCompletionStream(
-          request: ollama.GenerateChatCompletionRequest(
+      final message = TextMessage.fromStream(
+        clients.ollamaClient.chat.createStream(
+          request: llama.ChatRequest(
             model: model!.name,
             messages: toApi(),
             stream: true,
-            keepAlive: Preferences.instance.keepAlive,
-            think: finalThink,
+            keepAlive: llama.KeepAlive.number(Preferences.instance.keepAlive),
+            think: llama.ThinkValue.enabled(finalThink),
           ),
         ),
         sender: MessageSender.assistant,
         completer: completer,
         onContent: onContent,
+        saveChat: () async {
+          if (alive) await saveChat();
+        },
       )..addListener(notifyListeners);
       _messages.add(message);
 
-      var future = completer.future.catchError((e, s) {
+      final future = completer.future.catchError((e, s) {
         message
           .._locked = false
           .._includesError = true
@@ -389,18 +587,74 @@ class Chat extends ChangeNotifier {
         Error.throwWithStackTrace(e, s);
       });
       if (awaitCompletion) await future;
+    } else if (message is ImageMessage) {
+      await message.computeImageMeta();
     }
 
     notifyListeners();
-    await ChatManager.instance.saveChats();
+    if (alive) await saveChat();
   }
 
-  void deleteMessage(Message message) {
+  void delete(Message message) {
     assert(alive, "Chat must be alive to be modified.");
+    if (!alive) return;
 
     _messages.remove(message);
     message.removeListener(notifyListeners);
     notifyListeners();
+    saveChat();
+  }
+
+  Future<void> saveChat() async {
+    assert(alive, "Chat must be alive to be modified.");
+    if (!alive) return;
+
+    await chatDb
+        .into(chatDb.chats)
+        .insertOnConflictUpdate(
+          ChatsCompanion(id: Value(id), json: Value(jsonEncode(toJson()))),
+        );
+  }
+
+  Future<bool> _migrateImageStorageFormat() async {
+    var didMigrate = false;
+    for (var message in _messages.whereType<ImageMessage>()) {
+      if (message.image.scheme != "ref") {
+        final id = const Uuid().v4();
+        final data = base64Decode(message.image.toString().split(",").last);
+        await chatDb
+            .into(chatDb.assets)
+            .insert(
+              AssetsCompanion(
+                id: Value(id),
+                chatId: Value(this.id),
+                data: Value(data),
+              ),
+            );
+
+        double? aspectRatio;
+        int? width;
+        if (message.aspectRatio == null || message.width == null) {
+          try {
+            final decodedImage = img.decodeImage(data);
+            if (decodedImage != null) {
+              aspectRatio = decodedImage.width / decodedImage.height;
+              width = decodedImage.width;
+            }
+          } catch (_) {}
+        } else {
+          aspectRatio = message.aspectRatio;
+          width = message.width;
+        }
+
+        message
+          .._image = Uri.parse("ref://$id")
+          .._aspectRatio = aspectRatio
+          .._width = width;
+        didMigrate = true;
+      }
+    }
+    return didMigrate;
   }
 
   @override
@@ -416,12 +670,16 @@ class ChatManager extends ChangeNotifier {
   String? _currentChatId;
   String? get currentChatId => _currentChatId;
   set currentChatId(String? id) {
+    final chat = _chats.where((e) => e.id == id).firstOrNull;
+    if (chat == null && id != null) {
+      throw ArgumentError.value(id, "id", "Chat with this ID does not exist.");
+    }
+
     _currentChatId = id;
     if (id != null) {
-      ModelManager.instance.currentModelName = _chats
-          .singleWhere((e) => e.id == id)
-          .model!
-          .name;
+      if (chat!.model != null) {
+        ModelManager.instance.currentModelName = chat.model!.name;
+      }
     }
     notifyListeners();
   }
@@ -436,90 +694,94 @@ class ChatManager extends ChangeNotifier {
 
   ChatManager._();
 
-  void clearChats() {
-    for (var chat in _chats) {
-      chat.dispose();
-    }
-    _chats.clear();
-    _currentChatId = null;
-    notifyListeners();
-  }
-
   Future<void> loadChats() async {
     DateTime getDateTimeFromMilliseconds(int? milliseconds) {
       if (milliseconds == null) return DateTime.now();
       return DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
     }
 
-    var stored = prefs!.getStringList("chats") ?? [];
+    var stored = <String>[];
+
+    final oldPrefs = await SharedPreferences.getInstance();
+    final oldStored = oldPrefs.getStringList("chats") ?? [];
+    if (oldStored.isNotEmpty) {
+      stored = oldStored;
+      await oldPrefs.remove("chats");
+      await prefs!.remove("chats");
+    }
+
+    if (stored.isEmpty) {
+      stored = await chatDb
+          .select(chatDb.chats)
+          .get()
+          .then((rows) => rows.map((r) => r.json).toList());
+    }
+
     _chats.clear();
     for (var chatJson in stored) {
       try {
-        var chatData = jsonDecode(chatJson);
+        final chatData = jsonDecode(chatJson);
 
-        var messages = <Message>{};
+        final messages = <Message>[];
         String? system;
-        for (var message in chatData["messages"]) {
+
+        final data = chatData["messages"] is String
+            ? (jsonDecode(chatData["messages"]) as List)
+            : chatData["messages"];
+
+        for (var message in data) {
           if (message["role"] == "system") {
             system = message["content"];
+            continue;
           }
 
-          switch (message["type"]) {
-            case "text":
-              messages.add(
-                TextMessage(
-                  message["content"],
-                  sender: MessageSender.values.byName(message["role"]),
-                  createdAt: getDateTimeFromMilliseconds(message["createdAt"]),
-                ),
-              );
-            case "image":
-              messages.add(
-                ImageMessage(
-                  image: Uri.parse(message["image"]),
-                  name: message["name"],
-                  sender: MessageSender.values.byName(message["role"]),
-                  createdAt: getDateTimeFromMilliseconds(message["createdAt"]),
-                ),
-              );
-          }
+          final constructor = Message.constructorForType(
+            message["type"] ?? "text",
+          );
+          if (constructor == null) continue;
+          messages.add(constructor.call(message));
         }
 
         _chats.add(
           Chat._(
+            id: chatData["uuid"] ?? chatData["id"],
             modelName: chatData["model"],
             createdAt: getDateTimeFromMilliseconds(chatData["createdAt"]),
             title: chatData["title"],
             messages: messages,
             system: system,
-          ),
+          )..addListener(notifyListeners),
         );
       } catch (_) {
         rethrow;
       }
     }
+
+    if (oldStored.isNotEmpty) await saveChats();
     notifyListeners();
   }
 
   Future<void> saveChats() async {
-    prefs!.setStringList(
-      "chats",
-      _chats.map((c) => jsonEncode(c.toJson())).toList(),
-    );
+    for (var chat in _chats) {
+      await chatDb
+          .into(chatDb.chats)
+          .insertOnConflictUpdate(
+            ChatsCompanion(
+              id: Value(chat.id),
+              json: Value(jsonEncode(chat.toJson())),
+            ),
+          );
+      if (await chat._migrateImageStorageFormat()) await chat.saveChat();
+    }
   }
 
   Chat createChat({
     required BuildContext? context,
-    required Model? model,
+    Model? model,
     String? title,
     String? system,
   }) {
-    assert(
-      allowMultipleChats || chats.isEmpty,
-      "Cannot create a new chat when multiple chats are not allowed and there is already a chat.",
-    );
-
-    var chat = Chat._(
+    final chat = Chat._(
       modelName: model?.name,
       createdAt: DateTime.now(),
       title:
@@ -533,7 +795,7 @@ class ChatManager extends ChangeNotifier {
     _currentChatId = chat.id;
 
     notifyListeners();
-    saveChats();
+    chat.saveChat();
 
     return chat;
   }
@@ -549,7 +811,7 @@ class ChatManager extends ChangeNotifier {
     if (_currentChatId == chat.id) _currentChatId = null;
 
     notifyListeners();
-    saveChats();
+    (chatDb.delete(chatDb.chats)..where((c) => c.id.equals(chat.id))).go();
   }
 }
 
@@ -561,7 +823,7 @@ Future<bool> showDeleteChatDialog(
   FutureOr<void> Function()? onDelete,
 }) {
   chat ??= ChatManager.instance.currentChat;
-  var completer = Completer<bool>();
+  final completer = Completer<bool>();
   if (Preferences.instance.askBeforeDeletion) {
     showDialog(
       context: context,
@@ -575,6 +837,8 @@ Future<bool> showDeleteChatDialog(
     );
   } else {
     ChatManager.instance.deleteChat(chat!);
+    onDelete?.call();
+    completer.complete(true);
   }
   return completer.future;
 }
@@ -622,15 +886,32 @@ class DeleteChatDialog extends StatelessWidget {
 
 // MARK: Chat Text Widget
 
+class _AnimatedWord {
+  final String text;
+  final WidgetSpan? widgetSpan;
+  TextStyle? style;
+  AnimationController? controller;
+
+  bool get isWidget => widgetSpan != null;
+
+  _AnimatedWord(this.text, this.style, [this.controller]) : widgetSpan = null;
+  _AnimatedWord.forWidget(this.widgetSpan)
+    : text = '',
+      style = null,
+      controller = null;
+}
+
 class ChatText extends StatefulWidget {
-  final String content;
+  final InlineSpan content;
   final Duration? flyInDuration;
+  final Duration? wordDelay;
   final Widget? placeholder;
 
   const ChatText(
     this.content, {
     super.key,
     this.flyInDuration,
+    this.wordDelay,
     this.placeholder,
   });
 
@@ -639,84 +920,221 @@ class ChatText extends StatefulWidget {
 }
 
 class _ChatTextState extends State<ChatText> with TickerProviderStateMixin {
-  late List<String> _words;
-  late final List<AnimationController?> _controllers;
+  final List<_AnimatedWord> _words = [];
+  final List<_AnimatedWord> _queue = [];
+  Timer? _delayTimer;
+  DateTime? _lastWordShownAt;
+
+  List<String> _splitWords(String text) {
+    if (text.isEmpty) return const [];
+    return text.split(RegExp(r'(?=\s)')).where((s) => s.isNotEmpty).toList();
+  }
+
+  List<_AnimatedWord> _flattenAll(InlineSpan span, [TextStyle? parent]) {
+    final result = <_AnimatedWord>[];
+    if (span is TextSpan) {
+      final eff = (parent != null && span.style != null)
+          ? parent.merge(span.style!)
+          : (span.style ?? parent);
+      if (span.text?.isNotEmpty ?? false) {
+        result.add(_AnimatedWord(span.text!, eff));
+      }
+      for (var child in span.children ?? const <InlineSpan>[]) {
+        result.addAll(_flattenAll(child, eff));
+      }
+    } else if (span is WidgetSpan) {
+      result.add(_AnimatedWord.forWidget(span));
+    }
+    return result;
+  }
 
   @override
   void initState() {
     super.initState();
-    _words = _splitWords(widget.content);
-    _controllers = List.generate(_words.length, (_) => null);
+    for (var entry in _flattenAll(widget.content)) {
+      if (entry.isWidget) {
+        _words.add(entry);
+      } else {
+        for (var w in _splitWords(entry.text)) {
+          _words.add(_AnimatedWord(w, entry.style));
+        }
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(ChatText old) {
+    super.didUpdateWidget(old);
+    if (widget.content != old.content) _processUpdate();
+  }
+
+  void _enqueue(_AnimatedWord word) {
+    if (widget.wordDelay == null) {
+      word.controller?.forward();
+      return;
+    }
+    _queue.add(word);
+    _drainQueue();
+  }
+
+  void _drainQueue() {
+    if ((_delayTimer?.isActive ?? false) || _queue.isEmpty) return;
+    final remaining =
+        widget.wordDelay! -
+        (_lastWordShownAt != null
+            ? DateTime.now().difference(_lastWordShownAt!)
+            : widget.wordDelay!);
+    if (remaining <= Duration.zero) {
+      _lastWordShownAt = DateTime.now();
+      _queue.removeAt(0).controller?.forward();
+      if (_queue.isNotEmpty) _drainQueue();
+    } else {
+      _delayTimer = Timer(remaining, _drainQueue);
+    }
+  }
+
+  void _cancelQueue() {
+    _delayTimer?.cancel();
+    _delayTimer = null;
+    _lastWordShownAt = null;
+    _queue.clear();
   }
 
   @override
   void dispose() {
-    for (var c in _controllers) {
-      c?.dispose();
+    _cancelQueue();
+    for (var w in _words) {
+      w.controller?.dispose();
     }
     super.dispose();
   }
 
-  List<String> _splitWords(String s) {
-    if (s.trim().isEmpty) return <String>[];
-    return s.split(RegExp(r"(?=\s+)"));
+  void _processUpdate() {
+    final newEntries = _flattenAll(widget.content);
+    final newFullText = newEntries
+        .where((e) => !e.isWidget)
+        .map((e) => e.text)
+        .join();
+    final oldFullText = _words
+        .where((w) => !w.isWidget)
+        .map((w) => w.text)
+        .join();
+
+    if (newFullText == oldFullText) {
+      _syncStyles(newEntries);
+      setState(() {});
+      return;
+    }
+
+    if (newFullText.startsWith(oldFullText)) {
+      _animateAppended(newEntries, oldFullText.length);
+    } else {
+      _reset(newEntries);
+    }
+  }
+
+  void _syncStyles(List<_AnimatedWord> entries) {
+    final flat = <_AnimatedWord>[];
+    for (var entry in entries) {
+      if (entry.isWidget) continue;
+      for (var w in _splitWords(entry.text)) {
+        flat.add(_AnimatedWord(w, entry.style));
+      }
+    }
+    final textWords = _words.where((w) => !w.isWidget).toList();
+    for (var i = 0; i < textWords.length && i < flat.length; i++) {
+      textWords[i].style = flat[i].style;
+    }
+  }
+
+  void _animateAppended(List<_AnimatedWord> newEntries, int oldLength) {
+    var seen = 0;
+    for (var leaf in newEntries) {
+      if (leaf.isWidget) {
+        if (seen >= oldLength) _words.add(leaf);
+        continue;
+      }
+      final leafEnd = seen + leaf.text.length;
+      if (leafEnd <= oldLength) {
+        seen = leafEnd;
+        continue;
+      }
+      final start = (oldLength - seen).clamp(0, leaf.text.length);
+      final newText = leaf.text.substring(start);
+      for (var word in _splitWords(newText)) {
+        final ctrl = AnimationController(
+          value: 0.0,
+          vsync: this,
+          duration: widget.flyInDuration ?? Durations.medium1,
+        );
+        final entry = _AnimatedWord(word, leaf.style, ctrl);
+        ctrl
+          ..addListener(() {
+            if (mounted) setState(() {});
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              entry.controller?.dispose();
+              entry.controller = null;
+            }
+          });
+        _words.add(entry);
+        _enqueue(entry);
+      }
+      seen = leafEnd;
+    }
+  }
+
+  void _reset(List<_AnimatedWord> entries) {
+    _cancelQueue();
+    for (var w in _words) {
+      w.controller?.dispose();
+    }
+    _words.clear();
+    for (var entry in entries) {
+      if (entry.isWidget) {
+        _words.add(entry);
+      } else {
+        for (var w in _splitWords(entry.text)) {
+          _words.add(_AnimatedWord(w, entry.style));
+        }
+      }
+    }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    var newWords = _splitWords(
-      widget.content.replaceFirst(
-        RegExp("^${RegExp.escape(_words.join())}"),
-        "",
+    final isEmpty = _words.isEmpty;
+    if (isEmpty && widget.placeholder != null) return widget.placeholder!;
+
+    final defaultColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
+
+    return AnimatedSize(
+      alignment: Alignment.topLeft,
+      duration: Durations.short2,
+      child: Text.rich(
+        TextSpan(
+          children: _words
+              .where((w) => w.controller?.status != AnimationStatus.dismissed)
+              .map((word) {
+                final alpha = word.controller?.value;
+                if (alpha == null) {
+                  return TextSpan(text: word.text, style: word.style);
+                }
+
+                final baseColor = word.style?.color ?? defaultColor;
+                return TextSpan(
+                  text: word.text,
+                  style: (word.style ?? const TextStyle()).copyWith(
+                    color: baseColor.withValues(alpha: alpha),
+                  ),
+                );
+              })
+              .toList(),
+        ),
       ),
     );
-
-    for (var word in newWords.asMap().entries) {
-      _words.add(word.value);
-      _controllers.add(
-        AnimationController(
-            value: 0,
-            vsync: this,
-            duration: widget.flyInDuration ?? Durations.medium1,
-          )
-          ..addListener(() {
-            var index = word.key + _words.length - newWords.length;
-            if (_controllers[index]?.value == 1) {
-              _controllers[index]!.dispose();
-              _controllers[index] = null;
-            }
-
-            setState(() {});
-          })
-          ..forward(),
-      );
-    }
-
-    var finalColor =
-        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
-    return (_words.isEmpty && widget.placeholder != null)
-        ? widget.placeholder!
-        : AnimatedSize(
-            alignment: Alignment.topLeft,
-            duration: Durations.short2,
-            child: Text.rich(
-              TextSpan(
-                children: _words
-                    .asMap()
-                    .entries
-                    .map(
-                      (e) => TextSpan(
-                        text: e.value,
-                        style: TextStyle(
-                          color: finalColor.withValues(
-                            alpha: _controllers[e.key]?.value,
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          );
   }
 }

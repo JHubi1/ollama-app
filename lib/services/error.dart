@@ -6,11 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:ollama_dart/ollama_dart.dart';
+import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import 'markdown.dart';
+import 'services.dart';
 
 final _logIdRegex = RegExp(r"^[A-Z0-9]{2,16}$");
 
@@ -23,7 +24,7 @@ typedef ErrorGuardDetailsMessageGenerator =
 typedef ErrorGuardIgnoreIfGenerator = bool Function(Object exception);
 
 String _defaultErrorMessage(Object exception) => switch (exception) {
-  OllamaClientException _ => "Unknown client error",
+  llama.OllamaException _ => "Unknown client error",
   AssertionError _ =>
     exception.toString().split(": ").elementAtOrNull(4) ??
         "An assertion failed",
@@ -39,15 +40,15 @@ String? _defaultDetailsMessage(
   Object exception,
   StackTrace stackTrace,
 ) => switch (exception) {
-  OllamaClientException e =>
+  final llama.OllamaException e =>
     [
-          "SocketException",
-          "HttpException",
-          "ClientException",
-        ].contains(e.body.toString().split(":").first)
+          SocketException,
+          HttpException,
+          ClientException,
+        ].contains(e.cause.runtimeType)
         ? "A network error occurred while trying to connect to the server."
               "\n\nYou may check your network connection and server reachability and try again."
-        : "The Ollama API client received a faulty response with code `${e.code}`."
+        : "The Ollama API client received a faulty response with code `${e.message.split(":").last.trim()}`."
               "\n\nPlease check your Ollama server or proxy configuration and try again.",
   AssertionError _ =>
     "An assertion failed, meaning that the app is misconfigured or a bug occurred."
@@ -123,7 +124,7 @@ ErrorGuardDetailsMessageGenerator errorGuardDetailsMessageWithFallbackSingle(
 /// alphanumeric characters, starting with a letter. Other values will be
 /// ignored. The recommended length is 8 characters.
 ///
-/// To generate a random log ID, run: `dart run tools/logid.dart`
+/// To generate a random log ID, run: `dart run tool/logid.dart`
 ///
 /// The [errorMessage] function is used to generate the error message. This
 /// should be a short message that describes the error in a user-friendly way.
@@ -156,6 +157,11 @@ ErrorGuardDetailsMessageGenerator errorGuardDetailsMessageWithFallbackSingle(
 /// useful if it's certain that the error is not caused by a bug in the app,
 /// but rather by a user error or a misconfiguration. [forceReporting] can be
 /// used to force the reporting of the error.
+///
+/// The [onError] callback can be used to perform additional actions when an
+/// error occurs, such as logging the error to a remote server or performing
+/// additional cleanup. This callback is called before the error dialog or
+/// snackbar is shown.
 Future<T?> errorGuard<T>(
   BuildContext context,
   String? logId,
@@ -167,6 +173,7 @@ Future<T?> errorGuard<T>(
   bool enableDetails = true,
   bool enableReporting = true,
   bool forceReporting = false,
+  void Function(Object exception, StackTrace stackTrace)? onError,
 }) async {
   assert(
     logId == null || _logIdRegex.hasMatch(logId),
@@ -193,9 +200,10 @@ Future<T?> errorGuard<T>(
       action.call(),
     ).catchError(Error.throwWithStackTrace);
   } catch (exception, stackTrace) {
+    onError?.call(exception, stackTrace);
     if (context.mounted && !ignoreIf.call(exception)) {
-      var dateTime = DateTime.now();
-      var colorScheme = Theme.of(context).colorScheme;
+      final dateTime = DateTime.now();
+      final colorScheme = Theme.of(context).colorScheme;
 
       logId = logId?.toUpperCase();
       if (logId != null && !_logIdRegex.hasMatch(logId)) {
@@ -261,24 +269,26 @@ Future<T?> errorGuard<T>(
       if (instantDialog) {
         showErrorDialog();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _removeNewlines(
-                Markdown(errorMessageText).toTextSpan(context).toPlainText(),
+        ScaffoldMessenger.of(context)
+          ..clearSnackBars()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                _removeNewlines(
+                  Markdown(errorMessageText).toTextSpan(context).toPlainText(),
+                ),
+                style: TextStyle(color: colorScheme.onErrorContainer),
               ),
-              style: TextStyle(color: colorScheme.onErrorContainer),
+              backgroundColor: colorScheme.errorContainer,
+              action: !enableDetails
+                  ? null
+                  : SnackBarAction(
+                      label: AppLocalizations.of(context).errorGuardDetails,
+                      textColor: colorScheme.onErrorContainer,
+                      onPressed: showErrorDialog,
+                    ),
             ),
-            backgroundColor: colorScheme.errorContainer,
-            action: !enableDetails
-                ? null
-                : SnackBarAction(
-                    label: AppLocalizations.of(context).errorGuardDetails,
-                    textColor: colorScheme.onErrorContainer,
-                    onPressed: showErrorDialog,
-                  ),
-          ),
-        );
+          );
       }
     }
     return null;
@@ -317,6 +327,7 @@ class _ErrorGuardDetailsDialogState extends State<_ErrorGuardDetailsDialog> {
     return PopScope(
       canPop: !widget.forceReporting,
       child: AlertDialog(
+        constraints: const BoxConstraints(minWidth: 280, maxWidth: 560),
         title: Stack(
           children: [
             Align(
@@ -334,7 +345,14 @@ class _ErrorGuardDetailsDialogState extends State<_ErrorGuardDetailsDialog> {
                 ),
               ),
             ),
-            Text(AppLocalizations.of(context).errorGuardTitle),
+            Builder(
+              builder: (context) => Text(
+                AppLocalizations.of(context).errorGuardTitle,
+                style: DefaultTextStyle.of(
+                  context,
+                ).style.copyWith(fontFamily: "GoogleSansCode"),
+              ),
+            ),
           ],
         ),
         content: Column(
@@ -344,7 +362,14 @@ class _ErrorGuardDetailsDialogState extends State<_ErrorGuardDetailsDialog> {
             if (widget.logId != null)
               Transform.translate(
                 offset: const Offset(0, -20),
-                child: Text("@${widget.logId}"),
+                child: Builder(
+                  builder: (context) => Text(
+                    "@${widget.logId}",
+                    style: DefaultTextStyle.of(
+                      context,
+                    ).style.copyWith(fontFamily: "GoogleSansCode"),
+                  ),
+                ),
               ),
 
             Text.rich(Markdown(widget.errorMessage).toTextSpan(context)),
@@ -414,7 +439,7 @@ ${(widget.exception != null) ? "```\n${widget.exception}\n```" : "> Not availabl
 <summary>Stack Trace</summary>
 
 ```
-${widget.stackTrace.toString().trim()}
+${widget.stackTrace.toString().trim().split("\n").take(20).join("\n")}
 ```
 
 </details>
@@ -424,7 +449,7 @@ ${widget.stackTrace.toString().trim()}
 The app suggested the following cause of the issue:
 
 - ***Error Message:*** ${_removeNewlines(widget.errorMessage)}
-- ***Details Message:*** ${_removeNewlines((widget.detailsMessage ?? "None provided").trim())}"""
+- ***Details Message:*** ${_removeNewlines((widget.detailsMessage ?? "*None provided*").trim())}"""
           .trim();
 
   void _report() {
@@ -434,7 +459,7 @@ The app suggested the following cause of the issue:
     url +=
         "&description=${Uri.encodeComponent('Received error: "${widget.errorMessage.replaceFirst(RegExp(r".$"), "")}"${(widget.logId != null) ? " (@${widget.logId})" : ""}')}";
 
-    var contextText = _reportText();
+    final contextText = _reportText();
     url += "&context=${Uri.encodeComponent(contextText)}";
 
     Clipboard.setData(ClipboardData(text: url));
@@ -475,15 +500,22 @@ class _ErrorGuardDetailsPanelState extends State<_ErrorGuardDetailsPanel>
     super.initState();
     _animationController = AnimationController(
       value: widget.isExpanded ? 1.0 : 0.0,
-      duration: kThemeAnimationDuration,
+      duration: ExpressiveCurves.expressiveEffects.fastDuration,
       vsync: this,
     );
     _expanded = widget.isExpanded;
 
     _animation = CurvedAnimation(
       parent: _animationController,
-      curve: Curves.fastEaseInToSlowEaseOut,
+      curve: ExpressiveCurves.expressiveEffects.fast,
+      reverseCurve: ExpressiveCurves.expressiveEffects.fast.flipped,
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void _toggleAnimation() {
@@ -514,7 +546,7 @@ class _ErrorGuardDetailsPanelState extends State<_ErrorGuardDetailsPanel>
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -541,7 +573,7 @@ class _ErrorGuardDetailsPanelState extends State<_ErrorGuardDetailsPanel>
           ),
           SizeTransition(
             sizeFactor: _animation,
-            axisAlignment: -1,
+            alignment: Alignment.topCenter,
             child: _monospacedContent(
               child: Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
@@ -549,7 +581,7 @@ class _ErrorGuardDetailsPanelState extends State<_ErrorGuardDetailsPanel>
                     ? Text(
                         widget.content.trim(),
                         style: const TextStyle(
-                          fontFamily: "monospace",
+                          fontFamily: "GoogleSansCode",
                           height: kTextHeightNone,
                         ),
                       )

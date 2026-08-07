@@ -85,13 +85,13 @@ class ListTileSwitchInteractive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var listTileTheme = ListTileTheme.of(context);
-    var effectiveControlAffinity =
+    final listTileTheme = ListTileTheme.of(context);
+    final effectiveControlAffinity =
         controlAffinity ??
         listTileTheme.controlAffinity ??
         ListTileControlAffinity.platform;
 
-    var controlChildren = [
+    final controlChildren = [
       const SizedBox(height: 32, child: VerticalDivider()),
       const SizedBox(width: 8),
       Switch(
@@ -126,7 +126,7 @@ class ListTileSwitchInteractive extends StatelessWidget {
         overlayColor: overlayColor,
       ),
     ];
-    var control = ExcludeFocus(
+    final control = ExcludeFocus(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,15 +144,15 @@ class ListTileSwitchInteractive extends StatelessWidget {
       ListTileControlAffinity.platform => (secondary, control),
     };
 
-    var theme = Theme.of(context);
-    var switchTheme = SwitchTheme.of(context);
-    var states = <WidgetState>{if (selected) WidgetState.selected};
-    var effectiveActiveColor =
+    final theme = Theme.of(context);
+    final switchTheme = SwitchTheme.of(context);
+    final states = <WidgetState>{if (selected) WidgetState.selected};
+    final effectiveActiveColor =
         activeThumbColor ??
         switchTheme.thumbColor?.resolve(states) ??
         theme.colorScheme.secondary;
 
-    var effectiveContentPadding =
+    final effectiveContentPadding =
         contentPadding ??
         EdgeInsets.only(
           left: effectiveControlAffinity == ListTileControlAffinity.leading
@@ -273,13 +273,13 @@ class ListTileSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var listTileTheme = ListTileTheme.of(context);
-    var effectiveControlAffinity =
+    final listTileTheme = ListTileTheme.of(context);
+    final effectiveControlAffinity =
         controlAffinity ??
         listTileTheme.controlAffinity ??
         ListTileControlAffinity.platform;
 
-    var control = ExcludeFocus(
+    final control = ExcludeFocus(
       child: IgnorePointer(
         child: Switch(
           value: value,
@@ -316,15 +316,15 @@ class ListTileSwitch extends StatelessWidget {
       ListTileControlAffinity.platform => (secondary, control),
     };
 
-    var theme = Theme.of(context);
-    var switchTheme = SwitchTheme.of(context);
-    var states = <WidgetState>{if (selected) WidgetState.selected};
-    var effectiveActiveColor =
+    final theme = Theme.of(context);
+    final switchTheme = SwitchTheme.of(context);
+    final states = <WidgetState>{if (selected) WidgetState.selected};
+    final effectiveActiveColor =
         activeThumbColor ??
         switchTheme.thumbColor?.resolve(states) ??
         theme.colorScheme.secondary;
 
-    var effectiveContentPadding =
+    final effectiveContentPadding =
         contentPadding ??
         EdgeInsets.only(
           left: effectiveControlAffinity == ListTileControlAffinity.leading

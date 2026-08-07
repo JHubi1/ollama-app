@@ -23,23 +23,26 @@ String? updateUrl;
 String? latestVersion;
 String? currentVersion;
 String? updateChangeLog;
-Future<bool> updatesSupported(Function setState,
-    [bool takeAction = false]) async {
+Future<bool> updatesSupported(
+  Function setState, [
+  bool takeAction = false,
+]) async {
   var returnValue = true;
-  var installerApps = [
+  final installerApps = [
     "org.fdroid.fdroid",
     "org.gdroid.gdroid",
     "eu.bubu1.fdroidclassic",
     "in.sunilpaulmathew.izzyondroid",
     "com.looker.droidify",
     "com.machiav3lli.fdroid",
-    "nya.kitsunyan.foxydroid"
+    "nya.kitsunyan.foxydroid",
   ];
   if (!desktopFeature(web: true)) {
     if ((await InstallReferrer.referrer !=
             InstallationAppReferrer.androidManually) ||
-        (installerApps
-            .contains((await InstallReferrer.app).packageName ?? ""))) {
+        (installerApps.contains(
+          (await InstallReferrer.app).packageName ?? "",
+        ))) {
       returnValue = false;
       if (await InstallReferrer.referrer ==
           InstallationAppReferrer.androidDebug) {
@@ -75,20 +78,26 @@ Future<bool> checkUpdate(Function setState) async {
       return false;
     }
 
-    var repo = repoUrl.split("/");
+    final repo = repoUrl.split("/");
 
     currentVersion = (await PackageInfo.fromPlatform()).version;
     // currentVersion = "1.0.0";
 
     String? version;
     try {
-      var request = await httpClient
-          .get(Uri.parse(
-              "https://api.github.com/repos/${repo[3]}/${repo[4]}/releases"))
-          .timeout(Duration(
+      final request = await httpClient
+          .get(
+            Uri.parse(
+              "https://api.github.com/repos/${repo[3]}/${repo[4]}/releases",
+            ),
+          )
+          .timeout(
+            Duration(
               milliseconds:
                   (5000.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
-                      .round()));
+                      .round(),
+            ),
+          );
       if (request.statusCode == 403) {
         setState(() {
           updateStatus = "rateLimit";
@@ -126,41 +135,53 @@ Future<bool> checkUpdate(Function setState) async {
 
 Future<void> updateDialog(BuildContext context, Function title) async {
   await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-            title: Text(AppLocalizations.of(context).settingsUpdateDialogTitle),
-            content: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text(
-                  AppLocalizations.of(context).settingsUpdateDialogDescription),
-              title(AppLocalizations.of(context).settingsUpdateChangeLog),
-              Flexible(
-                  child: SingleChildScrollView(
-                      child: Container(
-                constraints: const BoxConstraints(maxWidth: 1000),
-                child: MarkdownBody(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(AppLocalizations.of(context).settingsUpdateDialogTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(AppLocalizations.of(context).settingsUpdateDialogDescription),
+            title(AppLocalizations.of(context).settingsUpdateChangeLog),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: MarkdownBody(
                     data: updateChangeLog ?? "No changelog given.",
-                    shrinkWrap: true),
-              )))
-            ]),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    selectionHaptic();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                      AppLocalizations.of(context).settingsUpdateDialogCancel)),
-              TextButton(
-                  onPressed: () {
-                    selectionHaptic();
-                    Navigator.of(context).pop();
-                    launchUrl(
-                        mode: LaunchMode.inAppBrowserView,
-                        Uri.parse(updateUrl!));
-                  },
-                  child: Text(
-                      AppLocalizations.of(context).settingsUpdateDialogUpdate))
-            ]);
-      });
+                    shrinkWrap: true,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              selectionHaptic();
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              AppLocalizations.of(context).settingsUpdateDialogCancel,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              selectionHaptic();
+              Navigator.of(context).pop();
+              launchUrl(
+                mode: LaunchMode.inAppBrowserView,
+                Uri.parse(updateUrl!),
+              );
+            },
+            child: Text(
+              AppLocalizations.of(context).settingsUpdateDialogUpdate,
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }

@@ -9,7 +9,17 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get appTitle => 'Ollama';
+  String appTitle(String env, String title) {
+    String _temp0 = intl.Intl.selectLogic(env, {
+      'short': 'Ollama',
+      'integrated': '$title - Ollama App',
+      'other': 'Ollama App',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get learnMore => 'Mehr erfahren';
 
   @override
   String get optionNewChat => 'Neuer Chat';
@@ -21,7 +31,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get optionInstallPwa => 'Webapp installieren';
 
   @override
-  String get optionNoChatFound => 'Keine Chats gefunden';
+  String get optionNoChatFound => 'Keine Chats';
+
+  @override
+  String optionNoChatFoundSearch(String query) {
+    return 'Keinen Chat gefunden für Suche ‚$query‘';
+  }
+
+  @override
+  String get optionSearchChats => 'Chats durchsuchen';
+
+  @override
+  String get optionChatDetails => 'Chat details';
+
+  @override
+  String get optionChatDetailsNoChat => 'No chat selected';
 
   @override
   String get tipPrefix => 'Tipp: ';
@@ -54,25 +78,54 @@ class AppLocalizationsDe extends AppLocalizations {
   String get uploadImage => 'Bild Hochladen';
 
   @override
-  String get notAValidImage => 'Kein gültiges Bild';
+  String newChatGreeting1(String user) {
+    return 'What’s on your mind, $user?';
+  }
 
   @override
-  String get imageOnlyConversation => 'Nur Bild Unterhaltung';
+  String newChatGreeting2(String user) {
+    return 'Good to see you, $user.';
+  }
 
   @override
-  String get messageInputPlaceholder => 'Nachricht';
+  String newChatGreeting3(String user) {
+    return 'What can I do for you, $user?';
+  }
 
   @override
-  String get tooltipAttachment => 'Anhang hinzufügen';
+  String newChatGreeting4(String user) {
+    return 'How can I help you today, $user?';
+  }
+
+  @override
+  String newChatGreeting5(String user) {
+    return 'What would you like to talk about, $user?';
+  }
+
+  @override
+  String get newChatGreetingNameFallback => 'user';
+
+  @override
+  String messageInputPlaceholder(String model) {
+    return '$model fragen';
+  }
+
+  @override
+  String get messageInputPlaceholderModelPlaceholder => 'Modell';
+
+  @override
+  String get tooltipMessageOptions => 'Nachrichtenoptionen';
 
   @override
   String get tooltipSend => 'Senden';
 
   @override
-  String get tooltipSave => 'Speichern';
+  String tooltipLetAIThink(String model) {
+    return 'Mit $model generieren';
+  }
 
   @override
-  String get tooltipLetAIThink => 'Lass KI denken';
+  String get tooltipAddHostHeaders => 'Host-Header festlegen';
 
   @override
   String get tooltipReset => 'Aktuellen Chat zurücksetzen';
@@ -85,72 +138,67 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get noHostSelected =>
-      'Kein Host ausgewählt, öffne zum Auswählen die Einstellungen';
+      'Kein Host ausgewählt, öffne zum Auswählen die Einstellungen.';
 
   @override
-  String get noSelectedModel => '<selektor>';
+  String get noSelectedModel => '<model>';
 
   @override
   String get newChatTitle => 'Unbenannter Chat';
 
   @override
-  String get modelDialogAddModel => 'Hinzufügen';
+  String get modelDialogTitle => 'Select a model';
 
   @override
-  String get modelDialogAddPromptTitle => 'Neues Modell hinzufügen';
+  String get modelDialogAdd => 'Hinzufügen';
+
+  @override
+  String get modelDialogRefresh => 'Refresh';
+
+  @override
+  String get modelDialogAddPromptTitle => 'Modell hinzufügen';
 
   @override
   String get modelDialogAddPromptDescription =>
-      'Das kann entweder ein normaler Name (z.B. \'llama3\') oder Name und Tag (z.B. \'llama3:70b\') sein.';
+      'Das kann entweder ein normaler Name (z.B. „llama3“) oder ein Name zusammen mit einem Tag (z.B. „llama3:70b“) sein.';
 
   @override
-  String get modelDialogAddPromptAlreadyExists => 'Modell existiert bereits';
+  String get modelDialogAddCurrently => 'Wird gerade heruntergeladen:';
 
   @override
-  String get modelDialogAddPromptInvalid => 'Ungültiger Modellname';
+  String get modelDialogAddPromptAlreadyExists => 'Modell existiert bereits.';
 
   @override
-  String get modelDialogAddAllowanceTitle => 'Proxy erlauben';
+  String get modelDialogAddPromptInvalid => 'Ungültiger Modellname.';
 
   @override
-  String get modelDialogAddAllowanceDescription =>
-      'Ollama App muss überprüfen, ob das eingegebene Modell gültig ist. Dafür senden wir normalerweise eine Webanfrage an die Ollama-Modellliste und überprüfen den Statuscode, aber da gerade der Webclient verwendet wird, können wir das nicht direkt tun. Stattdessen sendet die App die Anfrage an eine andere API, gehostet von JHubi1, um dies für uns zu überprüfen.\nDies ist eine einmalige Anfrage und wird nur gesendet, wenn du ein neues Modell hinzufügst.\nIhre IP-Adresse wird mit der Anfrage gesendet und kann bis zu zehn Minuten gespeichert werden, um Spamming mit potenziell schädlichen Absichten zu verhindern.\nWenn du zustimmst, wird deine Auswahl für die Zukunft gespeichert; wenn nicht, wird nichts gesendet und das Modell wird nicht hinzugefügt.';
+  String get modelDialogAddPromptNotFound =>
+      'Das Modell konnte auf dem Server nicht gefunden werden. Bitte überprüfe die Schreibweise und versuche es erneut.';
 
   @override
-  String get modelDialogAddAllowanceAllow => 'Erlauben';
+  String get modelDialogAddPromptNetworkError =>
+      'Netzwerkfehler beim Überprüfen des Modells. Bitte überprüfe deine Verbindung und versuche es erneut.';
 
   @override
-  String get modelDialogAddAllowanceDeny => 'Ablehnen';
+  String get modelDialogAddPromptCorruptionError =>
+      'Die API hat „EOF“ zurückgegeben; dein Server wurde wahrscheinlich neu gestartet, während das Modell zuvor heruntergeladen wurde.';
 
   @override
-  String modelDialogAddAssuranceTitle(String model) {
-    return '$model hinzufügen?';
-  }
+  String get modelDialogAddPromptCorruptionErrorSolution =>
+      'Alternativ kannst du den folgenden Befehl direkt auf deinem Linux-Host ausführen:\nWenn du eine neue Fehlermeldung siehst, versuche den Befehl mit „sudo“ davor auszuführen.';
 
   @override
-  String modelDialogAddAssuranceDescription(String model) {
-    return 'Durch Drücken von \'Hinzufügen\' wird das Modell \'$model\' direkt vom Ollama-Server auf deinen Host heruntergeladen.\nJe nach Internetverbindung kann dies eine Weile dauern. Der Vorgang kann nicht abgebrochen werden.\nWenn die App während des Downloads geschlossen wird, wird der Download fortgesetzt, wenn du den Namen erneut in den Modelldialog eingibst.';
-  }
+  String get modelDialogAddCancelTitle => 'Download abbrechen?';
 
   @override
-  String get modelDialogAddAssuranceAdd => 'Hinzufügen';
+  String get modelDialogAddCancelConfirm => 'Abbrechen';
 
   @override
-  String get modelDialogAddAssuranceCancel => 'Abbrechen';
+  String get modelDialogAddCancelHide => 'Ausblenden';
 
   @override
-  String get modelDialogAddDownloadPercentLoading => 'lade Fortschritt';
-
-  @override
-  String modelDialogAddDownloadPercent(String percent) {
-    return 'Download bei $percent%';
-  }
-
-  @override
-  String get modelDialogAddDownloadFailed => 'Getrennt, versuche es erneut';
-
-  @override
-  String get modelDialogAddDownloadSuccess => 'Download erfolgreich';
+  String get modelDialogAddDownloadSuccess =>
+      'Download erfolgreich. Als aktuelles Modell festlegen.';
 
   @override
   String get deleteDialogTitle => 'Chat löschen';
@@ -187,6 +235,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dialogEditMessageTitle => 'Nachricht bearbeiten';
 
   @override
+  String get settingsTitleOverview => 'Overview';
+
+  @override
+  String get settingsDescriptionOverview =>
+      'General settings regarding your host.';
+
+  @override
   String get settingsTitleBehavior => 'Verhalten';
 
   @override
@@ -220,10 +275,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingsDescriptionAbout =>
       'Suche nach Updates und erfahre mehr über Ollama App.';
-
-  @override
-  String get settingsSavedAutomatically =>
-      'Einstellungen werden automatisch gespeichert';
 
   @override
   String get settingsExperimentalAlpha => 'alpha';
@@ -262,6 +313,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsHost => 'Host';
 
   @override
+  String get settingsHostMissing => 'Kein Host festgelegt';
+
+  @override
   String get settingsHostValid => 'Gültiger Host';
 
   @override
@@ -270,34 +324,47 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String settingsHostInvalid(String type) {
     String _temp0 = intl.Intl.selectLogic(type, {
-      'url': 'Ungültige URL',
-      'host': 'Ungültiger Host',
-      'timeout': 'Request Fehlgeschlagen. Server Fehler',
-      'ratelimit': 'Zu viele Anfragen',
-      'other': 'Request Fehlgeschlagen',
+      'invalidUrl': 'Ungültige URL',
+      'unreachable': 'Host nicht erreichbar',
+      'undetectable': 'Host kein Ollama-Server',
+      'timeout': 'Verbindung abgelaufen',
+      'outdated': 'Veraltete Ollama-Version',
+      'other': 'Ungültiger Host',
     });
-    return 'Fehler: $_temp0';
+    return '$_temp0';
   }
-
-  @override
-  String get tooltipAddHostHeaders => 'Host-Header festlegen';
-
-  @override
-  String get settingsHostHeaderTitle => 'Host-Header festlegen';
-
-  @override
-  String get settingsHostHeaderInvalid =>
-      'Der eingegebene Text ist kein gültiges Header-JSON-Objekt';
 
   @override
   String settingsHostInvalidDetailed(String type) {
     String _temp0 = intl.Intl.selectLogic(type, {
-      'url':
-          'Die eingegebene URL ist ungültig. Es handelt sich nicht um ein standardisiertes URL-Format.',
-      'other':
-          'Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.',
+      'invalidUrl': 'Die eingegebene URL hat kein gültiges Format.',
+      'unreachable':
+          'Der Host ist ungültig oder nicht erreichbar, möglicherweise aufgrund einer falschen Adresse oder eines Netzwerkproblems.',
+      'undetectable':
+          'Der Host ist erreichbar, antwortet aber nicht wie von Ollama App erwartet.\nEr ist möglicherweise kein Ollama-Server. Bist du sicher, dass du ihn richtig eingegeben hast?',
+      'timeout':
+          'Der Host konnte nicht rechtzeitig erreicht werden.\nVersuche, den Timeout-Multiplikator in den Oberflächen-Einstellungen zu erhöhen.',
+      'outdated':
+          'Der Host verwendet eine Ollama-Version, die mit dieser App nicht kompatibel ist.\nBitte aktualisiere sowohl den Host als auch diese App, wenn möglich.',
+      'other': 'Der eingegebene Host ist ungültig.',
     });
     return '$_temp0';
+  }
+
+  @override
+  String get settingsHostHeaderHeaderName => 'Header';
+
+  @override
+  String get settingsHostHeaderHeaderValue => 'Value';
+
+  @override
+  String settingsHostHeaderUnsupported(String header) {
+    return 'The header “$header” may not be supported.';
+  }
+
+  @override
+  String settingsHostHeaderDuplicate(String header) {
+    return 'The header “$header” is already set.';
   }
 
   @override

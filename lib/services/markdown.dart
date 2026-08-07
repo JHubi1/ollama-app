@@ -365,6 +365,7 @@ final class Markdown {
   final document = md.Document(
     blockSyntaxes: [
       LatexBlockSyntax(),
+      LatexBracketBlockSyntax(),
       DetailsBlockSyntax(),
       const md.AlertBlockSyntax(),
     ],
@@ -373,6 +374,7 @@ final class Markdown {
       SubscriptSyntax(),
       MarkSyntax(),
       LatexInlineSyntax(),
+      LatexBracketInlineSyntax(),
       md.EmojiSyntax(),
       md.ColorSwatchSyntax(),
     ],
@@ -381,7 +383,7 @@ final class Markdown {
   );
 
   final String content;
-  Tree get tree => document.parse(
+  late final Tree tree = document.parse(
     content.trim().replaceAll(RegExp(r"<!--.*?-->", dotAll: true), ""),
   );
 
@@ -389,16 +391,9 @@ final class Markdown {
   final TextStyle? _textStyle;
   final TapLongPressGestureRecognizer? _recognizer;
 
-  Markdown(
-    this.content, {
-    Uri? rootUrl,
-    TextStyle? textStyle,
-    TapLongPressGestureRecognizer? recognizer,
-  }) : _rootUrl = rootUrl,
-       _textStyle = textStyle,
-       _recognizer = recognizer;
+  Markdown(this.content, {this._rootUrl, this._textStyle, this._recognizer});
 
-  double get _paragraphHeight => (TextPainter(
+  late final double _paragraphHeight = (TextPainter(
     text: TextSpan(text: "A", style: _textStyle),
     textDirection: TextDirection.ltr,
   )..layout()).preferredLineHeight;
@@ -438,33 +433,33 @@ final class Markdown {
     _MarkdownPayload payload, {
     bool block = false,
   }) {
-    var context = payload.context;
-    var theme = Theme.of(context);
-    var colorScheme = theme.colorScheme;
+    final context = payload.context;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    var codeBox = BoxDecoration(
+    final codeBox = BoxDecoration(
       color: colorScheme.surfaceContainerHigh,
       border: Border.all(color: colorScheme.outline),
       borderRadius: BorderRadius.circular(6),
     );
 
-    var spans = <InlineSpan>[];
+    final spans = <InlineSpan>[];
     for (var nodePair in payload.tree.asMap().entries) {
       var skipParagraphBreak = false;
-      var node = nodePair.value;
+      final node = nodePair.value;
       if (node is md.Text) {
         var text = node.text.replaceAll("\n", " ");
         while (text.contains("  ")) {
           text = text.replaceAll("  ", " ");
         }
 
-        var nodeStyle = const TextStyle(
+        const nodeStyle = TextStyle(
           // height: kTextHeightNone,
           fontFeatures: [FontFeature.tabularFigures()],
         );
         spans.addAll(
           text
-              .split(r"(?=\s|\/|\\)")
+              .split(RegExp(r"(?=\s|\/|\\)"))
               .map(
                 (t) => TextSpan(
                   text: t,
@@ -476,7 +471,7 @@ final class Markdown {
       } else if (node is md.Element) {
         switch (node.tag) {
           case "p": // MARK: Paragraph
-            var block =
+            final block =
                 node.children!.length == 1 &&
                 node.children![0] is md.Element &&
                 (node.children![0] as md.Element).tag == "img";
@@ -486,13 +481,16 @@ final class Markdown {
             spans.addAll(
               _toInlineSpans(payload.copy(tree: node.children), block: block),
             );
+          case "br": // MARK: Line Break
+            skipParagraphBreak = true;
+            spans.add(const TextSpan(text: "\n"));
           case "hr": // MARK: Horizontal Rule
             spans.add(const WidgetSpan(child: Divider()));
           case "h1" || "h2" || "h3" || "h4" || "h5" || "h6": // MARK: Headings
-            var multiplier =
+            final multiplier =
                 (payload.textStyle?.fontSize ?? kDefaultFontSize) /
                 kDefaultFontSize;
-            var size =
+            final size =
                 switch (node.tag) {
                   // stolen from HTML
                   "h1" => 32,
@@ -504,7 +502,7 @@ final class Markdown {
                   _ => kDefaultFontSize,
                 } -
                 2;
-            var nodeStyle = TextStyle(
+            final nodeStyle = TextStyle(
               fontSize: multiplier * size,
               fontWeight: FontWeight.bold,
             );
@@ -517,7 +515,7 @@ final class Markdown {
               ),
             );
           case "em": // MARK: Italic
-            var nodeStyle = const TextStyle(fontStyle: FontStyle.italic);
+            const nodeStyle = TextStyle(fontStyle: FontStyle.italic);
             spans.addAll(
               _toInlineSpans(
                 payload.copy(
@@ -527,7 +525,7 @@ final class Markdown {
               ),
             );
           case "strong": // MARK: Bold
-            var nodeStyle = const TextStyle(fontWeight: FontWeight.bold);
+            const nodeStyle = TextStyle(fontWeight: FontWeight.bold);
             spans.addAll(
               _toInlineSpans(
                 payload.copy(
@@ -537,9 +535,7 @@ final class Markdown {
               ),
             );
           case "del": // MARK: Strikethrough
-            var nodeStyle = const TextStyle(
-              decoration: TextDecoration.lineThrough,
-            );
+            const nodeStyle = TextStyle(decoration: TextDecoration.lineThrough);
             spans.addAll(
               _toInlineSpans(
                 payload.copy(
@@ -549,10 +545,10 @@ final class Markdown {
               ),
             );
           case "mark": // MARK: Highlight
-            var color = Colors.amberAccent
+            final color = Colors.amberAccent
                 .harmonizeWith(colorScheme.primary)
                 .withValues(alpha: 0.6);
-            var nodeStyle = TextStyle(
+            final nodeStyle = TextStyle(
               color: color.computeLuminance() > 0.5
                   ? Colors.black
                   : Colors.white,
@@ -567,13 +563,13 @@ final class Markdown {
               ),
             );
           case "a": // MARK: Link
-            var href = node.attributes["href"];
-            var parsed = href == null ? null : Uri.tryParse(href);
-            var valid =
+            final href = node.attributes["href"];
+            final parsed = href == null ? null : Uri.tryParse(href);
+            final valid =
                 href != null &&
                 parsed != null &&
                 ["http", "https"].contains(parsed.scheme);
-            var recognizer = valid
+            final recognizer = valid
                 ? TapLongPressGestureRecognizer(
                     onTap: () => launchUrl(payload.resolveUri(href)),
                     onLongPress: () {
@@ -583,8 +579,10 @@ final class Markdown {
                   )
                 : null;
 
-            var linkColor = Colors.lightBlue.harmonizeWith(colorScheme.primary);
-            var nodeStyle = TextStyle(
+            final linkColor = Colors.lightBlue.harmonizeWith(
+              colorScheme.primary,
+            );
+            final nodeStyle = TextStyle(
               color: valid ? linkColor : theme.disabledColor,
               decoration: TextDecoration.underline,
               decorationThickness: 1.2,
@@ -603,9 +601,9 @@ final class Markdown {
             );
           case "sub": // MARK: Subscript/Superscript
           case "sup":
-            var isSup = node.tag == "sup";
+            final isSup = node.tag == "sup";
 
-            var referenceTo =
+            final referenceTo =
                 isSup && node.attributes["class"] == "footnote-ref"
                 ? (node.children!.first as md.Element).attributes["href"]
                       ?.substring(1)
@@ -633,7 +631,9 @@ final class Markdown {
               } catch (_) {}
               if (referenced == null) break;
 
-              var referencedTree = List<md.Element>.from(referenced.children!);
+              final referencedTree = List<md.Element>.from(
+                referenced.children!,
+              );
               if (referencedTree.isEmpty) break;
 
               referencedTree.last = md.Element(
@@ -649,7 +649,7 @@ final class Markdown {
                   alignment: PlaceholderAlignment.middle,
                   child: Builder(
                     builder: (context) {
-                      var nodeStyle = TextStyle(
+                      final nodeStyle = TextStyle(
                         color: colorScheme.onSurface,
                         fontSize: math.max(
                           8.0,
@@ -705,7 +705,7 @@ final class Markdown {
                   alignment: PlaceholderAlignment.middle,
                   child: Builder(
                     builder: (context) {
-                      var nodeStyle = TextStyle(
+                      final nodeStyle = TextStyle(
                         fontSize: math.max(
                           8.0,
                           (DefaultTextStyle.of(context).style.fontSize ??
@@ -728,9 +728,9 @@ final class Markdown {
               ),
             );
           case "code": // MARK: Inline code
-            var text = (node.children!.first as md.Text).text;
+            final text = (node.children!.first as md.Text).text;
 
-            var backgroundColor =
+            final backgroundColor =
                 node.attributes.containsKey("class") &&
                     node.attributes["class"] == "gfm-color_chip"
                 ? (node.children!.firstWhere(
@@ -739,7 +739,7 @@ final class Markdown {
                           as md.Element)
                       .attributes["style"]
                 : null;
-            var colorCode =
+            final colorCode =
                 backgroundColor != null &&
                     backgroundColor.startsWith("background-color:")
                 ? backgroundColor
@@ -747,32 +747,32 @@ final class Markdown {
                       .trim()
                       .replaceAll(RegExp(r"^#|;$"), "")
                 : null;
-            var color = colorCode != null
+            final color = colorCode != null
                 ? switch (colorCode.length) {
                     3 || 4 => () {
-                      var r = int.tryParse(colorCode[0] * 2, radix: 16);
-                      var g = int.tryParse(colorCode[1] * 2, radix: 16);
-                      var b = int.tryParse(colorCode[2] * 2, radix: 16);
-                      var a = int.tryParse(
+                      final r = int.tryParse(colorCode[0] * 2, radix: 16);
+                      final g = int.tryParse(colorCode[1] * 2, radix: 16);
+                      final b = int.tryParse(colorCode[2] * 2, radix: 16);
+                      final a = int.tryParse(
                         (colorCode.length == 4 ? colorCode[3] : "F") * 2,
                         radix: 16,
                       );
                       return Color.fromARGB(a ?? 255, r ?? 0, g ?? 0, b ?? 0);
                     }(),
                     6 || 8 => () {
-                      var r = int.tryParse(
+                      final r = int.tryParse(
                         colorCode.substring(0, 2),
                         radix: 16,
                       );
-                      var g = int.tryParse(
+                      final g = int.tryParse(
                         colorCode.substring(2, 4),
                         radix: 16,
                       );
-                      var b = int.tryParse(
+                      final b = int.tryParse(
                         colorCode.substring(4, 6),
                         radix: 16,
                       );
-                      var a = int.tryParse(
+                      final a = int.tryParse(
                         (colorCode.length == 8
                             ? colorCode.substring(6, 8)
                             : "FF"),
@@ -784,10 +784,10 @@ final class Markdown {
                   }
                 : null;
 
-            var textStyle = _mergeOrOther(
+            final textStyle = _mergeOrOther(
               payload.textStyle,
               TextStyle(
-                fontFamily: "monospace",
+                fontFamily: "GoogleSansCode",
                 fontSize: 14,
                 backgroundColor: Colors.transparent,
                 color:
@@ -795,7 +795,7 @@ final class Markdown {
                     theme.colorScheme.onSurface,
               ),
             );
-            var parts = <Widget>[
+            final parts = <Widget>[
               ...text
                   .split(RegExp(r"(?<=\s|\/|\\)"))
                   .map((t) => Text(t, style: textStyle)),
@@ -818,10 +818,10 @@ final class Markdown {
             }
 
             for (var w in parts.asMap().entries) {
-              var isStart = w.key == 0;
-              var isEnd = w.key == parts.length - 1;
+              final isStart = w.key == 0;
+              final isEnd = w.key == parts.length - 1;
 
-              var decoration = BoxDecoration(
+              final decoration = BoxDecoration(
                 color: codeBox.color,
                 // border: Border(
                 //   top: codeBox.border!.top,
@@ -856,7 +856,7 @@ final class Markdown {
                   ),
                 ),
               );
-              var padding = EdgeInsets.only(
+              final padding = EdgeInsets.only(
                 left: isStart ? 2 : 0,
                 right: isEnd ? 2 : 0,
               );
@@ -869,6 +869,7 @@ final class Markdown {
                       height: kTextHeightNone,
                       backgroundColor: decoration.color,
                     ),
+                    spellOut: color != null,
                   ),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
@@ -881,9 +882,9 @@ final class Markdown {
               ]);
             }
           case "pre": // MARK: Fenced code block
-            var codeElement = node.children!.first as md.Element;
-            var text = (codeElement.children!.first as md.Text).text.trim();
-            var lang =
+            final codeElement = node.children!.first as md.Element;
+            final text = (codeElement.children!.first as md.Text).text.trim();
+            final lang =
                 codeElement.attributes.containsKey("class") &&
                     codeElement.attributes["class"]!.startsWith("language-")
                 ? codeElement.attributes["class"]!.substring(9)
@@ -953,8 +954,8 @@ final class Markdown {
               ),
             );
           case "img": // MARK: Image
-            var alt = (node.attributes["alt"] ?? "").trim();
-            var title = node.attributes["title"]?.trim();
+            final alt = (node.attributes["alt"] ?? "").trim();
+            final title = node.attributes["title"]?.trim();
             var src = node.attributes["src"];
 
             void imageScreen(String src) => Navigator.of(context).push(
@@ -1073,7 +1074,7 @@ final class Markdown {
             ].contains(alertType)) {
               alertType = null;
             }
-            var alertTitle = alertType != null
+            final alertTitle = alertType != null
                 ? node.children!.removeAt(
                         node.children!.indexWhere(
                           (e) =>
@@ -1083,16 +1084,17 @@ final class Markdown {
                       )
                       as md.Element
                 : null;
-            var alertIcon = alertType != null
+            final alertIcon = alertType != null
                 ? switch (alertType) {
                     "note" => Icons.info_outline,
                     "tip" => Icons.lightbulb_outline,
-                    "important" || "warning" => Icons.feedback_outlined,
+                    "important" => Icons.feedback_outlined,
+                    "warning" => Icons.warning_amber_rounded,
                     "caution" => Icons.report_outlined,
                     _ => null,
                   }
                 : null;
-            var alertColor = alertType != null
+            final alertColor = alertType != null
                 ? (switch (alertType) {
                     "note" => Colors.blue[600],
                     "tip" => Colors.green[600],
@@ -1103,12 +1105,12 @@ final class Markdown {
                   })?.harmonizeWith(colorScheme.primary)
                 : null;
 
-            var contentSpans = _toInlineSpans(
+            final contentSpans = _toInlineSpans(
               payload.copy(tree: node.children),
               block: true,
             );
             if (alertType != null && alertTitle != null) {
-              var titleSpans = _toInlineSpans(
+              final titleSpans = _toInlineSpans(
                 payload.copy(tree: alertTitle.children),
               );
               contentSpans.insertAll(0, [
@@ -1154,12 +1156,12 @@ final class Markdown {
               ),
             );
           case "table": // MARK: Table
-            var head =
+            final head =
                 node.children!.firstWhere(
                       (e) => e is md.Element && e.tag == "thead",
                     )
                     as md.Element;
-            var body =
+            final body =
                 node.children!.firstWhere(
                       (e) => e is md.Element && e.tag == "tbody",
                       orElse: () => md.Element("tbody", []),
@@ -1180,35 +1182,37 @@ final class Markdown {
                     headingRowColor: WidgetStatePropertyAll(
                       colorScheme.surfaceContainerLow,
                     ),
-                    columns: (head.children!.first as md.Element).children!.map((
-                      e,
-                    ) {
-                      e as md.Element;
-                      var align = switch (e.attributes["align"]) {
-                        "left" => MainAxisAlignment.start,
-                        "right" => MainAxisAlignment.end,
-                        _ => MainAxisAlignment.center,
-                      };
-                      return DataColumn(
-                        label: Padding(
-                          padding: const EdgeInsets.only(top: 4, bottom: 4),
-                          child: Text(
-                            // TODO: Reimplement table to better fit rendered content. Then use [Text.rich] here.
-                            TextSpan(
-                              children: _toInlineSpans(
-                                payload.copy(tree: e.children),
+                    columns: (head.children!.first as md.Element).children!.map(
+                      (e) {
+                        e as md.Element;
+                        final align = switch (e.attributes["align"]) {
+                          "left" => MainAxisAlignment.start,
+                          "right" => MainAxisAlignment.end,
+                          _ => MainAxisAlignment.center,
+                        };
+                        return DataColumn(
+                          label: Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4, bottom: 4),
+                              child: Text.rich(
+                                TextSpan(
+                                  children: _toInlineSpans(
+                                    payload.copy(tree: e.children),
+                                  ),
+                                ),
+                                overflow: TextOverflow.visible,
                               ),
-                            ).toPlainText(),
+                            ),
                           ),
-                        ),
-                        headingRowAlignment: align,
-                      );
-                    }).toList(),
+                          headingRowAlignment: align,
+                        );
+                      },
+                    ).toList(),
                     rows: body.children!.map((e) {
                       return DataRow(
                         cells: (e as md.Element).children!.map((c) {
                           c as md.Element;
-                          var align = switch (c.attributes["align"]) {
+                          final align = switch (c.attributes["align"]) {
                             "right" => Alignment.centerRight,
                             "center" => Alignment.center,
                             _ => Alignment.centerLeft,
@@ -1216,13 +1220,13 @@ final class Markdown {
                           return DataCell(
                             Align(
                               alignment: align,
-                              child: Text(
-                                // TODO: Reimplement table to better fit rendered content. Then use [Text.rich] here.
+                              child: Text.rich(
                                 TextSpan(
                                   children: _toInlineSpans(
                                     payload.copy(tree: c.children),
                                   ),
-                                ).toPlainText(),
+                                ),
+                                overflow: TextOverflow.visible,
                               ),
                             ),
                           );
@@ -1236,20 +1240,20 @@ final class Markdown {
             );
           case "ol": // MARK: Ordered/Unordered List
           case "ul":
-            var ordered = node.tag == "ol";
+            final ordered = node.tag == "ol";
 
-            var checkboxes = <int, bool>{};
-            var elements = <InlineSpan>[];
+            final checkboxes = <int, bool>{};
+            final elements = <InlineSpan>[];
             for (var child in (node.children ?? []).asMap().entries) {
               if (child.value is md.Element &&
                   (child.value as md.Element).tag == "li") {
-                var childElement = child.value as md.Element;
-                var children = childElement.children ?? [];
+                final childElement = child.value as md.Element;
+                final children = childElement.children ?? [];
 
                 if (!ordered &&
                     childElement.attributes.containsKey("class") &&
                     childElement.attributes["class"] == "task-list-item") {
-                  var checkbox =
+                  final checkbox =
                       childElement.children!.firstWhere(
                             (e) =>
                                 e is md.Element &&
@@ -1257,7 +1261,7 @@ final class Markdown {
                                 e.attributes["type"] == "checkbox",
                           )
                           as md.Element;
-                  var isChecked = checkbox.attributes.containsKey("checked");
+                  final isChecked = checkbox.attributes.containsKey("checked");
                   checkboxes[child.key] = isChecked;
                   children.removeAt(0);
                 }
@@ -1302,13 +1306,16 @@ final class Markdown {
                                       ),
                                     ),
                                   )
-                                : ExcludeSemantics(
-                                    child: Text(
-                                      ordered ? "${e.key + 1}." : "•",
-                                      style: TextStyle(
-                                        height:
-                                            payload.textStyle?.height ??
-                                            kTextHeightNone,
+                                : Transform.translate(
+                                    offset: const Offset(0, 2),
+                                    child: ExcludeSemantics(
+                                      child: Text(
+                                        ordered ? "${e.key + 1}." : "•",
+                                        style: TextStyle(
+                                          height:
+                                              payload.textStyle?.height ??
+                                              kTextHeightNone,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1323,12 +1330,12 @@ final class Markdown {
               ),
             );
           case "details": // MARK: Details
-            var opened =
+            final opened =
                 node.attributes.containsKey("class") &&
                 node.attributes["class"]!
                     .split(" ")
                     .contains("markdown-details-open");
-            var summary =
+            final summary =
                 (node.children!.removeAt(
                               node.children!.indexWhere(
                                 (e) =>
@@ -1360,8 +1367,8 @@ final class Markdown {
               ),
             );
           case "latex": // MARK: LaTeX Block
-            var text = (node.children!.first as md.Text).text;
-            var errorStyle = TextStyle(
+            final text = (node.children!.first as md.Text).text;
+            final errorStyle = TextStyle(
               color: colorScheme.error,
               fontStyle: FontStyle.italic,
             );
@@ -1394,8 +1401,8 @@ final class Markdown {
               ),
             );
           case "latexInline": // MARK: LaTeX Inline
-            var text = (node.children!.first as md.Text).text;
-            var errorStyle = TextStyle(
+            final text = (node.children!.first as md.Text).text;
+            final errorStyle = TextStyle(
               color: colorScheme.error,
               fontStyle: FontStyle.italic,
             );
@@ -1433,7 +1440,7 @@ final class Markdown {
 }
 
 class SuperscriptSyntax extends md.InlineSyntax {
-  SuperscriptSyntax() : super(r"\^.+\^");
+  SuperscriptSyntax() : super(r"\^.+?\^");
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {
@@ -1465,11 +1472,11 @@ class SubscriptSyntax extends md.InlineSyntax {
 }
 
 class MarkSyntax extends md.InlineSyntax {
-  MarkSyntax() : super(r"<\s*mark\s*>(.*)<\/\s*mark\s*>");
+  MarkSyntax() : super(r"<\s*mark\s*>(.*?)<\/\s*mark\s*>");
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {
-    var text = match[1]!.trim();
+    final text = match[1]!.trim();
     if (text.isEmpty) {
       parser.addNode(md.Text(match[0]!));
     } else {
@@ -1482,14 +1489,14 @@ class MarkSyntax extends md.InlineSyntax {
 class LatexBlockSyntax extends md.BlockSyntax {
   @override
   md.Node? parse(md.BlockParser parser) {
-    var opening = parser.current.content;
-    var m = pattern.firstMatch(opening)!;
-    var after = opening.substring(m.end);
+    final opening = parser.current.content;
+    final m = pattern.firstMatch(opening)!;
+    final after = opening.substring(m.end);
     parser.advance();
 
-    var buf = StringBuffer();
+    final buf = StringBuffer();
 
-    var closeSame = after.indexOf(_pattern);
+    final closeSame = after.indexOf(_pattern);
     if (closeSame != -1) {
       buf.write(after.substring(0, closeSame));
       return _toElement(buf);
@@ -1497,8 +1504,8 @@ class LatexBlockSyntax extends md.BlockSyntax {
 
     if (after.isNotEmpty) buf.write(after);
     while (!parser.isDone) {
-      var line = parser.current.content;
-      var ci = line.indexOf(_pattern);
+      final line = parser.current.content;
+      final ci = line.indexOf(_pattern);
       if (ci != -1) {
         buf.write(line.substring(0, ci));
         parser.advance();
@@ -1520,7 +1527,7 @@ class LatexBlockSyntax extends md.BlockSyntax {
 }
 
 class LatexInlineSyntax extends md.InlineSyntax {
-  LatexInlineSyntax() : super(r"\$.+\$");
+  LatexInlineSyntax() : super(r"\$.+?\$");
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {
@@ -1535,17 +1542,73 @@ class LatexInlineSyntax extends md.InlineSyntax {
   }
 }
 
+class LatexBracketBlockSyntax extends md.BlockSyntax {
+  @override
+  md.Node? parse(md.BlockParser parser) {
+    final opening = parser.current.content;
+    final m = pattern.firstMatch(opening)!;
+    final after = opening.substring(m.end);
+    parser.advance();
+
+    final buf = StringBuffer();
+
+    final closeSame = after.indexOf(_closePattern);
+    if (closeSame != -1) {
+      buf.write(after.substring(0, closeSame));
+      return _toElement(buf);
+    }
+
+    if (after.isNotEmpty) buf.write(after);
+    while (!parser.isDone) {
+      final line = parser.current.content;
+      final ci = line.indexOf(_closePattern);
+      if (ci != -1) {
+        buf.write(line.substring(0, ci));
+        parser.advance();
+        return _toElement(buf);
+      }
+      buf.writeln(line);
+      parser.advance();
+    }
+
+    return _toElement(buf);
+  }
+
+  md.Element _toElement(StringBuffer buf) =>
+      md.Element("latex", [md.Text(buf.toString())]);
+
+  @override
+  RegExp get pattern => RegExp(r"^\\\[");
+  final _closePattern = r"\]";
+}
+
+class LatexBracketInlineSyntax extends md.InlineSyntax {
+  LatexBracketInlineSyntax() : super(r"\\\(.+?\\\)");
+
+  @override
+  bool onMatch(md.InlineParser parser, Match match) {
+    var text = match[0]!.substring(2);
+    text = text.substring(0, text.length - 2).trim();
+    if (text.isEmpty) {
+      parser.addNode(md.Text(match[0]!));
+    } else {
+      parser.addNode(md.Element("latexInline", [md.Text(text)]));
+    }
+    return true;
+  }
+}
+
 class DetailsBlockSyntax extends md.BlockSyntax {
   @override
   md.Node? parse(md.BlockParser parser) {
-    var opening = parser.current.content;
-    var m = pattern.firstMatch(opening)!;
-    var after = opening.substring(m.end);
+    final opening = parser.current.content;
+    final m = pattern.firstMatch(opening)!;
+    final after = opening.substring(m.end);
     parser.advance();
 
-    var buf = StringBuffer();
+    final buf = StringBuffer();
 
-    var closeSame = after.indexOf(_closePattern);
+    final closeSame = after.indexOf(_closePattern);
     if (closeSame != -1) {
       buf.write(after.substring(0, closeSame));
       return _toElement(parser.document, buf);
@@ -1553,8 +1616,8 @@ class DetailsBlockSyntax extends md.BlockSyntax {
 
     if (after.isNotEmpty) buf.write(after);
     while (!parser.isDone) {
-      var line = parser.current.content;
-      var ci = line.indexOf(_closePattern);
+      final line = parser.current.content;
+      final ci = line.indexOf(_closePattern);
       if (ci != -1) {
         buf.write(line.substring(0, ci));
         parser.advance();
@@ -1568,12 +1631,12 @@ class DetailsBlockSyntax extends md.BlockSyntax {
   }
 
   md.Element? _toElement(md.Document doc, StringBuffer buf) {
-    var m = _realPattern.firstMatch("<details$buf</details>");
+    final m = _realPattern.firstMatch("<details$buf</details>");
     if (m == null) return null;
 
     var className = "markdown-details";
     if (m.namedGroup("argument") != null) {
-      var argument = m.namedGroup("argument")!.trim();
+      final argument = m.namedGroup("argument")!.trim();
       if (argument.isNotEmpty && ["open"].contains(argument)) {
         className += " markdown-details-$argument";
       }
@@ -1587,9 +1650,9 @@ class DetailsBlockSyntax extends md.BlockSyntax {
       summary = summary.replaceAll(" " * 2, " " * 1);
     }
 
-    var content = m.namedGroup("content")!.trimRight().split("\n\n");
-    var contentFirstLine = content.removeAt(0);
-    var contentNodes = <md.Node>[
+    final content = m.namedGroup("content")!.trimRight().split("\n\n");
+    final contentFirstLine = content.removeAt(0);
+    final contentNodes = <md.Node>[
       md.Element("p", [md.Text(summary)])
         ..attributes["class"] = "markdown-details-summary",
       if (contentFirstLine.trim().isNotEmpty)
@@ -1730,9 +1793,10 @@ class _MarkdownFootnoteModal extends StatefulWidget {
 class _MarkdownFootnoteModalState extends State<_MarkdownFootnoteModal> {
   var urlMode = false;
 
+  bool _loadedData = false;
+  bool urlModeError = false;
   late final Uri? urlModeUrl;
   OgpData? urlModeData;
-  bool _loadedData = false;
   Uri? urlModeFavicon;
 
   @override
@@ -1744,32 +1808,35 @@ class _MarkdownFootnoteModalState extends State<_MarkdownFootnoteModal> {
     urlMode =
         urlModeUrl != null && ["http", "https"].contains(urlModeUrl!.scheme);
     if (urlMode) {
-      OgpDataExtract.execute(urlModeUrl!.toString(), userAgent: userAgent).then(
-        (v) {
-          _loadedData = true;
-          if (mounted) setState(() {});
-          urlModeData = v;
-          if (mounted) setState(() {});
-        },
-      );
-      OgpDataExtract.fetchFavicon(
-        urlModeUrl!.toString(),
-        userAgent: userAgent,
-      ).then((v) async {
-        for (var i in v) {
-          if (i == null) continue;
-          var req = await httpClient.head(Uri.parse(i));
-          if (req.statusCode == 200 &&
-              [
-                "image/jpeg",
-                "image/png",
-              ].contains(req.headers["content-type"])) {
-            urlModeFavicon = Uri.parse(i);
-            if (mounted && _loadedData) setState(() {});
-            break;
-          }
-        }
-      });
+      OgpDataExtract.execute(urlModeUrl!.toString(), userAgent: userAgent)
+          .then((v) {
+            _loadedData = true;
+            if (mounted) setState(() {});
+            urlModeData = v;
+            if (mounted) setState(() {});
+          })
+          .catchError((_) {
+            _loadedData = true;
+            urlModeError = true;
+            if (mounted) setState(() {});
+          });
+      OgpDataExtract.fetchFavicon(urlModeUrl!.toString(), userAgent: userAgent)
+          .then((v) async {
+            for (var i in v) {
+              if (i == null) continue;
+              final req = await httpClient.head(Uri.parse(i));
+              if (req.statusCode == 200 &&
+                  [
+                    "image/jpeg",
+                    "image/png",
+                  ].contains(req.headers["content-type"])) {
+                urlModeFavicon = Uri.parse(i);
+                if (mounted && _loadedData) setState(() {});
+                break;
+              }
+            }
+          })
+          .catchError((_) {});
     }
   }
 
@@ -1777,21 +1844,21 @@ class _MarkdownFootnoteModalState extends State<_MarkdownFootnoteModal> {
   Widget build(BuildContext context) {
     Widget child;
     if (urlMode) {
-      var image = urlModeData?.image;
-      var title = urlModeData?.title ?? urlModeUrl.toString();
-      var description = urlModeData?.description;
+      final image = urlModeData?.image;
+      final title = urlModeData?.title ?? urlModeUrl.toString();
+      final description = urlModeData?.description;
 
-      var duration = kThemeAnimationDuration;
-      var curve = Curves.fastEaseInToSlowEaseOut;
+      const duration = kThemeAnimationDuration;
+      const curve = Curves.fastEaseInToSlowEaseOut;
 
-      child = InkWell(
-        onTap: () async {
-          await launchUrl(urlModeUrl!, mode: LaunchMode.inAppBrowserView);
-          if (context.mounted) Navigator.of(context).pop();
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Card.filled(
-          margin: EdgeInsets.zero,
+      child = Card.filled(
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () async {
+            await launchUrl(urlModeUrl!, mode: LaunchMode.inAppBrowserView);
+            if (context.mounted) Navigator.of(context).pop();
+          },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1799,40 +1866,34 @@ class _MarkdownFootnoteModalState extends State<_MarkdownFootnoteModal> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
-                      ),
-                      child: AnimatedSize(
-                        duration: duration,
-                        curve: curve,
-                        alignment: Alignment.topCenter,
-                        child: image != null
-                            ? Image.network(
-                                image,
-                                loadingBuilder: (_, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return SizedBox(
-                                    width: double.infinity,
-                                    child: LinearProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                              null
-                                          ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                          : null,
-                                    ),
-                                  );
-                                },
-                              )
-                            : const SizedBox(
-                                width: double.infinity,
-                                child: LinearProgressIndicator(),
-                              ),
-                      ),
+                    AnimatedSize(
+                      duration: duration,
+                      curve: curve,
+                      alignment: Alignment.topCenter,
+                      child: image != null
+                          ? Image.network(
+                              image,
+                              loadingBuilder: (_, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return SizedBox(
+                                  width: double.infinity,
+                                  child: LinearProgressIndicator(
+                                    value:
+                                        loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress
+                                                  .expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              },
+                            )
+                          : const SizedBox(
+                              width: double.infinity,
+                              child: LinearProgressIndicator(),
+                            ),
                     ),
                     if (_loadedData) const Divider(height: 1),
                   ],
@@ -1841,6 +1902,8 @@ class _MarkdownFootnoteModalState extends State<_MarkdownFootnoteModal> {
                 duration: duration,
                 curve: curve,
                 child: ListTile(
+                  isThreeLine:
+                      !(!_loadedData || (_loadedData && description == null)),
                   leading: SizedBox(
                     height: 24,
                     width: 24,
@@ -1957,6 +2020,12 @@ class _MarkdownDetailsState extends State<_MarkdownDetails>
     );
   }
 
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _toggleAnimation() {
     if (!kIsWeb) selectionHaptic();
     setState(() {
@@ -2001,7 +2070,7 @@ class _MarkdownDetailsState extends State<_MarkdownDetails>
         ),
         SizeTransition(
           sizeFactor: _animation,
-          axisAlignment: -1,
+          alignment: Alignment.topCenter,
           child: Text.rich(
             TextSpan(children: widget.contentSpans),
             style: widget.textStyle,
@@ -2083,7 +2152,7 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
 
   @override
   void dispose() {
-    _controller.removeListener(onUpdate);
+    _controller.dispose();
     super.dispose();
   }
 
@@ -2093,8 +2162,8 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
 
   @override
   Widget build(BuildContext context) {
-    var finalTitle = widget.title ?? "Untitled Image";
-    var titleWidget = Text(
+    final finalTitle = widget.title ?? "Untitled Image";
+    final titleWidget = Text(
       finalTitle,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -2103,8 +2172,8 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
       data: ThemeBuilderData.current!.themeDark(),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          var ratio = _ratioFromDouble(_imageSize?.aspectRatio ?? 1);
-          var realScale = _imageSize != null
+          final ratio = _ratioFromDouble(_imageSize?.aspectRatio ?? 1);
+          final realScale = _imageSize != null
               ? (_toRealScale(
                           _controller.value.getMaxScaleOnAxis(),
                           _imageSize!,
@@ -2224,14 +2293,14 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
     Size imageSize,
     BoxConstraints constraints,
   ) {
-    var iw = imageSize.width;
-    var ih = imageSize.height;
-    var cw = constraints.maxWidth;
-    var ch = constraints.maxHeight;
+    final iw = imageSize.width;
+    final ih = imageSize.height;
+    final cw = constraints.maxWidth;
+    final ch = constraints.maxHeight;
 
     if (iw <= 0 || ih <= 0 || cw <= 0 || ch <= 0) return scale;
 
-    var fitScale = (iw / ih > cw / ch) ? cw / iw : ch / ih;
+    final fitScale = (iw / ih > cw / ch) ? cw / iw : ch / ih;
     return scale * fitScale;
   }
 
@@ -2240,17 +2309,17 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
     Size imageSize,
     BoxConstraints constraints,
   ) {
-    var iw = imageSize.width * (constraints.maxWidth / imageSize.width);
-    var ih = imageSize.height * (constraints.maxHeight / imageSize.height);
-    var cw = constraints.maxWidth;
-    var ch = constraints.maxHeight;
+    final iw = imageSize.width * (constraints.maxWidth / imageSize.width);
+    final ih = imageSize.height * (constraints.maxHeight / imageSize.height);
+    final cw = constraints.maxWidth;
+    final ch = constraints.maxHeight;
 
     if (iw <= 0 || ih <= 0) return realScale;
     if (!cw.isFinite || !ch.isFinite) return realScale;
     if (cw <= 0 || ch <= 0) return realScale;
 
     // if (iw <= cw && ih <= ch) return realScale;
-    var fitScale = (iw / ih > cw / ch) ? cw / iw : ch / ih;
+    final fitScale = (iw / ih > cw / ch) ? cw / iw : ch / ih;
     return (realScale / fitScale) * (imageSize.width / constraints.maxWidth);
   }
 
@@ -2262,10 +2331,10 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
     if (!v.isFinite || v <= 0) {
       throw ArgumentError.value(v, 'v', 'must be > 0 and finite');
     }
-    var inverted = preferWidth && v < 1.0;
+    final inverted = preferWidth && v < 1.0;
     if (inverted) v = 1.0 / v;
 
-    var a0 = v.floor();
+    final a0 = v.floor();
     if ((v - a0).abs() < 1e-12) {
       return inverted
           ? (denominator: 1, numerator: a0)
@@ -2280,12 +2349,12 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
 
     while (true) {
       if (frac.abs() < 1e-12) break;
-      var x = 1.0 / frac;
-      var a = x.floor();
+      final x = 1.0 / frac;
+      final a = x.floor();
       var p2 = a * p1 + p0;
       var q2 = a * q1 + q0;
       if (q2 > maxDen) {
-        var k = (maxDen - q0) ~/ q1;
+        final k = (maxDen - q0) ~/ q1;
         if (k <= 0) {
           p2 = p1;
           q2 = q1;
@@ -2308,7 +2377,7 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
       a = a.abs();
       b = b.abs();
       while (b != 0) {
-        var t = a % b;
+        final t = a % b;
         a = b;
         b = t;
       }
@@ -2318,11 +2387,11 @@ class _MarkdownImageScreenState extends State<_MarkdownImageScreen>
     var num = p1;
     var den = q1;
     if (inverted) {
-      var t = num;
+      final t = num;
       num = den;
       den = t;
     }
-    var gg = g(num, den);
+    final gg = g(num, den);
     return (numerator: num ~/ gg, denominator: den ~/ gg);
   }
 }
@@ -2371,9 +2440,9 @@ class TapLongPressGestureRecognizer extends GestureRecognizer {
 extension on md.Node {
   String toInfoString() {
     switch (this) {
-      case md.Text e:
+      case final md.Text e:
         return 'Text("${e.text}")';
-      case md.Element e:
+      case final md.Element e:
         return 'Element(tag: ${e.tag}, attributes: ${e.attributes}, children: [${e.children?.map((e) => e.toInfoString()).join(", ")}])';
       default:
         return 'Node()';

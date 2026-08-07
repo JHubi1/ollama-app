@@ -9,7 +9,12 @@ class AppLocalizationsFa extends AppLocalizations {
   AppLocalizationsFa([String locale = 'fa']) : super(locale);
 
   @override
-  String get appTitle => 'Ollama';
+  String appTitle(String env, String title) {
+    return 'Ollama';
+  }
+
+  @override
+  String get learnMore => 'Learn more';
 
   @override
   String get optionNewChat => 'New Chat';
@@ -22,6 +27,20 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get optionNoChatFound => 'No chats found';
+
+  @override
+  String optionNoChatFoundSearch(String query) {
+    return 'No chats found for ‘$query’';
+  }
+
+  @override
+  String get optionSearchChats => 'Search through chats';
+
+  @override
+  String get optionChatDetails => 'Chat details';
+
+  @override
+  String get optionChatDetailsNoChat => 'No chat selected';
 
   @override
   String get tipPrefix => 'Tip: ';
@@ -54,25 +73,54 @@ class AppLocalizationsFa extends AppLocalizations {
   String get uploadImage => 'Upload Image';
 
   @override
-  String get notAValidImage => 'Not a valid image';
+  String newChatGreeting1(String user) {
+    return 'What’s on your mind, $user?';
+  }
 
   @override
-  String get imageOnlyConversation => 'Image Only Conversation';
+  String newChatGreeting2(String user) {
+    return 'Good to see you, $user.';
+  }
 
   @override
-  String get messageInputPlaceholder => 'Message';
+  String newChatGreeting3(String user) {
+    return 'What can I do for you, $user?';
+  }
 
   @override
-  String get tooltipAttachment => 'Add attachment';
+  String newChatGreeting4(String user) {
+    return 'How can I help you today, $user?';
+  }
+
+  @override
+  String newChatGreeting5(String user) {
+    return 'What would you like to talk about, $user?';
+  }
+
+  @override
+  String get newChatGreetingNameFallback => 'user';
+
+  @override
+  String messageInputPlaceholder(String model) {
+    return 'Message';
+  }
+
+  @override
+  String get messageInputPlaceholderModelPlaceholder => 'model';
+
+  @override
+  String get tooltipMessageOptions => 'Message options';
 
   @override
   String get tooltipSend => 'Send';
 
   @override
-  String get tooltipSave => 'Save';
+  String tooltipLetAIThink(String model) {
+    return 'Let AI think';
+  }
 
   @override
-  String get tooltipLetAIThink => 'Let AI think';
+  String get tooltipAddHostHeaders => 'Add host headers';
 
   @override
   String get tooltipReset => 'Reset current chat';
@@ -93,7 +141,13 @@ class AppLocalizationsFa extends AppLocalizations {
   String get newChatTitle => 'Unnamed Chat';
 
   @override
-  String get modelDialogAddModel => 'Add';
+  String get modelDialogTitle => 'Select a model';
+
+  @override
+  String get modelDialogAdd => 'Add';
+
+  @override
+  String get modelDialogRefresh => 'Refresh';
 
   @override
   String get modelDialogAddPromptTitle => 'Add new model';
@@ -103,50 +157,38 @@ class AppLocalizationsFa extends AppLocalizations {
       'This can have either be a normal name (e.g. \'llama3\') or name and tag (e.g. \'llama3:70b\').';
 
   @override
+  String get modelDialogAddCurrently => 'Currently downloading:';
+
+  @override
   String get modelDialogAddPromptAlreadyExists => 'Model already exists';
 
   @override
   String get modelDialogAddPromptInvalid => 'Invalid model name';
 
   @override
-  String get modelDialogAddAllowanceTitle => 'Allow Proxy';
+  String get modelDialogAddPromptNotFound =>
+      'Couldn’t find your model on the server. Please check the spelling and try again.';
 
   @override
-  String get modelDialogAddAllowanceDescription =>
-      'Ollama App must check if the entered model is valid. For that, we normally send a web request to the Ollama model list and check the status code, but because you\'re using the web client, we can\'t do that directly. Instead, the app will send the request to a different api, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potential harmful intentions.\nIf you accept, your selection will be remembered in the future; if not, nothing will be sent and the model won\'t be added.';
+  String get modelDialogAddPromptNetworkError =>
+      'Network error while checking model. Please check your connection and try again.';
 
   @override
-  String get modelDialogAddAllowanceAllow => 'Allow';
+  String get modelDialogAddPromptCorruptionError =>
+      'The API returned “EOF”; your server was likely restarted while downloading the model previously.';
 
   @override
-  String get modelDialogAddAllowanceDeny => 'Deny';
+  String get modelDialogAddPromptCorruptionErrorSolution =>
+      'Alternatively, you can run the following command on your Linux host directly:\nIf you see a new error, try running the command with “sudo” placed in front of it.';
 
   @override
-  String modelDialogAddAssuranceTitle(String model) {
-    return 'Add $model?';
-  }
+  String get modelDialogAddCancelTitle => 'Cancel download?';
 
   @override
-  String modelDialogAddAssuranceDescription(String model) {
-    return 'Pressing \'Add\' will download the model \'$model\' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it\'ll resume if you enter the name into the model dialog again.';
-  }
+  String get modelDialogAddCancelConfirm => 'Cancel';
 
   @override
-  String get modelDialogAddAssuranceAdd => 'Add';
-
-  @override
-  String get modelDialogAddAssuranceCancel => 'Cancel';
-
-  @override
-  String get modelDialogAddDownloadPercentLoading => 'loading progress';
-
-  @override
-  String modelDialogAddDownloadPercent(String percent) {
-    return 'download at $percent%';
-  }
-
-  @override
-  String get modelDialogAddDownloadFailed => 'Disconnected, try again';
+  String get modelDialogAddCancelHide => 'Hide';
 
   @override
   String get modelDialogAddDownloadSuccess => 'Download successful';
@@ -186,6 +228,13 @@ class AppLocalizationsFa extends AppLocalizations {
   String get dialogEditMessageTitle => 'Edit message';
 
   @override
+  String get settingsTitleOverview => 'Overview';
+
+  @override
+  String get settingsDescriptionOverview =>
+      'General settings regarding your host.';
+
+  @override
   String get settingsTitleBehavior => 'Behavior';
 
   @override
@@ -219,9 +268,6 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get settingsDescriptionAbout =>
       'Check for updates and learn more about Ollama App.';
-
-  @override
-  String get settingsSavedAutomatically => 'Settings are saved automatically';
 
   @override
   String get settingsExperimentalAlpha => 'alpha';
@@ -260,6 +306,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get settingsHost => 'Host';
 
   @override
+  String get settingsHostMissing => 'No host set';
+
+  @override
   String get settingsHostValid => 'Valid Host';
 
   @override
@@ -278,16 +327,6 @@ class AppLocalizationsFa extends AppLocalizations {
   }
 
   @override
-  String get tooltipAddHostHeaders => 'Add host headers';
-
-  @override
-  String get settingsHostHeaderTitle => 'Set host header';
-
-  @override
-  String get settingsHostHeaderInvalid =>
-      'The entered text isn\'t a valid header JSON object';
-
-  @override
   String settingsHostInvalidDetailed(String type) {
     String _temp0 = intl.Intl.selectLogic(type, {
       'url':
@@ -296,6 +335,22 @@ class AppLocalizationsFa extends AppLocalizations {
           'The host you entered is invalid. It cannot be reached. Please check the host and try again.',
     });
     return '$_temp0';
+  }
+
+  @override
+  String get settingsHostHeaderHeaderName => 'Header';
+
+  @override
+  String get settingsHostHeaderHeaderValue => 'Value';
+
+  @override
+  String settingsHostHeaderUnsupported(String header) {
+    return 'The header “$header” may not be supported.';
+  }
+
+  @override
+  String settingsHostHeaderDuplicate(String header) {
+    return 'The header “$header” is already set.';
   }
 
   @override

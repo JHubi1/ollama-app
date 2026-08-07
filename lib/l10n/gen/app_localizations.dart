@@ -106,11 +106,17 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
-  /// Title of the application
+  /// Title of the application. Should stay untranslated in most cases
   ///
   /// In en, this message translates to:
-  /// **'Ollama'**
-  String get appTitle;
+  /// **'{env, select, short{Ollama} integrated{{title} - Ollama App} other{Ollama App}}'**
+  String appTitle(String env, String title);
+
+  /// Text displayed for learn more button
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get learnMore;
 
   /// Text displayed for new chat option
   ///
@@ -130,11 +136,35 @@ abstract class AppLocalizations {
   /// **'Install Webapp'**
   String get optionInstallPwa;
 
-  /// Text displayed when no chats are found
+  /// Text displayed when there are no chats
   ///
   /// In en, this message translates to:
-  /// **'No chats found'**
+  /// **'No chats'**
   String get optionNoChatFound;
+
+  /// Text displayed when no chats are found for the search query
+  ///
+  /// In en, this message translates to:
+  /// **'No chats found for ‘{query}’'**
+  String optionNoChatFoundSearch(String query);
+
+  /// Placeholder for search chats input
+  ///
+  /// In en, this message translates to:
+  /// **'Search through chats'**
+  String get optionSearchChats;
+
+  /// Text displayed as title for chat details sidebar
+  ///
+  /// In en, this message translates to:
+  /// **'Chat details'**
+  String get optionChatDetails;
+
+  /// Text displayed when no chat is selected in the chat details sidebar
+  ///
+  /// In en, this message translates to:
+  /// **'No chat selected'**
+  String get optionChatDetailsNoChat;
 
   /// Prefix for tips
   ///
@@ -187,38 +217,68 @@ abstract class AppLocalizations {
   /// Text displayed for take image button
   ///
   /// In en, this message translates to:
-  /// **'Take Image'**
+  /// **'Camera'**
   String get takeImage;
 
   /// Text displayed for image upload button
   ///
   /// In en, this message translates to:
-  /// **'Upload Image'**
+  /// **'Gallery'**
   String get uploadImage;
 
-  /// Text displayed when an image is not valid
+  /// First greeting displayed in a new chat
   ///
   /// In en, this message translates to:
-  /// **'Not a valid image'**
-  String get notAValidImage;
+  /// **'What’s on your mind, {user}?'**
+  String newChatGreeting1(String user);
 
-  /// Title, if 'Generate Title' is executed on a conversation with no text messages
+  /// Second greeting displayed in a new chat
   ///
   /// In en, this message translates to:
-  /// **'Image Only Conversation'**
-  String get imageOnlyConversation;
+  /// **'Good to see you, {user}.'**
+  String newChatGreeting2(String user);
+
+  /// Third greeting displayed in a new chat
+  ///
+  /// In en, this message translates to:
+  /// **'What can I do for you, {user}?'**
+  String newChatGreeting3(String user);
+
+  /// Fourth greeting displayed in a new chat
+  ///
+  /// In en, this message translates to:
+  /// **'How can I help you today, {user}?'**
+  String newChatGreeting4(String user);
+
+  /// Fifth greeting displayed in a new chat
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to talk about, {user}?'**
+  String newChatGreeting5(String user);
+
+  /// Fallback name for the user if no name is set
+  ///
+  /// In en, this message translates to:
+  /// **'user'**
+  String get newChatGreetingNameFallback;
 
   /// Placeholder text for message input
   ///
   /// In en, this message translates to:
-  /// **'Message'**
-  String get messageInputPlaceholder;
+  /// **'Ask {model}'**
+  String messageInputPlaceholder(String model);
 
-  /// Tooltip for attachment button
+  /// Model name used in 'messageInputPlaceholder' if no model is available, should fit into capitalization and context
   ///
   /// In en, this message translates to:
-  /// **'Add attachment'**
-  String get tooltipAttachment;
+  /// **'model'**
+  String get messageInputPlaceholderModelPlaceholder;
+
+  /// Tooltip for message options button; options here being attachments, etc.
+  ///
+  /// In en, this message translates to:
+  /// **'Message options'**
+  String get tooltipMessageOptions;
 
   /// Tooltip for send button
   ///
@@ -226,17 +286,17 @@ abstract class AppLocalizations {
   /// **'Send'**
   String get tooltipSend;
 
-  /// Tooltip for save button
+  /// Tooltip for generate with model button
   ///
   /// In en, this message translates to:
-  /// **'Save'**
-  String get tooltipSave;
+  /// **'Generate with {model}'**
+  String tooltipLetAIThink(String model);
 
-  /// Tooltip for let AI think button
+  /// Tooltip for add host headers button
   ///
   /// In en, this message translates to:
-  /// **'Let AI think'**
-  String get tooltipLetAIThink;
+  /// **'Add host headers'**
+  String get tooltipAddHostHeaders;
 
   /// Tooltip for reset button
   ///
@@ -259,121 +319,115 @@ abstract class AppLocalizations {
   /// Text displayed when no host is selected
   ///
   /// In en, this message translates to:
-  /// **'No host selected, open settings to set one'**
+  /// **'No host selected, open settings to set one.'**
   String get noHostSelected;
 
-  /// Text displayed when no model is selected
+  /// Text displayed when no model is selected. Should be lower case even if the language would capitalize it, to fit better into the app's design.
   ///
   /// In en, this message translates to:
-  /// **'<selector>'**
+  /// **'<model>'**
   String get noSelectedModel;
 
   /// Title of a new chat
   ///
   /// In en, this message translates to:
-  /// **'Unnamed Chat'**
+  /// **'Untitled Chat'**
   String get newChatTitle;
+
+  /// Title of the model selection dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Select a model'**
+  String get modelDialogTitle;
 
   /// Text displayed for add model button
   ///
   /// In en, this message translates to:
   /// **'Add'**
-  String get modelDialogAddModel;
+  String get modelDialogAdd;
+
+  /// Text displayed for refresh models button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get modelDialogRefresh;
 
   /// Title of the add model dialog
   ///
   /// In en, this message translates to:
-  /// **'Add new model'**
+  /// **'Add model'**
   String get modelDialogAddPromptTitle;
 
   /// Description of the add model dialog
   ///
   /// In en, this message translates to:
-  /// **'This can either be a normal name (e.g. \'llama3\') or a name and tag (e.g. \'llama3:70b\').'**
+  /// **'This can either be a normal name (e.g. “llama3”) or a name together with a tag (e.g. “llama3:70b”).'**
   String get modelDialogAddPromptDescription;
+
+  /// Text displayed when there are currently downloading models
+  ///
+  /// In en, this message translates to:
+  /// **'Currently downloading:'**
+  String get modelDialogAddCurrently;
 
   /// Text displayed when the model already exists
   ///
   /// In en, this message translates to:
-  /// **'Model already exists'**
+  /// **'Model already exists. Try refreshing if it was deleted.'**
   String get modelDialogAddPromptAlreadyExists;
 
   /// Text displayed when the model name is invalid
   ///
   /// In en, this message translates to:
-  /// **'Invalid model name'**
+  /// **'Couldn’t read your model name correctly. Please check the spelling and try again.'**
   String get modelDialogAddPromptInvalid;
 
-  /// Title of the allow proxy dialog
+  /// Text displayed when the model could not be found
   ///
   /// In en, this message translates to:
-  /// **'Allow Proxy'**
-  String get modelDialogAddAllowanceTitle;
+  /// **'Couldn’t find your model on the server. Please check the spelling and try again.'**
+  String get modelDialogAddPromptNotFound;
 
-  /// Description of the allow proxy dialog
+  /// Text displayed when there was a network error while checking the model
   ///
   /// In en, this message translates to:
-  /// **'Ollama App must check if the entered model is valid. To do that, we normally send a web request to the Ollama model list and check the status code, but because you\'re using the web client, we can\'t do that directly. Instead, the app will send the request to a different API, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potentially harmful intentions.\nIf you accept, your selection will be remembered for the future; if not, nothing will be sent and the model won\'t be added.'**
-  String get modelDialogAddAllowanceDescription;
+  /// **'Network error while checking model. Please check your connection and try again.'**
+  String get modelDialogAddPromptNetworkError;
 
-  /// Text displayed for allow button, should be capitalized
+  /// Text displayed when the model is corrupted on the server
   ///
   /// In en, this message translates to:
-  /// **'Allow'**
-  String get modelDialogAddAllowanceAllow;
+  /// **'The API returned “EOF”; your server was likely restarted while downloading the model previously.'**
+  String get modelDialogAddPromptCorruptionError;
 
-  /// Text displayed for deny button, should be capitalized
+  /// Text displayed as solution for the corrupted model error
   ///
   /// In en, this message translates to:
-  /// **'Deny'**
-  String get modelDialogAddAllowanceDeny;
+  /// **'Alternatively, you can run the following command on your Linux host directly:\nIf you see a new error, try running the command with “sudo” placed in front of it.'**
+  String get modelDialogAddPromptCorruptionErrorSolution;
 
-  /// Title of the add model assurance dialog
+  /// Title of the cancel download dialog
   ///
   /// In en, this message translates to:
-  /// **'Add {model}?'**
-  String modelDialogAddAssuranceTitle(String model);
+  /// **'Cancel download?'**
+  String get modelDialogAddCancelTitle;
 
-  /// Description of the add model assurance dialog
-  ///
-  /// In en, this message translates to:
-  /// **'Pressing \'Add\' will download the model \'{model}\' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it will resume if you enter the name into the model dialog again.'**
-  String modelDialogAddAssuranceDescription(String model);
-
-  /// Text displayed for add button, should be capitalized
-  ///
-  /// In en, this message translates to:
-  /// **'Add'**
-  String get modelDialogAddAssuranceAdd;
-
-  /// Text displayed for cancel button, should be capitalized
+  /// Text displayed for cancel download button
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
-  String get modelDialogAddAssuranceCancel;
+  String get modelDialogAddCancelConfirm;
 
-  /// Text displayed while loading the download progress
+  /// Text displayed for hide button in cancel download dialog. Hide in the sense of 'hide this dialog'
   ///
   /// In en, this message translates to:
-  /// **'loading progress'**
-  String get modelDialogAddDownloadPercentLoading;
-
-  /// Text displayed while downloading a model
-  ///
-  /// In en, this message translates to:
-  /// **'download at {percent}%'**
-  String modelDialogAddDownloadPercent(String percent);
-
-  /// Text displayed when the download of a model fails
-  ///
-  /// In en, this message translates to:
-  /// **'Disconnected, try again'**
-  String get modelDialogAddDownloadFailed;
+  /// **'Hide'**
+  String get modelDialogAddCancelHide;
 
   /// Text displayed when the download of a model is successful
   ///
   /// In en, this message translates to:
-  /// **'Download successful'**
+  /// **'Download successful. Set as current model.'**
   String get modelDialogAddDownloadSuccess;
 
   /// Title of the delete dialog
@@ -442,6 +496,18 @@ abstract class AppLocalizations {
   /// **'Edit message'**
   String get dialogEditMessageTitle;
 
+  /// Title of the overview settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get settingsTitleOverview;
+
+  /// Description of the overview settings section
+  ///
+  /// In en, this message translates to:
+  /// **'General settings regarding your host.'**
+  String get settingsDescriptionOverview;
+
   /// Title of the behavior settings section
   ///
   /// In en, this message translates to:
@@ -502,12 +568,6 @@ abstract class AppLocalizations {
   /// **'Check for updates and learn more about Ollama App.'**
   String get settingsDescriptionAbout;
 
-  /// Text displayed when settings are saved automatically
-  ///
-  /// In en, this message translates to:
-  /// **'Settings are saved automatically'**
-  String get settingsSavedAutomatically;
-
   /// Text displayed when a feature is in alpha phase
   ///
   /// In en, this message translates to:
@@ -517,7 +577,7 @@ abstract class AppLocalizations {
   /// Description of the alpha feature
   ///
   /// In en, this message translates to:
-  /// **'This feature is in alpha and may not work as intended or expected.\nCritical issues and/or permanent critical damage to device and/or used services cannot be ruled out.\nUse at your own risk. No liability on the part of the app author.'**
+  /// **'This feature is in alpha and may not work as intended or expected.\nCritical issues and/or permanent critical damage to device and/or connected services cannot be ruled out.\nUse at your own risk. No liability on the part of the app author.'**
   String get settingsExperimentalAlphaDescription;
 
   /// Text displayed when a feature is in alpha
@@ -535,7 +595,7 @@ abstract class AppLocalizations {
   /// Description of the beta feature
   ///
   /// In en, this message translates to:
-  /// **'This feature is in beta and may not work as intended or expected.\nLess severe issues may or may not occur. Damage shouldn\'t be critical.\nUse at your own risk.'**
+  /// **'This feature is in beta and may not work as intended or expected.\nLess severe issues may or may not occur. Damage shouldn’t be critical.\nUse at your own risk.'**
   String get settingsExperimentalBetaDescription;
 
   /// Text displayed when a feature is in beta
@@ -568,6 +628,12 @@ abstract class AppLocalizations {
   /// **'Host'**
   String get settingsHost;
 
+  /// Text displayed when no host is set
+  ///
+  /// In en, this message translates to:
+  /// **'No host set'**
+  String get settingsHostMissing;
+
   /// Text displayed when the host is valid
   ///
   /// In en, this message translates to:
@@ -580,35 +646,41 @@ abstract class AppLocalizations {
   /// **'Checking Host'**
   String get settingsHostChecking;
 
-  /// Text displayed when the host is invalid
+  /// Short title displayed when the host is invalid
   ///
   /// In en, this message translates to:
-  /// **'Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request failed. Server issues} ratelimit{Too many requests} other{Request Failed}}'**
+  /// **'{type, select, invalidUrl{Invalid URL} unreachable{Host unreachable} undetectable{Host not an Ollama server} timeout{Connection timed out} outdated{Outdated Ollama version} other{Invalid host}}'**
   String settingsHostInvalid(String type);
 
-  /// Tooltip for add host headers button
+  /// Detailed text displayed when the host is invalid
   ///
   /// In en, this message translates to:
-  /// **'Add host headers'**
-  String get tooltipAddHostHeaders;
-
-  /// Text displayed as description for host header input
-  ///
-  /// In en, this message translates to:
-  /// **'Set host header'**
-  String get settingsHostHeaderTitle;
-
-  /// Text displayed when the host header is invalid
-  ///
-  /// In en, this message translates to:
-  /// **'The entered text isn\'t a valid header JSON object'**
-  String get settingsHostHeaderInvalid;
-
-  /// Text displayed when the host is invalid
-  ///
-  /// In en, this message translates to:
-  /// **'{type, select, url{The URL you entered is invalid. It isn\'t in a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}'**
+  /// **'{type, select, invalidUrl{The URL you entered isn’t in a valid format.} unreachable{The host is invalid or unreachable, possibly due to a wrong address or network issue.} undetectable{The host is reachable but doesn’t respond as expected by Ollama App.\nIt may not be an Ollama server. Are you sure you entered it correctly?} timeout{The host couldn’t be reached in time.\nTry increasing the timeout multiplier in interface settings.} outdated{The host is running an Ollama version incompatible with this app.\nPlease update both the host and this app, if possible.} other{The host you entered is invalid.}}'**
   String settingsHostInvalidDetailed(String type);
+
+  /// Text displayed as description for host header name input
+  ///
+  /// In en, this message translates to:
+  /// **'Header'**
+  String get settingsHostHeaderHeaderName;
+
+  /// Text displayed as description for host header value input
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get settingsHostHeaderHeaderValue;
+
+  /// Text displayed when a host header is unsupported
+  ///
+  /// In en, this message translates to:
+  /// **'The header “{header}” may not be supported.'**
+  String settingsHostHeaderUnsupported(String header);
+
+  /// Text displayed when a host header is a duplicate
+  ///
+  /// In en, this message translates to:
+  /// **'The header “{header}” is already set.'**
+  String settingsHostHeaderDuplicate(String header);
 
   /// Text displayed as description for system message input
   ///
@@ -625,7 +697,7 @@ abstract class AppLocalizations {
   /// Description of the use system message toggle
   ///
   /// In en, this message translates to:
-  /// **'Disables setting the system message above and uses the one from the model\'s Modelfile instead. Can be useful for models with model files.'**
+  /// **'Disables setting the system message above and uses the one from the model’s Modelfile instead. Can be useful for models with model files.'**
   String get settingsUseSystemDescription;
 
   /// Text displayed as description for disable markdown toggle
@@ -703,7 +775,7 @@ abstract class AppLocalizations {
   /// Text displayed as description for don't keep model loaded toggle
   ///
   /// In en, this message translates to:
-  /// **'Don\'t keep model loaded'**
+  /// **'Don’t keep model loaded'**
   String get settingsKeepModelLoadedNever;
 
   /// Text displayed as description for keep model loaded for toggle
@@ -793,7 +865,7 @@ abstract class AppLocalizations {
   /// Instructions and warnings for the temporary fixes
   ///
   /// In en, this message translates to:
-  /// **'Do not toggle any of these settings unless you know what you are doing! The given solutions might not work as expected.\nThey cannot be seen as final or should be judged as such. Issues might occur.'**
+  /// **'Do not toggle any of these settings unless you know what you are doing! The given solutions might not work as expected.\nThey should not be considered final or judged as such. Issues might occur.'**
   String get settingsTemporaryFixesInstructions;
 
   /// Text displayed when no fixes are available
@@ -805,7 +877,7 @@ abstract class AppLocalizations {
   /// Text displayed while loading voice permissions
   ///
   /// In en, this message translates to:
-  /// **'Loading voice permissions ...'**
+  /// **'Loading voice permissions...'**
   String get settingsVoicePermissionLoading;
 
   /// Text displayed when text-to-speech is not supported
@@ -913,13 +985,13 @@ abstract class AppLocalizations {
   /// Information displayed for export and import options
   ///
   /// In en, this message translates to:
-  /// **'These options allow you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or back up your chat history'**
+  /// **'These options allow you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or back up your chat history.'**
   String get settingsExportInfo;
 
   /// Warning displayed for export and import options
   ///
   /// In en, this message translates to:
-  /// **'Multiple chat histories won\'t be merged! You\'ll lose your current chat history if you import a new one.'**
+  /// **'Multiple chat histories won’t be merged! You’ll lose your current chat history if you import a new one.'**
   String get settingsExportWarning;
 
   /// Text displayed as description for check for updates button
@@ -931,7 +1003,7 @@ abstract class AppLocalizations {
   /// Text displayed while looking for updates
   ///
   /// In en, this message translates to:
-  /// **'Checking for updates ...'**
+  /// **'Checking for updates...'**
   String get settingsUpdateChecking;
 
   /// Text displayed when the app is up to date
@@ -949,7 +1021,7 @@ abstract class AppLocalizations {
   /// Text displayed when the API rate limit is exceeded
   ///
   /// In en, this message translates to:
-  /// **'Can\'t check, API rate limit exceeded'**
+  /// **'Can’t check, API rate limit exceeded'**
   String get settingsUpdateRateLimit;
 
   /// Text displayed when an issue occurs while checking for updates
@@ -991,7 +1063,7 @@ abstract class AppLocalizations {
   /// Text displayed as description for check for updates toggle
   ///
   /// In en, this message translates to:
-  /// **'Check for updates on open'**
+  /// **'Check for updates on startup'**
   String get settingsCheckForUpdates;
 
   /// Text displayed as description for GitHub button

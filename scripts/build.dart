@@ -4,7 +4,7 @@ import 'dart:io';
 
 void main() async {
   Directory.current = Directory(Platform.script.toFilePath()).parent.parent;
-  var flutterExecutable = Platform.isWindows ? 'flutter.bat' : 'flutter';
+  final flutterExecutable = Platform.isWindows ? 'flutter.bat' : 'flutter';
 
   print("Build script for Ollama App by JHubi1");
   print("Report issues at: https://github.com/JHubi1/ollama-app/issues");
@@ -12,14 +12,15 @@ void main() async {
   print('----------');
 
   print('Extracting version from pubspec.yaml ...');
-  var pubspec = File('pubspec.yaml');
-  var versionLine = await pubspec
-      .readAsLines()
-      .then((lines) => lines.firstWhere((line) => line.contains('version')));
-  var version = versionLine.split(':').last.trim().split('+').first.trim();
-  var versionCode = versionLine.split(':').last.trim().split('+')[1].trim();
+  final pubspec = File('pubspec.yaml');
+  final versionLine = await pubspec.readAsLines().then(
+    (lines) => lines.firstWhere((line) => line.contains('version')),
+  );
+  final version = versionLine.split(':').last.trim().split('+').first.trim();
+  final versionCode = versionLine.split(':').last.trim().split('+')[1].trim();
   print(
-      "Building Ollama App v$version (build $versionCode) - this may take a while");
+    "Building Ollama App v$version (build $versionCode) - this may take a while",
+  );
 
   print('----------');
 
@@ -27,7 +28,7 @@ void main() async {
     'build',
     'apk',
     '--obfuscate',
-    '--split-debug-info=build\\debugAndroid'
+    '--split-debug-info=build\\debugAndroid',
   ]);
 
   // ----------
@@ -71,17 +72,20 @@ void main() async {
 
   stdout.write('Copying build output to build\\.output ');
   try {
-    var outputDir = Directory('build\\.output');
+    final outputDir = Directory('build\\.output');
     if (await outputDir.exists()) {
       await outputDir.delete(recursive: true);
     }
     await outputDir.create();
 
-    await copyFile('build\\app\\outputs\\flutter-apk\\app-release.apk',
-        'build\\.output\\ollama-android-v$version.apk');
     await copyFile(
-        'build\\windows\\x64\\runner\\ollama-windows-x64-v$version.exe',
-        'build\\.output\\ollama-windows-x64-v$version.exe');
+      'build\\app\\outputs\\flutter-apk\\app-release.apk',
+      'build\\.output\\ollama-android-v$version.apk',
+    );
+    await copyFile(
+      'build\\windows\\x64\\runner\\ollama-windows-x64-v$version.exe',
+      'build\\.output\\ollama-windows-x64-v$version.exe',
+    );
     print('- done');
   } catch (_) {
     print('- failed');
@@ -95,14 +99,18 @@ void main() async {
 }
 
 Future<void> copyFile(String sourcePath, String destinationPath) async {
-  var sourceFile = File(sourcePath);
+  final sourceFile = File(sourcePath);
   if (await sourceFile.exists()) {
     await sourceFile.copy(destinationPath);
   }
 }
 
-Future<void> execute(String title, String command, List<String> arguments,
-    [String? errorText]) async {
+Future<void> execute(
+  String title,
+  String command,
+  List<String> arguments, [
+  String? errorText,
+]) async {
   stdout.write('$title ');
   ProcessResult process;
   try {

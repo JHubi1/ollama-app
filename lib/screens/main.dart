@@ -1,6 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:ollama_dart/ollama_dart.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
+import 'dart:async';
+import 'dart:ui';
+
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart' hide RouteSettings;
+import 'package:ollama_dart/ollama_dart.dart' as llama;
+
+import '../l10n/gen/app_localizations.dart';
+import '../main.dart';
+import '../main.gr.dart';
+import '../services/services.dart';
+import '../widgets/model_selector.dart';
+import '../widgets/two_state_widget.dart';
+import 'chat.dart';
+import 'settings.dart';
 
 // import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 // import 'package:flutter_chat_ui/flutter_chat_ui.dart' as chat_ui;
@@ -15,12 +27,6 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 // import '../l10n/gen/app_localizations.dart';
 // import '../main.dart';
-import '../l10n/gen/app_localizations.dart';
-import '../main.dart';
-import '../services/chat.dart';
-import '../services/error.dart';
-import '../services/markdown.dart';
-import '../services/model.dart';
 // import '../services/model.dart';
 // import '../services/preferences.dart';
 // import '../worker/desktop.dart';
@@ -1770,6 +1776,7 @@ import '../services/model.dart';
 //   }
 // }
 
+@RoutePage()
 class ScreenMain extends StatefulWidget {
   const ScreenMain({super.key});
 
@@ -1777,42 +1784,64 @@ class ScreenMain extends StatefulWidget {
   State<ScreenMain> createState() => _ScreenMainState();
 }
 
-class _ScreenMainState extends State<ScreenMain> {
+class _ScreenMainState extends State<ScreenMain>
+    with SingleTickerProviderStateMixin {
+  bool _thirdPaneOpen = false;
+
+  bool isSettingsRoute = false;
+  late final bool startedAtSettingsRoute;
+  PageController? _sidebarController;
+
+  final FocusNode _searchBarFocusNode = FocusNode();
+  final TextEditingController _searchBarController = TextEditingController();
+
+  late final AnimationController _searchBarFocusController;
+  late final CurvedAnimation _searchBarFocusCurved;
+
+  final _modelSelectorKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
+    setIsSettingsRoute();
+    startedAtSettingsRoute = isSettingsRoute;
 
-    host = "https://raspimainollama.tunler.net";
     ChatManager.instance.addListener(onUpdate);
     ModelManager.instance.addListener(onUpdate);
+    HostManager.instance.addListener(onUpdate);
 
-    prefsReady.future.then((_) async {
-      if (!mounted) return;
+    if (HostManager.instance.host != null) {
       errorGuard(
         context,
         "Q3L4Z1X6",
-        () async {
-          await ModelManager.instance.loadModels();
-
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Models: ${ModelManager.instance.models.length}"),
-            ),
-          );
-        },
+        () async => ModelManager.instance.loadModels(),
         errorMessage: errorGuardErrorMessageWithFallbackSingle(
-          OllamaClientException,
+          llama.OllamaException,
           "Unable to load models",
         ),
         enableReporting: false,
       );
+    }
 
-      await ChatManager.instance.loadChats();
+    _searchBarFocusController = AnimationController(
+      vsync: this,
+      duration: ExpressiveCurves.expressiveSpatial.fastDuration,
+      reverseDuration: ExpressiveCurves.expressiveSpatial.fastDuration,
+    );
+    _searchBarFocusCurved = CurvedAnimation(
+      parent: _searchBarFocusController,
+      curve: ExpressiveCurves.expressiveSpatial.fast,
+      reverseCurve: ExpressiveCurves.expressiveSpatial.fast.flipped,
+    );
+
+    _searchBarFocusNode.addListener(() {
       if (!mounted) return;
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("Chats: ${ChatManager.instance.chats.length}")),
-      // );
+      if (_searchBarFocusNode.hasFocus) {
+        _searchBarFocusController.forward();
+      } else {
+        _searchBarFocusController.reverse();
+      }
+      setState(() {});
     });
   }
 
@@ -1820,121 +1849,779 @@ class _ScreenMainState extends State<ScreenMain> {
   void dispose() {
     ChatManager.instance.removeListener(onUpdate);
     ModelManager.instance.removeListener(onUpdate);
+    HostManager.instance.removeListener(onUpdate);
+
+    _searchBarFocusNode.dispose();
+    _searchBarController.dispose();
+    _searchBarFocusCurved.dispose();
+    _searchBarFocusController.dispose();
+    _sidebarController?.dispose();
+
     super.dispose();
   }
 
   void onUpdate() {
-    if (mounted) setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
   }
 
-  bool test = false;
-  double testSlider = 0.5;
+  void setIsSettingsRoute() {
+    isSettingsRoute = context.router.currentPath.contains("/settings");
+
+    var page = isSettingsRoute ? 1 : 0;
+    if (_sidebarController != null && _sidebarController!.hasClients) {
+      if (startedAtSettingsRoute) page = page == 0 ? 1 : 0;
+      _sidebarController!.animateToPage(
+        page,
+        duration: ExpressiveCurves.expressiveEffects.slowDuration,
+        curve: ExpressiveCurves.expressiveEffects.slow,
+      );
+    } else {
+      _sidebarController = PageController(initialPage: 0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
-          ...ChatManager.instance.chats.map(
-            (chat) => ScreenMainChatTile(chat: chat),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final appLocalizations = AppLocalizations.of(context);
+
+    final adaptedSurface = adaptedSurfaceFromColorScheme(colorScheme);
+    final adaptedOnSurface = adaptedOnSurfaceFromColorScheme(colorScheme);
+    final breakpoint = Breakpoint.of(context);
+
+    final chatsSearched = ChatManager.instance.chats.where((chat) {
+      final searchTerm = _searchBarController.text.toLowerCase();
+      return chat.title.toLowerCase().contains(searchTerm) ||
+          chat.messages.any(
+            (message) =>
+                message is TextMessage &&
+                message.content.toLowerCase().contains(searchTerm),
+          );
+    }).toList();
+
+    if (breakpoint != Breakpoint.extraLarge) _thirdPaneOpen = false;
+    final embeddedNavigation = breakpoint.panesRecommended >= 2;
+
+    final navigationRail = Transform.translate(
+      offset: const Offset(0, -8),
+      child: _ScreenMainNavigationBarWide(
+        adaptedSurface: adaptedSurface,
+        isSettingsRoute: isSettingsRoute,
+        onDestinationSelected: () {
+          setIsSettingsRoute();
+          if (mounted) setState(() {});
+        },
+      ),
+    );
+
+    final children = [
+      AnimatedSwitcher(
+        duration: ExpressiveCurves.expressiveSpatial.normalDuration,
+        switchInCurve: ExpressiveCurves.expressiveSpatial.normal,
+        switchOutCurve: ExpressiveCurves.expressiveSpatial.normal.flipped,
+        transitionBuilder: (child, animation) => SizeTransition(
+          sizeFactor: animation,
+          axis: Axis.horizontal,
+          alignment: const AlignmentDirectional(0.75, 0.5),
+          child: child,
+        ),
+        child: embeddedNavigation
+            ? navigationRail
+            : SizedBox(width: breakpoint.spacing),
+      ),
+      AnimatedContainer(
+        duration: ExpressiveCurves.standardSpatial.fastDuration,
+        curve: ExpressiveCurves.standardEffects.fast,
+        padding: breakpoint.panesRecommended >= 2
+            ? EdgeInsetsDirectional.only(end: breakpoint.spacing)
+            : EdgeInsetsDirectional.zero,
+        child: AnimatedSwitcher(
+          duration: ExpressiveCurves.expressiveSpatial.normalDuration,
+          switchInCurve: ExpressiveCurves.expressiveSpatial.normal,
+          switchOutCurve: ExpressiveCurves.expressiveSpatial.normal.flipped,
+          transitionBuilder: (child, animation) => SizeTransition(
+            sizeFactor: animation,
+            axis: Axis.horizontal,
+            alignment: const AlignmentDirectional(0.25, 0.5),
+            child: child,
           ),
-          ListTile(
-            title: const Text("Add chat"),
-            onTap: () async {
-              if (ModelManager.instance.models.isEmpty) return;
-              var chat = ChatManager.instance.createChat(
-                context: context,
-                model: ModelManager.instance.models.first,
-              );
+          child: breakpoint.panesRecommended >= 2
+              ? Builder(
+                  builder: (context) {
+                    final children = [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(56 * (2 / 3)),
+                        ),
+                        child: chatsSearched.isEmpty
+                            ? Padding(
+                                padding: EdgeInsetsGeometry.only(
+                                  top: 64,
+                                  bottom: breakpoint.spacing,
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(24),
+                                    child: Text(
+                                      _searchBarController.text.isEmpty
+                                          ? appLocalizations.optionNoChatFound
+                                          : appLocalizations
+                                                .optionNoChatFoundSearch(
+                                                  _searchBarController.text,
+                                                ),
+                                      style: textTheme.labelLarge!.copyWith(
+                                        color: colorScheme.outline,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: EdgeInsetsGeometry.only(
+                                  top: 64,
+                                  bottom: breakpoint.spacing,
+                                ),
+                                itemBuilder: (context, index) {
+                                  final chat = chatsSearched.elementAtOrNull(
+                                    index,
+                                  );
+                                  if (chat == null) return null;
+                                  return ListTile(
+                                    title: Text(chat.title),
+                                    trailing: IconButton(
+                                      onPressed: () =>
+                                          ChatManager.instance.deleteChat(chat),
+                                      icon: const Icon(Icons.delete_outline),
+                                    ),
+                                  );
+                                },
+                              ),
+                      ),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              adaptedSurface,
+                              adaptedSurface.withAlpha(0),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: const [0.25, 1.0],
+                          ),
+                        ),
+                        child: const SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                        ),
+                      ),
+                      AnimatedBuilder(
+                        animation: _searchBarFocusCurved,
+                        builder: (context, child) => LayoutBuilder(
+                          builder: (context, constraints) {
+                            final padding = lerpDouble(
+                              12.0,
+                              0.0,
+                              _searchBarFocusCurved.value,
+                            )!;
+                            return OverflowBox(
+                              maxWidth: double.infinity,
+                              alignment: AlignmentGeometry.topCenter,
+                              child: SizedBox(
+                                width: constraints.maxWidth - padding * 2,
+                                child: child,
+                              ),
+                            );
+                          },
+                        ),
+                        child: SearchBar(
+                          hintText: appLocalizations.optionSearchChats,
+                          leading: TwoStateWidget(
+                            animation: _searchBarFocusCurved,
+                            from: IconButton(
+                              onPressed: null,
+                              disabledColor: IconTheme.of(context).color,
+                              icon: const Icon(Icons.search),
+                            ),
+                            to: IconButton(
+                              onPressed: () {
+                                _searchBarFocusNode.unfocus();
+                                onUpdate();
+                              },
+                              icon: const Icon(Icons.chevron_left),
+                            ),
+                          ),
+                          elevation: WidgetStateProperty.all(0),
+                          focusNode: _searchBarFocusNode,
+                          controller: _searchBarController,
+                          onChanged: (value) => onUpdate(),
+                        ),
+                      ),
+                    ];
 
-              await errorGuard(
-                context,
-                "M49WC9CW",
-                () async {
-                  var msg = TextMessage(
-                    "Write a long demo message for all GitHub Flavored Markdown features.",
-                    sender: MessageSender.user,
-                  );
-                  return chat.send(msg);
-                },
-                errorMessage: errorGuardErrorMessageWithFallbackSingle(
-                  OllamaClientException,
-                  "Unable to send message",
-                ),
-                enableReporting: false,
-              );
+                    var pageViewChildren = [
+                      Stack(children: children),
+                      const SettingsOptions(embeddedNavigation: true),
+                    ];
+                    if (startedAtSettingsRoute) {
+                      pageViewChildren = pageViewChildren.reversed.toList();
+                    }
 
-              if (!context.mounted || !chat.alive) return;
-              await errorGuard(
-                context,
-                "W97BM0DJ",
-                () async => chat.generateTitle(context: context),
-                errorMessage: errorGuardErrorMessageWithFallbackSingle(
-                  OllamaClientException,
-                  "Unable to generate chat title",
-                ),
-              );
+                    return SizedBox(
+                      width: breakpoint.panesFixedWidth,
+                      child: PageView(
+                        controller: _sidebarController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        children: pageViewChildren,
+                      ),
+                    );
+                  },
+                )
+              : null,
+        ),
+      ),
+      Expanded(
+        child: Builder(
+          builder: (context) {
+            const radius = BorderRadius.vertical(top: Radius.circular(12));
+            final border = BorderSide(
+              width: 2,
+              color: colorScheme.surfaceContainerHigh,
+            );
+
+            return AnimatedContainer(
+              duration: ExpressiveCurves.standardSpatial.fastDuration,
+              curve: ExpressiveCurves.standardEffects.fast,
+              decoration: breakpoint.panesRecommended >= 2
+                  ? BoxDecoration(
+                      borderRadius: radius,
+                      border: Border(top: border, left: border, right: border),
+                    )
+                  : const BoxDecoration(),
+              child: const ClipRRect(borderRadius: radius, child: AutoRouter()),
+            );
+          },
+        ),
+      ),
+      AnimatedContainer(
+        duration: ExpressiveCurves.standardSpatial.fastDuration,
+        curve: ExpressiveCurves.standardEffects.fast,
+        padding: breakpoint.panes.contains(3) && _thirdPaneOpen
+            ? EdgeInsetsDirectional.only(start: breakpoint.spacing)
+            : EdgeInsetsDirectional.zero,
+        child: Card.filled(
+          margin: EdgeInsets.zero,
+          color: adaptedOnSurface,
+          child: AnimatedSwitcher(
+            duration: ExpressiveCurves.expressiveSpatial.normalDuration,
+            switchInCurve: ExpressiveCurves.expressiveSpatial.normal,
+            switchOutCurve: ExpressiveCurves.expressiveSpatial.normal.flipped,
+            transitionBuilder: (child, animation) => SizeTransition(
+              sizeFactor: animation,
+              axis: Axis.horizontal,
+              alignment: const AlignmentDirectional(0.25, 0.5),
+              child: child,
+            ),
+            child: breakpoint.panes.contains(3) && _thirdPaneOpen
+                ? SizedBox(
+                    width: breakpoint.panesThirdFixedWidth,
+                    child: ChatDetails(
+                      onClose: () {
+                        _thirdPaneOpen = false;
+                        if (mounted) setState(() {});
+                      },
+                    ),
+                  )
+                : null,
+          ),
+        ),
+      ),
+      SizedBox(width: breakpoint.spacing),
+    ];
+
+    final modelSelectorAnimationDuration =
+        ExpressiveCurves.standardEffects.fastDuration;
+    final modelSelectorAnimationCurve = ExpressiveCurves.standardEffects.fast;
+
+    final modelHostSelected = HostManager.instance.host != null;
+    final modelSelector = GestureDetector(
+      key: _modelSelectorKey,
+      onTap: !modelHostSelected
+          ? null
+          : () {
+              showModelSelector(context: context, anchorKey: _modelSelectorKey);
+            },
+      child: Opacity(
+        opacity: !modelHostSelected ? kDisabledOpacity : 1.0,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text.rich(
+              TextSpan(
+                children:
+                    Model.nameColoredStatic(
+                      name: ModelManager.instance.currentModelName,
+                      context: context,
+                    ) ??
+                    [TextSpan(text: appLocalizations.noSelectedModel)],
+              ),
+              style: textTheme.titleMedium!.copyWith(
+                fontFamily: "GoogleSansCode",
+              ),
+            ),
+            SizedBox(width: breakpoint.spacing / 8),
+            const Icon(Icons.keyboard_arrow_down),
+          ],
+        ),
+      ),
+    );
+    final modelSelectorShowSubtitle = breakpoint.panesRecommended >= 2;
+    final modelSelectorOffset = modelSelectorShowSubtitle
+        ? 80.0 +
+              (breakpoint.panesFixedWidth ?? 0) +
+              breakpoint.spacing -
+              NavigationToolbar.kMiddleSpacing -
+              kToolbarHeight
+        : 0.0;
+
+    return Scaffold(
+      backgroundColor: adaptedSurface,
+      endDrawer: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerLow,
+            borderRadius: const BorderRadiusDirectional.only(
+              topStart: Radius.circular(16),
+              bottomStart: Radius.circular(16),
+            ),
+          ),
+          child: ChatDetails(
+            onClose: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
             },
           ),
-        ],
+        ),
       ),
+      appBar: AppBar(
+        clipBehavior: Clip.none,
+        leading: TwoStateWidgetManaged(
+          state: breakpoint.panesRecommended >= 2,
+          dimension: kToolbarHeight,
+          from: const DrawerBackButton(),
+          to: Transform.translate(
+            offset: const Offset(12, 2),
+            child: const Padding(
+              padding: EdgeInsetsGeometry.only(top: 8),
+              child: ImageIcon(kImageLogo),
+            ),
+          ),
+        ),
+        actions: [
+          TwoStateWidgetManaged(
+            state: isSettingsRoute,
+            from: SizedBox.square(
+              dimension: kToolbarHeight,
+              child: Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.info_outline),
+                  tooltip: appLocalizations.optionChatDetails,
+                  onPressed: () {
+                    if (breakpoint.panes.contains(3)) {
+                      _thirdPaneOpen = !_thirdPaneOpen;
+                      if (mounted) setState(() {});
+                    } else {
+                      Scaffold.of(context).openEndDrawer();
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+        title: SizedBox(
+          width: double.infinity,
+          height: theme.appBarTheme.toolbarHeight ?? kToolbarHeight,
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              AnimatedPositionedDirectional(
+                key: const ValueKey("modelSelectorSubtitle"),
+                duration: modelSelectorAnimationDuration,
+                curve: modelSelectorAnimationCurve,
+                start: modelSelectorShowSubtitle ? modelSelectorOffset : 64,
+                child: AnimatedSlide(
+                  offset: Offset(
+                    0,
+                    modelHostSelected || !modelSelectorShowSubtitle ? 0 : 0.7,
+                  ),
+                  duration: modelSelectorAnimationDuration,
+                  curve: modelSelectorAnimationCurve,
+                  child: IgnorePointer(
+                    child: AnimatedOpacity(
+                      opacity: modelHostSelected || !modelSelectorShowSubtitle
+                          ? 0
+                          : 1,
+                      duration: modelSelectorAnimationDuration,
+                      curve: modelSelectorAnimationCurve,
+                      child: Text(
+                        appLocalizations.noHostSelected,
+                        style: textTheme.labelSmall,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              AnimatedPositionedDirectional(
+                key: const ValueKey("modelSelectorButton"),
+                duration: modelSelectorAnimationDuration,
+                curve: modelSelectorAnimationCurve,
+                start: modelSelectorShowSubtitle ? modelSelectorOffset : null,
+                child: AnimatedSlide(
+                  offset: Offset(
+                    0,
+                    modelHostSelected || !modelSelectorShowSubtitle ? 0 : -0.2,
+                  ),
+                  duration: modelSelectorAnimationDuration,
+                  curve: modelSelectorAnimationCurve,
+                  child: modelSelector,
+                ),
+              ),
+            ],
+          ),
+        ),
+        centerTitle: breakpoint.panesRecommended < 2,
+        backgroundColor: adaptedSurface,
+        scrolledUnderElevation: 0,
+      ),
+      body: Builder(
+        builder: (context) {
+          if (breakpoint == Breakpoint.extraLarge &&
+              Scaffold.of(context).isEndDrawerOpen) {
+            _thirdPaneOpen = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              setState(() {});
+              Navigator.of(context).pop();
+            });
+          }
+
+          return Row(mainAxisSize: MainAxisSize.max, children: children);
+        },
+      ),
+    );
+
+    // return Scaffold(
+    //   body: ListView(
+    //     children: [
+    //       Padding(
+    //         padding: const EdgeInsetsGeometry.only(
+    //           top: 16,
+    //           left: 16,
+    //           right: 16,
+    //           bottom: 8,
+    //         ),
+    //         child: Card.filled(
+    //           margin: EdgeInsets.zero,
+    //           clipBehavior: Clip.antiAlias,
+    //           child: Column(
+    //             mainAxisSize: MainAxisSize.min,
+    //             children: [
+    //               ListTile(
+    //                 title: Text(
+    //                   HostManager.instance.host?.toString() ?? "<no host?>",
+    //                 ),
+    //                 onTap: loadingModels
+    //                     ? null
+    //                     : () async {
+    //                         loadingModels = true;
+    //                         HostManager.instance.host = Uri.parse(
+    //                           HostManager.instance.host.toString() ==
+    //                                   "https://ollama.tunler.net"
+    //                               ? "https://raspimainollama.tunler.net"
+    //                               : "https://ollama.tunler.net",
+    //                         );
+    //                         setState(() {});
+
+    //                         await loadModels();
+    //                       },
+    //                 dense: true,
+    //               ),
+    //               const Divider(height: 1),
+    //               AnimatedSize(
+    //                 duration: Durations.medium1,
+    //                 curve: Curves.easeInOutCubic,
+    //                 child: ListTile(
+    //                   title: ModelManager.instance.models.isEmpty
+    //                       ? const Text("No models available")
+    //                       : Text.rich(
+    //                           TextSpan(
+    //                             children: [
+    //                               const TextSpan(
+    //                                 text: "Models: ",
+    //                                 style: TextStyle(
+    //                                   fontStyle: FontStyle.italic,
+    //                                 ),
+    //                               ),
+    //                               for (
+    //                                 var i = 0;
+    //                                 i <
+    //                                     ModelManager.instance.models.length *
+    //                                             2 -
+    //                                         1;
+    //                                 i++
+    //                               )
+    //                                 if (i.isEven)
+    //                                   TextSpan(
+    //                                     text: ModelManager.instance.models
+    //                                         .elementAt(i ~/ 2)
+    //                                         .name,
+    //                                     style: i ~/ 2 == modelIndex
+    //                                         ? const TextStyle(
+    //                                             fontWeight: FontWeight.bold,
+    //                                           )
+    //                                         : null,
+    //                                   )
+    //                                 else
+    //                                   const TextSpan(text: ", "),
+    //                             ],
+    //                           ),
+    //                         ),
+    //                   onTap:
+    //                       loadingModels || ModelManager.instance.models.isEmpty
+    //                       ? null
+    //                       : () async {
+    //                           final currentIndex = modelIndex;
+    //                           if (currentIndex == null) return;
+
+    //                           final nextIndex =
+    //                               (currentIndex + 1) %
+    //                               ModelManager.instance.models.length;
+    //                           modelIndex = nextIndex;
+    //                           ModelManager.instance.currentModel = ModelManager
+    //                               .instance
+    //                               .models
+    //                               .elementAt(nextIndex);
+    //                           setState(() {});
+    //                         },
+    //                   dense: true,
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+
+    //       ...ChatManager.instance.chats.map(
+    //         (chat) => ScreenMainChatTile(chat: chat, chatsLoaded: chatsLoaded),
+    //       ),
+    //       MenuAnchor(
+    //         animated: true,
+    //         menuChildren:
+    //             <(String, String)>[
+    //               (
+    //                 "GFM demo",
+    //                 "Write a long demo message for all GitHub Flavored Markdown features.",
+    //               ),
+    //               (
+    //                 "Lorem Ipsum",
+    //                 "Write a middle long lorem ipsum stand in body text.",
+    //               ),
+    //               (
+    //                 "Best emoji",
+    //                 "Think very hard about the objectively best emoji.",
+    //               ),
+    //               (
+    //                 "Math test",
+    //                 "Calculate the normalized Shannon entropy for the following values: [0.1, 0.1, 0.2, 0.3, 0.3]",
+    //               ),
+    //             ].map((prompt) {
+    //               return MenuItemButton(
+    //                 child: Text(
+    //                   prompt.$1,
+    //                   maxLines: 1,
+    //                   overflow: TextOverflow.ellipsis,
+    //                 ),
+    //                 onPressed: () async {
+    //                   final chat = ChatManager.instance.createChat(
+    //                     context: context,
+    //                     system:
+    //                         "Write using GitHub Flavored Markdown messages. Your messages support all GitHub Flavored Markdown features, including tables, task lists, strikethrough, alert boxes, emojis and autolinks. You must format LaTeX math using the dollar sign syntax (`\$...\$`); bracket style does not work! Speak german to the user, even if he doesn't write you in that language!",
+    //                   );
+
+    //                   await errorGuard(
+    //                     context,
+    //                     "M49WC9CW",
+    //                     () async {
+    //                       final msg = TextMessage(
+    //                         prompt.$2,
+    //                         sender: MessageSender.user,
+    //                       );
+    //                       return chat.send(msg);
+    //                     },
+    //                     errorMessage: errorGuardErrorMessageWithFallbackSingle(
+    //                       llama.OllamaException,
+    //                       "Unable to send message",
+    //                     ),
+    //                     enableReporting: false,
+    //                   );
+
+    //                   if (!context.mounted || !chat.alive) return;
+    //                   await errorGuard(
+    //                     context,
+    //                     "W97BM0DJ",
+    //                     () async => chat.generateTitle(context: context),
+    //                     errorMessage: errorGuardErrorMessageWithFallbackSingle(
+    //                       llama.OllamaException,
+    //                       "Unable to generate chat title",
+    //                     ),
+    //                   );
+    //                 },
+    //               );
+    //             }).toList(),
+    //         builder: (_, controller, _) => ListTile(
+    //           leading: const Icon(Icons.add_rounded),
+    //           title: const Text("Add chat"),
+    //           onTap: loadingModels || ModelManager.instance.currentModel == null
+    //               ? null
+    //               : controller.open,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+  }
+}
+
+class _ScreenMainNavigationBarWide extends StatelessWidget {
+  final Color adaptedSurface;
+  final bool isSettingsRoute;
+  final void Function()? onDestinationSelected;
+  const _ScreenMainNavigationBarWide({
+    required this.adaptedSurface,
+    required this.isSettingsRoute,
+    this.onDestinationSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final breakpoint = Breakpoint.of(context);
+    final isEmbeddedNavigation = breakpoint.panesRecommended >= 2;
+
+    return NavigationRail(
+      leadingAtTop: true,
+      trailingAtBottom: true,
+      backgroundColor: adaptedSurface,
+      leading: FloatingActionButton(
+        onPressed: () async {
+          ChatManager.instance.currentChat = null;
+          if (isSettingsRoute) {
+            await context.router.navigate(const RouteNewChat());
+            onDestinationSelected?.call();
+          }
+        },
+        elevation: 0,
+        heroTag: null,
+        child: const Icon(Icons.add),
+      ),
+      destinations: const [
+        NavigationRailDestination(
+          icon: Icon(Icons.near_me),
+          label: Text("Chats"),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.settings),
+          label: Text("Settings"),
+        ),
+      ],
+      selectedIndex: isSettingsRoute ? 1 : 0,
+      onDestinationSelected: (value) async {
+        switch (value) {
+          case 0 when isSettingsRoute:
+            await context.router.navigate(
+              ChatManager.instance.currentChatId != null
+                  ? RouteChat(chatId: ChatManager.instance.currentChatId)
+                  : const RouteNewChat(),
+            );
+            onDestinationSelected?.call();
+          case 1 when !isSettingsRoute:
+            await context.router.navigate(
+              isEmbeddedNavigation
+                  ? const RouteSettingsOverview()
+                  : const RouteSettings(),
+            );
+            onDestinationSelected?.call();
+          default:
+        }
+      },
     );
   }
 }
 
-class ScreenMainChatTile extends StatefulWidget {
-  final Chat chat;
-
-  const ScreenMainChatTile({super.key, required this.chat});
+class DrawerBackButton extends StatefulWidget {
+  const DrawerBackButton({super.key});
 
   @override
-  State<ScreenMainChatTile> createState() => _ScreenMainChatTileState();
+  State<DrawerBackButton> createState() => _DrawerBackButtonState();
 }
 
-class _ScreenMainChatTileState extends State<ScreenMainChatTile> {
+class _DrawerBackButtonState extends State<DrawerBackButton> {
+  StreamSubscription<void>? _routerStream;
+  String? path;
+
   @override
   void initState() {
     super.initState();
-    widget.chat.addListener(onChange);
+    path = GlobalNavigationObserver.path;
+    _routerStream = GlobalNavigationObserver.routerStream.listen(onUpdate);
   }
 
   @override
   void dispose() {
-    widget.chat.removeListener(onChange);
+    _routerStream?.cancel();
     super.dispose();
   }
 
-  void onChange() {
-    if (mounted) setState(() {});
+  void onUpdate(_) {
+    if (GlobalNavigationObserver.path != null) {
+      path = GlobalNavigationObserver.path;
+      if (mounted) setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: ChatText(
-        widget.chat.title.emptyOn(AppLocalizations.of(context).newChatTitle),
-        placeholder: Text(AppLocalizations.of(context).newChatTitle),
+    final isSettingsRoute = path?.contains("/settings") ?? false;
+    final state = isSettingsRoute && path != "/settings";
+    return TwoStateWidgetManaged(
+      state: state,
+      from: const SizedBox.expand(child: DrawerButton()),
+      to: SizedBox.expand(
+        child: BackButton(
+          onPressed: () async {
+            if (!state) return;
+            if (context.router.canPop()) {
+              context.router.popTop();
+            } else {
+              await context.router.navigate(const RouteSettings());
+            }
+            if (mounted) setState(() {});
+          },
+        ),
       ),
-      subtitle:
-          (widget.chat.messages.isEmpty ||
-              widget.chat.messages.last.runtimeType != TextMessage)
-          ? null
-          // : ChatText(
-          //     (widget.chat.messages.last as TextMessage).content,
-          //     placeholder: const Text("<incoming>"),
-          //   ),
-          : (widget.chat.messages.last as TextMessage).content.isEmpty
-          ? const LinearProgressIndicator()
-          : Text.rich(
-              Markdown(
-                (widget.chat.messages.last as TextMessage).content,
-              ).toTextSpan(context),
-            ),
-      onTap: () => ChatManager.instance.deleteChat(widget.chat),
     );
   }
-}
-
-extension on String {
-  String emptyOn(String other) => (this == other) ? "" : this;
 }

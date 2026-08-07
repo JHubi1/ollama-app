@@ -4,7 +4,7 @@
 import 'dart:math';
 
 void main() {
-  var random = Random.secure();
+  final random = Random.secure();
   var logId = "";
 
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

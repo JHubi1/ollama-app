@@ -18,9 +18,9 @@ import 'sender.dart';
 import 'theme.dart';
 
 void setModel(BuildContext context, Function setState) {
-  var models = <String>[];
-  var modelsReal = <String>[];
-  var modal = <bool>[];
+  final models = <String>[];
+  final modelsReal = <String>[];
+  final modal = <bool>[];
   var usedIndex = -1;
   var oldIndex = -1;
   var addIndex = -1;
@@ -30,16 +30,22 @@ void setModel(BuildContext context, Function setState) {
   setState(() {});
   Future<void> load() async {
     try {
-      var list = await ollamaClient.listModels().timeout(Duration(
-          seconds:
-              (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0)).round()));
+      final list = await ollamaClient.listModels().timeout(
+        Duration(
+          seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+              .round(),
+        ),
+      );
       for (var i = 0; i < list.models!.length; i++) {
-        var details = await ollamaClient.showModelInfo(
-            request: llama.ModelInfoRequest(model: list.models![i].model!));
+        final details = await ollamaClient.showModelInfo(
+          request: llama.ModelInfoRequest(model: list.models![i].model!),
+        );
         models.add(list.models![i].model!.split(":")[0]);
         modelsReal.add(list.models![i].model!);
-        modal.add((list.models![i].details!.families ?? []).contains("clip") ||
-            (details.capabilities ?? []).contains(llama.Capability.vision));
+        modal.add(
+          (list.models![i].details!.families ?? []).contains("clip") ||
+              (details.capabilities ?? []).contains(llama.Capability.vision),
+        );
       }
 
       addIndex = models.length;
@@ -54,7 +60,7 @@ void setModel(BuildContext context, Function setState) {
         }
       }
       if (prefs!.getBool("modelTags") == null) {
-        var duplicateFinder = [];
+        final duplicateFinder = [];
         for (var model in models) {
           if (duplicateFinder.contains(model)) {
             prefs!.setBool("modelTags", true);
@@ -73,11 +79,15 @@ void setModel(BuildContext context, Function setState) {
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           content: Text(
-              // ignore: use_build_context_synchronously
-              AppLocalizations.of(context).settingsHostInvalid("timeout")),
-          showCloseIcon: true));
+            // ignore: use_build_context_synchronously
+            AppLocalizations.of(context).settingsHostInvalid("timeout"),
+          ),
+          showCloseIcon: true,
+        ),
+      );
     }
   }
 
@@ -86,9 +96,10 @@ void setModel(BuildContext context, Function setState) {
 
   load();
 
-  var content = StatefulBuilder(builder: (context, setLocalState) {
-    setModalState = setLocalState;
-    return PopScope(
+  final content = StatefulBuilder(
+    builder: (context, setLocalState) {
+      setModalState = setLocalState;
+      return PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) async {
           if (!loaded) return;
@@ -125,25 +136,35 @@ void setModel(BuildContext context, Function setState) {
                     headers: {
                       "Content-Type": "application/json",
                       ...(jsonDecode(prefs!.getString("hostHeaders") ?? "{}")
-                          as Map)
+                          as Map),
                     }.cast<String, String>(),
                     body: jsonEncode({
                       "model": model!,
-                      "keep_alive":
-                          int.parse(prefs!.getString("keepAlive") ?? "300")
+                      "keep_alive": int.parse(
+                        prefs!.getString("keepAlive") ?? "300",
+                      ),
                     }),
                   )
-                  .timeout(Duration(
-                      seconds: (10.0 *
-                              (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
-                          .round()));
+                  .timeout(
+                    Duration(
+                      seconds:
+                          (10.0 *
+                                  (prefs!.getDouble("timeoutMultiplier") ??
+                                      1.0))
+                              .round(),
+                    ),
+                  );
             } catch (_) {
               // ignore: use_build_context_synchronously
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
                   // ignore: use_build_context_synchronously
-                  content: Text(AppLocalizations.of(context)
-                      .settingsHostInvalid("timeout")),
-                  showCloseIcon: true));
+                  content: Text(
+                    AppLocalizations.of(context).settingsHostInvalid("timeout"),
+                  ),
+                  showCloseIcon: true,
+                ),
+              );
               setState(() {
                 model = null;
                 chatAllowed = false;
@@ -164,138 +185,149 @@ void setModel(BuildContext context, Function setState) {
           }
         },
         child: Container(
-            width: desktopLayout(context) ? null : double.infinity,
-            padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 16,
-                bottom: desktopLayout(context) ? 16 : 0),
-            child: (!loaded)
-                ? SizedBox(
-                    width: desktopLayout(context) ? 300 : double.infinity,
-                    child: const LinearProgressIndicator())
-                : Column(mainAxisSize: MainAxisSize.min, children: [
+          width: desktopLayout(context) ? null : double.infinity,
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: desktopLayout(context) ? 16 : 0,
+          ),
+          child: (!loaded)
+              ? SizedBox(
+                  width: desktopLayout(context) ? 300 : double.infinity,
+                  child: const LinearProgressIndicator(),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Container(
-                        width: desktopLayout(context) ? 300 : double.infinity,
-                        constraints: BoxConstraints(
-                            maxHeight:
-                                MediaQuery.of(context).size.height * 0.4),
-                        child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: Wrap(
-                              spacing: desktopLayout(context) ? 10.0 : 5.0,
-                              runSpacing:
-                                  desktopFeature(web: true) ? 10.0 : 0.0,
-                              alignment: WrapAlignment.center,
-                              children: List<Widget>.generate(
-                                models.length,
-                                (int index) {
-                                  return ChoiceChip(
-                                    label: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(models[index]),
-                                          ((prefs!.getBool("modelTags") ??
-                                                      false) &&
-                                                  modelsReal[index]
-                                                          .split(":")
-                                                          .length >
-                                                      1)
-                                              ? Text(
-                                                  ":${modelsReal[index].split(":")[1]}",
-                                                  style: const TextStyle(
-                                                      color: Colors.grey))
-                                              : const SizedBox.shrink()
-                                        ]),
-                                    selected: usedIndex == index,
-                                    avatar: (usedIndex == index)
-                                        ? null
-                                        : (addIndex == index)
-                                            ? const Icon(Icons.add_rounded)
-                                            : ((recommendedModels
-                                                    .contains(models[index]))
-                                                ? const Icon(Icons.star_rounded)
-                                                : ((modal[index])
-                                                    ? const Icon(Icons
-                                                        .collections_rounded)
-                                                    : null)),
-                                    checkmarkColor: (usedIndex == index &&
-                                            !(prefs?.getBool(
-                                                    "useDeviceTheme") ??
-                                                false))
-                                        ? ((MediaQuery.of(context)
-                                                    .platformBrightness ==
-                                                Brightness.light)
-                                            ? themeLight().colorScheme.secondary
-                                            : themeDark().colorScheme.secondary)
-                                        : null,
-                                    labelStyle: (usedIndex == index &&
-                                            !(prefs?.getBool(
-                                                    "useDeviceTheme") ??
-                                                false))
-                                        ? TextStyle(
-                                            color: (MediaQuery.of(context)
-                                                        .platformBrightness ==
-                                                    Brightness.light)
-                                                ? themeLight()
-                                                    .colorScheme
-                                                    .secondary
-                                                : themeDark()
-                                                    .colorScheme
-                                                    .secondary)
-                                        : null,
-                                    selectedColor: (prefs
-                                                ?.getBool("useDeviceTheme") ??
-                                            false)
-                                        ? null
-                                        : (MediaQuery.of(context)
-                                                    .platformBrightness ==
-                                                Brightness.light)
-                                            ? themeLight().colorScheme.primary
-                                            : themeDark().colorScheme.primary,
-                                    onSelected: (bool selected) {
-                                      selectionHaptic();
-                                      if (addIndex == index) {
-                                        usedIndex = oldIndex;
-                                        Navigator.of(context).pop();
-                                        addModel(context, setState);
-                                      }
-                                      if (!chatAllowed && model != null) {
-                                        return;
-                                      }
-                                      setLocalState(() {
-                                        usedIndex = selected ? index : -1;
-                                      });
-                                    },
-                                  );
-                                },
-                              ).toList(),
-                            )))
-                  ])));
-  });
+                      width: desktopLayout(context) ? 300 : double.infinity,
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.4,
+                      ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Wrap(
+                          spacing: desktopLayout(context) ? 10.0 : 5.0,
+                          runSpacing: desktopFeature(web: true) ? 10.0 : 0.0,
+                          alignment: WrapAlignment.center,
+                          children: List<Widget>.generate(models.length, (
+                            int index,
+                          ) {
+                            return ChoiceChip(
+                              label: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(models[index]),
+                                  ((prefs!.getBool("modelTags") ?? false) &&
+                                          modelsReal[index].split(":").length >
+                                              1)
+                                      ? Text(
+                                          ":${modelsReal[index].split(":")[1]}",
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
+                                ],
+                              ),
+                              selected: usedIndex == index,
+                              avatar: (usedIndex == index)
+                                  ? null
+                                  : (addIndex == index)
+                                  ? const Icon(Icons.add_rounded)
+                                  : ((recommendedModels.contains(models[index]))
+                                        ? const Icon(Icons.star_rounded)
+                                        : ((modal[index])
+                                              ? const Icon(
+                                                  Icons.collections_rounded,
+                                                )
+                                              : null)),
+                              checkmarkColor:
+                                  (usedIndex == index &&
+                                      !(prefs?.getBool("useDeviceTheme") ??
+                                          false))
+                                  ? ((MediaQuery.of(
+                                              context,
+                                            ).platformBrightness ==
+                                            Brightness.light)
+                                        ? themeLight().colorScheme.secondary
+                                        : themeDark().colorScheme.secondary)
+                                  : null,
+                              labelStyle:
+                                  (usedIndex == index &&
+                                      !(prefs?.getBool("useDeviceTheme") ??
+                                          false))
+                                  ? TextStyle(
+                                      color:
+                                          (MediaQuery.of(
+                                                context,
+                                              ).platformBrightness ==
+                                              Brightness.light)
+                                          ? themeLight().colorScheme.secondary
+                                          : themeDark().colorScheme.secondary,
+                                    )
+                                  : null,
+                              selectedColor:
+                                  (prefs?.getBool("useDeviceTheme") ?? false)
+                                  ? null
+                                  : (MediaQuery.of(
+                                          context,
+                                        ).platformBrightness ==
+                                        Brightness.light)
+                                  ? themeLight().colorScheme.primary
+                                  : themeDark().colorScheme.primary,
+                              onSelected: (bool selected) {
+                                selectionHaptic();
+                                if (addIndex == index) {
+                                  usedIndex = oldIndex;
+                                  Navigator.of(context).pop();
+                                  addModel(context, setState);
+                                }
+                                if (!chatAllowed && model != null) {
+                                  return;
+                                }
+                                setLocalState(() {
+                                  usedIndex = selected ? index : -1;
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      );
+    },
+  );
 
   if (desktopLayoutNotRequired(context)) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return Transform.translate(
-            offset: desktopLayoutRequired(context)
-                ? const Offset(289, 0)
-                : Offset.zero,
-            child: Dialog(
-                surfaceTintColor:
-                    (Theme.of(context).brightness == Brightness.dark)
-                        ? Colors.grey[800]
-                        : null,
-                alignment: desktopLayoutRequired(context)
-                    ? Alignment.topLeft
-                    : Alignment.topCenter,
-                child: content),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return Transform.translate(
+          offset: desktopLayoutRequired(context)
+              ? const Offset(289, 0)
+              : Offset.zero,
+          child: Dialog(
+            surfaceTintColor: (Theme.of(context).brightness == Brightness.dark)
+                ? Colors.grey[800]
+                : null,
+            alignment: desktopLayoutRequired(context)
+                ? Alignment.topLeft
+                : Alignment.topCenter,
+            child: content,
+          ),
+        );
+      },
+    );
   } else {
     showModalBottomSheet(
-        context: context, builder: (context) => Container(child: content));
+      context: context,
+      builder: (context) => Container(child: content),
+    );
   }
 }
 
@@ -304,19 +336,25 @@ Future<void> addModel(BuildContext context, Function setState) async {
   var networkError = false;
   var ratelimitError = false;
   var alreadyExists = false;
-  var invalidText = AppLocalizations.of(context).modelDialogAddPromptInvalid;
-  var networkErrorText =
-      AppLocalizations.of(context).settingsHostInvalid("other");
-  var timeoutErrorText =
-      AppLocalizations.of(context).settingsHostInvalid("timeout");
-  var ratelimitErrorText =
-      AppLocalizations.of(context).settingsHostInvalid("ratelimit");
-  var alreadyExistsText =
-      AppLocalizations.of(context).modelDialogAddPromptAlreadyExists;
-  var downloadSuccessText =
-      AppLocalizations.of(context).modelDialogAddDownloadSuccess;
-  var downloadFailedText =
-      AppLocalizations.of(context).modelDialogAddDownloadFailed;
+  final invalidText = AppLocalizations.of(context).modelDialogAddPromptInvalid;
+  final networkErrorText = AppLocalizations.of(
+    context,
+  ).settingsHostInvalid("other");
+  final timeoutErrorText = AppLocalizations.of(
+    context,
+  ).settingsHostInvalid("timeout");
+  final ratelimitErrorText = AppLocalizations.of(
+    context,
+  ).settingsHostInvalid("ratelimit");
+  final alreadyExistsText = AppLocalizations.of(
+    context,
+  ).modelDialogAddPromptAlreadyExists;
+  final downloadSuccessText = AppLocalizations.of(
+    context,
+  ).modelDialogAddDownloadSuccess;
+  final downloadFailedText = AppLocalizations.of(
+    context,
+  ).modelDialogAddDownloadFailed;
   var requestedModel = await prompt(
     context,
     title: AppLocalizations.of(context).modelDialogAddPromptTitle,
@@ -332,11 +370,14 @@ Future<void> addModel(BuildContext context, Function setState) async {
       ratelimitError = false;
       alreadyExists = false;
       try {
-        var request = await ollamaClient.listModels().timeout(Duration(
+        final request = await ollamaClient.listModels().timeout(
+          Duration(
             seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
-                .round()));
+                .round(),
+          ),
+        );
         for (var element in request.models!) {
-          var localModel = element.model!.removeSuffix(":latest");
+          final localModel = element.model!.removeSuffix(":latest");
           if (localModel == model) {
             alreadyExists = true;
           }
@@ -351,34 +392,44 @@ Future<void> addModel(BuildContext context, Function setState) async {
         if (!(prefs!.getBool("allowWebProxy") ?? false)) {
           var returnValue = false;
           await showDialog(
-              context: mainContext!,
-              barrierDismissible: false,
-              builder: (context) {
-                return AlertDialog(
-                    title: Text(AppLocalizations.of(context)
-                        .modelDialogAddAllowanceTitle),
-                    content: SizedBox(
-                      width: 640,
-                      child: Text(AppLocalizations.of(context)
-                          .modelDialogAddAllowanceDescription),
+            context: mainContext!,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(
+                  AppLocalizations.of(context).modelDialogAddAllowanceTitle,
+                ),
+                content: SizedBox(
+                  width: 640,
+                  child: Text(
+                    AppLocalizations.of(
+                      context,
+                    ).modelDialogAddAllowanceDescription,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      canceled = true;
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      AppLocalizations.of(context).modelDialogAddAllowanceDeny,
                     ),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            canceled = true;
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(AppLocalizations.of(context)
-                              .modelDialogAddAllowanceDeny)),
-                      TextButton(
-                          onPressed: () {
-                            returnValue = true;
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(AppLocalizations.of(context)
-                              .modelDialogAddAllowanceAllow))
-                    ]);
-              });
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      returnValue = true;
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      AppLocalizations.of(context).modelDialogAddAllowanceAllow,
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
           if (!returnValue) return false;
           prefs!.setBool("allowWebProxy", true);
         }
@@ -388,9 +439,12 @@ Future<void> addModel(BuildContext context, Function setState) async {
       try {
         response = await httpClient
             .get(Uri.parse("$endpoint${Uri.encodeComponent(model)}"))
-            .timeout(Duration(
+            .timeout(
+              Duration(
                 seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
-                    .round()));
+                    .round(),
+              ),
+            );
       } catch (_) {
         networkError = true;
         return false;
@@ -398,34 +452,46 @@ Future<void> addModel(BuildContext context, Function setState) async {
       if (response.statusCode == 200) {
         var returnValue = false;
         await showDialog(
-            context: mainContext!,
-            barrierDismissible: false,
-            builder: (context) {
-              return AlertDialog(
-                  title: Text(AppLocalizations.of(context)
-                      .modelDialogAddAssuranceTitle(model)),
-                  content: SizedBox(
-                    width: 640,
-                    child: Text(AppLocalizations.of(context)
-                        .modelDialogAddAssuranceDescription(model)),
+          context: mainContext!,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                AppLocalizations.of(
+                  context,
+                ).modelDialogAddAssuranceTitle(model),
+              ),
+              content: SizedBox(
+                width: 640,
+                child: Text(
+                  AppLocalizations.of(
+                    context,
+                  ).modelDialogAddAssuranceDescription(model),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    canceled = true;
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    AppLocalizations.of(context).modelDialogAddAssuranceCancel,
                   ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          canceled = true;
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(AppLocalizations.of(context)
-                            .modelDialogAddAssuranceCancel)),
-                    TextButton(
-                        onPressed: () {
-                          returnValue = true;
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(AppLocalizations.of(context)
-                            .modelDialogAddAssuranceAdd))
-                  ]);
-            });
+                ),
+                TextButton(
+                  onPressed: () {
+                    returnValue = true;
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    AppLocalizations.of(context).modelDialogAddAssuranceAdd,
+                  ),
+                ),
+              ],
+            );
+          },
+        );
         return returnValue;
       }
       if (response.statusCode == 429) {
@@ -446,45 +512,57 @@ Future<void> addModel(BuildContext context, Function setState) async {
   double? percent;
   Function? setDialogState;
   showModalBottomSheet(
-      context: mainContext!,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setLocalState) {
+    context: mainContext!,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setLocalState) {
           setDialogState = setLocalState;
           return PopScope(
-              canPop: false,
-              child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      top: 16,
-                      bottom: desktopLayout(context) ? 16 : 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        percent == null
-                            ? AppLocalizations.of(context)
-                                .modelDialogAddDownloadPercentLoading
-                            : AppLocalizations.of(context)
-                                .modelDialogAddDownloadPercent(
-                                    (percent * 100).round().toString()),
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 8)),
-                      LinearProgressIndicator(value: percent),
-                    ],
-                  )));
-        });
-      });
+            canPop: false,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: desktopLayout(context) ? 16 : 0,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    percent == null
+                        ? AppLocalizations.of(
+                            context,
+                          ).modelDialogAddDownloadPercentLoading
+                        : AppLocalizations.of(
+                            context,
+                          ).modelDialogAddDownloadPercent(
+                            (percent * 100).round().toString(),
+                          ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 8)),
+                  LinearProgressIndicator(value: percent),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
   try {
-    var stream = ollamaClient
+    final stream = ollamaClient
         .pullModelStream(request: llama.PullModelRequest(model: requestedModel))
-        .timeout(Duration(
+        .timeout(
+          Duration(
             seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
-                .round()));
+                .round(),
+          ),
+        );
     var alreadyProgressed = false;
     await for (var res in stream) {
-      var tmpPercent =
+      final tmpPercent =
           (res.completed ?? 0).toInt() / (res.total ?? 100).toInt();
       if ((tmpPercent * 100).round() == 0) {
         if (!alreadyProgressed) {
@@ -507,9 +585,12 @@ Future<void> addModel(BuildContext context, Function setState) async {
     }
     var exists = false;
     try {
-      var request = await ollamaClient.listModels().timeout(Duration(
-          seconds:
-              (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0)).round()));
+      final request = await ollamaClient.listModels().timeout(
+        Duration(
+          seconds: (10.0 * (prefs!.getDouble("timeoutMultiplier") ?? 1.0))
+              .round(),
+        ),
+      );
       for (var element in request.models!) {
         if (element.model == model) {
           exists = true;
@@ -530,10 +611,12 @@ Future<void> addModel(BuildContext context, Function setState) async {
       Navigator.of(mainContext!).pop();
       if (!exists) {
         ScaffoldMessenger.of(mainContext!).showSnackBar(
-            SnackBar(content: Text(downloadFailedText), showCloseIcon: true));
+          SnackBar(content: Text(downloadFailedText), showCloseIcon: true),
+        );
       } else {
         ScaffoldMessenger.of(mainContext!).showSnackBar(
-            SnackBar(content: Text(timeoutErrorText), showCloseIcon: true));
+          SnackBar(content: Text(timeoutErrorText), showCloseIcon: true),
+        );
       }
       return;
     }
@@ -544,11 +627,13 @@ Future<void> addModel(BuildContext context, Function setState) async {
     });
     Navigator.of(mainContext!).pop();
     ScaffoldMessenger.of(mainContext!).showSnackBar(
-        SnackBar(content: Text(downloadSuccessText), showCloseIcon: true));
+      SnackBar(content: Text(downloadSuccessText), showCloseIcon: true),
+    );
   } catch (_) {
     Navigator.of(mainContext!).pop();
     ScaffoldMessenger.of(mainContext!).showSnackBar(
-        SnackBar(content: Text(downloadFailedText), showCloseIcon: true));
+      SnackBar(content: Text(downloadFailedText), showCloseIcon: true),
+    );
   }
 }
 
@@ -565,11 +650,11 @@ Future<void> saveChat(String uuid, Function setState) async {
     if ((jsonDecode(jsonEncode(messages[i])) as Map).containsKey("text")) {
       history.add({
         "role": (messages[i].author == user) ? "user" : "assistant",
-        "content": jsonDecode(jsonEncode(messages[i]))["text"]
+        "content": jsonDecode(jsonEncode(messages[i]))["text"],
       });
     } else {
-      var uri = jsonDecode(jsonEncode(messages[i]))["uri"] as String;
-      var content = (uri.startsWith("data:image/png;base64,"))
+      final uri = jsonDecode(jsonEncode(messages[i]))["uri"] as String;
+      final content = (uri.startsWith("data:image/png;base64,"))
           ? uri.removePrefix("data:image/png;base64,")
           : base64.encode(await File(uri).readAsBytes());
       history.add({
@@ -577,7 +662,7 @@ Future<void> saveChat(String uuid, Function setState) async {
         "type": "image",
         "name": (messages[i] as types.ImageMessage).name,
         "size": (messages[i] as types.ImageMessage).size.toString(),
-        "content": content
+        "content": content,
       });
     }
   }
@@ -585,24 +670,26 @@ Future<void> saveChat(String uuid, Function setState) async {
     for (var i = 0; i < (prefs!.getStringList("chats") ?? []).length; i++) {
       if (jsonDecode((prefs!.getStringList("chats") ?? [])[i])["uuid"] ==
           chatUuid) {
-        var tmp = prefs!.getStringList("chats")!..removeAt(i);
+        final tmp = prefs!.getStringList("chats")!..removeAt(i);
         prefs!.setStringList("chats", tmp);
         chatUuid = null;
         return;
       }
     }
   }
-  if (jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"]
-          .length >=
+  if (jsonDecode(
+        (prefs!.getStringList("chats") ?? [])[index],
+      )["messages"].length >=
       1) {
-    if (jsonDecode(jsonDecode((prefs!.getStringList("chats") ?? [])[index])[
-            "messages"])[0]["role"] ==
+    if (jsonDecode(
+          jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"],
+        )[0]["role"] ==
         "system") {
       history.add({
         "role": "system",
-        "content": jsonDecode(jsonDecode(
-                (prefs!.getStringList("chats") ?? [])[index])["messages"])[0]
-            ["content"]
+        "content": jsonDecode(
+          jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"],
+        )[0]["content"],
       });
     }
   } else {
@@ -614,17 +701,19 @@ Future<void> saveChat(String uuid, Function setState) async {
     history.add({"role": "system", "content": system});
   }
   history = history.reversed.toList();
-  var tmp = prefs!.getStringList("chats") ?? []
+  final tmp = prefs!.getStringList("chats") ?? []
     ..removeAt(index)
     ..insert(
-        0,
-        jsonEncode({
-          "title":
-              jsonDecode((prefs!.getStringList("chats") ?? [])[index])["title"],
-          "uuid": uuid,
-          "model": model,
-          "messages": jsonEncode(history)
-        }));
+      0,
+      jsonEncode({
+        "title": jsonDecode(
+          (prefs!.getStringList("chats") ?? [])[index],
+        )["title"],
+        "uuid": uuid,
+        "model": model,
+        "messages": jsonEncode(history),
+      }),
+    );
   prefs!.setStringList("chats", tmp);
   setState(() {});
 }
@@ -640,27 +729,32 @@ void loadChat(String uuid, Function setState) {
   messages = [];
   model = null;
   setState(() {});
-  var history = jsonDecode(
-      jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"]);
+  final history = jsonDecode(
+    jsonDecode((prefs!.getStringList("chats") ?? [])[index])["messages"],
+  );
   for (var i = 0; i < history.length; i++) {
     if (history[i]["role"] != "system") {
       if ((history[i] as Map).containsKey("type") &&
           history[i]["type"] == "image") {
         messages.insert(
-            0,
-            types.ImageMessage(
-                author: (history[i]["role"] == "user") ? user : assistant,
-                id: const Uuid().v4(),
-                name: history[i]["name"],
-                size: int.parse(history[i]["size"]),
-                uri: "data:image/png;base64,${history[i]["content"]}"));
+          0,
+          types.ImageMessage(
+            author: (history[i]["role"] == "user") ? user : assistant,
+            id: const Uuid().v4(),
+            name: history[i]["name"],
+            size: int.parse(history[i]["size"]),
+            uri: "data:image/png;base64,${history[i]["content"]}",
+          ),
+        );
       } else {
         messages.insert(
-            0,
-            types.TextMessage(
-                author: (history[i]["role"] == "user") ? user : assistant,
-                id: const Uuid().v4(),
-                text: history[i]["content"]));
+          0,
+          types.TextMessage(
+            author: (history[i]["role"] == "user") ? user : assistant,
+            id: const Uuid().v4(),
+            text: history[i]["content"],
+          ),
+        );
       }
     }
   }
@@ -668,32 +762,35 @@ void loadChat(String uuid, Function setState) {
   setState(() {});
 }
 
-Future<String> prompt(BuildContext context,
-    {String description = "",
-    String value = "",
-    String title = "",
-    String? valueIfCanceled,
-    TextInputType keyboard = TextInputType.text,
-    bool autocorrect = true,
-    Iterable<String> autofillHints = const [],
-    bool enableSuggestions = true,
-    Icon? prefixIcon,
-    int maxLines = 1,
-    String? uuid,
-    Future<bool> Function(String content)? validator,
-    String? validatorError,
-    String? Function(String content)? validatorErrorCallback,
-    String? placeholder,
-    bool prefill = true}) async {
+Future<String> prompt(
+  BuildContext context, {
+  String description = "",
+  String value = "",
+  String title = "",
+  String? valueIfCanceled,
+  TextInputType keyboard = TextInputType.text,
+  bool autocorrect = true,
+  Iterable<String> autofillHints = const [],
+  bool enableSuggestions = true,
+  Icon? prefixIcon,
+  int maxLines = 1,
+  String? uuid,
+  Future<bool> Function(String content)? validator,
+  String? validatorError,
+  String? Function(String content)? validatorErrorCallback,
+  String? placeholder,
+  bool prefill = true,
+}) async {
   var returnText = (valueIfCanceled != null) ? valueIfCanceled : value;
-  var controller = TextEditingController(text: prefill ? value : "");
+  final controller = TextEditingController(text: prefill ? value : "");
   var loading = false;
   String? error;
   await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setLocalState) {
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setLocalState) {
           Future<void> submit() async {
             selectionHaptic();
             if (validator != null) {
@@ -701,7 +798,7 @@ Future<String> prompt(BuildContext context,
                 error = null;
                 loading = true;
               });
-              var valid = await validator(controller.text);
+              final valid = await validator(controller.text);
               setLocalState(() {
                 loading = false;
               });
@@ -724,102 +821,116 @@ Future<String> prompt(BuildContext context,
           }
 
           return PopScope(
-              child: Container(
-                  padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      top: 16,
-                      bottom: desktopFeature(web: true)
-                          ? 12
-                          : MediaQuery.of(context).viewInsets.bottom),
-                  width: double.infinity,
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        (title != "")
-                            ? Text(title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold))
-                            : const SizedBox.shrink(),
-                        (title != "")
-                            ? const Divider()
-                            : const SizedBox.shrink(),
-                        (description != "")
-                            ? Text(description)
-                            : const SizedBox.shrink(),
-                        const SizedBox(height: 8),
-                        TextField(
-                            controller: controller,
-                            autofocus: true,
-                            keyboardType: keyboard,
-                            autocorrect: autocorrect,
-                            autofillHints: autofillHints,
-                            enableSuggestions: enableSuggestions,
-                            maxLines: maxLines,
-                            onSubmitted: (_) => submit(),
-                            decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                hintText: placeholder,
-                                errorText: error,
-                                suffixIcon: IconButton(
-                                    enableFeedback: false,
-                                    tooltip: AppLocalizations.of(context)
-                                        .tooltipSave,
-                                    onPressed: submit,
-                                    icon: const Icon(Icons.save_rounded)),
-                                prefixIcon: (title ==
-                                            AppLocalizations.of(context)
-                                                .dialogEnterNewTitle &&
-                                        uuid != null)
-                                    ? IconButton(
-                                        enableFeedback: false,
-                                        tooltip: AppLocalizations.of(context)
-                                            .tooltipLetAIThink,
-                                        onPressed: () async {
-                                          selectionHaptic();
-                                          setLocalState(() {
-                                            loading = true;
-                                          });
+            child: Container(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: desktopFeature(web: true)
+                    ? 12
+                    : MediaQuery.of(context).viewInsets.bottom,
+              ),
+              width: double.infinity,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  (title != "")
+                      ? Text(
+                          title,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      : const SizedBox.shrink(),
+                  (title != "") ? const Divider() : const SizedBox.shrink(),
+                  (description != "")
+                      ? Text(description)
+                      : const SizedBox.shrink(),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: controller,
+                    autofocus: true,
+                    keyboardType: keyboard,
+                    autocorrect: autocorrect,
+                    autofillHints: autofillHints,
+                    enableSuggestions: enableSuggestions,
+                    maxLines: maxLines,
+                    onSubmitted: (_) => submit(),
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      hintText: placeholder,
+                      errorText: error,
+                      suffixIcon: IconButton(
+                        enableFeedback: false,
+                        tooltip: AppLocalizations.of(context).tooltipSave,
+                        onPressed: submit,
+                        icon: const Icon(Icons.save_rounded),
+                      ),
+                      prefixIcon:
+                          (title ==
+                                  AppLocalizations.of(
+                                    context,
+                                  ).dialogEnterNewTitle &&
+                              uuid != null)
+                          ? IconButton(
+                              enableFeedback: false,
+                              tooltip: AppLocalizations.of(
+                                context,
+                              ).tooltipLetAIThink,
+                              onPressed: () async {
+                                selectionHaptic();
+                                setLocalState(() {
+                                  loading = true;
+                                });
 
-                                          try {
-                                            var title = await getTitleAi(
-                                                getHistoryString(uuid));
-                                            controller.text = title;
-                                            setLocalState(() {
-                                              loading = false;
-                                            });
-                                          } catch (_) {
-                                            try {
-                                              setLocalState(() {
-                                                loading = false;
-                                              });
-                                              // ignore: use_build_context_synchronously
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          AppLocalizations.of(
-                                                                  // ignore: use_build_context_synchronously
-                                                                  context)
-                                                              .settingsHostInvalid(
-                                                                  "timeout")),
-                                                      showCloseIcon: true));
-                                            } catch (_) {}
-                                          }
-                                        },
-                                        icon: const Icon(
-                                            Icons.auto_awesome_rounded))
-                                    : prefixIcon)),
-                        SizedBox(
-                            height: 3,
-                            child: loading
-                                ? const LinearProgressIndicator()
-                                : const SizedBox.shrink()),
-                        (MediaQuery.of(context).viewInsets.bottom != 0)
-                            ? const SizedBox(height: 16)
-                            : const SizedBox.shrink()
-                      ])));
-        });
-      });
+                                try {
+                                  final title = await getTitleAi(
+                                    getHistoryString(uuid),
+                                  );
+                                  controller.text = title;
+                                  setLocalState(() {
+                                    loading = false;
+                                  });
+                                } catch (_) {
+                                  try {
+                                    setLocalState(() {
+                                      loading = false;
+                                    });
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(
+                                            // ignore: use_build_context_synchronously
+                                            context,
+                                          ).settingsHostInvalid("timeout"),
+                                        ),
+                                        showCloseIcon: true,
+                                      ),
+                                    );
+                                  } catch (_) {}
+                                }
+                              },
+                              icon: const Icon(Icons.auto_awesome_rounded),
+                            )
+                          : prefixIcon,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3,
+                    child: loading
+                        ? const LinearProgressIndicator()
+                        : const SizedBox.shrink(),
+                  ),
+                  (MediaQuery.of(context).viewInsets.bottom != 0)
+                      ? const SizedBox(height: 16)
+                      : const SizedBox.shrink(),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
   return returnText;
 }

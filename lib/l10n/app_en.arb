@@ -1,8 +1,24 @@
 {
     "@@locale": "en",
-    "appTitle": "Ollama",
+    "appTitle": "{env, select, short{Ollama} integrated{{title} - Ollama App} other{Ollama App}}",
     "@appTitle": {
-        "description": "Title of the application",
+        "description": "Title of the application. Should stay untranslated in most cases",
+        "context": "app:sidebar",
+        "placeholders": {
+            "env": {
+                "type": "String",
+                "description": "The environment the app is running in. Can be 'short' on mobile platforms, 'integrated' on web if the app is currently displaying a page, or 'other' in every other case.",
+                "example": "integrated"
+            },
+            "title": {
+                "type": "String",
+                "description": "Title of the chat or settings page currently visible, if visible"
+            }
+        }
+    },
+    "learnMore": "Learn more",
+    "@learnMore": {
+        "description": "Text displayed for learn more button",
         "context": "app:sidebar"
     },
     "optionNewChat": "New Chat",
@@ -20,9 +36,35 @@
         "description": "Text displayed for install PWA option",
         "context": "app:sidebar"
     },
-    "optionNoChatFound": "No chats found",
+    "optionNoChatFound": "No chats",
     "@optionNoChatFound": {
-        "description": "Text displayed when no chats are found",
+        "description": "Text displayed when there are no chats",
+        "context": "app:sidebar"
+    },
+    "optionNoChatFoundSearch": "No chats found for ‘{query}’",
+    "@optionNoChatFoundSearch": {
+        "description": "Text displayed when no chats are found for the search query",
+        "context": "app:sidebar",
+        "placeholders": {
+            "query": {
+                "type": "String",
+                "description": "The search query that returned no results"
+            }
+        }
+    },
+    "optionSearchChats": "Search through chats",
+    "@optionSearchChats": {
+        "description": "Placeholder for search chats input",
+        "context": "app:sidebar"
+    },
+    "optionChatDetails": "Chat details",
+    "@optionChatDetails": {
+        "description": "Text displayed as title for chat details sidebar",
+        "context": "app:sidebar"
+    },
+    "optionChatDetailsNoChat": "No chat selected",
+    "@optionChatDetailsNoChat": {
+        "description": "Text displayed when no chat is selected in the chat details sidebar",
         "context": "app:sidebar"
     },
     "tipPrefix": "Tip: ",
@@ -65,34 +107,100 @@
         "description": "Text displayed for rename chat option",
         "context": "app:sidebar"
     },
-    "takeImage": "Take Image",
+    "takeImage": "Camera",
     "@takeImage": {
         "description": "Text displayed for take image button",
         "context": "app:chat:attachment"
     },
-    "uploadImage": "Upload Image",
+    "uploadImage": "Gallery",
     "@uploadImage": {
         "description": "Text displayed for image upload button",
         "context": "app:chat:attachment"
     },
-    "notAValidImage": "Not a valid image",
-    "@notAValidImage": {
-        "description": "Text displayed when an image is not valid",
-        "context": "app:chat:attachment"
+    "newChatGreeting1": "What’s on your mind, {user}?",
+    "@newChatGreeting1": {
+        "description": "First greeting displayed in a new chat",
+        "context": "app:chat:greeting",
+        "placeholders": {
+            "user": {
+                "type": "String",
+                "description": "Name of the user. If unavailable, 'user' will be used instead.",
+                "example": "User"
+            }
+        }
     },
-    "imageOnlyConversation": "Image Only Conversation",
-    "@imageOnlyConversation": {
-        "description": "Title, if 'Generate Title' is executed on a conversation with no text messages",
-        "context": "app:chat:title"
+    "newChatGreeting2": "Good to see you, {user}.",
+    "@newChatGreeting2": {
+        "description": "Second greeting displayed in a new chat",
+        "context": "app:chat:greeting",
+        "placeholders": {
+            "user": {
+                "type": "String",
+                "description": "Name of the user. If unavailable, 'user' will be used instead.",
+                "example": "User"
+            }
+        }
     },
-    "messageInputPlaceholder": "Message",
+    "newChatGreeting3": "What can I do for you, {user}?",
+    "@newChatGreeting3": {
+        "description": "Third greeting displayed in a new chat",
+        "context": "app:chat:greeting",
+        "placeholders": {
+            "user": {
+                "type": "String",
+                "description": "Name of the user. If unavailable, 'user' will be used instead.",
+                "example": "User"
+            }
+        }
+    },
+    "newChatGreeting4": "How can I help you today, {user}?",
+    "@newChatGreeting4": {
+        "description": "Fourth greeting displayed in a new chat",
+        "context": "app:chat:greeting",
+        "placeholders": {
+            "user": {
+                "type": "String",
+                "description": "Name of the user. If unavailable, 'user' will be used instead.",
+                "example": "User"
+            }
+        }
+    },
+    "newChatGreeting5": "What would you like to talk about, {user}?",
+    "@newChatGreeting5": {
+        "description": "Fifth greeting displayed in a new chat",
+        "context": "app:chat:greeting",
+        "placeholders": {
+            "user": {
+                "type": "String",
+                "description": "Name of the user. If unavailable, 'user' will be used instead.",
+                "example": "User"
+            }
+        }
+    },
+    "newChatGreetingNameFallback": "user",
+    "@newChatGreetingNameFallback": {
+        "description": "Fallback name for the user if no name is set",
+        "context": "app:chat:greeting"
+    },
+    "messageInputPlaceholder": "Ask {model}",
     "@messageInputPlaceholder": {
         "description": "Placeholder text for message input",
+        "context": "app:chat:input",
+        "placeholders": {
+            "model": {
+                "type": "String",
+                "description": "Friendly name of the model without its tag, so 'gemma3' or 'gpt-oss' for example"
+            }
+        }
+    },
+    "messageInputPlaceholderModelPlaceholder": "model",
+    "@messageInputPlaceholderModelPlaceholder": {
+        "description": "Model name used in 'messageInputPlaceholder' if no model is available, should fit into capitalization and context",
         "context": "app:chat:input"
     },
-    "tooltipAttachment": "Add attachment",
-    "@tooltipAttachment": {
-        "description": "Tooltip for attachment button",
+    "tooltipMessageOptions": "Message options",
+    "@tooltipMessageOptions": {
+        "description": "Tooltip for message options button; options here being attachments, etc.",
         "context": "app:chat:tooltips"
     },
     "tooltipSend": "Send",
@@ -100,14 +208,20 @@
         "description": "Tooltip for send button",
         "context": "app:chat:tooltips"
     },
-    "tooltipSave": "Save",
-    "@tooltipSave": {
-        "description": "Tooltip for save button",
-        "context": "app:chat:tooltips"
-    },
-    "tooltipLetAIThink": "Let AI think",
+    "tooltipLetAIThink": "Generate with {model}",
     "@tooltipLetAIThink": {
-        "description": "Tooltip for let AI think button",
+        "description": "Tooltip for generate with model button",
+        "context": "app:chat:tooltips",
+        "placeholders": {
+            "model": {
+                "type": "String",
+                "description": "Friendly name of the model without its tag, so 'gemma3' or 'gpt-oss' for example"
+            }
+        }
+    },
+    "tooltipAddHostHeaders": "Add host headers",
+    "@tooltipAddHostHeaders": {
+        "description": "Tooltip for add host headers button",
         "context": "app:chat:tooltips"
     },
     "tooltipReset": "Reset current chat",
@@ -125,120 +239,97 @@
         "description": "Text displayed when no model is selected",
         "context": "app:chat"
     },
-    "noHostSelected": "No host selected, open settings to set one",
+    "noHostSelected": "No host selected, open settings to set one.",
     "@noHostSelected": {
         "description": "Text displayed when no host is selected",
         "context": "app:chat"
     },
-    "noSelectedModel": "<selector>",
+    "noSelectedModel": "<model>",
     "@noSelectedModel": {
-        "description": "Text displayed when no model is selected",
+        "description": "Text displayed when no model is selected. Should be lower case even if the language would capitalize it, to fit better into the app's design.",
         "context": "app:chat"
     },
-    "newChatTitle": "Unnamed Chat",
+    "newChatTitle": "Untitled Chat",
     "@newChatTitle": {
         "description": "Title of a new chat",
         "context": "app:chat:title"
     },
-    "modelDialogAddModel": "Add",
-    "@modelDialogAddModel": {
+    "modelDialogTitle": "Select a model",
+    "@modelDialogTitle": {
+        "description": "Title of the model selection dialog",
+        "context": "app:modelDialog"
+    },
+    "modelDialogAdd": "Add",
+    "@modelDialogAdd": {
         "description": "Text displayed for add model button",
         "context": "app:modelDialog"
     },
-    "modelDialogAddPromptTitle": "Add new model",
+    "modelDialogRefresh": "Refresh",
+    "@modelDialogRefresh": {
+        "description": "Text displayed for refresh models button",
+        "context": "app:modelDialog"
+    },
+    "modelDialogAddPromptTitle": "Add model",
     "@modelDialogAddPromptTitle": {
         "description": "Title of the add model dialog",
         "context": "app:modelDialog"
     },
-    "modelDialogAddPromptDescription": "This can either be a normal name (e.g. 'llama3') or a name and tag (e.g. 'llama3:70b').",
+    "modelDialogAddPromptDescription": "This can either be a normal name (e.g. “llama3”) or a name together with a tag (e.g. “llama3:70b”).",
     "@modelDialogAddPromptDescription": {
         "description": "Description of the add model dialog",
         "context": "app:modelDialog"
     },
-    "modelDialogAddPromptAlreadyExists": "Model already exists",
+    "modelDialogAddCurrently": "Currently downloading:",
+    "@modelDialogAddCurrently": {
+        "description": "Text displayed when there are currently downloading models",
+        "context": "app:modelDialog"
+    },
+    "modelDialogAddPromptAlreadyExists": "Model already exists. Try refreshing if it was deleted.",
     "@modelDialogAddPromptAlreadyExists": {
         "description": "Text displayed when the model already exists",
         "context": "app:modelDialog"
     },
-    "modelDialogAddPromptInvalid": "Invalid model name",
+    "modelDialogAddPromptInvalid": "Couldn’t read your model name correctly. Please check the spelling and try again.",
     "@modelDialogAddPromptInvalid": {
         "description": "Text displayed when the model name is invalid",
         "context": "app:modelDialog"
     },
-    "modelDialogAddAllowanceTitle": "Allow Proxy",
-    "@modelDialogAddAllowanceTitle": {
-        "description": "Title of the allow proxy dialog",
+    "modelDialogAddPromptNotFound": "Couldn’t find your model on the server. Please check the spelling and try again.",
+    "@modelDialogAddPromptNotFound": {
+        "description": "Text displayed when the model could not be found",
         "context": "app:modelDialog"
     },
-    "modelDialogAddAllowanceDescription": "Ollama App must check if the entered model is valid. To do that, we normally send a web request to the Ollama model list and check the status code, but because you're using the web client, we can't do that directly. Instead, the app will send the request to a different API, hosted by JHubi1, to check for us.\nThis is a one-time request and will only be sent when you add a new model.\nYour IP address will be sent with the request and might be stored for up to ten minutes to prevent spamming with potentially harmful intentions.\nIf you accept, your selection will be remembered for the future; if not, nothing will be sent and the model won't be added.",
-    "@modelDialogAddAllowanceDescription": {
-        "description": "Description of the allow proxy dialog",
+    "modelDialogAddPromptNetworkError": "Network error while checking model. Please check your connection and try again.",
+    "@modelDialogAddPromptNetworkError": {
+        "description": "Text displayed when there was a network error while checking the model",
         "context": "app:modelDialog"
     },
-    "modelDialogAddAllowanceAllow": "Allow",
-    "@modelDialogAddAllowanceAllow": {
-        "description": "Text displayed for allow button, should be capitalized",
+    "modelDialogAddPromptCorruptionError": "The API returned “EOF”; your server was likely restarted while downloading the model previously.",
+    "@modelDialogAddPromptCorruptionError": {
+        "description": "Text displayed when the model is corrupted on the server",
         "context": "app:modelDialog"
     },
-    "modelDialogAddAllowanceDeny": "Deny",
-    "@modelDialogAddAllowanceDeny": {
-        "description": "Text displayed for deny button, should be capitalized",
+    "modelDialogAddPromptCorruptionErrorSolution": "Alternatively, you can run the following command on your Linux host directly:\nIf you see a new error, try running the command with “sudo” placed in front of it.",
+    "@modelDialogAddPromptCorruptionErrorSolution": {
+        "description": "Text displayed as solution for the corrupted model error",
         "context": "app:modelDialog"
     },
-    "modelDialogAddAssuranceTitle": "Add {model}?",
-    "@modelDialogAddAssuranceTitle": {
-        "description": "Title of the add model assurance dialog",
-        "context": "app:modelDialog",
-        "placeholders": {
-            "model": {
-                "type": "String",
-                "description": "Name of the model to be added"
-            }
-        }
-    },
-    "modelDialogAddAssuranceDescription": "Pressing 'Add' will download the model '{model}' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it will resume if you enter the name into the model dialog again.",
-    "@modelDialogAddAssuranceDescription": {
-        "description": "Description of the add model assurance dialog",
-        "context": "app:modelDialog",
-        "placeholders": {
-            "model": {
-                "type": "String",
-                "description": "Name of the model to be added"
-            }
-        }
-    },
-    "modelDialogAddAssuranceAdd": "Add",
-    "@modelDialogAddAssuranceAdd": {
-        "description": "Text displayed for add button, should be capitalized",
+    "modelDialogAddCancelTitle": "Cancel download?",
+    "@modelDialogAddCancelTitle": {
+        "description": "Title of the cancel download dialog",
         "context": "app:modelDialog"
     },
-    "modelDialogAddAssuranceCancel": "Cancel",
-    "@modelDialogAddAssuranceCancel": {
-        "description": "Text displayed for cancel button, should be capitalized",
+    "modelDialogAddCancelConfirm": "Cancel",
+    "@modelDialogAddCancelConfirm": {
+        "description": "Text displayed for cancel download button",
         "context": "app:modelDialog"
     },
-    "modelDialogAddDownloadPercentLoading": "loading progress",
-    "@modelDialogAddDownloadPercentLoading": {
-        "description": "Text displayed while loading the download progress",
-        "context": "app:modelDialog:download"
+    "modelDialogAddCancelHide": "Hide",
+    "@modelDialogAddCancelHide": {
+        "description": "Text displayed for hide button in cancel download dialog. Hide in the sense of 'hide this dialog'",
+        "context": "app:modelDialog"
     },
-    "modelDialogAddDownloadPercent": "download at {percent}%",
-    "@modelDialogAddDownloadPercent": {
-        "description": "Text displayed while downloading a model",
-        "context": "app:modelDialog:download",
-        "placeholders": {
-            "percent": {
-                "type": "String",
-                "description": "Percentage of the download"
-            }
-        }
-    },
-    "modelDialogAddDownloadFailed": "Disconnected, try again",
-    "@modelDialogAddDownloadFailed": {
-        "description": "Text displayed when the download of a model fails",
-        "context": "app:modelDialog:download"
-    },
-    "modelDialogAddDownloadSuccess": "Download successful",
+    "modelDialogAddDownloadSuccess": "Download successful. Set as current model.",
     "@modelDialogAddDownloadSuccess": {
         "description": "Text displayed when the download of a model is successful",
         "context": "app:modelDialog:download"
@@ -298,6 +389,16 @@
         "description": "Title of the edit message dialog",
         "context": "app:editMessageDialog"
     },
+    "settingsTitleOverview": "Overview",
+    "@settingsTitleOverview": {
+        "description": "Title of the overview settings section",
+        "context": "app:settings"
+    },
+    "settingsDescriptionOverview": "General settings regarding your host.",
+    "@settingsDescriptionOverview": {
+        "description": "Description of the overview settings section",
+        "context": "app:settings"
+    },
     "settingsTitleBehavior": "Behavior",
     "@settingsTitleBehavior": {
         "description": "Title of the behavior settings section",
@@ -348,17 +449,12 @@
         "description": "Description of the about settings section",
         "context": "app:settings"
     },
-    "settingsSavedAutomatically": "Settings are saved automatically",
-    "@settingsSavedAutomatically": {
-        "description": "Text displayed when settings are saved automatically",
-        "context": "app:settings"
-    },
     "settingsExperimentalAlpha": "alpha",
     "@settingsExperimentalAlpha": {
         "description": "Text displayed when a feature is in alpha phase",
         "context": "app:settings"
     },
-    "settingsExperimentalAlphaDescription": "This feature is in alpha and may not work as intended or expected.\nCritical issues and/or permanent critical damage to device and/or used services cannot be ruled out.\nUse at your own risk. No liability on the part of the app author.",
+    "settingsExperimentalAlphaDescription": "This feature is in alpha and may not work as intended or expected.\nCritical issues and/or permanent critical damage to device and/or connected services cannot be ruled out.\nUse at your own risk. No liability on the part of the app author.",
     "@settingsExperimentalAlphaDescription": {
         "description": "Description of the alpha feature",
         "context": "app:settings"
@@ -373,7 +469,7 @@
         "description": "Text displayed when a feature is in beta",
         "context": "app:settings"
     },
-    "settingsExperimentalBetaDescription": "This feature is in beta and may not work as intended or expected.\nLess severe issues may or may not occur. Damage shouldn't be critical.\nUse at your own risk.",
+    "settingsExperimentalBetaDescription": "This feature is in beta and may not work as intended or expected.\nLess severe issues may or may not occur. Damage shouldn’t be critical.\nUse at your own risk.",
     "@settingsExperimentalBetaDescription": {
         "description": "Description of the beta feature",
         "context": "app:settings"
@@ -403,6 +499,11 @@
         "description": "Text displayed as description for host input",
         "context": "app:settings:host"
     },
+    "settingsHostMissing": "No host set",
+    "@settingsHostMissing": {
+        "description": "Text displayed when no host is set",
+        "context": "app:settings:host"
+    },
     "settingsHostValid": "Valid Host",
     "@settingsHostValid": {
         "description": "Text displayed when the host is valid",
@@ -413,40 +514,57 @@
         "description": "Text displayed when the host is being checked",
         "context": "app:settings:host"
     },
-    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request failed. Server issues} ratelimit{Too many requests} other{Request Failed}}",
+    "settingsHostInvalid": "{type, select, invalidUrl{Invalid URL} unreachable{Host unreachable} undetectable{Host not an Ollama server} timeout{Connection timed out} outdated{Outdated Ollama version} other{Invalid host}}",
     "@settingsHostInvalid": {
-        "description": "Text displayed when the host is invalid",
+        "description": "Short title displayed when the host is invalid",
         "context": "app:settings:host",
         "placeholders": {
             "type": {
                 "type": "String",
-                "description": "Type of the issue, either 'url', 'host', 'timeout', 'ratelimit' or 'other' (preferably 'host')"
+                "description": "Type of the issue, either 'invalidUrl', 'unreachable', 'undetectable', 'timeout' or 'outdated'. See `lib/services/host.dart` for more information."
             }
         }
     },
-    "tooltipAddHostHeaders": "Add host headers",
-    "@tooltipAddHostHeaders": {
-        "description": "Tooltip for add host headers button",
-        "context": "app:settings:host"
-    },
-    "settingsHostHeaderTitle": "Set host header",
-    "@settingsHostHeaderTitle": {
-        "description": "Text displayed as description for host header input",
-        "context": "app:settings:host"
-    },
-    "settingsHostHeaderInvalid": "The entered text isn't a valid header JSON object",
-    "@settingsHostHeaderInvalid": {
-        "description": "Text displayed when the host header is invalid",
-        "context": "app:settings:host"
-    },
-    "settingsHostInvalidDetailed": "{type, select, url{The URL you entered is invalid. It isn't in a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}",
+    "settingsHostInvalidDetailed": "{type, select, invalidUrl{The URL you entered isn’t in a valid format.} unreachable{The host is invalid or unreachable, possibly due to a wrong address or network issue.} undetectable{The host is reachable but doesn’t respond as expected by Ollama App.\nIt may not be an Ollama server. Are you sure you entered it correctly?} timeout{The host couldn’t be reached in time.\nTry increasing the timeout multiplier in interface settings.} outdated{The host is running an Ollama version incompatible with this app.\nPlease update both the host and this app, if possible.} other{The host you entered is invalid.}}",
     "@settingsHostInvalidDetailed": {
-        "description": "Text displayed when the host is invalid",
+        "description": "Detailed text displayed when the host is invalid",
         "context": "app:settings:host",
         "placeholders": {
             "type": {
                 "type": "String",
-                "description": "Type of the issue, either 'url' or 'other' (preferably 'host')"
+                "description": "Type of the issue, either 'invalidUrl', 'unreachable', 'undetectable', 'timeout' or 'outdated'. See `lib/services/host.dart` for more information."
+            }
+        }
+    },
+    "settingsHostHeaderHeaderName": "Header",
+    "@settingsHostHeaderHeaderName": {
+        "description": "Text displayed as description for host header name input",
+        "context": "app:settings:host"
+    },
+    "settingsHostHeaderHeaderValue": "Value",
+    "@settingsHostHeaderHeaderValue": {
+        "description": "Text displayed as description for host header value input",
+        "context": "app:settings:host"
+    },
+    "settingsHostHeaderUnsupported": "The header “{header}” may not be supported.",
+    "@settingsHostHeaderUnsupported": {
+        "description": "Text displayed when a host header is unsupported",
+        "context": "app:settings:host",
+        "placeholders": {
+            "header": {
+                "type": "String",
+                "description": "The name of the unsupported header"
+            }
+        }
+    },
+    "settingsHostHeaderDuplicate": "The header “{header}” is already set.",
+    "@settingsHostHeaderDuplicate": {
+        "description": "Text displayed when a host header is a duplicate",
+        "context": "app:settings:host",
+        "placeholders": {
+            "header": {
+                "type": "String",
+                "description": "The name of the duplicate header"
             }
         }
     },
@@ -460,7 +578,7 @@
         "description": "Text displayed as description for use system message toggle",
         "context": "app:settings:behavior"
     },
-    "settingsUseSystemDescription": "Disables setting the system message above and uses the one from the model's Modelfile instead. Can be useful for models with model files.",
+    "settingsUseSystemDescription": "Disables setting the system message above and uses the one from the model’s Modelfile instead. Can be useful for models with model files.",
     "@settingsUseSystemDescription": {
         "description": "Description of the use system message toggle",
         "context": "app:settings:behavior"
@@ -525,7 +643,7 @@
         "description": "Text displayed as description for keep model loaded always toggle",
         "context": "app:settings:interface:keepModelLoaded"
     },
-    "settingsKeepModelLoadedNever": "Don't keep model loaded",
+    "settingsKeepModelLoadedNever": "Don’t keep model loaded",
     "@settingsKeepModelLoadedNever": {
         "description": "Text displayed as description for don't keep model loaded toggle",
         "context": "app:settings:interface:keepModelLoaded"
@@ -606,7 +724,7 @@
         "description": "Description of the temporary fixes section",
         "context": "app:settings:interface:temporaryFixes"
     },
-    "settingsTemporaryFixesInstructions": "Do not toggle any of these settings unless you know what you are doing! The given solutions might not work as expected.\nThey cannot be seen as final or should be judged as such. Issues might occur.",
+    "settingsTemporaryFixesInstructions": "Do not toggle any of these settings unless you know what you are doing! The given solutions might not work as expected.\nThey should not be considered final or judged as such. Issues might occur.",
     "@settingsTemporaryFixesInstructions": {
         "description": "Instructions and warnings for the temporary fixes",
         "context": "app:settings:interface:temporaryFixes"
@@ -616,7 +734,7 @@
         "description": "Text displayed when no fixes are available",
         "context": "app:settings:interface:temporaryFixes"
     },
-    "settingsVoicePermissionLoading": "Loading voice permissions ...",
+    "settingsVoicePermissionLoading": "Loading voice permissions...",
     "@settingsVoicePermissionLoading": {
         "description": "Text displayed while loading voice permissions",
         "context": "app:settings:voice"
@@ -706,12 +824,12 @@
         "description": "Text displayed when chats are imported successfully",
         "context": "app:settings:export"
     },
-    "settingsExportInfo": "These options allow you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or back up your chat history",
+    "settingsExportInfo": "These options allow you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or back up your chat history.",
     "@settingsExportInfo": {
         "description": "Information displayed for export and import options",
         "context": "app:settings:export"
     },
-    "settingsExportWarning": "Multiple chat histories won't be merged! You'll lose your current chat history if you import a new one.",
+    "settingsExportWarning": "Multiple chat histories won’t be merged! You’ll lose your current chat history if you import a new one.",
     "@settingsExportWarning": {
         "description": "Warning displayed for export and import options",
         "context": "app:settings:export"
@@ -721,7 +839,7 @@
         "description": "Text displayed as description for check for updates button",
         "context": "app:settings:info"
     },
-    "settingsUpdateChecking": "Checking for updates ...",
+    "settingsUpdateChecking": "Checking for updates...",
     "@settingsUpdateChecking": {
         "description": "Text displayed while looking for updates",
         "context": "app:settings:info"
@@ -742,7 +860,7 @@
             }
         }
     },
-    "settingsUpdateRateLimit": "Can't check, API rate limit exceeded",
+    "settingsUpdateRateLimit": "Can’t check, API rate limit exceeded",
     "@settingsUpdateRateLimit": {
         "description": "Text displayed when the API rate limit is exceeded",
         "context": "app:settings:info"
@@ -777,7 +895,7 @@
         "description": "Text displayed for cancel button, should be capitalized",
         "context": "app:settings:info"
     },
-    "settingsCheckForUpdates": "Check for updates on open",
+    "settingsCheckForUpdates": "Check for updates on startup",
     "@settingsCheckForUpdates": {
         "description": "Text displayed as description for check for updates toggle",
         "context": "app:settings:info"

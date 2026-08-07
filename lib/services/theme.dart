@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/gen/app_localizations.dart';
@@ -23,24 +24,32 @@ class ThemeBuilderData {
   }
 
   ThemeData themeModifier(BuildContext context, ThemeData theme) {
-    var isMobile = Display.from(context).isMobile;
+    final floatingSnackbar = Breakpoint.of(context) <= Breakpoint.medium;
     return theme.copyWith(
       pageTransitionsTheme: const PageTransitionsTheme(
-        builders: <TargetPlatform, PageTransitionsBuilder>{
-          TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        builders: {
+          TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(),
+          TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(),
         },
       ),
       sliderTheme: theme.sliderTheme.copyWith(year2023: false),
       progressIndicatorTheme: theme.progressIndicatorTheme.copyWith(
         year2023: false,
       ),
+      dividerTheme: theme.dividerTheme.copyWith(
+        color: theme.colorScheme.outline,
+      ),
       snackBarTheme: theme.snackBarTheme.copyWith(
-        behavior: isMobile ? null : SnackBarBehavior.floating,
-        width: isMobile ? null : 288,
+        behavior: SnackBarBehavior.floating,
+        width: floatingSnackbar ? null : 288,
       ),
       listTileTheme: theme.listTileTheme.copyWith(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       ),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 
@@ -48,10 +57,16 @@ class ThemeBuilderData {
     if (Preferences.instance.themeSystem && dynamicLight != null) {
       return ThemeData.from(colorScheme: dynamicLight!);
     } else {
+      final colorScheme = ColorScheme.fromSeed(
+        seedColor: Colors.black,
+        dynamicSchemeVariant: DynamicSchemeVariant.content,
+      );
       return ThemeData.from(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.black,
-          dynamicSchemeVariant: DynamicSchemeVariant.content,
+        colorScheme: colorScheme.copyWith(
+          surface: Colors.white,
+          onPrimaryContainer: colorScheme.onPrimary,
+          onSecondaryContainer: colorScheme.onSurface,
+          onTertiaryContainer: colorScheme.onTertiary,
         ),
       );
     }
@@ -61,12 +76,18 @@ class ThemeBuilderData {
     if (Preferences.instance.themeSystem && dynamicDark != null) {
       return ThemeData.from(colorScheme: dynamicDark!);
     } else {
+      final colorScheme = ColorScheme.fromSeed(
+        seedColor: Colors.white,
+        dynamicSchemeVariant: DynamicSchemeVariant.content,
+        brightness: Brightness.dark,
+      );
       return ThemeData.from(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.white,
-          dynamicSchemeVariant: DynamicSchemeVariant.content,
-          brightness: Brightness.dark,
-        ).copyWith(surface: Colors.black),
+        colorScheme: colorScheme.copyWith(
+          surface: Colors.black,
+          onPrimaryContainer: colorScheme.onPrimary,
+          onSecondaryContainer: colorScheme.onSurface,
+          onTertiaryContainer: colorScheme.onTertiary,
+        ),
       ).copyWith(dividerColor: Colors.white30);
     }
   }
@@ -86,7 +107,9 @@ class _ThemeBuilderState extends State<ThemeBuilder> {
   @override
   void initState() {
     super.initState();
-    Preferences.instance.addListener(onChange);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => Preferences.instance.addListener(onChange),
+    );
   }
 
   @override

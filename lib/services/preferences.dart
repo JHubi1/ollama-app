@@ -14,12 +14,14 @@ class Preferences extends ChangeNotifier {
     }
   }
 
-  String? get host => prefs?.getString("host") ?? (useHost ? fixedHost : null);
-  set host(String? value) {
-    if (value == null || value.isEmpty) {
+  Uri? get host => Uri.tryParse(
+    prefs?.getString("host") ?? (useHost ? fixedHost : null) ?? "::",
+  );
+  set host(Uri? value) {
+    if (value == null) {
       prefs?.remove("host");
     } else {
-      prefs?.setString("host", value);
+      prefs?.setString("host", value.toString());
     }
     notifyListeners();
   }
@@ -41,6 +43,16 @@ class Preferences extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? get user => prefs?.getString("user");
+  set user(String? value) {
+    if (value == null || value.isEmpty) {
+      prefs?.remove("user");
+    } else {
+      prefs?.setString("user", value);
+    }
+    notifyListeners();
+  }
+
   bool get useSystem => prefs?.getBool("useSystem") ?? true;
   set useSystem(bool value) {
     prefs?.setBool("useSystem", value);
@@ -48,7 +60,9 @@ class Preferences extends ChangeNotifier {
   }
 
   String? get system => useSystem
-      ? prefs?.getString("system") ?? "You are a helpful assistant."
+      ? prefs?.getString("system") ??
+            "You are a helpful assistant. Answer the user's questions to the best of your ability. If you do not know the answer, say that you do not know and do not fabricate information.\n\n"
+                "You may use Markdown to format your response. For math, you may use LaTeX with standard Markdown LaTeX syntax."
       : null;
   set system(String? value) {
     if (value == null || value.isEmpty) {

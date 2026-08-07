@@ -9,7 +9,12 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'Ollama';
+  String appTitle(String env, String title) {
+    return 'Ollama';
+  }
+
+  @override
+  String get learnMore => 'Learn more';
 
   @override
   String get optionNewChat => 'Yeni Sohbet';
@@ -22,6 +27,20 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get optionNoChatFound => 'Sohbet bulunamadı';
+
+  @override
+  String optionNoChatFoundSearch(String query) {
+    return 'No chats found for ‘$query’';
+  }
+
+  @override
+  String get optionSearchChats => 'Search through chats';
+
+  @override
+  String get optionChatDetails => 'Chat details';
+
+  @override
+  String get optionChatDetailsNoChat => 'No chat selected';
 
   @override
   String get tipPrefix => 'İpucu: ';
@@ -54,25 +73,54 @@ class AppLocalizationsTr extends AppLocalizations {
   String get uploadImage => 'Görsel Yükle';
 
   @override
-  String get notAValidImage => 'Geçerli bir görsel değil';
+  String newChatGreeting1(String user) {
+    return 'What’s on your mind, $user?';
+  }
 
   @override
-  String get imageOnlyConversation => 'Sadece Görsel İçeren Konuşma';
+  String newChatGreeting2(String user) {
+    return 'Good to see you, $user.';
+  }
 
   @override
-  String get messageInputPlaceholder => 'Mesaj';
+  String newChatGreeting3(String user) {
+    return 'What can I do for you, $user?';
+  }
 
   @override
-  String get tooltipAttachment => 'Ek ekle';
+  String newChatGreeting4(String user) {
+    return 'How can I help you today, $user?';
+  }
+
+  @override
+  String newChatGreeting5(String user) {
+    return 'What would you like to talk about, $user?';
+  }
+
+  @override
+  String get newChatGreetingNameFallback => 'user';
+
+  @override
+  String messageInputPlaceholder(String model) {
+    return 'Mesaj';
+  }
+
+  @override
+  String get messageInputPlaceholderModelPlaceholder => 'model';
+
+  @override
+  String get tooltipMessageOptions => 'Message options';
 
   @override
   String get tooltipSend => 'Gönder';
 
   @override
-  String get tooltipSave => 'Kaydet';
+  String tooltipLetAIThink(String model) {
+    return 'AI\'\'nın düşünmesine izin ver';
+  }
 
   @override
-  String get tooltipLetAIThink => 'AI\'\'nın düşünmesine izin ver';
+  String get tooltipAddHostHeaders => 'Ana bilgisayar başlıkları ekle';
 
   @override
   String get tooltipReset => 'Mevcut sohbeti sıfırla';
@@ -94,7 +142,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get newChatTitle => 'İsimsiz Sohbet';
 
   @override
-  String get modelDialogAddModel => 'Ekle';
+  String get modelDialogTitle => 'Select a model';
+
+  @override
+  String get modelDialogAdd => 'Add';
+
+  @override
+  String get modelDialogRefresh => 'Refresh';
 
   @override
   String get modelDialogAddPromptTitle => 'Yeni model ekle';
@@ -104,51 +158,38 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu normal bir isim (örneğin \'llama3\') ya da isim ve etiket (örneğin \'llama3:70b\') olabilir.';
 
   @override
+  String get modelDialogAddCurrently => 'Currently downloading:';
+
+  @override
   String get modelDialogAddPromptAlreadyExists => 'Model zaten mevcut';
 
   @override
   String get modelDialogAddPromptInvalid => 'Geçersiz model adı';
 
   @override
-  String get modelDialogAddAllowanceTitle => 'Proxy\'e İzin Ver';
+  String get modelDialogAddPromptNotFound =>
+      'Couldn’t find your model on the server. Please check the spelling and try again.';
 
   @override
-  String get modelDialogAddAllowanceDescription =>
-      'Ollama Uygulaması, girilen modelin geçerli olup olmadığını kontrol etmelidir. Bunun için normalde Ollama model listesine bir web isteği gönderir ve durum kodunu kontrol ederiz, ancak siz web istemcisini kullandığınız için bunu doğrudan yapamayız. Bunun yerine, uygulama bizim için kontrol etmek amacıyla JHubi1 tarafından barındırılan farklı bir API\'ye istek gönderecek. \nBu, yalnızca bir kez yapılan bir istektir ve yalnızca yeni bir model eklediğinizde gönderilecektir. \nIP adresiniz istekle birlikte gönderilecek ve olası zararlı niyetlerle spam yapılmasını önlemek amacıyla on dakikaya kadar saklanabilir. \nKabul ederseniz, seçiminiz gelecekte hatırlanacaktır; kabul etmezseniz, hiçbir şey gönderilmeyecek ve model eklenmeyecektir.';
+  String get modelDialogAddPromptNetworkError =>
+      'Network error while checking model. Please check your connection and try again.';
 
   @override
-  String get modelDialogAddAllowanceAllow => 'İzin ver';
+  String get modelDialogAddPromptCorruptionError =>
+      'The API returned “EOF”; your server was likely restarted while downloading the model previously.';
 
   @override
-  String get modelDialogAddAllowanceDeny => 'Reddet';
+  String get modelDialogAddPromptCorruptionErrorSolution =>
+      'Alternatively, you can run the following command on your Linux host directly:\nIf you see a new error, try running the command with “sudo” placed in front of it.';
 
   @override
-  String modelDialogAddAssuranceTitle(String model) {
-    return '$model Ekle?';
-  }
+  String get modelDialogAddCancelTitle => 'Cancel download?';
 
   @override
-  String modelDialogAddAssuranceDescription(String model) {
-    return '\'Ekle\' tuşuna basmak, \'$model\' modelini doğrudan Ollama sunucusundan bilgisayarınıza indirecektir. İnternet bağlantınıza bağlı olarak bu işlem biraz zaman alabilir. Bu işlem iptal edilemez. Uygulama indirme sırasında kapatılırsa, model adını tekrar model diyaloguna girerseniz indirme işlemi kaldığı yerden devam eder.';
-  }
+  String get modelDialogAddCancelConfirm => 'Cancel';
 
   @override
-  String get modelDialogAddAssuranceAdd => 'Ekle';
-
-  @override
-  String get modelDialogAddAssuranceCancel => 'İptal';
-
-  @override
-  String get modelDialogAddDownloadPercentLoading => 'yükleme ilerleme durumu';
-
-  @override
-  String modelDialogAddDownloadPercent(String percent) {
-    return '%$percent oranında indir';
-  }
-
-  @override
-  String get modelDialogAddDownloadFailed =>
-      'Bağlantı kesildi, yeniden deneyin';
+  String get modelDialogAddCancelHide => 'Hide';
 
   @override
   String get modelDialogAddDownloadSuccess => 'İndirme tamamlandı';
@@ -188,6 +229,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dialogEditMessageTitle => 'Mesajı düzenle';
 
   @override
+  String get settingsTitleOverview => 'Overview';
+
+  @override
+  String get settingsDescriptionOverview =>
+      'General settings regarding your host.';
+
+  @override
   String get settingsTitleBehavior => 'Davranış';
 
   @override
@@ -221,9 +269,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get settingsDescriptionAbout =>
       'Güncellemeleri kontrol edin ve Ollama Uygulaması hakkında daha fazla bilgi edinin.';
-
-  @override
-  String get settingsSavedAutomatically => 'Ayarlar otomatik olarak kaydedilir';
 
   @override
   String get settingsExperimentalAlpha => 'alfa';
@@ -262,6 +307,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsHost => 'Ana bilgisayar';
 
   @override
+  String get settingsHostMissing => 'No host set';
+
+  @override
   String get settingsHostValid => 'Geçerli Ana Bilgisayar';
 
   @override
@@ -280,16 +328,6 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get tooltipAddHostHeaders => 'Ana bilgisayar başlıkları ekle';
-
-  @override
-  String get settingsHostHeaderTitle => 'Ana bilgisayar başlığını ayarla';
-
-  @override
-  String get settingsHostHeaderInvalid =>
-      'Girilen metin geçerli bir başlık JSON nesnesi değil';
-
-  @override
   String settingsHostInvalidDetailed(String type) {
     String _temp0 = intl.Intl.selectLogic(type, {
       'url': 'Girdiğiniz URL geçersiz. Standart bir URL formatında değil.',
@@ -297,6 +335,22 @@ class AppLocalizationsTr extends AppLocalizations {
           'Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.',
     });
     return '$_temp0';
+  }
+
+  @override
+  String get settingsHostHeaderHeaderName => 'Header';
+
+  @override
+  String get settingsHostHeaderHeaderValue => 'Value';
+
+  @override
+  String settingsHostHeaderUnsupported(String header) {
+    return 'The header “$header” may not be supported.';
+  }
+
+  @override
+  String settingsHostHeaderDuplicate(String header) {
+    return 'The header “$header” is already set.';
   }
 
   @override

@@ -1,80 +1,122 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dartx/dartx.dart';
 import 'package:dynamic_system_colors/dynamic_system_colors.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter/material.dart' hide RouteSettings;
 // import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_web_plugins/url_strategy.dart' show usePathUrlStrategy;
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pwa_install/pwa_install.dart' as pwa;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/util/legacy_to_async_migration_util.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:uuid/uuid.dart';
 
 import 'l10n/gen/app_localizations.dart';
-import 'screens/main.dart';
-import 'services/clients.dart';
-import 'services/responsive.dart';
-import 'services/theme.dart';
+import 'main.gr.dart';
+import 'services/services.dart';
 
 // client configuration
 
-// use host or not, if false dialog is shown
+/// forces usage of [fixedHost] as the host
 const bool useHost = false;
-// host of ollama, must be accessible from the client, without trailing slash
-// ! will always be accepted as valid, even if [useHost] is false
+
+/// the host used when [useHost] is true; not validated!
 const String fixedHost = "http://example.com:11434";
-// use model or not, if false selector is shown
+
+/// forces usage of [fixedModel] as the model
 const bool useModel = false;
-// model name as string, must be valid ollama model!
-const String fixedModel = "gemma3";
-// recommended models, shown with a star in model selector
-const List<String> recommendedModels = ["gemma3", "llama3.3"];
-// allow opening of settings
-const bool allowSettings = true;
-// allow multiple chats
-const bool allowMultipleChats = true;
+
+/// the model used when [useModel] is true; not validated!
+const String fixedModel = "gemma3:latest";
 
 // client configuration end
 
 Completer<void> prefsReady = Completer<void>();
 SharedPreferencesWithCache? prefs;
 
-String? host;
-
-bool chatAllowed = true;
-String hoveredChat = "";
-
-final user = types.User(id: const Uuid().v4());
-final assistant = types.User(id: const Uuid().v4());
-
-bool settingsOpen = false;
-bool desktopTitleVisible = true;
-bool logoVisible = true;
-bool menuVisible = false;
-bool sendable = false;
-bool updateDetectedOnStart = false;
-double sidebarIconSize = 1;
-
 SpeechToText speech = SpeechToText();
 FlutterTts voice = FlutterTts();
 bool voiceSupported = false;
 
-BuildContext? mainContext;
-void Function(void Function())? setGlobalState;
-void Function(void Function())? setMainAppState;
+Color adaptedSurfaceFromColorScheme(ColorScheme cs) => cs.surface;
+Color adaptedOnSurfaceFromColorScheme(ColorScheme cs) => cs.surfaceContainerLow;
 
-void main() {
+const kDisabledOpacity = 0.38;
+
+const kImageLogo = AssetImage("assets/logo512.png");
+const kImageLogoError = AssetImage("assets/logo512error.png");
+
+final uuidRegex = RegExp(
+  r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+  caseSensitive: false,
+);
+
+@AutoRouterConfig()
+class AppRouter extends RootStackRouter {
+  @override
+  RouteType get defaultRouteType => const RouteType.material();
+
+  @override
+  List<AutoRoute> get routes => [
+    AutoRoute(
+      page: RouteMain.page,
+      path: "/",
+      children: [
+        AutoRoute(page: RouteNewChat.page, path: ""),
+        AutoRoute(page: RouteChat.page, path: "c/:id"),
+
+        AutoRoute(
+          page: RouteSettingsShell.page,
+          path: "settings",
+          children: [
+            AutoRoute(page: RouteSettings.page, path: "", initial: true),
+            AutoRoute(page: RouteSettingsOverview.page, path: "overview"),
+
+            AutoRoute(page: RouteSettingsBehavior.page, path: "behavior"),
+            AutoRoute(page: RouteSettingsInterface.page, path: "interface"),
+            AutoRoute(page: RouteSettingsVoice.page, path: "voice"),
+            AutoRoute(page: RouteSettingsExport.page, path: "export"),
+            AutoRoute(page: RouteSettingsAbout.page, path: "about"),
+          ],
+        ),
+      ],
+    ),
+    RedirectRoute(path: "*", redirectTo: "/"),
+  ];
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
+
+  await initializeDateFormatting(null, null);
   pwa.PWAInstall().setup();
 
   try {
     HttpOverrides.global = OllamaHttpOverrides();
   } catch (_) {}
+
+  SharedPreferences.setPrefix("ollama.");
+  await migrateLegacySharedPreferencesToSharedPreferencesAsyncIfNecessary(
+    legacySharedPreferencesInstance: await SharedPreferences.getInstance(),
+    sharedPreferencesAsyncOptions: const SharedPreferencesOptions(),
+    migrationCompletedKey: "migrationCompleted",
+  );
+  prefs = await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(),
+  );
+  prefsReady.complete();
+  Preferences.instance;
+
+  chatDb = ChatDatabase();
+  await ChatManager.instance.loadChats();
 
   runApp(const App());
 
@@ -96,6 +138,9 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  final _appRouter = AppRouter();
+  Chat? _currentChat;
+
   @override
   void initState() {
     super.initState();
@@ -104,17 +149,6 @@ class _AppState extends State<App> {
     // FlutterDisplayMode.setHighRefreshRate().catchError((_) {});
 
     Future<void> load() async {
-      SharedPreferences.setPrefix("ollama.");
-      await migrateLegacySharedPreferencesToSharedPreferencesAsyncIfNecessary(
-        legacySharedPreferencesInstance: await SharedPreferences.getInstance(),
-        sharedPreferencesAsyncOptions: const SharedPreferencesOptions(),
-        migrationCompletedKey: "migrationCompleted",
-      );
-      prefs = await SharedPreferencesWithCache.create(
-        cacheOptions: const SharedPreferencesWithCacheOptions(),
-      );
-      prefsReady.complete();
-
       try {
         if ((await Permission.bluetoothConnect.isGranted) &&
             (await Permission.microphone.isGranted)) {
@@ -130,6 +164,34 @@ class _AppState extends State<App> {
     }
 
     load();
+
+    ChatManager.instance.addListener(onChatUpdate);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(kImageLogo, context);
+      precacheImage(kImageLogoError, context);
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    ChatManager.instance.removeListener(onChatUpdate);
+    super.dispose();
+  }
+
+  void onUpdate() {
+      if (mounted) setState(() {});
+  }
+
+  void onChatUpdate() {
+    if (ChatManager.instance.currentChat != _currentChat) {
+      _currentChat?.removeListener(onUpdate);
+      _currentChat = ChatManager.instance.currentChat;
+      _currentChat?.addListener(onUpdate);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
+    }
   }
 
   @override
@@ -142,19 +204,69 @@ class _AppState extends State<App> {
             dynamicDark: dynamicDark,
           ),
           builder: (themeMode, themeLight, themeDark) {
-            return MaterialApp(
+            return MaterialApp.router(
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              onGenerateTitle: (context) =>
-                  AppLocalizations.of(context).appTitle,
+              onGenerateTitle: (context) {
+                final currentId = _appRouter.currentPath
+                    .split("/")
+                    .where(uuidRegex.hasMatch)
+                    .lastOrNull;
+                final currentTitle = currentId != null
+                    ? ChatManager.instance.chats
+                              .firstOrNullWhere((chat) => chat.id == currentId)
+                              ?.title ??
+                          AppLocalizations.of(context).newChatTitle
+                    : null;
+
+                return AppLocalizations.of(context).appTitle(switch (kIsWeb
+                    ? "web"
+                    : Platform.operatingSystem) {
+                  "android" || "ios" => "short",
+                  "web" when (currentTitle != null) => "integrated",
+                  _ => "other",
+                }, currentTitle ?? "");
+              },
               theme: themeLight,
               darkTheme: themeDark,
               themeMode: themeMode,
-              home: const ScreenMain(),
+              routerConfig: _appRouter.config(
+                navigatorObservers: () => [
+                  GlobalNavigationObserver(),
+                  HeroController(),
+                ],
+              ),
             );
           },
         );
       },
     );
+  }
+}
+
+class GlobalNavigationObserver extends NavigatorObserver {
+  static String? _path;
+  static String? get path => _path;
+
+  static final StreamController<void> _routerStream =
+      StreamController<void>.broadcast();
+  static Stream<void> get routerStream => _routerStream.stream;
+
+  @override
+  void didChangeTop(Route<dynamic> topRoute, Route<dynamic>? previousTopRoute) {
+    super.didChangeTop(topRoute, previousTopRoute);
+
+    var node = topRoute.data;
+    var path = node?.path ?? "";
+    while (node?.parent != null) {
+      node = node!.parent;
+      if (node?.path != null && node!.path.isNotEmpty) {
+        path = "${node.path}/$path";
+      }
+    }
+    path = "/${path.replaceAll(RegExp(r"(^/+)|(/+$)"), "")}";
+
+    _path = path;
+    _routerStream.add(null);
   }
 }

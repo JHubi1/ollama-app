@@ -22,13 +22,13 @@ Widget heroTextFlightShuttleBuilder(
     (begin, end) = (end, begin);
   }
 
-  var styleTween = TextStyleTween(begin: begin, end: end);
-  var textString = fromText.data ?? toText.data ?? "";
+  final styleTween = TextStyleTween(begin: begin, end: end);
+  final textString = fromText.data ?? toText.data ?? "";
 
   return AnimatedBuilder(
     animation: animation,
     builder: (context, child) {
-      var currentStyle = styleTween.lerp(animation.value);
+      final currentStyle = styleTween.lerp(animation.value);
       return Material(
         type: MaterialType.transparency,
         child: Center(

@@ -16,19 +16,18 @@ linter:
     - avoid_multiple_declarations_per_line
     - eol_at_end_of_file
     - leading_newlines_in_multiline_strings
+    - no_wildcard_variable_uses
+    - prefer_final_locals
     - unnecessary_breaks
-    - unnecessary_final
     - unnecessary_lambdas
     - unnecessary_parenthesis
 
     # Async, Errors, Null Safety
     - avoid_catching_errors
-    - avoid_null_checks_in_equality_operators
     - avoid_void_async
     - cancel_subscriptions
     - cast_nullable_to_non_nullable
     - unnecessary_await_in_return
-    - use_if_null_to_convert_nulls_to_bools
     - use_to_and_as_if_applicable
 
     # Usage Patterns

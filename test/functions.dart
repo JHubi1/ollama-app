@@ -1,8 +1,8 @@
 import 'dart:math';
 
 String random(int length) {
-  var rand = Random();
-  var codeUnits = List.generate(length, (index) {
+  final rand = Random();
+  final codeUnits = List.generate(length, (index) {
     return rand.nextInt(33) + 89;
   });
 

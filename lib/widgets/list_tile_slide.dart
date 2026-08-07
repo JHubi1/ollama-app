@@ -62,7 +62,7 @@ class ListTileSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var content = Column(
+    final content = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,9 +87,9 @@ class ListTileSlide extends StatelessWidget {
       ],
     );
 
-    var theme = Theme.of(context);
-    var switchTheme = SliderTheme.of(context);
-    var effectiveActiveColor =
+    final theme = Theme.of(context);
+    final switchTheme = SliderTheme.of(context);
+    final effectiveActiveColor =
         thumbColor ?? switchTheme.thumbColor ?? theme.colorScheme.secondary;
 
     return MergeSemantics(

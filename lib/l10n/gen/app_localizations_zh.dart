@@ -9,7 +9,12 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => 'Ollama';
+  String appTitle(String env, String title) {
+    return 'Ollama';
+  }
+
+  @override
+  String get learnMore => 'Learn more';
 
   @override
   String get optionNewChat => '新建聊天';
@@ -22,6 +27,20 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get optionNoChatFound => '暂无聊天消息';
+
+  @override
+  String optionNoChatFoundSearch(String query) {
+    return 'No chats found for ‘$query’';
+  }
+
+  @override
+  String get optionSearchChats => 'Search through chats';
+
+  @override
+  String get optionChatDetails => 'Chat details';
+
+  @override
+  String get optionChatDetailsNoChat => 'No chat selected';
 
   @override
   String get tipPrefix => '提示： ';
@@ -54,25 +73,54 @@ class AppLocalizationsZh extends AppLocalizations {
   String get uploadImage => '上传图像';
 
   @override
-  String get notAValidImage => '不是一个有效的图片文件.';
+  String newChatGreeting1(String user) {
+    return 'What’s on your mind, $user?';
+  }
 
   @override
-  String get imageOnlyConversation => '仅图片对话';
+  String newChatGreeting2(String user) {
+    return 'Good to see you, $user.';
+  }
 
   @override
-  String get messageInputPlaceholder => '消息';
+  String newChatGreeting3(String user) {
+    return 'What can I do for you, $user?';
+  }
 
   @override
-  String get tooltipAttachment => '添加附件';
+  String newChatGreeting4(String user) {
+    return 'How can I help you today, $user?';
+  }
+
+  @override
+  String newChatGreeting5(String user) {
+    return 'What would you like to talk about, $user?';
+  }
+
+  @override
+  String get newChatGreetingNameFallback => 'user';
+
+  @override
+  String messageInputPlaceholder(String model) {
+    return '消息';
+  }
+
+  @override
+  String get messageInputPlaceholderModelPlaceholder => 'model';
+
+  @override
+  String get tooltipMessageOptions => 'Message options';
 
   @override
   String get tooltipSend => '发送';
 
   @override
-  String get tooltipSave => '保存';
+  String tooltipLetAIThink(String model) {
+    return '让AI思考';
+  }
 
   @override
-  String get tooltipLetAIThink => '让AI思考';
+  String get tooltipAddHostHeaders => '设置主机请求头';
 
   @override
   String get tooltipReset => '重置当前聊天';
@@ -93,7 +141,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newChatTitle => '未命名的聊天';
 
   @override
-  String get modelDialogAddModel => '添加';
+  String get modelDialogTitle => 'Select a model';
+
+  @override
+  String get modelDialogAdd => 'Add';
+
+  @override
+  String get modelDialogRefresh => 'Refresh';
 
   @override
   String get modelDialogAddPromptTitle => '添加新模型';
@@ -103,50 +157,38 @@ class AppLocalizationsZh extends AppLocalizations {
       '可以是一个普通名称(如：\'llama3\')，也可以是名称加标签(如：\'llama3:70b\')。';
 
   @override
+  String get modelDialogAddCurrently => 'Currently downloading:';
+
+  @override
   String get modelDialogAddPromptAlreadyExists => '模型已存在';
 
   @override
   String get modelDialogAddPromptInvalid => '无效的模型名称';
 
   @override
-  String get modelDialogAddAllowanceTitle => '允许代理服务器';
+  String get modelDialogAddPromptNotFound =>
+      'Couldn’t find your model on the server. Please check the spelling and try again.';
 
   @override
-  String get modelDialogAddAllowanceDescription =>
-      'Ollama 应用程序必须检查输入的模型是否有效。 为此，我们通常向Ollama模型列表发送一个网络请求并检查状态。 由于您正在使用 Web 客户端，我们不能直接做到这一点。 因此，应用将把请求发送到另一个由 JHubi 1 部署的api 上进行检查。\n这是一个一次性请求，只有当您添加一个新模型时才会发送。\n您的IP地址将与请求一起发送，可能会被存储长达10分钟，以防止潜在的有害故障。\n如果您接受，您的选择将在将来被记住；如果不接受，将不会发送任何内容，也不会添加模型。';
+  String get modelDialogAddPromptNetworkError =>
+      'Network error while checking model. Please check your connection and try again.';
 
   @override
-  String get modelDialogAddAllowanceAllow => '允许';
+  String get modelDialogAddPromptCorruptionError =>
+      'The API returned “EOF”; your server was likely restarted while downloading the model previously.';
 
   @override
-  String get modelDialogAddAllowanceDeny => '拒绝';
+  String get modelDialogAddPromptCorruptionErrorSolution =>
+      'Alternatively, you can run the following command on your Linux host directly:\nIf you see a new error, try running the command with “sudo” placed in front of it.';
 
   @override
-  String modelDialogAddAssuranceTitle(String model) {
-    return '添加$model?';
-  }
+  String get modelDialogAddCancelTitle => 'Cancel download?';
 
   @override
-  String modelDialogAddAssuranceDescription(String model) {
-    return '按下“添加”将直接从 Ollama 服务器下载模型“$model”到您的主机。\n这可能需要一些时间，取决于您的互联网连接。该操作不能被取消。\n如果在下载过程中关闭应用，当您再次在模型对话框中输入名称，它将恢复之前的下载。';
-  }
+  String get modelDialogAddCancelConfirm => 'Cancel';
 
   @override
-  String get modelDialogAddAssuranceAdd => '添加';
-
-  @override
-  String get modelDialogAddAssuranceCancel => '取消';
-
-  @override
-  String get modelDialogAddDownloadPercentLoading => '加载进度';
-
-  @override
-  String modelDialogAddDownloadPercent(String percent) {
-    return '已下载 $percent%';
-  }
-
-  @override
-  String get modelDialogAddDownloadFailed => '连接断开，请重试';
+  String get modelDialogAddCancelHide => 'Hide';
 
   @override
   String get modelDialogAddDownloadSuccess => '下载成功';
@@ -186,6 +228,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dialogEditMessageTitle => '编辑消息';
 
   @override
+  String get settingsTitleOverview => 'Overview';
+
+  @override
+  String get settingsDescriptionOverview =>
+      'General settings regarding your host.';
+
+  @override
   String get settingsTitleBehavior => '行为';
 
   @override
@@ -214,9 +263,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsDescriptionAbout => '检查更新并了解更多关于Ollama App的信息。';
-
-  @override
-  String get settingsSavedAutomatically => '设置已自动保存';
 
   @override
   String get settingsExperimentalAlpha => 'alpha';
@@ -252,6 +298,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsHost => '主机地址';
 
   @override
+  String get settingsHostMissing => 'No host set';
+
+  @override
   String get settingsHostValid => '有效主机地址';
 
   @override
@@ -269,21 +318,28 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get tooltipAddHostHeaders => '设置主机请求头';
-
-  @override
-  String get settingsHostHeaderTitle => '设置主机请求头';
-
-  @override
-  String get settingsHostHeaderInvalid => '输入的文本不是有效的标题 JSON 对象';
-
-  @override
   String settingsHostInvalidDetailed(String type) {
     String _temp0 = intl.Intl.selectLogic(type, {
       'url': '您输入的 URL 无效。它不是一个标准的 URL 格式。',
       'other': '您输入的主机地址无效。无法连接。请检查主机地址并再试一次',
     });
     return '$_temp0';
+  }
+
+  @override
+  String get settingsHostHeaderHeaderName => 'Header';
+
+  @override
+  String get settingsHostHeaderHeaderValue => 'Value';
+
+  @override
+  String settingsHostHeaderUnsupported(String header) {
+    return 'The header “$header” may not be supported.';
+  }
+
+  @override
+  String settingsHostHeaderDuplicate(String header) {
+    return 'The header “$header” is already set.';
   }
 
   @override
