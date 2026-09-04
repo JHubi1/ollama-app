@@ -53,6 +53,10 @@ Linux app data is kept at: `/home/[user]/.local/share/ollama`
 
 The most difficult part is setting up the host. To learn more visit the [wiki guide on how to do so](https://github.com/JHubi1/ollama-app/wiki/Getting-Started#setting-up-the-host). After setting up, you normally don't have to enter it again.
 
+#### Using with llmman
+
+[llmman](https://github.com/llmmanorg/llmman) is a local model runner that serves the Ollama API on port 17434, so Ollama App works with it as well. Start it with `llmman serve`, pull a model with `llmman pull gemma4`, and enter `http://localhost:17434` as the host in the app settings.
+
 And you're done! Just start chatting with your local AI and have fun!
 
 > [!TIP]
