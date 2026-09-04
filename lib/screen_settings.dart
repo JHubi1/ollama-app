@@ -367,7 +367,11 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       });
       return;
     }
-    if ((request.statusCode == 200 && request.body == "Ollama is running") ||
+    // llmman (https://github.com/llmmanorg/llmman) serves the Ollama API on
+    // port 17434 and answers the root route with "llmman is running"
+    if ((request.statusCode == 200 &&
+            (request.body == "Ollama is running" ||
+                request.body == "llmman is running")) ||
         (Uri.parse(tmpHost).toString() == fixedHost)) {
       setState(() {
         hostLoading = false;
