@@ -18,6 +18,7 @@ import 'worker/desktop.dart';
 import 'worker/theme.dart';
 import 'worker/update.dart';
 import 'worker/clients.dart';
+import 'worker/secure_storage.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
@@ -64,6 +65,7 @@ SharedPreferences? prefs;
 
 String? model;
 String? host;
+String ollamaApiToken = "";
 
 bool multimodal = false;
 
@@ -138,6 +140,19 @@ class _AppState extends State<App> {
       setState(() {
         prefs = tmp;
       });
+
+      try {
+        final legacyToken = (prefs?.getString("ollamaApiToken") ?? "").trim();
+        if (legacyToken.isNotEmpty) {
+          await writeOllamaApiTokenSecure(legacyToken);
+          prefs?.remove("ollamaApiToken");
+        }
+      } catch (_) {}
+      try {
+        ollamaApiToken = await readOllamaApiTokenSecure();
+      } catch (_) {
+        ollamaApiToken = "";
+      }
 
       try {
         if ((await Permission.bluetoothConnect.isGranted) &&
