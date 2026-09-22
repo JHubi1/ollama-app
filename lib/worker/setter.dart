@@ -129,8 +129,7 @@ void setModel(BuildContext context, Function setState) {
                     Uri.parse("$host/api/generate"),
                     headers: {
                       "Content-Type": "application/json",
-                      ...(jsonDecode(prefs!.getString("hostHeaders") ?? "{}")
-                          as Map)
+                      ...getRequestHeaders()
                     }.cast<String, String>(),
                     body: jsonEncode({
                       "model": model!,
