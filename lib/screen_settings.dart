@@ -8,6 +8,7 @@ import 'worker/haptic.dart';
 import 'worker/update.dart';
 import 'worker/desktop.dart';
 import 'worker/setter.dart';
+import 'worker/clients.dart';
 
 import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
@@ -324,9 +325,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       text: (useHost)
           ? fixedHost
           : (prefs?.getString("host") ?? "http://localhost:11434"));
+  final apiTokenController = TextEditingController(
+      text: prefs?.getString("ollamaApiToken") ?? "");
   bool hostLoading = false;
   bool hostInvalidUrl = false;
   bool hostInvalidHost = false;
+  bool apiTokenVisible = false;
   String normalizeHostInput(String input) {
     var tmpHost = input.trim().removeSuffix("/").trim();
     if (tmpHost.isEmpty) return tmpHost;
@@ -383,10 +387,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       }
       final requestBase =
           http.Request("get", parsedUri.replace(path: "$hostPath/api/tags"))
-        ..headers.addAll(
-          (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-              .cast<String, String>(),
-        )
+        ..headers.addAll(getRequestHeaders())
         ..followRedirects = false;
       request = await http.Response.fromStream(await requestBase.send().timeout(
           Duration(
@@ -449,6 +450,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   void dispose() {
     super.dispose();
     hostInputController.dispose();
+    apiTokenController.dispose();
   }
 
   @override
@@ -637,7 +639,62 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                         fontFamily:
                                                             "monospace"))
                                               ],
-                                            ))))
+                                            )))),
+                         const SizedBox(height: 8),
+                         TextField(
+                             controller: apiTokenController,
+                             keyboardType: TextInputType.visiblePassword,
+                             readOnly: useHost,
+                             autocorrect: false,
+                             enableSuggestions: false,
+                             obscureText: !apiTokenVisible,
+                             onSubmitted: (value) {
+                               selectionHaptic();
+                               prefs?.setString("ollamaApiToken", value.trim());
+                               checkHost();
+                             },
+                             decoration: InputDecoration(
+                                 labelText: "Ollama Cloud API Token",
+                                 hintText: "Paste token from ollama.com",
+                                 border: const OutlineInputBorder(),
+                                 prefixIcon: const Icon(Icons.key_rounded),
+                                 suffixIcon: useHost
+                                     ? const SizedBox.shrink()
+                                     : Row(
+                                         mainAxisSize: MainAxisSize.min,
+                                         children: [
+                                           IconButton(
+                                               enableFeedback: false,
+                                               tooltip: apiTokenVisible
+                                                   ? "Hide token"
+                                                   : "Show token",
+                                               onPressed: () {
+                                                 selectionHaptic();
+                                                 setState(() {
+                                                   apiTokenVisible =
+                                                       !apiTokenVisible;
+                                                 });
+                                               },
+                                               icon: Icon(apiTokenVisible
+                                                   ? Icons.visibility_off_rounded
+                                                   : Icons.visibility_rounded)),
+                                           IconButton(
+                                               enableFeedback: false,
+                                               tooltip:
+                                                   AppLocalizations.of(context)!
+                                                       .tooltipSave,
+                                               onPressed: () {
+                                                 selectionHaptic();
+                                                 prefs?.setString(
+                                                     "ollamaApiToken",
+                                                     apiTokenController.text
+                                                         .trim());
+                                                 checkHost();
+                                               },
+                                               icon: const Icon(
+                                                   Icons.save_rounded)),
+                                         ],
+                                       ))),
                         ]);
                         var column2 =
                             Column(mainAxisSize: MainAxisSize.min, children: [
