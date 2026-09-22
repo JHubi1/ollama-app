@@ -19,7 +19,7 @@ final httpClient = http.Client();
 Map<String, String> getRequestHeaders() {
   final headers = (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
       .cast<String, String>();
-  final apiToken = (prefs?.getString("ollamaApiToken") ?? "").trim();
+  final apiToken = ollamaApiToken.trim();
   final hasAuthorizationHeader =
       headers.keys.any((key) => key.toLowerCase() == "authorization");
   if (apiToken.isNotEmpty && !hasAuthorizationHeader) {

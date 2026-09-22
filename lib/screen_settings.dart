@@ -9,6 +9,7 @@ import 'worker/update.dart';
 import 'worker/desktop.dart';
 import 'worker/setter.dart';
 import 'worker/clients.dart';
+import 'worker/secure_storage.dart';
 
 import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
@@ -325,12 +326,16 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       text: (useHost)
           ? fixedHost
           : (prefs?.getString("host") ?? "http://localhost:11434"));
-  final apiTokenController = TextEditingController(
-      text: prefs?.getString("ollamaApiToken") ?? "");
+  final apiTokenController = TextEditingController(text: "");
   bool hostLoading = false;
   bool hostInvalidUrl = false;
   bool hostInvalidHost = false;
   bool apiTokenVisible = false;
+
+  Future<void> saveApiToken() async {
+    await writeOllamaApiTokenSecure(apiTokenController.text);
+    ollamaApiToken = await readOllamaApiTokenSecure();
+  }
   String normalizeHostInput(String input) {
     var tmpHost = input.trim().removeSuffix("/").trim();
     if (tmpHost.isEmpty) return tmpHost;
@@ -440,6 +445,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
+    readOllamaApiTokenSecure().then((token) {
+      if (!mounted) return;
+      setState(() {
+        apiTokenController.text = token;
+      });
+    });
     if ((Uri.parse(normalizeHostInput(hostInputController.text)).toString() !=
         fixedHost)) {
       checkHost();
@@ -644,13 +655,13 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                          TextField(
                              controller: apiTokenController,
                              keyboardType: TextInputType.visiblePassword,
-                             readOnly: useHost,
+                             readOnly: false,
                              autocorrect: false,
                              enableSuggestions: false,
                              obscureText: !apiTokenVisible,
-                             onSubmitted: (value) {
+                             onSubmitted: (value) async {
                                selectionHaptic();
-                               prefs?.setString("ollamaApiToken", value.trim());
+                               await saveApiToken();
                                checkHost();
                              },
                              decoration: InputDecoration(
@@ -658,9 +669,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                  hintText: "Paste token from ollama.com",
                                  border: const OutlineInputBorder(),
                                  prefixIcon: const Icon(Icons.key_rounded),
-                                 suffixIcon: useHost
-                                     ? const SizedBox.shrink()
-                                     : Row(
+                                 suffixIcon: Row(
                                          mainAxisSize: MainAxisSize.min,
                                          children: [
                                            IconButton(
@@ -683,12 +692,9 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                tooltip:
                                                    AppLocalizations.of(context)!
                                                        .tooltipSave,
-                                               onPressed: () {
+                                               onPressed: () async {
                                                  selectionHaptic();
-                                                 prefs?.setString(
-                                                     "ollamaApiToken",
-                                                     apiTokenController.text
-                                                         .trim());
+                                                 await saveApiToken();
                                                  checkHost();
                                                },
                                                icon: const Icon(
