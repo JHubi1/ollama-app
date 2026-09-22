@@ -8,6 +8,8 @@ import 'worker/haptic.dart';
 import 'worker/update.dart';
 import 'worker/desktop.dart';
 import 'worker/setter.dart';
+import 'worker/clients.dart';
+import 'worker/secure_storage.dart';
 
 import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
@@ -324,18 +326,55 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       text: (useHost)
           ? fixedHost
           : (prefs?.getString("host") ?? "http://localhost:11434"));
+  final apiTokenController = TextEditingController(text: "");
   bool hostLoading = false;
   bool hostInvalidUrl = false;
   bool hostInvalidHost = false;
+  bool apiTokenVisible = false;
+
+  Future<void> saveApiToken() async {
+    await writeOllamaApiTokenSecure(apiTokenController.text);
+    ollamaApiToken = await readOllamaApiTokenSecure();
+  }
+  String normalizeHostInput(String input) {
+    var tmpHost = input.trim().removeSuffix("/").trim();
+    if (tmpHost.isEmpty) return tmpHost;
+    final parsed = Uri.parse(tmpHost);
+    var path = parsed.path.removeSuffix("/");
+    if (path.toLowerCase().endsWith("/api")) {
+      path = path.substring(0, path.length - 4);
+    }
+    if (path == "/") {
+      path = "";
+    }
+    return parsed
+        .replace(path: path, query: null, fragment: null)
+        .toString()
+        .removeSuffix("/");
+  }
+
   void checkHost() async {
     setState(() {
       hostLoading = true;
       hostInvalidUrl = false;
       hostInvalidHost = false;
     });
-    var tmpHost = hostInputController.text.trim().removeSuffix("/").trim();
+    String tmpHost;
+    Uri parsedUri;
+    try {
+      tmpHost = normalizeHostInput(hostInputController.text);
+      parsedUri = Uri.parse(tmpHost);
+    } catch (_) {
+      setState(() {
+        hostInvalidUrl = true;
+        hostLoading = false;
+      });
+      return;
+    }
 
-    if (tmpHost.isEmpty || !Uri.parse(tmpHost).isAbsolute) {
+    if (tmpHost.isEmpty ||
+        !parsedUri.isAbsolute ||
+        !["http", "https"].contains(parsedUri.scheme.toLowerCase())) {
       setState(() {
         hostInvalidUrl = true;
         hostLoading = false;
@@ -347,11 +386,13 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     try {
       // don't use centralized client because of unexplainable inconsistency
       // between the ways of calling a request
-      final requestBase = http.Request("get", Uri.parse(tmpHost))
-        ..headers.addAll(
-          (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-              .cast<String, String>(),
-        )
+      var hostPath = parsedUri.path.removeSuffix("/");
+      if (hostPath == "/") {
+        hostPath = "";
+      }
+      final requestBase =
+          http.Request("get", parsedUri.replace(path: "$hostPath/api/tags"))
+        ..headers.addAll(getRequestHeaders())
         ..followRedirects = false;
       request = await http.Response.fromStream(await requestBase.send().timeout(
           Duration(
@@ -367,8 +408,17 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       });
       return;
     }
-    if ((request.statusCode == 200 && request.body == "Ollama is running") ||
-        (Uri.parse(tmpHost).toString() == fixedHost)) {
+    bool validHost = false;
+    if (request.statusCode == 200) {
+      try {
+        var responseJson = jsonDecode(request.body);
+        responseJson as Map<String, dynamic>;
+        validHost = responseJson.containsKey("models");
+      } catch (_) {}
+    } else if (request.statusCode == 401 || request.statusCode == 403) {
+      validHost = true;
+    }
+    if (validHost || (Uri.parse(tmpHost).toString() == fixedHost)) {
       setState(() {
         hostLoading = false;
         host = tmpHost;
@@ -395,8 +445,13 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    if ((Uri.parse(hostInputController.text.trim().removeSuffix("/").trim())
-            .toString() !=
+    readOllamaApiTokenSecure().then((token) {
+      if (!mounted) return;
+      setState(() {
+        apiTokenController.text = token;
+      });
+    });
+    if ((Uri.parse(normalizeHostInput(hostInputController.text)).toString() !=
         fixedHost)) {
       checkHost();
     }
@@ -406,6 +461,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   void dispose() {
     super.dispose();
     hostInputController.dispose();
+    apiTokenController.dispose();
   }
 
   @override
@@ -454,7 +510,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               decoration: InputDecoration(
                                   labelText: AppLocalizations.of(context)!
                                       .settingsHost,
-                                  hintText: "http://localhost:11434",
+                                  hintText:
+                                      "http://localhost:11434 / https://ollama.com",
                                   prefixIcon: IconButton(
                                       enableFeedback: false,
                                       tooltip: AppLocalizations.of(context)!
@@ -593,7 +650,57 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                         fontFamily:
                                                             "monospace"))
                                               ],
-                                            ))))
+                                            )))),
+                         const SizedBox(height: 8),
+                         TextField(
+                             controller: apiTokenController,
+                             keyboardType: TextInputType.visiblePassword,
+                             readOnly: false,
+                             autocorrect: false,
+                             enableSuggestions: false,
+                             obscureText: !apiTokenVisible,
+                             onSubmitted: (value) async {
+                               selectionHaptic();
+                               await saveApiToken();
+                               checkHost();
+                             },
+                             decoration: InputDecoration(
+                                 labelText: "Ollama Cloud API Token",
+                                 hintText: "Paste token from ollama.com",
+                                 border: const OutlineInputBorder(),
+                                 prefixIcon: const Icon(Icons.key_rounded),
+                                 suffixIcon: Row(
+                                         mainAxisSize: MainAxisSize.min,
+                                         children: [
+                                           IconButton(
+                                               enableFeedback: false,
+                                               tooltip: apiTokenVisible
+                                                   ? "Hide token"
+                                                   : "Show token",
+                                               onPressed: () {
+                                                 selectionHaptic();
+                                                 setState(() {
+                                                   apiTokenVisible =
+                                                       !apiTokenVisible;
+                                                 });
+                                               },
+                                               icon: Icon(apiTokenVisible
+                                                   ? Icons.visibility_off_rounded
+                                                   : Icons.visibility_rounded)),
+                                           IconButton(
+                                               enableFeedback: false,
+                                               tooltip:
+                                                   AppLocalizations.of(context)!
+                                                       .tooltipSave,
+                                               onPressed: () async {
+                                                 selectionHaptic();
+                                                 await saveApiToken();
+                                                 checkHost();
+                                               },
+                                               icon: const Icon(
+                                                   Icons.save_rounded)),
+                                         ],
+                                       ))),
                         ]);
                         var column2 =
                             Column(mainAxisSize: MainAxisSize.min, children: [

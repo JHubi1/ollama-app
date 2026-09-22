@@ -15,8 +15,20 @@ class OllamaHttpOverrides extends HttpOverrides {
 }
 
 final httpClient = http.Client();
+
+Map<String, String> getRequestHeaders() {
+  final headers = (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
+      .cast<String, String>();
+  final apiToken = ollamaApiToken.trim();
+  final hasAuthorizationHeader =
+      headers.keys.any((key) => key.toLowerCase() == "authorization");
+  if (apiToken.isNotEmpty && !hasAuthorizationHeader) {
+    headers["Authorization"] = "Bearer " + apiToken;
+  }
+  return headers;
+}
+
 llama.OllamaClient get ollamaClient => llama.OllamaClient(
-    headers: (jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map)
-        .cast<String, String>(),
+    headers: getRequestHeaders(),
     baseUrl: "$host/api",
     client: httpClient);

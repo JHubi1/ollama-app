@@ -53,6 +53,18 @@ Linux app data is kept at: `/home/[user]/.local/share/ollama`
 
 The most difficult part is setting up the host. To learn more visit the [wiki guide on how to do so](https://github.com/JHubi1/ollama-app/wiki/Getting-Started#setting-up-the-host). After setting up, you normally don't have to enter it again.
 
+#### Ollama Cloud Setup
+
+You can also connect to Ollama Cloud:
+
+1. Set host to `https://ollama.com`
+2. Open settings and enter your token in `Ollama Cloud API Token`
+3. Save the token and host
+
+> [!IMPORTANT]
+> The cloud API token is stored using encrypted platform secure storage (Android Keystore / iOS Keychain / OS credential vaults where supported), not plain app preferences.
+> This keeps the token device-bound so it is not portable as plain text to another unintended device.
+
 And you're done! Just start chatting with your local AI and have fun!
 
 > [!TIP]
