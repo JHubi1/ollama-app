@@ -1443,6 +1443,7 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     case 'fr': return AppLocalizationsFr();
     case 'hy': return AppLocalizationsHy();
     case 'it': return AppLocalizationsIt();
+    case 'pt': return AppLocalizationsPt();
     case 'ru': return AppLocalizationsRu();
     case 'tr': return AppLocalizationsTr();
     case 'zh': return AppLocalizationsZh();
