@@ -1,0 +1,6 @@
+Este é um cliente moderno e fácil de usar para o Ollama.
+
+Inspirado no aplicativo ChatGPT e na simplicidade da página do Ollama, tornamos a interação com a IA o mais simples possível, mesmo sem nenhum conhecimento técnico prévio.
+É fácil de entender e pode ser explicado em questão de segundos.
+
+O aplicativo Ollama também é compatível com entrada multimodal. Isso significa que você pode inserir uma imagem e conversar com ela por meio do chatbot.

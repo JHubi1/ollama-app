@@ -284,6 +284,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsApiTokenVerified => 'API 令牌已保存并通过验证';
 
   @override
+  String get settingsApiToken => 'Ollama Cloud API 令牌';
+
+  @override
+  String get settingsApiTokenHint => '粘贴来自 ollama.com 的令牌';
+
+  @override
+  String get tooltipShowToken => '显示令牌';
+
+  @override
+  String get tooltipHideToken => '隐藏令牌';
+
+  @override
+  String voiceLanguageInstruction(String language) {
+    return '你必须使用以下语言书写：$language！';
+  }
+
+  @override
   String get settingsSystemMessage => '系统信息';
 
   @override

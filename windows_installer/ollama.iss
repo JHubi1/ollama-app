@@ -74,6 +74,12 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
 Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "armenian"; MessagesFile: "compiler:Languages\Armenian.isl"
+Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "french"; MessagesFile: "compiler:Languages\French.isl"
+Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\PortugueseBrazilian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked

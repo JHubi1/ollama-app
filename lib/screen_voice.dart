@@ -163,8 +163,11 @@ class _ScreenVoiceState extends State<ScreenVoice> {
         }
       }
     },
+        // ignore: use_build_context_synchronously
         addToSystem: (prefs!.getBool("voiceLimitLanguage") ?? true)
-            ? "You must write in the following language: ${prefs!.getString("voiceLanguage") ?? "en_US"}!"
+            ? AppLocalizations.of(context)!
+                .voiceLanguageInstruction(
+                    prefs!.getString("voiceLanguage") ?? "en_US")
             : null);
   }
 

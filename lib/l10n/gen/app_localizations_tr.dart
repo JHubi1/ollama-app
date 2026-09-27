@@ -285,6 +285,23 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsApiTokenVerified => 'API token kaydedildi ve doğrulandı';
 
   @override
+  String get settingsApiToken => 'Ollama Cloud API Token';
+
+  @override
+  String get settingsApiTokenHint => 'Token\'ı ollama.com\'dan yapıştır';
+
+  @override
+  String get tooltipShowToken => 'Token\'ı göster';
+
+  @override
+  String get tooltipHideToken => 'Token\'ı gizle';
+
+  @override
+  String voiceLanguageInstruction(String language) {
+    return 'Şu dilde yazmalısınız: $language!';
+  }
+
+  @override
   String get settingsSystemMessage => 'Sistem mesajı';
 
   @override

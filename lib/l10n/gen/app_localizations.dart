@@ -7,8 +7,15 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_fa.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_fr_ca.dart';
+import 'app_localizations_hy.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_pt_br.dart';
+import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
 import 'app_localizations_zh.dart';
 
@@ -100,7 +107,14 @@ abstract class AppLocalizations {
     Locale('fa'),
     Locale('it'),
     Locale('tr'),
-    Locale('zh')
+    Locale('zh'),
+    Locale('hy'),
+    Locale('ru'),
+    Locale('fr'),
+    Locale('fr', 'CA'),
+    Locale('es'),
+    Locale('pt'),
+    Locale('pt', 'BR')
   ];
 
   /// Title of the application
@@ -595,6 +609,35 @@ abstract class AppLocalizations {
   /// **'API token saved and verified'**
   String get settingsApiTokenVerified;
 
+  /// Label of the Ollama Cloud API token input field
+  ///
+  /// In en, this message translates to:
+  /// **'Ollama Cloud API Token'**
+  String get settingsApiToken;
+
+  /// Hint of the Ollama Cloud API token input field
+  ///
+  /// In en, this message translates to:
+  /// **'Paste token from ollama.com'**
+  String get settingsApiTokenHint;
+
+  /// Tooltip displayed for the button that reveals the API token
+  ///
+  /// In en, this message translates to:
+  /// **'Show token'**
+  String get tooltipShowToken;
+
+  /// Tooltip displayed for the button that hides the API token
+  ///
+  /// In en, this message translates to:
+  /// **'Hide token'**
+  String get tooltipHideToken;
+
+  /// System instruction telling the model to answer in the selected voice mode language
+  ///
+  /// In en, this message translates to:
+  /// **'You must write in the following language: {language}!'**
+  String voiceLanguageInstruction(String language);
   /// Text displayed as description for system message input
   ///
   /// In en, this message translates to:
@@ -1013,7 +1056,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['de', 'en', 'fa', 'it', 'tr', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fa', 'fr', 'hy', 'it', 'pt', 'ru', 'tr', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1026,10 +1069,32 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'de': return AppLocalizationsDe();
     case 'en': return AppLocalizationsEn();
+    case 'es': return AppLocalizationsEs();
     case 'fa': return AppLocalizationsFa();
+    case 'fr': return AppLocalizationsFr();
+    case 'hy': return AppLocalizationsHy();
     case 'it': return AppLocalizationsIt();
+    case 'ru': return AppLocalizationsRu();
     case 'tr': return AppLocalizationsTr();
     case 'zh': return AppLocalizationsZh();
+  }
+
+  // Lookup logic when language and country code are specified.
+  switch (locale.languageCode) {
+    case 'fr':
+      {
+        switch (locale.countryCode) {
+          case 'CA': return AppLocalizationsFrCa();
+        }
+        break;
+      }
+    case 'pt':
+      {
+        switch (locale.countryCode) {
+          case 'BR': return AppLocalizationsPtBr();
+        }
+        break;
+      }
   }
 
   throw FlutterError(
