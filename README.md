@@ -9,6 +9,18 @@ A modern and easy-to-use client for Ollama. Have the greatest experience while k
 > This app does not host a Ollama server on device, but rather connects to one using its api endpoint.
 > You don't know what Ollama is? Learn more at [ollama.com](https://ollama.com).
 
+## Download
+
+### Android (this fork)
+
+[![Download APK](https://img.shields.io/badge/Download-ollama--android--v1.2.0.apk-3DDC84?logo=android&logoColor=white)](https://github.com/Lev0n82/ollama-app/releases/download/v1.2.0/ollama-android-v1.2.0.apk)
+
+Direct link: [`ollama-android-v1.2.0.apk`](https://github.com/Lev0n82/ollama-app/releases/download/v1.2.0/ollama-android-v1.2.0.apk) · [All releases & release notes](https://github.com/Lev0n82/ollama-app/releases)
+
+Includes Ollama Cloud support, 13 languages/locales, and full accessibility (WCAG 2.2 / AODA) features — see the [release notes](https://github.com/Lev0n82/ollama-app/releases/tag/v1.2.0).
+
+> Sideload it: allow "install unknown apps" for your browser/file manager when prompted.
+
 ## Getting Started
 
 Ollama App has a pretty simple and intuitive interface to be as open as possible. Everything just works out of the box, you just have to follow the next steps.
