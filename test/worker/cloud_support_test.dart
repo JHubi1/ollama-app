@@ -1,6 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ollama_app/main.dart' as app;
@@ -102,28 +102,29 @@ void main() {
   });
 
   group("classifyChatError", () {
-    DioException dioError(int? statusCode) {
-      final options = RequestOptions(path: "/api/chat");
-      return DioException(
-          requestOptions: options,
-          response: (statusCode == null)
-              ? null
-              : Response(requestOptions: options, statusCode: statusCode));
+    llama.OllamaClientException ollamaError(int? statusCode,
+        {String message = "Unsuccessful response", String body = ""}) {
+      return llama.OllamaClientException(
+          message: message,
+          uri: Uri.parse("https://ollama.com/api/chat"),
+          method: llama.HttpMethod.post,
+          code: statusCode,
+          body: body);
     }
 
     test("maps 401/403 responses to auth", () {
-      expect(classifyChatError(dioError(401)), "auth");
-      expect(classifyChatError(dioError(403)), "auth");
+      expect(classifyChatError(ollamaError(401)), "auth");
+      expect(classifyChatError(ollamaError(403)), "auth");
     });
 
     test("maps 429 responses to ratelimit", () {
-      expect(classifyChatError(dioError(429)), "ratelimit");
+      expect(classifyChatError(ollamaError(429)), "ratelimit");
     });
 
     test("maps other status codes and unknown errors to timeout", () {
-      expect(classifyChatError(dioError(404)), "timeout");
-      expect(classifyChatError(dioError(500)), "timeout");
-      expect(classifyChatError(dioError(null)), "timeout");
+      expect(classifyChatError(ollamaError(404)), "timeout");
+      expect(classifyChatError(ollamaError(500)), "timeout");
+      expect(classifyChatError(ollamaError(null)), "timeout");
       expect(classifyChatError(Exception("connection refused")), "timeout");
     });
 
