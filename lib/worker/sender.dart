@@ -14,8 +14,6 @@ import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:dartx/dartx.dart';
 import 'package:uuid/uuid.dart';
 // ignore: depend_on_referenced_packages
-import 'package:dio/dio.dart' show DioException;
-// ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 // import 'package:scroll_to_index/scroll_to_index.dart';
 
@@ -25,8 +23,8 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 String classifyChatError(Object e) {
   final String errStr = e.toString().toLowerCase();
   int? statusCode;
-  if (e is DioException) {
-    statusCode = e.response?.statusCode;
+  if (e is llama.OllamaClientException) {
+    statusCode = e.code;
   }
   if (statusCode == 401 || statusCode == 403) return "auth";
   if (statusCode == 429) return "ratelimit";
