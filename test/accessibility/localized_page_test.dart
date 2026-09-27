@@ -55,13 +55,19 @@ void main() {
           tester.element(find.byType(AccessibilityBody)))!;
 
       // Expand all four sections: statement, tests, standards, contact.
-      for (final String sectionTitle in <String>[
-        l10n.accessibilityStatementTitle,
-        l10n.accessibilityTestsTitle,
-        l10n.accessibilityAodaTitle,
-        l10n.accessibilityContactTitle,
-      ]) {
-        await tester.tap(find.text(sectionTitle).last);
+      //
+      // Expand by tile index, scrolling each header into view first: once an
+      // earlier section expands, its content pushes the remaining tiles out
+      // of the list's build range, so title-text finders would go empty.
+      final Finder sectionTiles = find.byType(ExpansionTile);
+      expect(sectionTiles, findsNWidgets(4),
+          reason: 'the four expandable sections are missing for locale $tag');
+      for (int index = 0; index < 4; index++) {
+        final Finder tile = find.byType(ExpansionTile).at(index);
+        await tester.scrollUntilVisible(tile, 160,
+            scrollable: find.byType(Scrollable).first);
+        await tester.pumpAndSettle();
+        await tester.tap(tile);
         await tester.pumpAndSettle();
       }
 

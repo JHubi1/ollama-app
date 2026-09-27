@@ -1440,30 +1440,29 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     case 'en': return AppLocalizationsEn();
     case 'es': return AppLocalizationsEs();
     case 'fa': return AppLocalizationsFa();
-    case 'fr': return AppLocalizationsFr();
     case 'hy': return AppLocalizationsHy();
     case 'it': return AppLocalizationsIt();
-    case 'pt': return AppLocalizationsPt();
     case 'ru': return AppLocalizationsRu();
     case 'tr': return AppLocalizationsTr();
     case 'zh': return AppLocalizationsZh();
   }
 
-  // Lookup logic when language and country code are specified.
+  // Lookup logic when language and country code are specified. Language-only
+  // 'fr'/'pt' fall through here and resolve to their base bundles.
   switch (locale.languageCode) {
     case 'fr':
       {
         switch (locale.countryCode) {
           case 'CA': return AppLocalizationsFrCa();
         }
-        break;
+        return AppLocalizationsFr();
       }
     case 'pt':
       {
         switch (locale.countryCode) {
           case 'BR': return AppLocalizationsPtBr();
         }
-        break;
+        return AppLocalizationsPt();
       }
   }
 

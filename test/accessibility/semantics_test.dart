@@ -99,14 +99,21 @@ void main() {
     expect(find.text(l10n.accessibilityFormAssistiveTech), findsOneWidget);
     expect(find.text(l10n.accessibilityFormDescription), findsOneWidget);
 
-    // Both send actions are exposed as buttons with labels.
-    final Finder sendEmailFinder = find.ancestor(
-        of: find.text(l10n.accessibilityFormSendEmail),
-        matching: find.byType(Semantics));
-    expect(sendEmailFinder, findsWidgets);
-    final Semantics sendEmailSemantics =
-        tester.firstWidget<Semantics>(sendEmailFinder);
-    expect(sendEmailSemantics.properties.button, true);
+    // Both send actions are exposed as buttons with labels (matched by
+    // predicate: the ancestor chain contains several unlabeled Semantics
+    // wrappers around a FilledButton.icon).
+    for (final String sendLabel in <String>[
+      l10n.accessibilityFormSendEmail,
+      l10n.accessibilityFormSendGithub,
+    ]) {
+      final Finder sendFinder = find.byWidgetPredicate(
+          (Widget widget) =>
+              widget is Semantics &&
+              widget.properties.button == true &&
+              widget.properties.label == sendLabel);
+      expect(sendFinder, findsOneWidget,
+          reason: 'send action "$sendLabel" is not an accessible button');
+    }
   });
 
   testWidgets('semantics: welcome FAB tooltip and image labels',
@@ -125,18 +132,27 @@ void main() {
     expect(fab.tooltip, l10n.tooltipWelcomeNext);
 
     // Each onboarding image carries its description for screen readers.
-    for (final String label in <String>[
+    // The PageView builds its pages lazily, so fling through them one at a
+    // time and assert each label while its page is in the tree.
+    final List<String> pageLabels = <String>[
       l10n.accessibilityWelcomePage1,
       l10n.accessibilityWelcomePage2,
       l10n.accessibilityWelcomePage3,
-    ]) {
+    ];
+    for (int index = 0; index < pageLabels.length; index++) {
+      if (index > 0) {
+        await tester.fling(find.byType(PageView), const Offset(-400, 0), 1000);
+        await tester.pumpAndSettle();
+      }
+      final String label = pageLabels[index];
       final Finder imageSemanticsFinder = find.byWidgetPredicate(
           (Widget widget) =>
               widget is Semantics &&
               widget.properties.label == label &&
               widget.properties.image == true);
       expect(imageSemanticsFinder, findsOneWidget,
-          reason: 'welcome image description "$label" missing');
+          reason: 'welcome image description "$label" missing on page '
+              '${index + 1}');
     }
 
     // The page dots are decorative and excluded from the semantics tree.

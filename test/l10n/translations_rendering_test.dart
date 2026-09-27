@@ -181,6 +181,14 @@ void _expectVisible(Rect rect) {
 
 /// Pumps the probe for [locale] on a constrained 360x640 surface.
 Future<void> _pumpProbe(WidgetTester tester, Locale locale) async {
+  // Constrain the test surface itself so visibility rects live in the
+  // probe's own coordinate space (an RTL locale would otherwise shift the
+  // home widget to the right side of the default 800x600 test window and
+  // break the absolute off-screen checks).
+  await tester.binding.setSurfaceSize(_probeSurface);
+  addTearDown(() async {
+    await tester.binding.setSurfaceSize(null);
+  });
   await tester.pumpWidget(
     SizedBox(
       width: _probeSurface.width,
@@ -305,6 +313,10 @@ void main() {
   //    directly and verify the French-Canada bundle renders too.
   testWidgets('l10n rendering: fr-CA bundle renders via Localizations',
       (WidgetTester tester) async {
+    await tester.binding.setSurfaceSize(_probeSurface);
+    addTearDown(() async {
+      await tester.binding.setSurfaceSize(null);
+    });
     await tester.pumpWidget(
       SizedBox(
         width: _probeSurface.width,
