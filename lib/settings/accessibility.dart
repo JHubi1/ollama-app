@@ -165,9 +165,11 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
   }
 
   ExpansionTile _expansionTile(
-      {required String title, required String subtitle,
+      {required Key key,
+      required String title, required String subtitle,
       required List<Widget> children}) {
     return ExpansionTile(
+        key: key,
         collapsedBackgroundColor: Colors.transparent,
         backgroundColor: Colors.transparent,
         childrenPadding:
@@ -221,6 +223,7 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
                       const TextStyle(fontSize: 16))
                   .copyWith(color: Theme.of(context).colorScheme.primary))),
       _expansionTile(
+          key: const Key('a11y-section-statement'),
           title: l10n.accessibilityStatementTitle,
           subtitle: l10n.accessibilitySectionStatementSummary,
           children: [
@@ -233,6 +236,7 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
             _paragraph(context, l10n.accessibilityKnownIssues)
           ]),
       _expansionTile(
+          key: const Key('a11y-section-tests'),
           title: l10n.accessibilityTestsTitle,
           subtitle: l10n.accessibilitySectionTestsSummary,
           children: [
@@ -250,6 +254,7 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
                     style: TextStyle(color: accessibleMuted(context))))
           ]),
       _expansionTile(
+          key: const Key('a11y-section-standards'),
           title: l10n.accessibilityAodaTitle,
           subtitle: l10n.accessibilitySectionStandardsSummary,
           children: [
@@ -270,6 +275,7 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
             _paragraph(context, l10n.accessibilityStandardsUsText)
           ]),
       _expansionTile(
+          key: const Key('a11y-section-contact'),
           title: l10n.accessibilityContactTitle,
           subtitle: l10n.accessibilitySectionContactSummary,
           children: [
