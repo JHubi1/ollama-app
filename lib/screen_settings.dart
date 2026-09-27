@@ -331,6 +331,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   bool hostInvalidUrl = false;
   bool hostInvalidHost = false;
   bool apiTokenVisible = false;
+  bool apiTokenInvalid = false;
 
   Future<void> saveApiToken() async {
     await writeOllamaApiTokenSecure(apiTokenController.text);
@@ -353,11 +354,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
         .removeSuffix("/");
   }
 
-  void checkHost() async {
+  void checkHost({bool validateToken = false}) async {
     setState(() {
       hostLoading = true;
       hostInvalidUrl = false;
       hostInvalidHost = false;
+      apiTokenInvalid = false;
     });
     String tmpHost;
     Uri parsedUri;
@@ -409,6 +411,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       return;
     }
     bool validHost = false;
+    bool serverAuthRejected = false;
     if (request.statusCode == 200) {
       try {
         var responseJson = jsonDecode(request.body);
@@ -416,7 +419,25 @@ class _ScreenSettingsState extends State<ScreenSettings> {
         validHost = responseJson.containsKey("models");
       } catch (_) {}
     } else if (request.statusCode == 401 || request.statusCode == 403) {
+      // The host is reachable but wants authentication (e.g. Ollama Cloud
+      // without a token, or a rejected token).
       validHost = true;
+      serverAuthRejected = true;
+    }
+    if (serverAuthRejected) {
+      // An explicit Authorization header in hostHeaders overrides the token,
+      // so a rejection is only about the token when none is configured.
+      final headersMap =
+          jsonDecode(prefs!.getString("hostHeaders") ?? "{}") as Map;
+      final hasAuthHeader = headersMap.keys
+          .any((key) => key.toString().toLowerCase() == "authorization");
+      setState(() {
+        apiTokenInvalid = ollamaApiToken.trim().isNotEmpty && !hasAuthHeader;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              AppLocalizations.of(context)!.settingsHostInvalidDetailed("auth")),
+          showCloseIcon: true));
     }
     if (validHost || (Uri.parse(tmpHost).toString() == fixedHost)) {
       setState(() {
@@ -428,6 +449,15 @@ class _ScreenSettingsState extends State<ScreenSettings> {
         }
       });
       prefs?.setString("host", host!);
+      if (validateToken &&
+          ollamaApiToken.trim().isNotEmpty &&
+          request.statusCode == 200 &&
+          tmpHost.toLowerCase().contains("ollama.com")) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text(AppLocalizations.of(context)!.settingsApiTokenVerified),
+            showCloseIcon: true));
+      }
     } else {
       setState(() {
         hostInvalidHost = true;
@@ -662,12 +692,41 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                              onSubmitted: (value) async {
                                selectionHaptic();
                                await saveApiToken();
-                               checkHost();
+                               checkHost(validateToken: true);
                              },
                              decoration: InputDecoration(
                                  labelText: "Ollama Cloud API Token",
                                  hintText: "Paste token from ollama.com",
                                  border: const OutlineInputBorder(),
+                                 error: apiTokenInvalid
+                                     ? InkWell(
+                                         onTap: () {
+                                           selectionHaptic();
+                                           ScaffoldMessenger.of(context)
+                                               .showSnackBar(SnackBar(
+                                                   content: Text(AppLocalizations
+                                                           .of(context)!
+                                                       .settingsApiTokenInvalidDetailed),
+                                                   showCloseIcon: true));
+                                         },
+                                         splashFactory: NoSplash.splashFactory,
+                                         highlightColor: Colors.transparent,
+                                         hoverColor: Colors.transparent,
+                                         child: Row(children: [
+                                           Icon(Icons.error_rounded,
+                                               color: Theme.of(context)
+                                                   .colorScheme
+                                                   .error),
+                                           const SizedBox(width: 8),
+                                           Text(
+                                               AppLocalizations.of(context)!
+                                                   .settingsApiTokenInvalid,
+                                               style: TextStyle(
+                                                   color: Theme.of(context)
+                                                       .colorScheme
+                                                       .error))
+                                         ]))
+                                     : null,
                                  prefixIcon: const Icon(Icons.key_rounded),
                                  suffixIcon: Row(
                                          mainAxisSize: MainAxisSize.min,
@@ -695,7 +754,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                onPressed: () async {
                                                  selectionHaptic();
                                                  await saveApiToken();
-                                                 checkHost();
+                                                 checkHost(validateToken: true);
                                                },
                                                icon: const Icon(
                                                    Icons.save_rounded)),

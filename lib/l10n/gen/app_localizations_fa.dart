@@ -246,6 +246,7 @@ class AppLocalizationsFa extends AppLocalizations {
       {
         'url': 'Invalid URL',
         'host': 'Invalid Host',
+        'auth': 'احراز هویت ناموفق بود',
         'timeout': 'Request Failed. Server issues',
         'ratelimit': 'Too many requests',
         'other': 'Request Failed',
@@ -265,12 +266,23 @@ class AppLocalizationsFa extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       type,
       {
-        'url': 'The URL you entered is invalid. It isn\'t an a standardized URL format.',
+        'url': 'نشانی اینترنتی واردشده نامعتبر است. از یک نشانی کامل که با http:// یا https:// شروع می‌شود استفاده کنید — برای مثال http://localhost:11434 برای سرور محلی Ollama، یا https://ollama.com برای Ollama Cloud. در انتها اسلش یا مسیر api/ اضافه نکنید.',
+        'host': 'The host you entered is invalid. It cannot be reached. Please check the host and try again.',
+        'auth': 'سرور درخواست را رد کرد (401/403). اگر به Ollama Cloud (https://ollama.com) متصل می‌شوید، کلید API خود را در فیلد توکن زیر وارد کنید — می‌توانید آن را در https://ollama.com/keys بسازید یا کپی کنید — و ذخیره کنید. اگر از سرور شخصی استفاده می‌کنید، هدر Authorization پیکربندی‌شده برای میزبان را بررسی کنید.',
         'other': 'The host you entered is invalid. It cannot be reached. Please check the host and try again.',
       },
     );
     return '$_temp0';
   }
+
+  @override
+  String get settingsApiTokenInvalid => 'توکن API رد شد';
+
+  @override
+  String get settingsApiTokenInvalidDetailed => 'توکن API توسط سرور رد شد (401/403). بررسی کنید که دقیقاً مطابق نمایش‌داده‌شده در https://ollama.com/keys کپی شده باشد — کلید جدیدی نیز می‌توان در همان صفحه ساخت — و دوباره ذخیره کنید. توکن باید در حالی که میزبان https://ollama.com است تنظیم شود.';
+
+  @override
+  String get settingsApiTokenVerified => 'توکن API ذخیره و تأیید شد';
 
   @override
   String get settingsSystemMessage => 'System message';

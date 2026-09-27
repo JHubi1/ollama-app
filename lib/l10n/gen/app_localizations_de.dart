@@ -246,6 +246,7 @@ class AppLocalizationsDe extends AppLocalizations {
       {
         'url': 'Ungültige URL',
         'host': 'Ungültiger Host',
+        'auth': 'Authentifizierung fehlgeschlagen',
         'timeout': 'Request Fehlgeschlagen. Server Fehler',
         'ratelimit': 'Zu viele Anfragen',
         'other': 'Request Fehlgeschlagen',
@@ -265,12 +266,23 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       type,
       {
-        'url': 'Die eingegebene URL ist ungültig. Es handelt sich nicht um ein standardisiertes URL-Format.',
+        'url': 'Die eingegebene URL ist ungültig. Verwende eine vollständige URL beginnend mit http:// oder https:// — zum Beispiel http://localhost:11434 für einen lokalen Ollama-Server oder https://ollama.com für Ollama Cloud. Kein Schrägstrich am Ende und kein /api-Pfad.',
+        'host': 'Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.',
+        'auth': 'Der Server hat die Anfrage abgelehnt (401/403). Wenn du dich mit Ollama Cloud (https://ollama.com) verbindest, gib deinen API-Schlüssel im Token-Feld unten ein — du kannst ihn unter https://ollama.com/keys erstellen oder kopieren — und speichere ihn. Bei einem selbst gehosteten Server prüfe den für den Host konfigurierten Authorization-Header.',
         'other': 'Der eingegebene Host ist ungültig. Er kann nicht erreicht werden. Bitte überprüfe den Host und versuche es erneut.',
       },
     );
     return '$_temp0';
   }
+
+  @override
+  String get settingsApiTokenInvalid => 'API-Token abgelehnt';
+
+  @override
+  String get settingsApiTokenInvalidDetailed => 'Der API-Token wurde vom Server abgelehnt (401/403). Prüfe, ob er genau wie unter https://ollama.com/keys angezeigt kopiert wurde — dort kann auch ein neuer Schlüssel erstellt werden — und speichere ihn erneut. Der Token muss gesetzt sein, während der Host https://ollama.com ist.';
+
+  @override
+  String get settingsApiTokenVerified => 'API-Token gespeichert und verifiziert';
 
   @override
   String get settingsSystemMessage => 'Systemnachricht';

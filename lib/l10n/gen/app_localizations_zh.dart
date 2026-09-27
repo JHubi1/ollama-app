@@ -246,6 +246,7 @@ class AppLocalizationsZh extends AppLocalizations {
       {
         'url': '无效的URL',
         'host': '无效的主机地址',
+        'auth': '身份验证失败',
         'timeout': '请求失败。服务器问题',
         'other': '请求失败',
       },
@@ -264,12 +265,23 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       type,
       {
-        'url': '您输入的 URL 无效。它不是一个标准的 URL 格式。',
+        'url': '您输入的 URL 无效。请使用以 http:// 或 https:// 开头的完整 URL——例如本地 Ollama 服务器用 http://localhost:11434，Ollama Cloud 用 https://ollama.com。末尾不要加斜杠，也不要加 /api 路径。',
+        'host': '您输入的主机地址无效。无法连接。请检查主机地址并再试一次',
+        'auth': '服务器拒绝了请求（401/403）。如果您连接的是 Ollama Cloud（https://ollama.com），请在下方的令牌字段中输入您的 API 密钥——可在 https://ollama.com/keys 创建或复制——然后保存。如果您使用自托管服务器，请检查为主机配置的 Authorization 标头。',
         'other': '您输入的主机地址无效。无法连接。请检查主机地址并再试一次',
       },
     );
     return '$_temp0';
   }
+
+  @override
+  String get settingsApiTokenInvalid => 'API 令牌被拒绝';
+
+  @override
+  String get settingsApiTokenInvalidDetailed => '服务器拒绝了 API 令牌（401/403）。请检查是否按照 https://ollama.com/keys 页面显示的内容完整复制——也可以在该页面创建新密钥——然后重新保存。令牌需在主机为 https://ollama.com 时设置。';
+
+  @override
+  String get settingsApiTokenVerified => 'API 令牌已保存并通过验证';
 
   @override
   String get settingsSystemMessage => '系统信息';

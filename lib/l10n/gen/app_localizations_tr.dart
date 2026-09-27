@@ -246,6 +246,7 @@ class AppLocalizationsTr extends AppLocalizations {
       {
         'url': 'Geçersiz URL',
         'host': 'Geçersiz Ana Bilgisayar',
+        'auth': 'Kimlik doğrulama başarısız',
         'timeout': 'İstek Başarısız. Sunucu sorunları',
         'ratelimit': 'Çok fazla istek',
         'other': 'İstek Başarısız',
@@ -265,12 +266,23 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       type,
       {
-        'url': 'Girdiğiniz URL geçersiz. Standart bir URL formatında değil.',
+        'url': 'Girdiğiniz URL geçersiz. http:// veya https:// ile başlayan tam bir URL kullanın — örneğin yerel bir Ollama sunucusu için http://localhost:11434, Ollama Cloud için https://ollama.com. Sonda eğik çizgi veya /api yolu eklemeyin.',
+        'host': 'Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.',
+        'auth': 'Sunucu isteği reddetti (401/403). Ollama Cloud\'a (https://ollama.com) bağlanıyorsanız, API anahtarınızı aşağıdaki token alanına girin — https://ollama.com/keys sayfasından oluşturabilir veya kopyalayabilirsiniz — ve kaydedin. Kendi sunucunuzu kullanıyorsanız, ana bilgisayar için yapılandırılmış Authorization başlığını kontrol edin.',
         'other': 'Girdiğiniz ana bilgisayar geçersiz. Ulaşılamıyor. Lütfen ana bilgisayarı kontrol edin ve tekrar deneyin.',
       },
     );
     return '$_temp0';
   }
+
+  @override
+  String get settingsApiTokenInvalid => 'API token reddedildi';
+
+  @override
+  String get settingsApiTokenInvalidDetailed => 'API token sunucu tarafından reddedildi (401/403). https://ollama.com/keys sayfasında gösterildiği gibi tam olarak kopyalandığını kontrol edin — yeni bir anahtar o sayfadan oluşturulabilir — ve tekrar kaydedin. Token, ana bilgisayar https://ollama.com iken ayarlanmış olmalıdır.';
+
+  @override
+  String get settingsApiTokenVerified => 'API token kaydedildi ve doğrulandı';
 
   @override
   String get settingsSystemMessage => 'Sistem mesajı';
