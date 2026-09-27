@@ -440,6 +440,34 @@
         "description": "Text displayed when the API token was accepted by the server",
         "context": "Visible in the settings view"
     },
+    "settingsApiToken": "Ollama Cloud API Token",
+    "@settingsApiToken": {
+        "description": "Label of the Ollama Cloud API token input field",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiTokenHint": "Paste token from ollama.com",
+    "@settingsApiTokenHint": {
+        "description": "Hint of the Ollama Cloud API token input field",
+        "context": "Visible in the settings view"
+    },
+    "tooltipShowToken": "Show token",
+    "@tooltipShowToken": {
+        "description": "Tooltip displayed for the button that reveals the API token"
+    },
+    "tooltipHideToken": "Hide token",
+    "@tooltipHideToken": {
+        "description": "Tooltip displayed for the button that hides the API token"
+    },
+    "voiceLanguageInstruction": "You must write in the following language: {language}!",
+    "@voiceLanguageInstruction": {
+        "description": "System instruction telling the model to answer in the selected voice mode language",
+        "placeholders": {
+            "language": {
+                "type": "String",
+                "description": "The voice mode language identifier, e.g. en_US"
+            }
+        }
+    },
     "settingsSystemMessage": "System message",
     "@settingsSystemMessage": {
         "description": "Text displayed as description for system message input",
