@@ -207,8 +207,9 @@ void setModel(BuildContext context, Function setState) {
                                                       1)
                                               ? Text(
                                                   ":${modelsReal[index].split(":")[1]}",
-                                                  style: const TextStyle(
-                                                      color: Colors.grey))
+                                                  style: TextStyle(
+                                                      color: accessibleMuted(
+                                                          context)))
                                               : const SizedBox.shrink()
                                         ]),
                                     selected: usedIndex == index,
@@ -825,7 +826,13 @@ Future<String> prompt(BuildContext context,
                             ? Text(description)
                             : const SizedBox.shrink(),
                         const SizedBox(height: 8),
-                        TextField(
+                        Semantics(
+                            label: (title != "" && description != "")
+                                ? "$title. $description"
+                                : (title != "")
+                                    ? title
+                                    : description,
+                            child: TextField(
                             controller: controller,
                             autofocus: true,
                             keyboardType: keyboard,
@@ -885,7 +892,7 @@ Future<String> prompt(BuildContext context,
                                         },
                                         icon: const Icon(
                                             Icons.auto_awesome_rounded))
-                                    : prefixIcon)),
+                                    : prefixIcon))),
                         SizedBox(
                             height: 3,
                             child: (loading)
