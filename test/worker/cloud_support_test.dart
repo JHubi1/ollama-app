@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ollama_dart/ollama_dart.dart' as llama;
+// ignore: implementation_imports, depend_on_referenced_packages
+import 'package:ollama_dart/src/generated/client.dart' show HttpMethod;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ollama_app/main.dart' as app;
@@ -107,7 +109,7 @@ void main() {
       return llama.OllamaClientException(
           message: message,
           uri: Uri.parse("https://ollama.com/api/chat"),
-          method: llama.HttpMethod.post,
+          method: HttpMethod.post,
           code: statusCode,
           body: body);
     }
