@@ -49,6 +49,11 @@ jobs:
     if: ${{ github.event.inputs.buildAndroid == 'true' }}
     runs-on: ubuntu-latest
     needs: analyze
+    env:
+      # When the keystore secrets are not configured on the fork, the release
+      # APK is signed with the debug keystore via the fallback in
+      # android/app/build.gradle.kts (fine for personal installs).
+      KEYSTORE_CONFIGURED: ${{ secrets.ANDROID_KEYSTORE != '' && secrets.ANDROID_KEYSTORE_PASSPHRASE != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2.18.0
@@ -61,6 +66,7 @@ jobs:
           distribution: "adopt"
           java-version: "17"
       - name: Copy keystore file
+        if: ${{ env.KEYSTORE_CONFIGURED == 'true' }}
         run: |
           echo $'storePassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}\nkeyPassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}\nkeyAlias=upload\nstoreFile=upload-keystore.jks\n' > ./android/key.properties
           echo "${{ secrets.ANDROID_KEYSTORE }}" > ./android/app/upload-keystore.jks.asc

@@ -1,9 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ollama_app/main.dart' as app;
 import 'package:ollama_app/worker/clients.dart';
+import 'package:ollama_app/worker/sender.dart';
 import 'package:ollama_app/worker/secure_storage.dart';
 
 void main() {
@@ -96,6 +98,42 @@ void main() {
       final token = await readOllamaApiTokenSecure();
 
       expect(token, "");
+    });
+  });
+
+  group("classifyChatError", () {
+    DioException dioError(int? statusCode) {
+      final options = RequestOptions(path: "/api/chat");
+      return DioException(
+          requestOptions: options,
+          response: (statusCode == null)
+              ? null
+              : Response(requestOptions: options, statusCode: statusCode));
+    }
+
+    test("maps 401/403 responses to auth", () {
+      expect(classifyChatError(dioError(401)), "auth");
+      expect(classifyChatError(dioError(403)), "auth");
+    });
+
+    test("maps 429 responses to ratelimit", () {
+      expect(classifyChatError(dioError(429)), "ratelimit");
+    });
+
+    test("maps other status codes and unknown errors to timeout", () {
+      expect(classifyChatError(dioError(404)), "timeout");
+      expect(classifyChatError(dioError(500)), "timeout");
+      expect(classifyChatError(dioError(null)), "timeout");
+      expect(classifyChatError(Exception("connection refused")), "timeout");
+    });
+
+    test("detects auth errors from error text when no typed response", () {
+      expect(
+          classifyChatError(
+              Exception("DioException: invalid status code of 401")),
+          "auth");
+      expect(classifyChatError(Exception("Unauthorized")), "auth");
+      expect(classifyChatError(Exception("Invalid API Key provided")), "auth");
     });
   });
 }
