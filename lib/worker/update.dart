@@ -19,6 +19,8 @@ import 'package:version/version.dart';
 
 const repoUrl = "https://github.com/JHubi1/ollama-app";
 
+const String accessibilityRepoUrl = "https://github.com/Lev0n82/ollama-app";
+
 bool updateChecked = false;
 bool updateLoading = false;
 String updateStatus = "ok";
