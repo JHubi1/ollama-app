@@ -143,8 +143,9 @@ class L10nProbe extends StatelessWidget {
 }
 
 /// Concrete bundle classes that are safe to import statically (the `pt`,
-/// `pt_br` and `fr_ca` gen files are intentionally absent here; `fr_CA` and
-/// `pt_BR` are asserted via `localeName` instead).
+/// `pt_br` and `fr_ca` gen files are intentionally absent here; the
+/// country-variant locales `fr-CA` and `pt-BR` are asserted via `localeName`
+/// instead).
 const Map<String, Type> _concreteBundleTypes = <String, Type>{
   'en': AppLocalizationsEn,
   'de': AppLocalizationsDe,
@@ -257,15 +258,21 @@ void main() {
 
       final AppLocalizations resolved = _resolvedLocalizations(tester);
 
-      // Concrete bundle type (or localeName for the concurrently-written
-      // pt/pt_BR bundles, which are intentionally not imported here).
-      final Type? expectedType = _concreteBundleTypes[locale.languageCode];
+      // Concrete bundle type for base-language locales (the fr_ca/pt_br gen
+      // files are intentionally not imported; country-variant locales are
+      // asserted via localeName instead).
+      final Type? expectedType = locale.countryCode == null
+          ? _concreteBundleTypes[locale.languageCode]
+          : null;
       if (expectedType != null) {
         expect(resolved.runtimeType, expectedType,
             reason: 'locale $tag resolved to the wrong localization bundle');
       } else {
-        final String expectedLocaleName =
-            locale.countryCode == 'BR' ? 'pt_BR' : locale.languageCode;
+        final String expectedLocaleName = locale.countryCode == 'CA'
+            ? 'fr_CA'
+            : locale.countryCode == 'BR'
+                ? 'pt_BR'
+                : locale.languageCode;
         expect(resolved.localeName, expectedLocaleName,
             reason: 'locale $tag resolved to the wrong localization bundle');
       }
@@ -307,10 +314,9 @@ void main() {
   }
 
   // 2) fr_CA: the bundle exists (AppLocalizationsFrCa extends
-  //    AppLocalizationsFr) but 'fr_CA' is not in supportedLocales, so
-  //    MaterialApp's locale resolution would fall back to plain 'fr'. Use a
-  //    Localizations widget to load the delegate with the fr_CA locale
-  //    directly and verify the French-Canada bundle renders too.
+  //    AppLocalizationsFr). Use a Localizations widget to load the delegate
+  //    with the fr_CA locale directly and verify the French-Canada bundle
+  //    renders too.
   testWidgets('l10n rendering: fr-CA bundle renders via Localizations',
       (WidgetTester tester) async {
     await tester.binding.setSurfaceSize(_probeSurface);

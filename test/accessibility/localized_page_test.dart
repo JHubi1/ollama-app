@@ -56,14 +56,17 @@ void main() {
 
       // Expand all four sections: statement, tests, standards, contact.
       //
-      // Expand by tile index, scrolling each header into view first: once an
-      // earlier section expands, its content pushes the remaining tiles out
-      // of the list's build range, so title-text finders would go empty.
-      final Finder sectionTiles = find.byType(ExpansionTile);
-      expect(sectionTiles, findsNWidgets(4),
-          reason: 'the four expandable sections are missing for locale $tag');
-      for (int index = 0; index < 4; index++) {
-        final Finder tile = find.byType(ExpansionTile).at(index);
+      // The list builds children lazily: once an earlier section expands,
+      // its content pushes the remaining tiles out of the build range, so
+      // scroll each keyed tile back into the tree before tapping it.
+      const List<Key> sectionKeys = <Key>[
+        Key('a11y-section-statement'),
+        Key('a11y-section-tests'),
+        Key('a11y-section-standards'),
+        Key('a11y-section-contact'),
+      ];
+      for (final Key sectionKey in sectionKeys) {
+        final Finder tile = find.byKey(sectionKey);
         await tester.scrollUntilVisible(tile, 160,
             scrollable: find.byType(Scrollable).first);
         await tester.pumpAndSettle();
