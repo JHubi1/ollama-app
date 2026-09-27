@@ -510,4 +510,201 @@ class AppLocalizationsHy extends AppLocalizations {
   String settingsVersion(String version) {
     return 'Ollama App v$version';
   }
+
+  @override
+  String get settingsTitleAccessibility => 'Հասանելիություն';
+
+  @override
+  String get settingsDescriptionAccessibility => 'Հասանելիության հայտարարություն, ստուգման արդյունքներ և խնդիր հաղորդելու եղանակ:';
+
+  @override
+  String get accessibilityStatementTitle => 'Հասանելիության հայտարարություն';
+
+  @override
+  String get accessibilityCommitmentIntro => 'Ollama-ն պետք է օգտագործելի լինի բոլոր կարողություններով մարդկանց համար՝ մեր աջակցվող ամեն լեզվով: Ձայնային կառավարումը, էկրանի ընթերցողները, ստեղնաշարով նավարկությունը և բարձր կոնտրաստով պատկերումը այս հավելվածն օգտագործելու լիարժեք եղանակներ են, ոչ թե հետագա ավելացումներ:';
+
+  @override
+  String get accessibilityCommitmentDetails => 'Գործնականում դա նշանակում է. ամեն փոխազդեցիկ կառավարիչ ունի անուն, որը հայտարարում է էկրանի ընթերցողը (ներառյալ ձայնային ռեժիմի վիճակը), կոճակները պահպանում են առնվազն 48dp հպման թիրախ, ստեղնաշարի ֆոկուսը հետևում է միջերեսի տեսողական հերթականությանը, կարգավիճակի հաղորդագրությունները հայտարարվում են փոփոխվելիս, և միջերեսը մնում է օգտագործելի մեծ տեքստի չափսերի և և՛ բաց, և՛ մուգ թեմաների դեպքում:';
+
+  @override
+  String get accessibilityConformanceTitle => 'Համապատասխանության կարգավիճակ';
+
+  @override
+  String get accessibilityConformanceStatus => 'Այս հավելվածը նախագծված է համապատասխանելու Վեբ Բովանդակության Հասանելիության Ուղեցույցներին (WCAG) 2.2 մակարդակ AA: Համապատասխանությունը երրորդ կողմի կողմից անկախ վկայագրված չէ. այն հիմնված է մեր սեփական ավտոմատ ստուգումների վրա: Որտեղ հնարավոր է, մենք գերազանցում ենք AA-ն և կիրառում ենք WCAG AAA միջոցներ, որոնք ներկայացված են ստորև:';
+
+  @override
+  String get accessibilityAaaMeasuresTitle => 'AA-ից բարձր (AAA միջոցներ)';
+
+  @override
+  String get accessibilityAaaMeasures => 'Հիմնական տեքստը օգտագործում է 21:1 կոնտրաստ երկու թեմաներում (AAA-ն պահանջում է 7:1), խոնարհված երկրորդային տեքստը՝ 10:1 կամ ավելի լավ, հաջողության և նախազգուշացումների կարգավիճակի գույները հասնում են AAA կոնտրաստի երկու թեմաներում, իսկ սխալի տեքստը մուգ թեմայում հասնում է AAA կոնտրաստի: AAA-ն լրացուցիչ պահանջում է միջոցներ, որոնք անիրագործելի են այս չափի չաթ հավելվածի համար (օրինակ՝ 7:1 կոնտրաստ բացարձակապես ամեն տեքստի վրա և ընթերցանության մակարդակի սահմանափակումներ), ուստի մենք AA-ն ընդունում ենք որպես երաշխիք, իսկ այս AAA միջոցները՝ որպես լրացումներ:';
+
+  @override
+  String get accessibilityAodaTitle => 'Հասանելիություն Օնտարիոյի հաշմանդամություն ունեցող անձանց համար ակտ (AODA)';
+
+  @override
+  String get accessibilityAodaText => 'Օնտարիոյի «Հասանելիություն Օնտարիոյի հաշմանդամություն ունեցող անձանց համար» ակտը (AODA) պահանջում է, որ թվային արտադրանքները հասնեն WCAG 2.0/2.1 մակարդակ AA-ին: Այս հավելվածի WCAG 2.2 մակարդակ AA նպատակը հասնում և գերազանցում է այդ բազային մակարդակին: Հասանելիության վերաբերյալ արձագանքը ողջունվում է այս էջի կապի ձևի միջոցով՝ համապատասխան AODA-ի՝ արձագանքի ուղիները հասանելի դարձնելու պահանջին:';
+
+  @override
+  String get accessibilityStandardsEuropeTitle => 'Եվրոպական չափորոշիչներ (EN 301 549)';
+
+  @override
+  String get accessibilityStandardsEuropeText => 'Եվրոպական Միությունում ներդաշնակեցված EN 301 549 չափորոշիչը սահմանում է Եվրոպական Հասանելիության Ակտի ICT հասանելիության պահանջները, որը հղում է կատարում WCAG 2.1 մակարդակ AA-ին: Այս հավելվածի WCAG 2.2 մակարդակ AA նպատակը ծածկում է այդ պահանջները՝ աջակցելով եվրոպական հասանելիության պարտավորություններին, որոնք ուժի մեջ են մտնում 2025 թ. հունիսի 28-ից:';
+
+  @override
+  String get accessibilityStandardsUsTitle => 'Միացյալ Նահանգների չափորոշիչներ (ADA / Section 508)';
+
+  @override
+  String get accessibilityStandardsUsText => 'Միացյալ Նահանգներում Հաշմանդամություն ունեցող ամերիկացիների ակտը (ADA) ընդհանուր ոչ խտրականության բազային մակարդակն է, իսկ Վերականգնման ակտի Section 508-ը պահանջում է WCAG 2.0 մակարդակ AA դաշնային տեխնոլոգիաների համար (Section 504-ը նման պարտավորություններ է տարածում ֆինանսավորվող ծրագրերի վրա): Այս հավելվածի WCAG 2.2 մակարդակ AA նպատակը հասնում և գերազանցում է այդ բազային մակարդակներին:';
+
+  @override
+  String get accessibilityKnownIssuesTitle => 'Հայտնի սահմանափակումներ';
+
+  @override
+  String get accessibilityKnownIssues => 'Աշխատասեղանի պատուհանի վերնագրի կոճակները (նվազագույնի հասցնել, առավելագույնի հասցնել, փակել) տրամադրվում են օպերացիոն համակարգի ինտեգրման կողմից և հասանելի չեն հավելվածի էկրանի ընթերցողի ծառին: Չաթի գրադարանը պատկերում է սեփական միջերեսի փոքր մասը, որը դեռ կարող է հասանելի չլինել բոլոր լեզուներով: Ձայնային ռեժիմում պատասխանի տեքստը գունաթափվում է էկրանի եզրին մոտ, և չաթի չափազանց երկար տողերը կարող են կրճատվել էլիպսիսով, երբ համակարգային տեքստի չափը էականորեն մեծացվում է:';
+
+  @override
+  String accessibilityLastValidated(String version) {
+    return 'Ավտոմատ ստուգումները վերջին անգամ ստուգվել են Ollama App v$version տարբերակի դեմ:';
+  }
+
+  @override
+  String get accessibilityTestsTitle => 'Ստուգման արդյունքներ';
+
+  @override
+  String get accessibilityTestsIntro => 'Հետևյալ ավտոմատ հասանելիության ստուգումները այս հավելվածի ստուգման հավաքածուի մաս են և գործարկվում են ամեն հանձնառության ժամանակ:';
+
+  @override
+  String get accessibilityTestsCheckColumn => 'Ստուգում';
+
+  @override
+  String get accessibilityTestsStatusColumn => 'Կարգավիճակ';
+
+  @override
+  String get accessibilityTestsPass => 'Հաջողված';
+
+  @override
+  String get accessibilityTestsCiNote => 'Ամբողջական հավաքածուն (ստատիկ վերլուծություն և ավտոմատ ստուգումներ) գործարկվում է ամեն հանձնառության ժամանակ շարունակական ինտեգրման խողովակաշարում:';
+
+  @override
+  String get accessibilityTestContrast => 'Տեքստի կոնտրաստը հասնում է WCAG մակարդակների բաց և մուգ թեմաներում';
+
+  @override
+  String get accessibilityTestLabeledTapTarget => 'Հպելի թիրախները ունեն էկրանի ընթերցողի պիտակներ';
+
+  @override
+  String get accessibilityTestAndroidTapTarget => 'Հպման թիրախները առնվազն 48x48dp են (Android-ի ուղեցույց)';
+
+  @override
+  String get accessibilityTestIosTapTarget => 'Հպման թիրախները առնվազն 44x44dp են (iOS-ի ուղեցույց)';
+
+  @override
+  String get accessibilityTestSemanticsPresent => 'Էկրանի ընթերցողի պիտակներ կան բոլոր սեփական կառավարիչների համար';
+
+  @override
+  String get accessibilityTestTraversalOrder => 'Ստեղնաշարի ֆոկուսի հերթականությունը հետևում է տեսողական հերթականությանը';
+
+  @override
+  String get accessibilityTestLocalesRender => 'Բոլոր միջերեսի լեզուները պատկերվում են առանց սխալների';
+
+  @override
+  String get accessibilityTestFormValidation => 'Ձևի դաշտերը հայտարարում են վավերացման սխալները';
+
+  @override
+  String get accessibilityContactTitle => 'Հաղորդել հասանելիության խնդիր';
+
+  @override
+  String get accessibilityContactIntro => 'Օգտագործեք այս ձևը՝ հասանելիության տեղեկատվություն խնդրելու, լուծում պահանջելու կամ հասանելիության խոչընդոտ հաղորդելու համար: Ձեր հաղորդումը կազմվում է հաղորդագրության մեջ, որը կարող եք ուղարկել էլ. փոստով կամ որպես հանրային խնդիր GitHub-ում:';
+
+  @override
+  String get accessibilityFormName => 'Անուն (ոչ պարտադիր)';
+
+  @override
+  String get accessibilityFormEmail => 'Էլ. փոստ (ոչ պարտադիր)';
+
+  @override
+  String get accessibilityFormAssistiveTech => 'Օգտագործվող օժանդակ տեխնոլոգիա (ոչ պարտադիր)';
+
+  @override
+  String get accessibilityFormDescription => 'Նկարագրեք խնդիրը (պարտադիր)';
+
+  @override
+  String get accessibilityFormDescriptionHint => 'Ի՞նչ էիք փորձում անել, և ի՞նչ խանգարեց ձեզ:';
+
+  @override
+  String get accessibilityFormErrorDescription => 'Ուղարկելուց առաջ նկարագրեք խնդիրը:';
+
+  @override
+  String get accessibilityFormErrorEmail => 'Մուտքագրեք վավեր էլ. փոստի հասցե կամ թողեք դաշտը դատարկ:';
+
+  @override
+  String get accessibilityFormSendEmail => 'Ուղարկել էլ. փոստով';
+
+  @override
+  String get accessibilityFormSendGithub => 'Բացել GitHub խնդիր';
+
+  @override
+  String get accessibilityFormEmailSubject => 'Հասանելիության հաղորդում (Ollama App)';
+
+  @override
+  String get accessibilityFormCopiedFallback => 'Հղումը բացել չհաջողվեց: Հաղորդումը պատճենվեց սեղմատախտակին:';
+
+  @override
+  String get tooltipResetChat => 'Վերակայել ընթացիկ չաթը';
+
+  @override
+  String get tooltipVoiceClose => 'Փակել ձայնային ռեժիմը';
+
+  @override
+  String get tooltipVoiceSettings => 'Բացել ձայնի կարգավորումները';
+
+  @override
+  String get tooltipVoiceScrollToEnd => 'Ոլորել մինչև վերջին տեքստը';
+
+  @override
+  String get tooltipWelcomeNext => 'Հաջորդ էջ';
+
+  @override
+  String get tooltipWelcomeFinish => 'Սկսել օգտագործել Ollama-ն';
+
+  @override
+  String get accessibilityVoiceOrbListening => 'Ձայնային ռեժիմը լսում է: Սեղմեք՝ լսումը դադարեցնելու համար:';
+
+  @override
+  String get accessibilityVoiceOrbSpeaking => 'Պատասխանը ընթերցվում է բարձրաձայն: Սեղմեք՝ դադարեցնելու համար:';
+
+  @override
+  String get accessibilityVoiceOrbThinking => 'AI-ն պատասխան է պատրաստում: Սեղմեք՝ չեղարկելու համար:';
+
+  @override
+  String get accessibilityAppLogo => 'Ollama';
+
+  @override
+  String get accessibilityWelcomePage1 => 'Բարի գալուստ Ollama: Այս ներածությունը ցուցադրում է երեք կարճ նկար:';
+
+  @override
+  String get accessibilityWelcomePage2 => 'Ներածության 2-րդ էջը 3-ից: Նկարը ցուցադրում է, թե ինչպես ընտրել մոդել և սկսել չաթել:';
+
+  @override
+  String get accessibilityWelcomePage3 => 'Ներածության 3-րդ էջը 3-ից: Նկարը ցուցադրում է, թե որտեղ գտնել կարգավորումները և ձայնային ռեժիմը:';
+
+  @override
+  String get accessibilitySummaryConformance => 'Այս հավելվածը նպատակադրում է WCAG 2.2 մակարդակ AA և կիրառում է AAA մակարդակի լրացումներ: Որոշ հնարավորություններ ունեն սահմանափակումներ, որոնք նկարագրված են ամեն բաժնի ներսում:';
+
+  @override
+  String get accessibilitySectionStatementSummary => 'Մեր պարտավորությունը, համապատասխանության կարգավիճակը և AA-ից դուրս կիրառվող միջոցները:';
+
+  @override
+  String get accessibilitySectionTestsSummary => 'Ամեն կառուցման ժամանակ անցնում են 8 ավտոմատ հասանելիության ստուգումներ:';
+
+  @override
+  String get accessibilitySectionStandardsSummary => 'Ինչպես ենք մենք աջակցում AODA-ին, եվրոպական EN 301 549 չափորոշիչին և ԱՄՆ ADA / Section 508-ին:';
+
+  @override
+  String get accessibilitySectionContactSummary => 'Հաղորդեք հասանելիության խնդիր էլ. փոստով կամ GitHub-ում: Մենք պատասխանում ենք բոլոր հաղորդումներին:';
+
+  @override
+  String get accessibilitySupportLevelLimited => 'Սահմանափակ աջակցություն';
+
+  @override
+  String get accessibilitySupportLevelCompliantWithLimitations => 'Համապատասխան՝ սահմանափակումներով';
 }

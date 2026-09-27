@@ -289,7 +289,100 @@ List<_L10nString> _parameterizedStrings(AppLocalizations l) => <_L10nString>[
       _s('settingsVersion(1.2.0)', l.settingsVersion('1.2.0')),
     ];
 
-/// All 155 public members of AppLocalizations, evaluated for [l].
+/// The accessibility-page strings, the screen-reader labels, and the
+/// contact-form strings added with the accessibility work.
+List<_L10nString> _accessibilityStrings(AppLocalizations l) =>
+    <_L10nString>[
+      _s('settingsTitleAccessibility', l.settingsTitleAccessibility),
+      _s('settingsDescriptionAccessibility',
+          l.settingsDescriptionAccessibility),
+      _s('accessibilityStatementTitle', l.accessibilityStatementTitle),
+      _s('accessibilityCommitmentIntro', l.accessibilityCommitmentIntro),
+      _s('accessibilityCommitmentDetails', l.accessibilityCommitmentDetails),
+      _s('accessibilityConformanceTitle', l.accessibilityConformanceTitle),
+      _s('accessibilityConformanceStatus', l.accessibilityConformanceStatus),
+      _s('accessibilityAaaMeasuresTitle', l.accessibilityAaaMeasuresTitle),
+      _s('accessibilityAaaMeasures', l.accessibilityAaaMeasures),
+      _s('accessibilityAodaTitle', l.accessibilityAodaTitle),
+      _s('accessibilityAodaText', l.accessibilityAodaText),
+      _s('accessibilityStandardsEuropeTitle',
+          l.accessibilityStandardsEuropeTitle),
+      _s('accessibilityStandardsEuropeText',
+          l.accessibilityStandardsEuropeText),
+      _s('accessibilityStandardsUsTitle', l.accessibilityStandardsUsTitle),
+      _s('accessibilityStandardsUsText', l.accessibilityStandardsUsText),
+      _s('accessibilityKnownIssuesTitle', l.accessibilityKnownIssuesTitle),
+      _s('accessibilityKnownIssues', l.accessibilityKnownIssues),
+      _s('accessibilityLastValidated(1.2.0)',
+          l.accessibilityLastValidated('1.2.0')),
+      _s('accessibilityTestsTitle', l.accessibilityTestsTitle),
+      _s('accessibilityTestsIntro', l.accessibilityTestsIntro),
+      _s('accessibilityTestsCheckColumn', l.accessibilityTestsCheckColumn),
+      _s('accessibilityTestsStatusColumn', l.accessibilityTestsStatusColumn),
+      _s('accessibilityTestsPass', l.accessibilityTestsPass),
+      _s('accessibilityTestsCiNote', l.accessibilityTestsCiNote),
+      _s('accessibilityTestContrast', l.accessibilityTestContrast),
+      _s('accessibilityTestLabeledTapTarget',
+          l.accessibilityTestLabeledTapTarget),
+      _s('accessibilityTestAndroidTapTarget',
+          l.accessibilityTestAndroidTapTarget),
+      _s('accessibilityTestIosTapTarget', l.accessibilityTestIosTapTarget),
+      _s('accessibilityTestSemanticsPresent',
+          l.accessibilityTestSemanticsPresent),
+      _s('accessibilityTestTraversalOrder',
+          l.accessibilityTestTraversalOrder),
+      _s('accessibilityTestLocalesRender', l.accessibilityTestLocalesRender),
+      _s('accessibilityTestFormValidation',
+          l.accessibilityTestFormValidation),
+      _s('accessibilityContactTitle', l.accessibilityContactTitle),
+      _s('accessibilityContactIntro', l.accessibilityContactIntro),
+      _s('accessibilityFormName', l.accessibilityFormName),
+      _s('accessibilityFormEmail', l.accessibilityFormEmail),
+      _s('accessibilityFormAssistiveTech', l.accessibilityFormAssistiveTech),
+      _s('accessibilityFormDescription', l.accessibilityFormDescription),
+      _s('accessibilityFormDescriptionHint',
+          l.accessibilityFormDescriptionHint),
+      _s('accessibilityFormErrorDescription',
+          l.accessibilityFormErrorDescription),
+      _s('accessibilityFormErrorEmail', l.accessibilityFormErrorEmail),
+      _s('accessibilityFormSendEmail', l.accessibilityFormSendEmail),
+      _s('accessibilityFormSendGithub', l.accessibilityFormSendGithub),
+      _s('accessibilityFormEmailSubject', l.accessibilityFormEmailSubject),
+      _s('accessibilityFormCopiedFallback',
+          l.accessibilityFormCopiedFallback),
+      _s('accessibilitySummaryConformance',
+          l.accessibilitySummaryConformance),
+      _s('accessibilitySectionStatementSummary',
+          l.accessibilitySectionStatementSummary),
+      _s('accessibilitySectionTestsSummary',
+          l.accessibilitySectionTestsSummary),
+      _s('accessibilitySectionStandardsSummary',
+          l.accessibilitySectionStandardsSummary),
+      _s('accessibilitySectionContactSummary',
+          l.accessibilitySectionContactSummary),
+      _s('accessibilitySupportLevelLimited',
+          l.accessibilitySupportLevelLimited),
+      _s('accessibilitySupportLevelCompliantWithLimitations',
+          l.accessibilitySupportLevelCompliantWithLimitations),
+      _s('tooltipResetChat', l.tooltipResetChat),
+      _s('tooltipVoiceClose', l.tooltipVoiceClose),
+      _s('tooltipVoiceSettings', l.tooltipVoiceSettings),
+      _s('tooltipVoiceScrollToEnd', l.tooltipVoiceScrollToEnd),
+      _s('tooltipWelcomeNext', l.tooltipWelcomeNext),
+      _s('tooltipWelcomeFinish', l.tooltipWelcomeFinish),
+      _s('accessibilityVoiceOrbListening',
+          l.accessibilityVoiceOrbListening),
+      _s('accessibilityVoiceOrbSpeaking',
+          l.accessibilityVoiceOrbSpeaking),
+      _s('accessibilityVoiceOrbThinking',
+          l.accessibilityVoiceOrbThinking),
+      _s('accessibilityAppLogo', l.accessibilityAppLogo),
+      _s('accessibilityWelcomePage1', l.accessibilityWelcomePage1),
+      _s('accessibilityWelcomePage2', l.accessibilityWelcomePage2),
+      _s('accessibilityWelcomePage3', l.accessibilityWelcomePage3),
+    ];
+
+/// All 220 public members of AppLocalizations, evaluated for [l].
 List<_L10nString> collectAllStrings(AppLocalizations l) => <_L10nString>[
       ..._chatStrings(l),
       ..._tooltipStrings(l),
@@ -302,6 +395,7 @@ List<_L10nString> collectAllStrings(AppLocalizations l) => <_L10nString>[
       ..._voiceStrings(l),
       ..._exportStrings(l),
       ..._updateStrings(l),
+      ..._accessibilityStrings(l),
       ..._parameterizedStrings(l),
     ];
 
@@ -354,9 +448,9 @@ void main() {
         final l = lookupAppLocalizations(locale);
         final strings = collectAllStrings(l);
 
-        // 155 members; settingsHostInvalid is called with 6 select arguments
-        // and settingsHostInvalidDetailed with 4, hence 163 values.
-        expect(strings.length, 163,
+        // 220 members; settingsHostInvalid is called with 6 select arguments
+        // and settingsHostInvalidDetailed with 4, hence 228 values.
+        expect(strings.length, 228,
             reason: 'member enumeration drifted from the abstract class');
 
         for (final item in strings) {

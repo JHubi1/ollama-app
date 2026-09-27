@@ -510,4 +510,201 @@ class AppLocalizationsPt extends AppLocalizations {
   String settingsVersion(String version) {
     return 'Ollama App v$version';
   }
+
+  @override
+  String get settingsTitleAccessibility => 'Acessibilidade';
+
+  @override
+  String get settingsDescriptionAccessibility => 'Declaração de acessibilidade, resultados dos testes e como comunicar um problema.';
+
+  @override
+  String get accessibilityStatementTitle => 'Declaração de acessibilidade';
+
+  @override
+  String get accessibilityCommitmentIntro => 'O Ollama tem de ser utilizável por pessoas com qualquer tipo de capacidades, em todos os idiomas que disponibilizamos. O controlo por voz, os leitores de ecrã, a navegação por teclado e a renderização em alto contraste são formas de utilização desta aplicação de primeira classe — e não uma reflexão tardia.';
+
+  @override
+  String get accessibilityCommitmentDetails => 'Na prática, isto significa: cada controlo interativo tem um nome que os leitores de ecrã anunciam (incluindo o estado do modo de voz), os botões mantêm um alvo de toque mínimo de 48dp, a focagem do teclado segue a ordem visual da interface, as mensagens de estado são anunciadas quando mudam e a interface continua utilizável em escalas de texto grandes e nos temas claro e escuro.';
+
+  @override
+  String get accessibilityConformanceTitle => 'Estado de conformidade';
+
+  @override
+  String get accessibilityConformanceStatus => 'Esta aplicação está concebida para cumprir as Web Content Accessibility Guidelines (WCAG) 2.2 Level AA. A conformidade não foi certificada de forma independente por terceiros; baseia-se nos nossos próprios testes automatizados. Sempre que é viável, vamos além do AA e aplicamos medidas WCAG AAA, indicadas abaixo.';
+
+  @override
+  String get accessibilityAaaMeasuresTitle => 'Para além do AA (medidas AAA)';
+
+  @override
+  String get accessibilityAaaMeasures => 'O texto principal utiliza um contraste de 21:1 em ambos os temas (o AAA exige 7:1), o texto secundário atenuado utiliza 10:1 ou melhor, as cores de estado de sucesso e de aviso cumprem o contraste AAA em ambos os temas e o texto de erro no tema escuro cumpre o contraste AAA. O AAA exige, além disso, medidas pouco práticas numa aplicação de conversação deste tamanho (por exemplo, um contraste de 7:1 em absolutamente todo o texto e limites de nível de leitura), pelo que visamos o AA como garantia e tratamos estas medidas AAA como melhoramentos.';
+
+  @override
+  String get accessibilityAodaTitle => 'Lei de Acessibilidade para Ontarianos com Deficiências (AODA)';
+
+  @override
+  String get accessibilityAodaText => 'A Accessibility for Ontarians with Disabilities Act (AODA) de Ontário exige que os produtos digitais cumpram o WCAG 2.0/2.1 Level AA. O objetivo WCAG 2.2 Level AA desta aplicação cumpre e ultrapassa esse patamar mínimo. Os comentários sobre acessibilidade são bem-vindos através do formulário de contacto nesta página, em conformidade com a exigência da AODA de tornar os canais de comentários acessíveis.';
+
+  @override
+  String get accessibilityStandardsEuropeTitle => 'Normas europeias (EN 301 549)';
+
+  @override
+  String get accessibilityStandardsEuropeText => 'Na União Europeia, a norma harmonizada EN 301 549 define os requisitos de acessibilidade das TIC do Ato Europeu da Acessibilidade, que referencia o WCAG 2.1 Level AA. O objetivo WCAG 2.2 Level AA desta aplicação cobre esses requisitos, apoiando as obrigações europeias de acessibilidade aplicáveis a partir de 28 de junho de 2025.';
+
+  @override
+  String get accessibilityStandardsUsTitle => 'Normas dos Estados Unidos (ADA / Section 508)';
+
+  @override
+  String get accessibilityStandardsUsText => 'Nos Estados Unidos, a Americans with Disabilities Act (ADA) é o patamar mínimo geral de não discriminação e a Section 508 da Rehabilitation Act exige o WCAG 2.0 Level AA para a tecnologia federal (a Section 504 estende obrigações semelhantes aos programas financiados). O objetivo WCAG 2.2 Level AA desta aplicação cumpre e ultrapassa esses patamares.';
+
+  @override
+  String get accessibilityKnownIssuesTitle => 'Limitações conhecidas';
+
+  @override
+  String get accessibilityKnownIssues => 'Os botões da barra de título da janela de secretária (minimizar, maximizar, fechar) são fornecidos pela integração do sistema operativo e não estão ao alcance da árvore de leitor de ecrã da aplicação. A biblioteca de conversação processa uma pequena parte do seu próprio texto de interface, que pode ainda não estar disponível em todos os idiomas. No modo de voz, o texto da resposta é esbatido junto à margem do ecrã e as linhas de conversa muito longas podem ser truncadas com reticências quando o tamanho do texto do sistema é aumentado significativamente.';
+
+  @override
+  String accessibilityLastValidated(String version) {
+    return 'Verificações automatizadas validadas pela última vez contra o Ollama App v$version.';
+  }
+
+  @override
+  String get accessibilityTestsTitle => 'Resultados dos testes';
+
+  @override
+  String get accessibilityTestsIntro => 'As seguintes verificações de acessibilidade automatizadas fazem parte do conjunto de testes desta aplicação e são executadas em cada commit:';
+
+  @override
+  String get accessibilityTestsCheckColumn => 'Verificação';
+
+  @override
+  String get accessibilityTestsStatusColumn => 'Estado';
+
+  @override
+  String get accessibilityTestsPass => 'Aprovado';
+
+  @override
+  String get accessibilityTestsCiNote => 'O conjunto completo (análise estática e testes automatizados) é executado em cada commit no pipeline de integração contínua.';
+
+  @override
+  String get accessibilityTestContrast => 'O contraste do texto cumpre os níveis WCAG nos temas claro e escuro';
+
+  @override
+  String get accessibilityTestLabeledTapTarget => 'Os alvos tocáveis têm etiquetas para o leitor de ecrã';
+
+  @override
+  String get accessibilityTestAndroidTapTarget => 'As áreas de toque têm, no mínimo, 48x48dp (diretriz Android)';
+
+  @override
+  String get accessibilityTestIosTapTarget => 'As áreas de toque têm, no mínimo, 44x44dp (diretriz iOS)';
+
+  @override
+  String get accessibilityTestSemanticsPresent => 'Existem etiquetas de leitor de ecrã para todos os controlos personalizados';
+
+  @override
+  String get accessibilityTestTraversalOrder => 'A ordem de focagem do teclado segue a ordem visual';
+
+  @override
+  String get accessibilityTestLocalesRender => 'Todos os idiomas da interface são processados sem erros';
+
+  @override
+  String get accessibilityTestFormValidation => 'Os campos dos formulários anunciam erros de validação';
+
+  @override
+  String get accessibilityContactTitle => 'Comunicar um problema de acessibilidade';
+
+  @override
+  String get accessibilityContactIntro => 'Utilize este formulário para pedir informações de acessibilidade, solicitar uma resolução ou comunicar uma barreira de acessibilidade. O seu relatório é convertido numa mensagem que pode enviar por e-mail ou como um problema público no GitHub.';
+
+  @override
+  String get accessibilityFormName => 'Nome (opcional)';
+
+  @override
+  String get accessibilityFormEmail => 'E-mail (opcional)';
+
+  @override
+  String get accessibilityFormAssistiveTech => 'Tecnologia de assistência utilizada (opcional)';
+
+  @override
+  String get accessibilityFormDescription => 'Descreva o problema (obrigatório)';
+
+  @override
+  String get accessibilityFormDescriptionHint => 'O que estava a tentar fazer e o que o impediu?';
+
+  @override
+  String get accessibilityFormErrorDescription => 'Descreva o problema antes de enviar.';
+
+  @override
+  String get accessibilityFormErrorEmail => 'Introduza um endereço de e-mail válido ou deixe o campo vazio.';
+
+  @override
+  String get accessibilityFormSendEmail => 'Enviar por e-mail';
+
+  @override
+  String get accessibilityFormSendGithub => 'Abrir um problema no GitHub';
+
+  @override
+  String get accessibilityFormEmailSubject => 'Relatório de acessibilidade (Ollama App)';
+
+  @override
+  String get accessibilityFormCopiedFallback => 'Não foi possível abrir a ligação. O relatório foi copiado para a área de transferência.';
+
+  @override
+  String get tooltipResetChat => 'Reiniciar a conversa atual';
+
+  @override
+  String get tooltipVoiceClose => 'Fechar o modo de voz';
+
+  @override
+  String get tooltipVoiceSettings => 'Abrir as definições de voz';
+
+  @override
+  String get tooltipVoiceScrollToEnd => 'Deslocar para o texto mais recente';
+
+  @override
+  String get tooltipWelcomeNext => 'Página seguinte';
+
+  @override
+  String get tooltipWelcomeFinish => 'Começar a utilizar o Ollama';
+
+  @override
+  String get accessibilityVoiceOrbListening => 'O modo de voz está a ouvir. Toque para parar de ouvir.';
+
+  @override
+  String get accessibilityVoiceOrbSpeaking => 'A resposta está a ser lida em voz alta. Toque para parar.';
+
+  @override
+  String get accessibilityVoiceOrbThinking => 'A IA está a preparar uma resposta. Toque para cancelar.';
+
+  @override
+  String get accessibilityAppLogo => 'Ollama';
+
+  @override
+  String get accessibilityWelcomePage1 => 'Bem-vindo ao Ollama. Esta apresentação inicial mostra três imagens breves.';
+
+  @override
+  String get accessibilityWelcomePage2 => 'Página de apresentação inicial 2 de 3. A imagem mostra como selecionar um modelo e começar a conversar.';
+
+  @override
+  String get accessibilityWelcomePage3 => 'Página de apresentação inicial 3 de 3. A imagem mostra onde encontrar as definições e o modo de voz.';
+
+  @override
+  String get accessibilitySummaryConformance => 'Esta aplicação tem como objetivo o WCAG 2.2 Level AA e aplica melhorias de nível AAA. Algumas funcionalidades têm limitações, descritas em cada secção.';
+
+  @override
+  String get accessibilitySectionStatementSummary => 'O nosso compromisso, o estado de conformidade e as medidas que aplicamos para além do AA.';
+
+  @override
+  String get accessibilitySectionTestsSummary => '8 verificações de acessibilidade automatizadas são aprovadas em cada compilação.';
+
+  @override
+  String get accessibilitySectionStandardsSummary => 'Como apoiamos a AODA, a norma europeia EN 301 549 e a ADA / Section 508 dos EUA.';
+
+  @override
+  String get accessibilitySectionContactSummary => 'Comunique um problema de acessibilidade por e-mail ou no GitHub. Respondemos a todas as comunicações.';
+
+  @override
+  String get accessibilitySupportLevelLimited => 'Suporte limitado';
+
+  @override
+  String get accessibilitySupportLevelCompliantWithLimitations => 'Conforme com limitações';
 }

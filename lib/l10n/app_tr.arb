@@ -154,5 +154,336 @@
   "settingsGithub": "GitHub",
   "settingsReportIssue": "Sorun Bildir",
   "settingsLicenses": "Lisanslar",
-  "settingsVersion": "Ollama App v{version}"
+  "settingsVersion": "Ollama App v{version}",
+  "settingsTitleAccessibility": "Erişilebilirlik",
+  "@settingsTitleAccessibility": {
+    "description": "Title of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "settingsDescriptionAccessibility": "Erişilebilirlik bildirimi, test sonuçları ve sorun bildirme yolları.",
+  "@settingsDescriptionAccessibility": {
+    "description": "Description of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "accessibilityStatementTitle": "Erişilebilirlik bildirimi",
+  "@accessibilityStatementTitle": {
+    "description": "Title of the accessibility statement section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentIntro": "Ollama, yayınladığımız her dilde, her yetenek düzeyindeki kişi tarafından kullanılabilmelidir. Sesli kontrol, ekran okuyucular, klavye ile gezinme ve yüksek kontrastlı gösterim bu uygulamanın birinci sınıf kullanım yollarıdır — sonradan düşünülmüş eklemeler değil.",
+  "@accessibilityCommitmentIntro": {
+    "description": "Opening commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentDetails": "Uygulamada bu şöyle anlama gelir: her etkileşimli denetimin ekran okuyucuların duyurduğu bir adı vardır (sesli mod durumu dahil), düğmeler en az 48dp dokunma hedefine sahiptir, klavye odağı arayüzün görsel sırasını izler, durum mesajları değiştikçe duyurulur ve arayüz büyük metin ölçeklerinde hem açık hem de koyu temalarda kullanılabilir durumda kalır.",
+  "@accessibilityCommitmentDetails": {
+    "description": "Detailed commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceTitle": "Uyumluluk durumu",
+  "@accessibilityConformanceTitle": {
+    "description": "Title of the conformance status section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceStatus": "Bu uygulama, Web Content Accessibility Guidelines (WCAG) 2.2 Level AA ile uyumlu olacak şekilde tasarlanmıştır. Uyumluluk bağımsız bir üçüncü taraf tarafından sertifikalandırılmamıştır; kendi otomatik testlerimize dayanmaktadır. Uygun olduğu durumlarda AA''nın ötesine geçiyor ve aşağıda listelenen WCAG AAA ölçülerini uyguluyoruz.",
+  "@accessibilityConformanceStatus": {
+    "description": "Conformance status text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasuresTitle": "AA''nın ötesinde (AAA ölçüleri)",
+  "@accessibilityAaaMeasuresTitle": {
+    "description": "Title of the AAA measures section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasures": "Ana metin her iki temada 21:1 kontrast kullanır (AAA 7:1 gerektirir), soluk ikincil metin 10:1 veya daha iyisini kullanır, başarı ve uyarı durum renkleri her iki temada AAA kontrastını karşılar ve koyu temadaki hata metni AAA kontrastını karşılar. AAA ayrıca bu boyutta bir sohbet uygulamasında pratik olmayan ölçüler gerektirir (örneğin tüm metinlerde kesinlikle 7:1 kontrast ve okuma düzeyi sınırları), bu nedenle garanti olarak AA''yi hedefliyor ve bu AAA ölçülerini iyileştirmeler olarak ele alıyoruz.",
+  "@accessibilityAaaMeasures": {
+    "description": "Text describing the applied AAA measures",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaTitle": "Accessibility for Ontarians with Disabilities Act (AODA)",
+  "@accessibilityAodaTitle": {
+    "description": "Title of the AODA section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaText": "Ontario''nın Accessibility for Ontarians with Disabilities Act (AODA) yasası, dijital ürünlerin WCAG 2.0/2.1 Level AA karşılamasını gerektirir. Bu uygulamanın WCAG 2.2 Level AA hedefi bu tabanı karşılar ve aşar. Erişilebilirlik geri bildirimleri, AODA''nın geri bildirim kanallarını erişilebilir kılma gereksinimi doğrultusunda bu sayfadaki iletişim formu aracılığıyla memnuniyetle kabul edilir.",
+  "@accessibilityAodaText": {
+    "description": "Text about AODA compliance",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeTitle": "Avrupa standartları (EN 301 549)",
+  "@accessibilityStandardsEuropeTitle": {
+    "description": "Title of the European standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeText": "Avrupa Birliği''nde uyumlaştırılmış standart EN 301 549, Avrupa Erişilebilirlik Yasası''nın BT erişilebilirliği gereksinimlerini tanımlar; bu yasa WCAG 2.1 Level AA''ya atıfta bulunur. Bu uygulamanın WCAG 2.2 Level AA hedefi bu gereksinimleri kapsar ve 28 Haziran 2025''ten itibaren geçerli olan Avrupa erişilebilirlik yükümlülüklerini destekler.",
+  "@accessibilityStandardsEuropeText": {
+    "description": "Text about the European standards (EN 301 549 / EAA)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsTitle": "Amerika Birleşik Devletleri standartları (ADA / Section 508)",
+  "@accessibilityStandardsUsTitle": {
+    "description": "Title of the United States standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsText": "Amerika Birleşik Devletleri''nde Americans with Disabilities Act (ADA) genel ayrımcılık yasağı tabanıdır ve Rehabilitation Act''ın Section 508 maddesi federal teknoloji için WCAG 2.0 Level AA gerektirir (Section 504 benzer yükümlülükleri desteklenen programlara genişletir). Bu uygulamanın WCAG 2.2 Level AA hedefi bu tabanları karşılar ve aşar.",
+  "@accessibilityStandardsUsText": {
+    "description": "Text about the US standards (ADA / Section 508 / Section 504)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssuesTitle": "Bilinen sınırlamalar",
+  "@accessibilityKnownIssuesTitle": {
+    "description": "Title of the known limitations section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssues": "Masaüstü pencere başlık çubuğu düğmeleri (küçültme, büyütme, kapatma) işletim sistemi entegrasyonu tarafından sağlanır ve uygulamanın ekran okuyucu ağacından erişilemez. Sohbet kitaplığı, kendi arayüz metninin küçük bir bölümünü kendisi oluşturur; bu metin henüz tüm dillerde mevcut olmayabilir. Ses modunda yanıt metni ekranın kenarına yakın bir yerde soluklaşır ve sistem metin boyutu belirgin şekilde artırıldığında çok uzun sohbet satırları üç nokta ile kısaltılabilir.",
+  "@accessibilityKnownIssues": {
+    "description": "Text describing the known accessibility limitations",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityLastValidated": "Otomatik kontroller en son Ollama App v{version} için doğrulandı.",
+  "@accessibilityLastValidated": {
+    "description": "Text stating when the automated checks were last validated",
+    "context": "Visible on the accessibility page",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "description": "Version number of the app"
+      }
+    }
+  },
+  "accessibilityTestsTitle": "Test sonuçları",
+  "@accessibilityTestsTitle": {
+    "description": "Title of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsIntro": "Aşağıdaki otomatik erişilebilirlik kontrolleri bu uygulamanın test paketinin parçasıdır ve her gönderide çalışır:",
+  "@accessibilityTestsIntro": {
+    "description": "Intro text of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCheckColumn": "Kontrol",
+  "@accessibilityTestsCheckColumn": {
+    "description": "Column header for the check name in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsStatusColumn": "Durum",
+  "@accessibilityTestsStatusColumn": {
+    "description": "Column header for the status in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsPass": "Geçti",
+  "@accessibilityTestsPass": {
+    "description": "Status label of a passing accessibility check",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCiNote": "Tam paket (statik analiz ve otomatik testler) sürekli entegrasyon hattında her gönderide çalışır.",
+  "@accessibilityTestsCiNote": {
+    "description": "Note about where the test suite runs",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestContrast": "Metin kontrastı açık ve koyu temalarda WCAG düzeylerini karşılar",
+  "@accessibilityTestContrast": {
+    "description": "Name of the text contrast accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLabeledTapTarget": "Dokunulabilir hedefler ekran okuyucu etiketlerine sahiptir",
+  "@accessibilityTestLabeledTapTarget": {
+    "description": "Name of the labeled tap target accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestAndroidTapTarget": "Dokunma hedefleri en az 48x48dp (Android kılavuzu)",
+  "@accessibilityTestAndroidTapTarget": {
+    "description": "Name of the Android tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestIosTapTarget": "Dokunma hedefleri en az 44x44dp (iOS kılavuzu)",
+  "@accessibilityTestIosTapTarget": {
+    "description": "Name of the iOS tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestSemanticsPresent": "Tüm özel denetimler için ekran okuyucu etiketleri mevcuttur",
+  "@accessibilityTestSemanticsPresent": {
+    "description": "Name of the semantics presence accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestTraversalOrder": "Klavye odağı sırası görsel sırayı izler",
+  "@accessibilityTestTraversalOrder": {
+    "description": "Name of the focus traversal order accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLocalesRender": "Tüm arayüz dilleri hatasız oluşturuluyor",
+  "@accessibilityTestLocalesRender": {
+    "description": "Name of the per-locale rendering accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestFormValidation": "Form alanları doğrulama hatalarını duyurur",
+  "@accessibilityTestFormValidation": {
+    "description": "Name of the form validation announcement accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityContactTitle": "Erişilebilirlik sorunu bildir",
+  "@accessibilityContactTitle": {
+    "description": "Title of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityContactIntro": "Erişilebilirlik bilgisi istemek, bir çözüm talep etmek veya bir erişilebilirlik engeli bildirmek için bu formu kullanın. Bildiriniz, e-posta ile ya da GitHub üzerinde herkese açık bir sorun kaydı olarak gönderebileceğiniz bir mesaj haline getirilir.",
+  "@accessibilityContactIntro": {
+    "description": "Intro text of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormName": "Ad (isteğe bağlı)",
+  "@accessibilityFormName": {
+    "description": "Label of the optional name field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmail": "E-posta (isteğe bağlı)",
+  "@accessibilityFormEmail": {
+    "description": "Label of the optional email field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormAssistiveTech": "Kullanılan yardımcı teknoloji (isteğe bağlı)",
+  "@accessibilityFormAssistiveTech": {
+    "description": "Label of the optional assistive technology field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescription": "Sorunu açıklayın (zorunlu)",
+  "@accessibilityFormDescription": {
+    "description": "Label of the required description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescriptionHint": "Ne yapmaya çalışıyordunuz ve ne engel oldu?",
+  "@accessibilityFormDescriptionHint": {
+    "description": "Hint of the description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormErrorDescription": "Göndermeden önce lütfen sorunu açıklayın.",
+  "@accessibilityFormErrorDescription": {
+    "description": "Validation error for an empty description in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormErrorEmail": "Lütfen geçerli bir e-posta adresi girin veya alanı boş bırakın.",
+  "@accessibilityFormErrorEmail": {
+    "description": "Validation error for an invalid email in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormSendEmail": "E-posta ile gönder",
+  "@accessibilityFormSendEmail": {
+    "description": "Label of the send-by-email button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormSendGithub": "GitHub sorunu aç",
+  "@accessibilityFormSendGithub": {
+    "description": "Label of the open-a-GitHub-issue button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmailSubject": "Erişilebilirlik raporu (Ollama App)",
+  "@accessibilityFormEmailSubject": {
+    "description": "Subject line used for the composed accessibility report",
+    "context": "Used when composing the email or GitHub issue"
+  },
+  "accessibilityFormCopiedFallback": "Bağlantı açılamadı. Rapor panoya kopyalandı.",
+  "@accessibilityFormCopiedFallback": {
+    "description": "Snackbar shown when the report link cannot be opened and the report was copied instead",
+    "context": "Visible in the accessibility contact form"
+  },
+  "tooltipResetChat": "Mevcut sohbeti sıfırla",
+  "@tooltipResetChat": {
+    "description": "Tooltip for the reset chat button",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceClose": "Ses modunu kapat",
+  "@tooltipVoiceClose": {
+    "description": "Tooltip for the close button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceSettings": "Ses ayarlarını aç",
+  "@tooltipVoiceSettings": {
+    "description": "Tooltip for the settings button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceScrollToEnd": "En son metne kaydır",
+  "@tooltipVoiceScrollToEnd": {
+    "description": "Tooltip for the scroll-to-end button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeNext": "Sonraki sayfa",
+  "@tooltipWelcomeNext": {
+    "description": "Tooltip for the next button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeFinish": "Ollama''yı kullanmaya başla",
+  "@tooltipWelcomeFinish": {
+    "description": "Tooltip for the finish button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbListening": "Ses modu dinliyor. Dinlemeyi durdurmak için dokunun.",
+  "@accessibilityVoiceOrbListening": {
+    "description": "Screen-reader label for the voice orb while listening",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbSpeaking": "Yanıt sesli olarak okunuyor. Durdurmak için dokunun.",
+  "@accessibilityVoiceOrbSpeaking": {
+    "description": "Screen-reader label for the voice orb while speaking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbThinking": "Yapay zeka bir yanıt hazırlıyor. İptal etmek için dokunun.",
+  "@accessibilityVoiceOrbThinking": {
+    "description": "Screen-reader label for the voice orb while the AI is thinking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityAppLogo": "Ollama",
+  "@accessibilityAppLogo": {
+    "description": "Screen-reader label for the app logo",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage1": "Ollama''ya hoş geldiniz. Bu tanıtım üç kısa resim gösteriyor.",
+  "@accessibilityWelcomePage1": {
+    "description": "Screen-reader description of the first welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage2": "Tanıtım sayfası 2/3. Resim bir modelin nasıl seçileceğini ve sohbete nasıl başlanacağını gösteriyor.",
+  "@accessibilityWelcomePage2": {
+    "description": "Screen-reader description of the second welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage3": "Tanıtım sayfası 3/3. Resim ayarların ve ses modunun nerede bulunacağını gösteriyor.",
+  "@accessibilityWelcomePage3": {
+    "description": "Screen-reader description of the third welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilitySummaryConformance": "Bu uygulama WCAG 2.2 Level AA''yi hedefler ve AAA düzeyinde iyileştirmeler uygular. Bazı özelliklerin sınırlamaları vardır; bunlar her bölümün içinde açıklanmıştır.",
+  "@accessibilitySummaryConformance": {
+    "description": "Short always-visible conformance summary at the top of the accessibility page",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStatementSummary": "Taahhüdümüz, uyumluluk durumumuz ve AA''nın ötesinde uyguladığımız ölçüler.",
+  "@accessibilitySectionStatementSummary": {
+    "description": "One-line summary under the collapsed statement section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionTestsSummary": "8 otomatik erişilebilirlik kontrolü her derlemede geçiyor.",
+  "@accessibilitySectionTestsSummary": {
+    "description": "One-line summary under the collapsed test results section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStandardsSummary": "AODA''yı, Avrupa standardı EN 301 549''u ve ABD''nin ADA / Section 508 maddesini nasıl desteklediğimiz.",
+  "@accessibilitySectionStandardsSummary": {
+    "description": "One-line summary under the collapsed standards section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionContactSummary": "Bir erişilebilirlik sorununu e-posta veya GitHub ile bildirin. Tüm bildirilere yanıt veriyoruz.",
+  "@accessibilitySectionContactSummary": {
+    "description": "One-line summary under the collapsed contact section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelLimited": "Sınırlı destek",
+  "@accessibilitySupportLevelLimited": {
+    "description": "Support level label: partially meets the standard",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelCompliantWithLimitations": "Sınırlamalarla uyumlu",
+  "@accessibilitySupportLevelCompliantWithLimitations": {
+    "description": "Support level label: meets the standard with documented limitations",
+    "context": "Used for screen readers and display"
+  }
 }

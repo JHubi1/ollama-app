@@ -509,4 +509,201 @@ class AppLocalizationsZh extends AppLocalizations {
   String settingsVersion(String version) {
     return 'Ollama App v$version';
   }
+
+  @override
+  String get settingsTitleAccessibility => '无障碍';
+
+  @override
+  String get settingsDescriptionAccessibility => '无障碍声明、测试结果以及如何报告问题。';
+
+  @override
+  String get accessibilityStatementTitle => '无障碍声明';
+
+  @override
+  String get accessibilityCommitmentIntro => 'Ollama 必须让我们发布的每一种语言下、所有能力的人群都能使用。语音控制、屏幕阅读器、键盘导航和高对比度渲染是使用本应用的一等公民方式，而非事后补充。';
+
+  @override
+  String get accessibilityCommitmentDetails => '具体而言：每个交互控件都有一个屏幕阅读器会播报的名称（包括语音模式的状态），按钮保持至少 48dp 的最小触控目标，键盘焦点遵循界面的视觉顺序，状态消息在变化时播报，并且界面在大字号以及明亮和黑暗主题下都保持可用。';
+
+  @override
+  String get accessibilityConformanceTitle => '符合性状态';
+
+  @override
+  String get accessibilityConformanceStatus => '本应用的设计符合《网页内容无障碍指南》(WCAG) 2.2 Level AA。该符合性尚未由第三方独立认证；其依据是我们自己的自动化测试。在可行的情况下，我们超越 AA 并采用 WCAG AAA 措施，如下所列。';
+
+  @override
+  String get accessibilityAaaMeasuresTitle => '超越 AA（AAA 措施）';
+
+  @override
+  String get accessibilityAaaMeasures => '主要文本在两种主题下使用 21:1 对比度（AAA 要求 7:1），次要的灰暗文本使用 10:1 或更高，成功与警告状态颜色在两种主题下均满足 AAA 对比度，黑暗主题下的错误文本满足 AAA 对比度。AAA 还额外要求一些在这种规模的聊天应用中并不切实际的措施（例如对所有文本一律 7:1 对比度以及阅读水平限制），因此我们以 AA 作为保证，并将这些 AAA 措施视为增强。';
+
+  @override
+  String get accessibilityAodaTitle => '《安大略省残障人士无障碍法》(AODA)';
+
+  @override
+  String get accessibilityAodaText => '安大略省《安大略残障人士无障碍法》(AODA) 要求数字产品达到 WCAG 2.0/2.1 Level AA。本应用的 WCAG 2.2 Level AA 目标达到并超越了该基准。欢迎通过本页面的联系表单提供无障碍方面的反馈，这符合 AODA 关于使反馈渠道无障碍的要求。';
+
+  @override
+  String get accessibilityStandardsEuropeTitle => '欧洲标准 (EN 301 549)';
+
+  @override
+  String get accessibilityStandardsEuropeText => '在欧盟，协调标准 EN 301 549 定义了《欧洲无障碍法案》的信息通信技术无障碍要求，该法案引用了 WCAG 2.1 Level AA。本应用的 WCAG 2.2 Level AA 目标涵盖了这些要求，支持自 2025年6月28日起适用的欧洲无障碍义务。';
+
+  @override
+  String get accessibilityStandardsUsTitle => '美国标准 (ADA / Section 508)';
+
+  @override
+  String get accessibilityStandardsUsText => '在美国，《美国残疾人法》(ADA) 是一般性的非歧视基准，而《康复法》的 Section 508 要求数字产品达到 WCAG 2.0 Level AA（Section 504 将类似义务扩展到受资助的项目）。本应用的 WCAG 2.2 Level AA 目标达到并超越了这些基准。';
+
+  @override
+  String get accessibilityKnownIssuesTitle => '已知限制';
+
+  @override
+  String get accessibilityKnownIssues => '桌面窗口标题栏按钮（最小化、最大化、关闭）由操作系统集成提供，应用的屏幕阅读器树无法访问它们。聊天库会渲染少量自身的界面文本，这些文本可能尚未提供所有语言版本。在语音模式下，响应文本在屏幕边缘附近渐隐，当系统文字尺寸显著增大时，很长的聊天行可能会被省略号截断。';
+
+  @override
+  String accessibilityLastValidated(String version) {
+    return '自动化检查最后一次验证针对 Ollama App v$version。';
+  }
+
+  @override
+  String get accessibilityTestsTitle => '测试结果';
+
+  @override
+  String get accessibilityTestsIntro => '以下自动化无障碍检查属于本应用的测试套件，并在每次提交时运行：';
+
+  @override
+  String get accessibilityTestsCheckColumn => '检查项';
+
+  @override
+  String get accessibilityTestsStatusColumn => '状态';
+
+  @override
+  String get accessibilityTestsPass => '通过';
+
+  @override
+  String get accessibilityTestsCiNote => '完整套件（静态分析加自动化测试）在持续集成流水线中对每次提交运行。';
+
+  @override
+  String get accessibilityTestContrast => '文本对比度在明亮和黑暗主题下均满足 WCAG 等级';
+
+  @override
+  String get accessibilityTestLabeledTapTarget => '可点按的目标具有屏幕阅读器标签';
+
+  @override
+  String get accessibilityTestAndroidTapTarget => '触控目标至少为 48x48dp（Android 准则）';
+
+  @override
+  String get accessibilityTestIosTapTarget => '触控目标至少为 44x44dp（iOS 准则）';
+
+  @override
+  String get accessibilityTestSemanticsPresent => '所有自定义控件都有屏幕阅读器标签';
+
+  @override
+  String get accessibilityTestTraversalOrder => '键盘焦点顺序遵循视觉顺序';
+
+  @override
+  String get accessibilityTestLocalesRender => '所有界面语言均能正常渲染';
+
+  @override
+  String get accessibilityTestFormValidation => '表单字段播报验证错误';
+
+  @override
+  String get accessibilityContactTitle => '报告无障碍问题';
+
+  @override
+  String get accessibilityContactIntro => '使用此表单索取无障碍信息、请求解决方案，或报告无障碍使用障碍。您的报告将被编写成一条消息，您可以通过电子邮件发送，或在 GitHub 上作为公开 issue 提交。';
+
+  @override
+  String get accessibilityFormName => '姓名（可选）';
+
+  @override
+  String get accessibilityFormEmail => '电子邮件（可选）';
+
+  @override
+  String get accessibilityFormAssistiveTech => '使用的辅助技术（可选）';
+
+  @override
+  String get accessibilityFormDescription => '描述问题（必填）';
+
+  @override
+  String get accessibilityFormDescriptionHint => '您原本想做什么？是什么阻碍了您？';
+
+  @override
+  String get accessibilityFormErrorDescription => '发送前请描述问题。';
+
+  @override
+  String get accessibilityFormErrorEmail => '请输入有效的电子邮件地址，或将该字段留空。';
+
+  @override
+  String get accessibilityFormSendEmail => '通过电子邮件发送';
+
+  @override
+  String get accessibilityFormSendGithub => '创建 GitHub issue';
+
+  @override
+  String get accessibilityFormEmailSubject => '无障碍报告 (Ollama App)';
+
+  @override
+  String get accessibilityFormCopiedFallback => '无法打开链接。报告已复制到剪贴板。';
+
+  @override
+  String get tooltipResetChat => '重置当前聊天';
+
+  @override
+  String get tooltipVoiceClose => '关闭语音模式';
+
+  @override
+  String get tooltipVoiceSettings => '打开语音设置';
+
+  @override
+  String get tooltipVoiceScrollToEnd => '滚动到最新文本';
+
+  @override
+  String get tooltipWelcomeNext => '下一页';
+
+  @override
+  String get tooltipWelcomeFinish => '开始使用 Ollama';
+
+  @override
+  String get accessibilityVoiceOrbListening => '语音模式正在聆听。点按以停止聆听。';
+
+  @override
+  String get accessibilityVoiceOrbSpeaking => '正在朗读响应。点按以停止。';
+
+  @override
+  String get accessibilityVoiceOrbThinking => 'AI 正在准备响应。点按以取消。';
+
+  @override
+  String get accessibilityAppLogo => 'Ollama';
+
+  @override
+  String get accessibilityWelcomePage1 => '欢迎使用 Ollama。本引导流程展示三张简短图片。';
+
+  @override
+  String get accessibilityWelcomePage2 => '引导页面第 2 页，共 3 页。图片展示如何选择模型并开始聊天。';
+
+  @override
+  String get accessibilityWelcomePage3 => '引导页面第 3 页，共 3 页。图片显示在哪里可以找到设置和语音模式。';
+
+  @override
+  String get accessibilitySummaryConformance => '本应用以 WCAG 2.2 Level AA 为目标，并采用 AAA 级别的增强措施。部分功能存在限制，详见各章节内的说明。';
+
+  @override
+  String get accessibilitySectionStatementSummary => '我们的承诺、符合性状态，以及我们超越 AA 所采用的措施。';
+
+  @override
+  String get accessibilitySectionTestsSummary => '每次构建中 8 项自动化无障碍检查全部通过。';
+
+  @override
+  String get accessibilitySectionStandardsSummary => '我们如何支持 AODA、欧洲标准 EN 301 549 以及美国 ADA / Section 508。';
+
+  @override
+  String get accessibilitySectionContactSummary => '通过电子邮件或 GitHub 报告无障碍问题。我们会回复所有报告。';
+
+  @override
+  String get accessibilitySupportLevelLimited => '有限支持';
+
+  @override
+  String get accessibilitySupportLevelCompliantWithLimitations => '符合标准（存在限制）';
 }

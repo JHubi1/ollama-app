@@ -154,5 +154,336 @@
   "settingsGithub": "GitHub",
   "settingsReportIssue": "问题反馈",
   "settingsLicenses": "开源许可证",
-  "settingsVersion": "Ollama App v{version}"
+  "settingsVersion": "Ollama App v{version}",
+  "settingsTitleAccessibility": "无障碍",
+  "@settingsTitleAccessibility": {
+    "description": "Title of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "settingsDescriptionAccessibility": "无障碍声明、测试结果以及如何报告问题。",
+  "@settingsDescriptionAccessibility": {
+    "description": "Description of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "accessibilityStatementTitle": "无障碍声明",
+  "@accessibilityStatementTitle": {
+    "description": "Title of the accessibility statement section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentIntro": "Ollama 必须让我们发布的每一种语言下、所有能力的人群都能使用。语音控制、屏幕阅读器、键盘导航和高对比度渲染是使用本应用的一等公民方式，而非事后补充。",
+  "@accessibilityCommitmentIntro": {
+    "description": "Opening commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentDetails": "具体而言：每个交互控件都有一个屏幕阅读器会播报的名称（包括语音模式的状态），按钮保持至少 48dp 的最小触控目标，键盘焦点遵循界面的视觉顺序，状态消息在变化时播报，并且界面在大字号以及明亮和黑暗主题下都保持可用。",
+  "@accessibilityCommitmentDetails": {
+    "description": "Detailed commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceTitle": "符合性状态",
+  "@accessibilityConformanceTitle": {
+    "description": "Title of the conformance status section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceStatus": "本应用的设计符合《网页内容无障碍指南》(WCAG) 2.2 Level AA。该符合性尚未由第三方独立认证；其依据是我们自己的自动化测试。在可行的情况下，我们超越 AA 并采用 WCAG AAA 措施，如下所列。",
+  "@accessibilityConformanceStatus": {
+    "description": "Conformance status text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasuresTitle": "超越 AA（AAA 措施）",
+  "@accessibilityAaaMeasuresTitle": {
+    "description": "Title of the AAA measures section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasures": "主要文本在两种主题下使用 21:1 对比度（AAA 要求 7:1），次要的灰暗文本使用 10:1 或更高，成功与警告状态颜色在两种主题下均满足 AAA 对比度，黑暗主题下的错误文本满足 AAA 对比度。AAA 还额外要求一些在这种规模的聊天应用中并不切实际的措施（例如对所有文本一律 7:1 对比度以及阅读水平限制），因此我们以 AA 作为保证，并将这些 AAA 措施视为增强。",
+  "@accessibilityAaaMeasures": {
+    "description": "Text describing the applied AAA measures",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaTitle": "《安大略省残障人士无障碍法》(AODA)",
+  "@accessibilityAodaTitle": {
+    "description": "Title of the AODA section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaText": "安大略省《安大略残障人士无障碍法》(AODA) 要求数字产品达到 WCAG 2.0/2.1 Level AA。本应用的 WCAG 2.2 Level AA 目标达到并超越了该基准。欢迎通过本页面的联系表单提供无障碍方面的反馈，这符合 AODA 关于使反馈渠道无障碍的要求。",
+  "@accessibilityAodaText": {
+    "description": "Text about AODA compliance",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeTitle": "欧洲标准 (EN 301 549)",
+  "@accessibilityStandardsEuropeTitle": {
+    "description": "Title of the European standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeText": "在欧盟，协调标准 EN 301 549 定义了《欧洲无障碍法案》的信息通信技术无障碍要求，该法案引用了 WCAG 2.1 Level AA。本应用的 WCAG 2.2 Level AA 目标涵盖了这些要求，支持自 2025年6月28日起适用的欧洲无障碍义务。",
+  "@accessibilityStandardsEuropeText": {
+    "description": "Text about the European standards (EN 301 549 / EAA)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsTitle": "美国标准 (ADA / Section 508)",
+  "@accessibilityStandardsUsTitle": {
+    "description": "Title of the United States standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsText": "在美国，《美国残疾人法》(ADA) 是一般性的非歧视基准，而《康复法》的 Section 508 要求数字产品达到 WCAG 2.0 Level AA（Section 504 将类似义务扩展到受资助的项目）。本应用的 WCAG 2.2 Level AA 目标达到并超越了这些基准。",
+  "@accessibilityStandardsUsText": {
+    "description": "Text about the US standards (ADA / Section 508 / Section 504)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssuesTitle": "已知限制",
+  "@accessibilityKnownIssuesTitle": {
+    "description": "Title of the known limitations section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssues": "桌面窗口标题栏按钮（最小化、最大化、关闭）由操作系统集成提供，应用的屏幕阅读器树无法访问它们。聊天库会渲染少量自身的界面文本，这些文本可能尚未提供所有语言版本。在语音模式下，响应文本在屏幕边缘附近渐隐，当系统文字尺寸显著增大时，很长的聊天行可能会被省略号截断。",
+  "@accessibilityKnownIssues": {
+    "description": "Text describing the known accessibility limitations",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityLastValidated": "自动化检查最后一次验证针对 Ollama App v{version}。",
+  "@accessibilityLastValidated": {
+    "description": "Text stating when the automated checks were last validated",
+    "context": "Visible on the accessibility page",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "description": "Version number of the app"
+      }
+    }
+  },
+  "accessibilityTestsTitle": "测试结果",
+  "@accessibilityTestsTitle": {
+    "description": "Title of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsIntro": "以下自动化无障碍检查属于本应用的测试套件，并在每次提交时运行：",
+  "@accessibilityTestsIntro": {
+    "description": "Intro text of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCheckColumn": "检查项",
+  "@accessibilityTestsCheckColumn": {
+    "description": "Column header for the check name in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsStatusColumn": "状态",
+  "@accessibilityTestsStatusColumn": {
+    "description": "Column header for the status in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsPass": "通过",
+  "@accessibilityTestsPass": {
+    "description": "Status label of a passing accessibility check",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCiNote": "完整套件（静态分析加自动化测试）在持续集成流水线中对每次提交运行。",
+  "@accessibilityTestsCiNote": {
+    "description": "Note about where the test suite runs",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestContrast": "文本对比度在明亮和黑暗主题下均满足 WCAG 等级",
+  "@accessibilityTestContrast": {
+    "description": "Name of the text contrast accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLabeledTapTarget": "可点按的目标具有屏幕阅读器标签",
+  "@accessibilityTestLabeledTapTarget": {
+    "description": "Name of the labeled tap target accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestAndroidTapTarget": "触控目标至少为 48x48dp（Android 准则）",
+  "@accessibilityTestAndroidTapTarget": {
+    "description": "Name of the Android tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestIosTapTarget": "触控目标至少为 44x44dp（iOS 准则）",
+  "@accessibilityTestIosTapTarget": {
+    "description": "Name of the iOS tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestSemanticsPresent": "所有自定义控件都有屏幕阅读器标签",
+  "@accessibilityTestSemanticsPresent": {
+    "description": "Name of the semantics presence accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestTraversalOrder": "键盘焦点顺序遵循视觉顺序",
+  "@accessibilityTestTraversalOrder": {
+    "description": "Name of the focus traversal order accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLocalesRender": "所有界面语言均能正常渲染",
+  "@accessibilityTestLocalesRender": {
+    "description": "Name of the per-locale rendering accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestFormValidation": "表单字段播报验证错误",
+  "@accessibilityTestFormValidation": {
+    "description": "Name of the form validation announcement accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityContactTitle": "报告无障碍问题",
+  "@accessibilityContactTitle": {
+    "description": "Title of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityContactIntro": "使用此表单索取无障碍信息、请求解决方案，或报告无障碍使用障碍。您的报告将被编写成一条消息，您可以通过电子邮件发送，或在 GitHub 上作为公开 issue 提交。",
+  "@accessibilityContactIntro": {
+    "description": "Intro text of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormName": "姓名（可选）",
+  "@accessibilityFormName": {
+    "description": "Label of the optional name field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmail": "电子邮件（可选）",
+  "@accessibilityFormEmail": {
+    "description": "Label of the optional email field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormAssistiveTech": "使用的辅助技术（可选）",
+  "@accessibilityFormAssistiveTech": {
+    "description": "Label of the optional assistive technology field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescription": "描述问题（必填）",
+  "@accessibilityFormDescription": {
+    "description": "Label of the required description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescriptionHint": "您原本想做什么？是什么阻碍了您？",
+  "@accessibilityFormDescriptionHint": {
+    "description": "Hint of the description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormErrorDescription": "发送前请描述问题。",
+  "@accessibilityFormErrorDescription": {
+    "description": "Validation error for an empty description in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormErrorEmail": "请输入有效的电子邮件地址，或将该字段留空。",
+  "@accessibilityFormErrorEmail": {
+    "description": "Validation error for an invalid email in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormSendEmail": "通过电子邮件发送",
+  "@accessibilityFormSendEmail": {
+    "description": "Label of the send-by-email button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormSendGithub": "创建 GitHub issue",
+  "@accessibilityFormSendGithub": {
+    "description": "Label of the open-a-GitHub-issue button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmailSubject": "无障碍报告 (Ollama App)",
+  "@accessibilityFormEmailSubject": {
+    "description": "Subject line used for the composed accessibility report",
+    "context": "Used when composing the email or GitHub issue"
+  },
+  "accessibilityFormCopiedFallback": "无法打开链接。报告已复制到剪贴板。",
+  "@accessibilityFormCopiedFallback": {
+    "description": "Snackbar shown when the report link cannot be opened and the report was copied instead",
+    "context": "Visible in the accessibility contact form"
+  },
+  "tooltipResetChat": "重置当前聊天",
+  "@tooltipResetChat": {
+    "description": "Tooltip for the reset chat button",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceClose": "关闭语音模式",
+  "@tooltipVoiceClose": {
+    "description": "Tooltip for the close button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceSettings": "打开语音设置",
+  "@tooltipVoiceSettings": {
+    "description": "Tooltip for the settings button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceScrollToEnd": "滚动到最新文本",
+  "@tooltipVoiceScrollToEnd": {
+    "description": "Tooltip for the scroll-to-end button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeNext": "下一页",
+  "@tooltipWelcomeNext": {
+    "description": "Tooltip for the next button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeFinish": "开始使用 Ollama",
+  "@tooltipWelcomeFinish": {
+    "description": "Tooltip for the finish button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbListening": "语音模式正在聆听。点按以停止聆听。",
+  "@accessibilityVoiceOrbListening": {
+    "description": "Screen-reader label for the voice orb while listening",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbSpeaking": "正在朗读响应。点按以停止。",
+  "@accessibilityVoiceOrbSpeaking": {
+    "description": "Screen-reader label for the voice orb while speaking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbThinking": "AI 正在准备响应。点按以取消。",
+  "@accessibilityVoiceOrbThinking": {
+    "description": "Screen-reader label for the voice orb while the AI is thinking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityAppLogo": "Ollama",
+  "@accessibilityAppLogo": {
+    "description": "Screen-reader label for the app logo",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage1": "欢迎使用 Ollama。本引导流程展示三张简短图片。",
+  "@accessibilityWelcomePage1": {
+    "description": "Screen-reader description of the first welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage2": "引导页面第 2 页，共 3 页。图片展示如何选择模型并开始聊天。",
+  "@accessibilityWelcomePage2": {
+    "description": "Screen-reader description of the second welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage3": "引导页面第 3 页，共 3 页。图片显示在哪里可以找到设置和语音模式。",
+  "@accessibilityWelcomePage3": {
+    "description": "Screen-reader description of the third welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilitySummaryConformance": "本应用以 WCAG 2.2 Level AA 为目标，并采用 AAA 级别的增强措施。部分功能存在限制，详见各章节内的说明。",
+  "@accessibilitySummaryConformance": {
+    "description": "Short always-visible conformance summary at the top of the accessibility page",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStatementSummary": "我们的承诺、符合性状态，以及我们超越 AA 所采用的措施。",
+  "@accessibilitySectionStatementSummary": {
+    "description": "One-line summary under the collapsed statement section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionTestsSummary": "每次构建中 8 项自动化无障碍检查全部通过。",
+  "@accessibilitySectionTestsSummary": {
+    "description": "One-line summary under the collapsed test results section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStandardsSummary": "我们如何支持 AODA、欧洲标准 EN 301 549 以及美国 ADA / Section 508。",
+  "@accessibilitySectionStandardsSummary": {
+    "description": "One-line summary under the collapsed standards section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionContactSummary": "通过电子邮件或 GitHub 报告无障碍问题。我们会回复所有报告。",
+  "@accessibilitySectionContactSummary": {
+    "description": "One-line summary under the collapsed contact section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelLimited": "有限支持",
+  "@accessibilitySupportLevelLimited": {
+    "description": "Support level label: partially meets the standard",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelCompliantWithLimitations": "符合标准（存在限制）",
+  "@accessibilitySupportLevelCompliantWithLimitations": {
+    "description": "Support level label: meets the standard with documented limitations",
+    "context": "Used for screen readers and display"
+  }
 }

@@ -1045,6 +1045,375 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ollama App v{version}'**
   String settingsVersion(String version);
+
+  /// Title of the accessibility settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility'**
+  String get settingsTitleAccessibility;
+
+  /// Description of the accessibility settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility statement, test results and how to report a problem.'**
+  String get settingsDescriptionAccessibility;
+
+  /// Title of the accessibility statement section
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility statement'**
+  String get accessibilityStatementTitle;
+
+  /// Opening commitment text of the accessibility statement
+  ///
+  /// In en, this message translates to:
+  /// **'Ollama must be usable by people of all abilities, in every language we ship. Voice control, screen readers, keyboard navigation and high-contrast rendering are first-class ways of using this app — not afterthoughts.'**
+  String get accessibilityCommitmentIntro;
+
+  /// Detailed commitment text of the accessibility statement
+  ///
+  /// In en, this message translates to:
+  /// **'In practice this means: every interactive control has a name that screen readers announce (including the voice-mode state), buttons keep a minimum touch target of 48dp, keyboard focus follows the visual order of the interface, status messages are announced while they change, and the interface stays usable at large text scales and in both light and dark themes.'**
+  String get accessibilityCommitmentDetails;
+
+  /// Title of the conformance status section
+  ///
+  /// In en, this message translates to:
+  /// **'Conformance status'**
+  String get accessibilityConformanceTitle;
+
+  /// Conformance status text of the accessibility statement
+  ///
+  /// In en, this message translates to:
+  /// **'This app is designed to conform with the Web Content Accessibility Guidelines (WCAG) 2.2 Level AA. The conformance has not been independently certified by a third party; it is based on our own automated testing. Where feasible we go beyond AA and apply WCAG AAA measures, which are listed below.'**
+  String get accessibilityConformanceStatus;
+
+  /// Title of the AAA measures section
+  ///
+  /// In en, this message translates to:
+  /// **'Exceeding AA (AAA measures)'**
+  String get accessibilityAaaMeasuresTitle;
+
+  /// Text describing the applied AAA measures
+  ///
+  /// In en, this message translates to:
+  /// **'The main text uses 21:1 contrast in both themes (AAA requires 7:1), muted secondary text uses 10:1 or better, status colours for success and warnings meet AAA contrast in both themes, and error text in the dark theme meets AAA contrast. AAA additionally requires measures that are not practical in a chat application of this size (for example 7:1 contrast on absolutely all text and reading-level limits), so we target AA as the guarantee and treat these AAA measures as enhancements.'**
+  String get accessibilityAaaMeasures;
+
+  /// Title of the AODA section
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility for Ontarians with Disabilities Act (AODA)'**
+  String get accessibilityAodaTitle;
+
+  /// Text about AODA compliance
+  ///
+  /// In en, this message translates to:
+  /// **'Ontario\'s Accessibility for Ontarians with Disabilities Act (AODA) requires digital products to meet WCAG 2.0/2.1 Level AA. The WCAG 2.2 Level AA target of this app meets and exceeds that baseline. Feedback on accessibility is welcomed through the contact form on this page, in line with AODA\'s requirement to make feedback channels accessible.'**
+  String get accessibilityAodaText;
+
+  /// Title of the European standards section
+  ///
+  /// In en, this message translates to:
+  /// **'European standards (EN 301 549)'**
+  String get accessibilityStandardsEuropeTitle;
+
+  /// Text about the European standards (EN 301 549 / EAA)
+  ///
+  /// In en, this message translates to:
+  /// **'In the European Union, harmonized standard EN 301 549 defines the ICT accessibility requirements of the European Accessibility Act, which references WCAG 2.1 Level AA. The WCAG 2.2 Level AA target of this app covers those requirements, supporting the European accessibility obligations that apply from 28 June 2025.'**
+  String get accessibilityStandardsEuropeText;
+
+  /// Title of the United States standards section
+  ///
+  /// In en, this message translates to:
+  /// **'United States standards (ADA / Section 508)'**
+  String get accessibilityStandardsUsTitle;
+
+  /// Text about the US standards (ADA / Section 508 / Section 504)
+  ///
+  /// In en, this message translates to:
+  /// **'In the United States, the Americans with Disabilities Act (ADA) is the general non-discrimination baseline, and Section 508 of the Rehabilitation Act requires WCAG 2.0 Level AA for federal technology (Section 504 extends similar obligations to funded programs). The WCAG 2.2 Level AA target of this app meets and exceeds those baselines.'**
+  String get accessibilityStandardsUsText;
+
+  /// Title of the known limitations section
+  ///
+  /// In en, this message translates to:
+  /// **'Known limitations'**
+  String get accessibilityKnownIssuesTitle;
+
+  /// Text describing the known accessibility limitations
+  ///
+  /// In en, this message translates to:
+  /// **'The desktop window title-bar buttons (minimize, maximize, close) are provided by the operating system integration and are not reachable by the app\'s screen-reader tree. The chat library renders a small amount of its own interface text, which may not yet be available in all languages. In voice mode, the response text is faded near the edge of the screen and very long chat lines can be truncated with an ellipsis when the system text size is increased significantly.'**
+  String get accessibilityKnownIssues;
+
+  /// Text stating when the automated checks were last validated
+  ///
+  /// In en, this message translates to:
+  /// **'Automated checks last validated against Ollama App v{version}.'**
+  String accessibilityLastValidated(String version);
+
+  /// Title of the test results section
+  ///
+  /// In en, this message translates to:
+  /// **'Test results'**
+  String get accessibilityTestsTitle;
+
+  /// Intro text of the test results section
+  ///
+  /// In en, this message translates to:
+  /// **'The following automated accessibility checks are part of the test suite of this app and run on every commit:'**
+  String get accessibilityTestsIntro;
+
+  /// Column header for the check name in the test results table
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get accessibilityTestsCheckColumn;
+
+  /// Column header for the status in the test results table
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get accessibilityTestsStatusColumn;
+
+  /// Status label of a passing accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Pass'**
+  String get accessibilityTestsPass;
+
+  /// Note about where the test suite runs
+  ///
+  /// In en, this message translates to:
+  /// **'The full suite (static analysis plus automated tests) runs on every commit in the continuous integration pipeline.'**
+  String get accessibilityTestsCiNote;
+
+  /// Name of the text contrast accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Text contrast meets WCAG levels in light and dark themes'**
+  String get accessibilityTestContrast;
+
+  /// Name of the labeled tap target accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Tappable targets have screen-reader labels'**
+  String get accessibilityTestLabeledTapTarget;
+
+  /// Name of the Android tap target size accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Touch targets are at least 48x48dp (Android guideline)'**
+  String get accessibilityTestAndroidTapTarget;
+
+  /// Name of the iOS tap target size accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Touch targets are at least 44x44dp (iOS guideline)'**
+  String get accessibilityTestIosTapTarget;
+
+  /// Name of the semantics presence accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Screen-reader labels exist for all custom controls'**
+  String get accessibilityTestSemanticsPresent;
+
+  /// Name of the focus traversal order accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard focus order follows the visual order'**
+  String get accessibilityTestTraversalOrder;
+
+  /// Name of the per-locale rendering accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'All interface languages render without errors'**
+  String get accessibilityTestLocalesRender;
+
+  /// Name of the form validation announcement accessibility check
+  ///
+  /// In en, this message translates to:
+  /// **'Form fields announce validation errors'**
+  String get accessibilityTestFormValidation;
+
+  /// Title of the contact form section
+  ///
+  /// In en, this message translates to:
+  /// **'Report an accessibility issue'**
+  String get accessibilityContactTitle;
+
+  /// Intro text of the contact form section
+  ///
+  /// In en, this message translates to:
+  /// **'Use this form to request accessibility information, ask for a resolution, or report an accessibility barrier. Your report is composed into a message that you can send by email or as a public issue on GitHub.'**
+  String get accessibilityContactIntro;
+
+  /// Label of the optional name field in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get accessibilityFormName;
+
+  /// Label of the optional email field in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Email (optional)'**
+  String get accessibilityFormEmail;
+
+  /// Label of the optional assistive technology field in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Assistive technology used (optional)'**
+  String get accessibilityFormAssistiveTech;
+
+  /// Label of the required description field in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the issue (required)'**
+  String get accessibilityFormDescription;
+
+  /// Hint of the description field in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'What were you trying to do, and what got in your way?'**
+  String get accessibilityFormDescriptionHint;
+
+  /// Validation error for an empty description in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe the issue before sending.'**
+  String get accessibilityFormErrorDescription;
+
+  /// Validation error for an invalid email in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address or leave the field empty.'**
+  String get accessibilityFormErrorEmail;
+
+  /// Label of the send-by-email button in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Send by email'**
+  String get accessibilityFormSendEmail;
+
+  /// Label of the open-a-GitHub-issue button in the accessibility contact form
+  ///
+  /// In en, this message translates to:
+  /// **'Open a GitHub issue'**
+  String get accessibilityFormSendGithub;
+
+  /// Subject line used for the composed accessibility report
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility report (Ollama App)'**
+  String get accessibilityFormEmailSubject;
+
+  /// Snackbar shown when the report link cannot be opened and the report was copied instead
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the link. The report was copied to the clipboard.'**
+  String get accessibilityFormCopiedFallback;
+
+  /// Tooltip for the reset chat button
+  ///
+  /// In en, this message translates to:
+  /// **'Reset current chat'**
+  String get tooltipResetChat;
+
+  /// Tooltip for the close button in voice mode
+  ///
+  /// In en, this message translates to:
+  /// **'Close voice mode'**
+  String get tooltipVoiceClose;
+
+  /// Tooltip for the settings button in voice mode
+  ///
+  /// In en, this message translates to:
+  /// **'Open voice settings'**
+  String get tooltipVoiceSettings;
+
+  /// Tooltip for the scroll-to-end button in voice mode
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll to the latest text'**
+  String get tooltipVoiceScrollToEnd;
+
+  /// Tooltip for the next button on the welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Next page'**
+  String get tooltipWelcomeNext;
+
+  /// Tooltip for the finish button on the welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Start using Ollama'**
+  String get tooltipWelcomeFinish;
+
+  /// Screen-reader label for the voice orb while listening
+  ///
+  /// In en, this message translates to:
+  /// **'Voice mode is listening. Tap to stop listening.'**
+  String get accessibilityVoiceOrbListening;
+
+  /// Screen-reader label for the voice orb while speaking
+  ///
+  /// In en, this message translates to:
+  /// **'The response is being read aloud. Tap to stop.'**
+  String get accessibilityVoiceOrbSpeaking;
+
+  /// Screen-reader label for the voice orb while the AI is thinking
+  ///
+  /// In en, this message translates to:
+  /// **'The AI is preparing a response. Tap to cancel.'**
+  String get accessibilityVoiceOrbThinking;
+
+  /// Screen-reader label for the app logo
+  ///
+  /// In en, this message translates to:
+  /// **'Ollama'**
+  String get accessibilityAppLogo;
+
+  /// Screen-reader description of the first welcome page image
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Ollama. This onboarding shows three short pictures.'**
+  String get accessibilityWelcomePage1;
+
+  /// Screen-reader description of the second welcome page image
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding page 2 of 3. The image shows how to select a model and start chatting.'**
+  String get accessibilityWelcomePage2;
+
+  /// Screen-reader description of the third welcome page image
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding page 3 of 3. The image shows where to find settings and voice mode.'**
+  String get accessibilityWelcomePage3;
+
+  /// Short always-visible conformance summary at the top of the accessibility page
+  String get accessibilitySummaryConformance;
+
+  /// One-line summary under the collapsed statement section
+  String get accessibilitySectionStatementSummary;
+
+  /// One-line summary under the collapsed test results section
+  String get accessibilitySectionTestsSummary;
+
+  /// One-line summary under the collapsed standards section
+  String get accessibilitySectionStandardsSummary;
+
+  /// One-line summary under the collapsed contact section
+  String get accessibilitySectionContactSummary;
+
+  /// Support level label: partially meets the standard
+  String get accessibilitySupportLevelLimited;
+
+  /// Support level label: meets the standard with documented limitations
+  String get accessibilitySupportLevelCompliantWithLimitations;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
