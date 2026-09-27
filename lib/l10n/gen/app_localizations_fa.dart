@@ -285,6 +285,23 @@ class AppLocalizationsFa extends AppLocalizations {
   String get settingsApiTokenVerified => 'توکن API ذخیره و تأیید شد';
 
   @override
+  String get settingsApiToken => 'توکن API ابری Ollama';
+
+  @override
+  String get settingsApiTokenHint => 'توکن را از ollama.com بچسبانید';
+
+  @override
+  String get tooltipShowToken => 'نمایش توکن';
+
+  @override
+  String get tooltipHideToken => 'پنهان کردن توکن';
+
+  @override
+  String voiceLanguageInstruction(String language) {
+    return 'شما باید به زبان زیر بنویسید: $language!';
+  }
+
+  @override
   String get settingsSystemMessage => 'System message';
 
   @override

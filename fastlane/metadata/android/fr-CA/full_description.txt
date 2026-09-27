@@ -1,0 +1,6 @@
+Voici un client moderne et facile à utiliser pour Ollama.
+
+Inspiré de l'appli ChatGPT et de la simplicité du site Web d'Ollama, nous avons rendu la conversation avec l'IA aussi simple que possible, même sans connaissances techniques préalables.
+C'est facile à comprendre et on peut l'expliquer en quelques secondes.
+
+L'appli Ollama prend même en charge la saisie multimodale. Vous pouvez donc saisir une image et lui parler au clavier dans le clavardage.

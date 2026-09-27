@@ -695,8 +695,10 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                checkHost(validateToken: true);
                              },
                              decoration: InputDecoration(
-                                 labelText: "Ollama Cloud API Token",
-                                 hintText: "Paste token from ollama.com",
+                                 labelText:
+                                     AppLocalizations.of(context)!.settingsApiToken,
+                                 hintText:
+                                     AppLocalizations.of(context)!.settingsApiTokenHint,
                                  border: const OutlineInputBorder(),
                                  error: apiTokenInvalid
                                      ? InkWell(
@@ -734,8 +736,12 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                            IconButton(
                                                enableFeedback: false,
                                                tooltip: apiTokenVisible
-                                                   ? "Hide token"
-                                                   : "Show token",
+                                                   ? AppLocalizations.of(
+                                                           context)!
+                                                       .tooltipHideToken
+                                                   : AppLocalizations.of(
+                                                           context)!
+                                                       .tooltipShowToken,
                                                onPressed: () {
                                                  selectionHaptic();
                                                  setState(() {

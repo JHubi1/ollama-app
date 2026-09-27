@@ -1,0 +1,829 @@
+{
+    "@@locale": "pt",
+    "appTitle": "Ollama",
+    "@appTitle": {
+        "description": "Title of the application",
+        "context": "Visible in the side bar"
+    },
+    "optionNewChat": "Nova conversa",
+    "@optionNewChat": {
+        "description": "Text displayed for new chat option",
+        "context": "Visible in the side bar"
+    },
+    "optionSettings": "Definições",
+    "@optionSettings": {
+        "description": "Text displayed for settings option",
+        "context": "Visible in the side bar"
+    },
+    "optionInstallPwa": "Instalar aplicação web",
+    "@optionInstallPwa": {
+        "description": "Text displayed for install PWA option",
+        "context": "Visible in the side bar"
+    },
+    "optionNoChatFound": "Não foram encontradas conversas",
+    "@optionNoChatFound": {
+        "description": "Text displayed when no chats are found",
+        "context": "Visible in the side bar"
+    },
+    "tipPrefix": "Dica: ",
+    "@tipPrefix": {
+        "description": "Prefix for tips",
+        "context": "Visible in the sidebar"
+    },
+    "tip0": "Edite as mensagens mantendo-as premidas",
+    "@tip0": {
+        "description": "First tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip1": "Elimine as mensagens tocando nelas duas vezes",
+    "@tip1": {
+        "description": "Second tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip2": "Pode alterar o tema nas definições",
+    "@tip2": {
+        "description": "Third tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip3": "Selecione um modelo multimodal para introduzir imagens",
+    "@tip3": {
+        "description": "Fourth tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "tip4": "As conversas são guardadas automaticamente",
+    "@tip4": {
+        "description": "Fifth tip displayed in the sidebar",
+        "context": "Visible in the sidebar"
+    },
+    "deleteChat": "Eliminar",
+    "@deleteChat": {
+        "description": "Text displayed for delete chat option",
+        "context": "Visible in the chat view, desktop only"
+    },
+    "renameChat": "Renomear",
+    "@renameChat": {
+        "description": "Text displayed for rename chat option",
+        "context": "Visible in the chat view, desktop only"
+    },
+    "takeImage": "Tirar fotografia",
+    "@takeImage": {
+        "description": "Text displayed for take image button",
+        "context": "Visible in attachment menu"
+    },
+    "uploadImage": "Carregar imagem",
+    "@uploadImage": {
+        "description": "Text displayed for image upload button",
+        "context": "Visible in attachment menu"
+    },
+    "notAValidImage": "Não é uma imagem válida",
+    "@notAValidImage": {
+        "description": "Text displayed when an image is not valid",
+        "context": "Visible in the chat view"
+    },
+    "imageOnlyConversation": "Conversa apenas com imagens",
+    "@imageOnlyConversation": {
+        "description": "Title, if 'Generate Title' is executed on a conversation with no text messages",
+        "context": "Visible in the chat view"
+    },
+    "messageInputPlaceholder": "Mensagem",
+    "@messageInputPlaceholder": {
+        "description": "Placeholder text for message input",
+        "context": "Visible in the chat view"
+    },
+    "tooltipAttachment": "Adicionar anexo",
+    "@tooltipAttachment": {
+        "description": "Tooltip for attachment button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipSend": "Enviar",
+    "@tooltipSend": {
+        "description": "Tooltip for send button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipSave": "Guardar",
+    "@tooltipSave": {
+        "description": "Tooltip for save button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipLetAIThink": "Deixar a IA pensar",
+    "@tooltipLetAIThink": {
+        "description": "Tooltip for let AI think button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipAddHostHeaders": "Adicionar cabeçalhos do servidor",
+    "@tooltipAddHostHeaders": {
+        "description": "Tooltip for add host headers button",
+        "context": "Visible in settings view"
+    },
+    "tooltipReset": "Reiniciar a conversa atual",
+    "@tooltipReset": {
+        "description": "Tooltip for reset button",
+        "context": "Visible in the chat view"
+    },
+    "tooltipOptions": "Mostrar opções",
+    "@tooltipOptions": {
+        "description": "Tooltip for options button",
+        "context": "Visible in the chat view"
+    },
+    "noModelSelected": "Nenhum modelo selecionado",
+    "@noModelSelected": {
+        "description": "Text displayed when no model is selected",
+        "context": "Visible in the chat view"
+    },
+    "noHostSelected": "Nenhum servidor selecionado; abra as definições para definir um",
+    "@noHostSelected": {
+        "description": "Text displayed when no host is selected",
+        "context": "Visible in the chat view, opens the settings dialog when clicked"
+    },
+    "noSelectedModel": "<seletor>",
+    "@noSelectedModel": {
+        "description": "Text displayed when no model is selected",
+        "context": "Visible in the chat view, opens the model dialog when clicked"
+    },
+    "newChatTitle": "Conversa sem nome",
+    "@newChatTitle": {
+        "description": "Title of a new chat",
+        "context": "Visible in the new chat dialog"
+    },
+    "modelDialogAddModel": "Adicionar",
+    "@modelDialogAddModel": {
+        "description": "Text displayed for add model button",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddPromptTitle": "Adicionar novo modelo",
+    "@modelDialogAddPromptTitle": {
+        "description": "Title of the add model dialog",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddPromptDescription": "Isto pode ser um nome normal (p. ex. 'llama3') ou um nome com etiqueta (p. ex. 'llama3:70b').",
+    "@modelDialogAddPromptDescription": {
+        "description": "Description of the add model dialog",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddPromptAlreadyExists": "O modelo já existe",
+    "@modelDialogAddPromptAlreadyExists": {
+        "description": "Text displayed when the model already exists",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddPromptInvalid": "Nome de modelo inválido",
+    "@modelDialogAddPromptInvalid": {
+        "description": "Text displayed when the model name is invalid",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAllowanceTitle": "Permitir proxy",
+    "@modelDialogAddAllowanceTitle": {
+        "description": "Title of the allow proxy dialog",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAllowanceDescription": "A aplicação Ollama tem de verificar se o modelo introduzido é válido. Para isso, normalmente enviamos um pedido web à lista de modelos do Ollama e verificamos o código de estado, mas como está a utilizar o cliente web, não o podemos fazer diretamente. Em vez disso, a aplicação enviará o pedido para outra API, alojada por JHubi1, para verificar por nós.\nEste é um pedido único e só será enviado quando adicionar um novo modelo.\nO seu endereço IP será enviado com o pedido e poderá ser guardado durante um máximo de dez minutos para impedir o envio de spam com intenções potencialmente prejudiciais.\nSe aceitar, a sua seleção será memorizada no futuro; se não, nada será enviado e o modelo não será adicionado.",
+    "@modelDialogAddAllowanceDescription": {
+        "description": "Description of the allow proxy dialog",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAllowanceAllow": "Permitir",
+    "@modelDialogAddAllowanceAllow": {
+        "description": "Text displayed for allow button, should be capitalized",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAllowanceDeny": "Negar",
+    "@modelDialogAddAllowanceDeny": {
+        "description": "Text displayed for deny button, should be capitalized",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAssuranceTitle": "Adicionar {model}?",
+    "@modelDialogAddAssuranceTitle": {
+        "description": "Title of the add model assurance dialog",
+        "context": "Visible in the model dialog",
+        "placeholders": {
+            "model": {
+                "type": "String",
+                "description": "Name of the model to be added"
+            }
+        }
+    },
+    "modelDialogAddAssuranceDescription": "Ao premir 'Adicionar', o modelo '{model}' será transferido diretamente do servidor Ollama para o seu servidor.\nIsto pode demorar algum tempo, dependendo da sua ligação à internet. A ação não pode ser cancelada.\nSe a aplicação for fechada durante a transferência, esta será retomada se voltar a introduzir o nome na janela de modelos.",
+    "@modelDialogAddAssuranceDescription": {
+        "description": "Description of the add model assurance dialog",
+        "context": "Visible in the model dialog",
+        "placeholders": {
+            "model": {
+                "type": "String",
+                "description": "Name of the model to be added"
+            }
+        }
+    },
+    "modelDialogAddAssuranceAdd": "Adicionar",
+    "@modelDialogAddAssuranceAdd": {
+        "description": "Text displayed for add button, should be capitalized",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddAssuranceCancel": "Cancelar",
+    "@modelDialogAddAssuranceCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddDownloadPercentLoading": "a carregar o progresso",
+    "@modelDialogAddDownloadPercentLoading": {
+        "description": "Text displayed while loading the download progress",
+        "context": "Visible in the model dialog; 'loading progress in the moment'"
+    },
+    "modelDialogAddDownloadPercent": "transferência em {percent}%",
+    "@modelDialogAddDownloadPercent": {
+        "description": "Text displayed while downloading a model",
+        "context": "Visible in the model dialog; download is at x percent",
+        "placeholders": {
+            "percent": {
+                "type": "String",
+                "description": "Percentage of the download"
+            }
+        }
+    },
+    "modelDialogAddDownloadFailed": "Desligado, tente novamente",
+    "@modelDialogAddDownloadFailed": {
+        "description": "Text displayed when the download of a model fails",
+        "context": "Visible in the model dialog"
+    },
+    "modelDialogAddDownloadSuccess": "Transferência concluída com sucesso",
+    "@modelDialogAddDownloadSuccess": {
+        "description": "Text displayed when the download of a model is successful",
+        "context": "Visible in the model dialog"
+    },
+    "deleteDialogTitle": "Eliminar conversa",
+    "@deleteDialogTitle": {
+        "description": "Title of the delete dialog",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogDescription": "Tem a certeza de que pretende continuar? Isto apagará toda a memória desta conversa e não pode ser anulado.\nPara desativar esta janela, visite as definições.",
+    "@deleteDialogDescription": {
+        "description": "Description of the delete dialog",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogDelete": "Eliminar",
+    "@deleteDialogDelete": {
+        "description": "Text displayed for delete button, should be capitalized",
+        "context": "Visible in the delete dialog"
+    },
+    "deleteDialogCancel": "Cancelar",
+    "@deleteDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the delete dialog"
+    },
+    "dialogEnterNewTitle": "Introduza o novo título",
+    "@dialogEnterNewTitle": {
+        "description": "Text displayed as description for new title input",
+        "context": "Visible in the rename dialog"
+    },
+    "dialogEditMessageTitle": "Editar mensagem",
+    "@dialogEditMessageTitle": {
+        "description": "Title of the edit message dialog",
+        "context": "Visible in the edit message dialog"
+    },
+    "settingsTitleBehavior": "Comportamento",
+    "@settingsTitleBehavior": {
+        "description": "Title of the behavior settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsDescriptionBehavior": "Altere o comportamento da IA ao seu gosto.",
+    "@settingsDescriptionBehavior": {
+        "description": "Description of the behavior settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTitleInterface": "Interface",
+    "@settingsTitleInterface": {
+        "description": "Title of the interface settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsDescriptionInterface": "Edite a aparência e o comportamento da aplicação Ollama.",
+    "@settingsDescriptionInterface": {
+        "description": "Description of the interface settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTitleVoice": "Voz",
+    "@settingsTitleVoice": {
+        "description": "Title of the voice settings section. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
+    "settingsDescriptionVoice": "Ative o modo de voz e configure as definições de voz.",
+    "@settingsDescriptionVoice": {
+        "description": "Description of the voice settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTitleExport": "Exportar",
+    "@settingsTitleExport": {
+        "description": "Title of the export settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsDescriptionExport": "Exporte e importe o seu histórico de conversas.",
+    "@settingsDescriptionExport": {
+        "description": "Description of the export settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTitleAbout": "Acerca de",
+    "@settingsTitleAbout": {
+        "description": "Title of the about settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsDescriptionAbout": "Verifique se há atualizações e saiba mais sobre a aplicação Ollama.",
+    "@settingsDescriptionAbout": {
+        "description": "Description of the about settings section",
+        "context": "Visible in the settings view"
+    },
+    "settingsSavedAutomatically": "As definições são guardadas automaticamente",
+    "@settingsSavedAutomatically": {
+        "description": "Text displayed when settings are saved automatically",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalAlpha": "alfa",
+    "@settingsExperimentalAlpha": {
+        "description": "Text displayed when a feature is in alpha",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalAlphaDescription": "Esta funcionalidade está em fase alfa e pode não funcionar como pretendido ou esperado.\nNão é possível excluir problemas críticos e/ou danos críticos permanentes no dispositivo e/ou nos serviços utilizados.\nUtilize por sua conta e risco. O autor da aplicação não assume qualquer responsabilidade.",
+    "@settingsExperimentalAlphaDescription": {
+        "description": "Description of the alpha feature",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalAlphaFeature": "Funcionalidade em alfa, mantenha premido para saber mais",
+    "@settingsExperimentalAlphaFeature": {
+        "description": "Text displayed when a feature is in alpha",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalBeta": "beta",
+    "@settingsExperimentalBeta": {
+        "description": "Text displayed when a feature is in beta",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalBetaDescription": "Esta funcionalidade está em fase beta e pode não funcionar como pretendido ou esperado.\nPodem ou não ocorrer problemas menos graves. Os danos não deverão ser críticos.\nUtilize por sua conta e risco.",
+    "@settingsExperimentalBetaDescription": {
+        "description": "Description of the beta feature",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalBetaFeature": "Funcionalidade em beta, mantenha premido para saber mais",
+    "@settingsExperimentalBetaFeature": {
+        "description": "Text displayed when a feature is in beta",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalDeprecated": "obsoleta",
+    "@settingsExperimentalDeprecated": {
+        "description": "Text displayed when a feature is deprecated",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalDeprecatedDescription": "Esta funcionalidade está obsoleta e será removida numa versão futura.\nPode não funcionar como pretendido ou esperado. Utilize por sua conta e risco.",
+    "@settingsExperimentalDeprecatedDescription": {
+        "description": "Description of the deprecated feature",
+        "context": "Visible in the settings view"
+    },
+    "settingsExperimentalDeprecatedFeature": "Funcionalidade obsoleta, mantenha premido para saber mais",
+    "@settingsExperimentalDeprecatedFeature": {
+        "description": "Text displayed when a feature is deprecated",
+        "context": "Visible in the settings view"
+    },
+    "settingsHost": "Servidor",
+    "@settingsHost": {
+        "description": "Text displayed as description for host input",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostValid": "Servidor válido",
+    "@settingsHostValid": {
+        "description": "Text displayed when the host is valid",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostChecking": "A verificar o servidor",
+    "@settingsHostChecking": {
+        "description": "Text displayed when the host is being checked",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostInvalid": "Problema: {type, select, url{URL inválido} host{Servidor inválido} auth{Falha na autenticação} timeout{Falha no pedido. Problemas no servidor} ratelimit{Demasiados pedidos} other{Falha no pedido}}",
+    "@settingsHostInvalid": {
+        "description": "Text displayed when the host is invalid",
+        "context": "Visible in the settings view",
+        "placeholders": {
+            "type": {
+                "type": "String",
+                "description": "Type of the issue, either 'url', 'host', 'auth', 'timeout', 'ratelimit' or 'other' (preferably 'host')"
+            }
+        }
+    },
+    "settingsHostHeaderTitle": "Definir cabeçalho do servidor",
+    "@settingsHostHeaderTitle": {
+        "description": "Text displayed as description for host header input",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostHeaderInvalid": "O texto introduzido não é um objeto JSON de cabeçalho válido",
+    "@settingsHostHeaderInvalid": {
+        "description": "Text displayed when the host header is invalid",
+        "context": "Visible in the settings view"
+    },
+    "settingsHostInvalidDetailed": "{type, select, url{O URL introduzido é inválido. Utilize um URL completo que comece por http:// ou https:// — por exemplo http://localhost:11434 para um servidor Ollama local, ou https://ollama.com para Ollama Cloud. Não acrescente uma barra final nem um caminho /api.} host{O servidor introduzido é inválido. Não é possível alcançá-lo. Verifique o servidor e tente novamente.} auth{O servidor rejeitou o pedido (401/403). Se se ligar ao Ollama Cloud (https://ollama.com), introduza a sua chave de API no campo de token abaixo — pode criá-la ou copiá-la em https://ollama.com/keys — e guarde-a. Se utilizar um servidor alojado por si, verifique o cabeçalho Authorization configurado para o servidor.} other{O servidor introduzido é inválido. Não é possível alcançá-lo. Verifique o servidor e tente novamente.}}",
+    "@settingsHostInvalidDetailed": {
+        "description": "Text displayed when the host is invalid",
+        "context": "Visible in the settings view",
+        "placeholders": {
+            "type": {
+                "type": "String",
+                "description": "Type of the issue, either 'url', 'host', 'auth' or 'other' (preferably 'host')"
+            }
+        }
+    },
+    "settingsApiTokenInvalid": "Token de API rejeitado",
+    "@settingsApiTokenInvalid": {
+        "description": "Text displayed when the Ollama Cloud API token is rejected by the server",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiTokenInvalidDetailed": "O token de API foi rejeitado pelo servidor (401/403). Verifique que foi copiado exatamente como apresentado em https://ollama.com/keys — é possível criar uma nova chave nessa página — e volte a guardá-lo. O token tem de estar definido enquanto o servidor for https://ollama.com.",
+    "@settingsApiTokenInvalidDetailed": {
+        "description": "Detailed instructions shown when the Ollama Cloud API token is rejected",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiTokenVerified": "Token de API guardado e verificado",
+    "@settingsApiTokenVerified": {
+        "description": "Text displayed when the API token was accepted by the server",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiToken": "Token de API do Ollama Cloud",
+    "@settingsApiToken": {
+        "description": "Label of the Ollama Cloud API token input field",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiTokenHint": "Cole o token de ollama.com",
+    "@settingsApiTokenHint": {
+        "description": "Hint of the Ollama Cloud API token input field",
+        "context": "Visible in the settings view"
+    },
+    "tooltipShowToken": "Mostrar token",
+    "@tooltipShowToken": {
+        "description": "Tooltip displayed for the button that reveals the API token"
+    },
+    "tooltipHideToken": "Ocultar token",
+    "@tooltipHideToken": {
+        "description": "Tooltip displayed for the button that hides the API token"
+    },
+    "voiceLanguageInstruction": "Tem de escrever no seguinte idioma: {language}!",
+    "@voiceLanguageInstruction": {
+        "description": "System instruction telling the model to answer in the selected voice mode language",
+        "placeholders": {
+            "language": {
+                "type": "String",
+                "description": "The voice mode language identifier, e.g. en_US"
+            }
+        }
+    },
+    "settingsSystemMessage": "Mensagem do sistema",
+    "@settingsSystemMessage": {
+        "description": "Text displayed as description for system message input",
+        "context": "Visible in the settings view"
+    },
+    "settingsUseSystem": "Utilizar mensagem do sistema",
+    "@settingsUseSystem": {
+        "description": "Text displayed as description for use system message toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsUseSystemDescription": "Desativa a definição da mensagem do sistema acima e utiliza a do modelo em vez disso. Pode ser útil para modelos com ficheiros de modelo",
+    "@settingsUseSystemDescription": {
+        "description": "Description of the use system message toggle",
+        "context": "Visible in the settings view by long pressing the toggle"
+    },
+    "settingsDisableMarkdown": "Desativar markdown",
+    "@settingsDisableMarkdown": {
+        "description": "Text displayed as description for disable markdown toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsBehaviorNotUpdatedForOlderChats": "As definições de comportamento não são atualizadas para conversas mais antigas",
+    "@settingsBehaviorNotUpdatedForOlderChats": {
+        "description": "Text displayed when behavior settings are not updated for older chats",
+        "context": "Visible in the settings view"
+    },
+    "settingsShowModelTags": "Mostrar etiquetas do modelo",
+    "@settingsShowModelTags": {
+        "description": "Text displayed as description for show model tags toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsPreloadModels": "Pré-carregar modelos",
+    "@settingsPreloadModels": {
+        "description": "Text displayed as description for preload models toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsResetOnModelChange": "Reiniciar ao mudar de modelo",
+    "@settingsResetOnModelChange": {
+        "description": "Text displayed as description for reset on model change toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsRequestTypeStream": "Stream",
+    "@settingsRequestTypeStream": {
+        "description": "Text displayed as description for stream request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
+    "settingsRequestTypeRequest": "Request",
+    "@settingsRequestTypeRequest": {
+        "description": "Text displayed as description for request request type. Do not translate if not required!",
+        "context": "Visible in the settings view"
+    },
+    "settingsGenerateTitles": "Gerar títulos",
+    "@settingsGenerateTitles": {
+        "description": "Text displayed as description for generate titles toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsEnableEditing": "Edição de mensagens",
+    "@settingsEnableEditing": {
+        "description": "Text displayed as description for enable editing toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsAskBeforeDelete": "Perguntar antes de eliminar a conversa",
+    "@settingsAskBeforeDelete": {
+        "description": "Text displayed as description for ask before deletion toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsShowTips": "Mostrar dicas na barra lateral",
+    "@settingsShowTips": {
+        "description": "Text displayed as description for show tips toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsKeepModelLoadedAlways": "Manter o modelo sempre carregado",
+    "@settingsKeepModelLoadedAlways": {
+        "description": "Text displayed as description for keep model loaded always toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsKeepModelLoadedNever": "Não manter o modelo carregado",
+    "@settingsKeepModelLoadedNever": {
+        "description": "Text displayed as description for don't keep model loaded toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsKeepModelLoadedFor": "Definir um tempo específico para manter o modelo carregado",
+    "@settingsKeepModelLoadedFor": {
+        "description": "Text displayed as description for keep model loaded for toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsKeepModelLoadedSet": "Manter o modelo carregado durante {minutes} minutos",
+    "@settingsKeepModelLoadedSet": {
+        "description": "Text displayed as description for keep model loaded for set time toggle",
+        "context": "Visible in the settings view",
+        "placeholders": {
+            "minutes": {
+                "type": "String",
+                "description": "Minutes the model should be kept loaded"
+            }
+        }
+    },
+    "settingsTimeoutMultiplier": "Multiplicador do tempo limite",
+    "@settingsTimeoutMultiplier": {
+        "description": "Text displayed as title for the timeout multiplier section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTimeoutMultiplierDescription": "Selecione o multiplicador que será aplicado a todos os valores de tempo limite na aplicação. Pode ser útil com uma ligação à internet lenta ou um servidor lento.",
+    "@settingsTimeoutMultiplierDescription": {
+        "description": "Description of the timeout multiplier section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTimeoutMultiplierExample": "P. ex., tempo limite da mensagem:",
+    "@settingsTimeoutMultiplierExample": {
+        "description": "Example for the timeout multiplier",
+        "context": "Visible in the settings view"
+    },
+    "settingsEnableHapticFeedback": "Ativar feedback háptico",
+    "@settingsEnableHapticFeedback": {
+        "description": "Text displayed as description for enable haptic feedback toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsMaximizeOnStart": "Iniciar maximizado",
+    "@settingsMaximizeOnStart": {
+        "description": "Text displayed as description for maximize on start toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessSystem": "Sistema",
+    "@settingsBrightnessSystem": {
+        "description": "Text displayed as description for system brightness option",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessLight": "Claro",
+    "@settingsBrightnessLight": {
+        "description": "Text displayed as description for light brightness option",
+        "context": "Visible in the settings view"
+    },
+    "settingsBrightnessDark": "Escuro",
+    "@settingsBrightnessDark": {
+        "description": "Text displayed as description for dark brightness option",
+        "context": "Visible in the settings view"
+    },
+    "settingsThemeDevice": "Dispositivo",
+    "@settingsThemeDevice": {
+        "description": "Text displayed as description for device theme option",
+        "context": "Visible in the settings view"
+    },
+    "settingsThemeOllama": "Ollama",
+    "@settingsThemeOllama": {
+        "description": "Text displayed as description for Ollama theme option",
+        "context": "Visible in the settings view"
+    },
+    "settingsTemporaryFixes": "Correções temporárias da interface",
+    "@settingsTemporaryFixes": {
+        "description": "Text displayed as description for temporary fixes section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTemporaryFixesDescription": "Ative correções temporárias para problemas da interface.\nMantenha premido nas opções individuais para saber mais.",
+    "@settingsTemporaryFixesDescription": {
+        "description": "Description of the temporary fixes section",
+        "context": "Visible in the settings view"
+    },
+    "settingsTemporaryFixesInstructions": "Não ative nenhuma destas definições, a menos que saiba o que está a fazer! As soluções indicadas podem não funcionar como esperado.\nNão podem ser consideradas definitivas nem devem ser avaliadas como tal. Podem ocorrer problemas.",
+    "@settingsTemporaryFixesInstructions": {
+        "description": "Instructions and warnings for the temporary fixes",
+        "context": "Visible in the settings view"
+    },
+    "settingsTemporaryFixesNoFixes": "Não há correções disponíveis",
+    "@settingsTemporaryFixesNoFixes": {
+        "description": "Text displayed when no fixes are available",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoicePermissionLoading": "A carregar as permissões de voz ...",
+    "@settingsVoicePermissionLoading": {
+        "description": "Text displayed while loading voice permissions",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceTtsNotSupported": "Síntese de voz não suportada",
+    "@settingsVoiceTtsNotSupported": {
+        "description": "Text displayed when text-to-speech is not supported",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceTtsNotSupportedDescription": "Os serviços de síntese de voz não são suportados para o idioma selecionado. Selecione outro idioma no painel de idiomas para voltar a ativá-los.\nOutros serviços, como o reconhecimento de voz e o pensamento da IA, continuarão a funcionar normalmente, mas a interação pode não ser tão fluida.",
+    "@settingsVoiceTtsNotSupportedDescription": {
+        "description": "Description of the text-to-speech not supported message",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoicePermissionNot": "Permissões não concedidas",
+    "@settingsVoicePermissionNot": {
+        "description": "Text displayed when voice permissions are not granted",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceNotEnabled": "Modo de voz não ativado",
+    "@settingsVoiceNotEnabled": {
+        "description": "Text displayed when voice mode is not enabled",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceNotSupported": "Modo de voz não suportado",
+    "@settingsVoiceNotSupported": {
+        "description": "Text displayed when voice mode is not supported",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceEnable": "Ativar o modo de voz",
+    "@settingsVoiceEnable": {
+        "description": "Text displayed as description for enable voice mode toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceNoLanguage": "Nenhum idioma selecionado",
+    "@settingsVoiceNoLanguage": {
+        "description": "Text displayed when no language is selected",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoiceLimitLanguage": "Limitar ao idioma selecionado",
+    "@settingsVoiceLimitLanguage": {
+        "description": "Text displayed as description for limit language toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsVoicePunctuation": "Ativar pontuação da IA",
+    "@settingsVoicePunctuation": {
+        "description": "Text displayed as description for enable AI punctuation toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportChats": "Exportar conversas",
+    "@settingsExportChats": {
+        "description": "Text displayed as description for export chats button",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportChatsSuccess": "Conversas exportadas com sucesso",
+    "@settingsExportChatsSuccess": {
+        "description": "Text displayed when chats are exported successfully",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChats": "Importar conversas",
+    "@settingsImportChats": {
+        "description": "Text displayed as description for import chats button",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsTitle": "Importar",
+    "@settingsImportChatsTitle": {
+        "description": "Title of the import dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsDescription": "O passo seguinte importará as conversas do ficheiro selecionado. Isto substituirá todas as conversas atualmente disponíveis.\nPretende continuar?",
+    "@settingsImportChatsDescription": {
+        "description": "Description of the import dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsImport": "Importar e apagar",
+    "@settingsImportChatsImport": {
+        "description": "Text displayed for import button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsCancel": "Cancelar",
+    "@settingsImportChatsCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsSuccess": "Conversas importadas com sucesso",
+    "@settingsImportChatsSuccess": {
+        "description": "Text displayed when chats are imported successfully",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportInfo": "Esta opção permite exportar e importar o seu histórico de conversas. Pode ser útil se quiser transferir o seu histórico de conversas para outro dispositivo ou criar uma cópia de segurança do mesmo",
+    "@settingsExportInfo": {
+        "description": "Information displayed for export and import options",
+        "context": "Visible in the settings view"
+    },
+    "settingsExportWarning": "Vários históricos de conversas não serão unificados! Perderá o seu histórico de conversas atual se importar um novo",
+    "@settingsExportWarning": {
+        "description": "Warning displayed for export and import options",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateCheck": "Procurar atualizações",
+    "@settingsUpdateCheck": {
+        "description": "Text displayed as description for check for updates button",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateChecking": "A procurar atualizações ...",
+    "@settingsUpdateChecking": {
+        "description": "Text displayed while looking for updates",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateLatest": "Está na versão mais recente",
+    "@settingsUpdateLatest": {
+        "description": "Text displayed when the app is up to date",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateAvailable": "Atualização disponível (v{version})",
+    "@settingsUpdateAvailable": {
+        "description": "Text displayed when an update is available",
+        "context": "Visible in the settings view",
+        "placeholders": {
+            "version": {
+                "type": "String",
+                "description": "Version number of the available update"
+            }
+        }
+    },
+    "settingsUpdateRateLimit": "Não é possível verificar, limite de pedidos da API excedido",
+    "@settingsUpdateRateLimit": {
+        "description": "Text displayed when the API rate limit is exceeded",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateIssue": "Ocorreu um problema",
+    "@settingsUpdateIssue": {
+        "description": "Text displayed when an issue occurs while checking for updates",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogTitle": "Nova versão disponível",
+    "@settingsUpdateDialogTitle": {
+        "description": "Title of the update dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogDescription": "Está disponível uma nova versão do Ollama. Quer transferi-la e instalá-la agora?",
+    "@settingsUpdateDialogDescription": {
+        "description": "Description of the update dialog",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateChangeLog": "Registo de alterações",
+    "@settingsUpdateChangeLog": {
+        "description": "Text displayed as description for change log button",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogUpdate": "Atualizar",
+    "@settingsUpdateDialogUpdate": {
+        "description": "Text displayed for update button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsUpdateDialogCancel": "Cancelar",
+    "@settingsUpdateDialogCancel": {
+        "description": "Text displayed for cancel button, should be capitalized",
+        "context": "Visible in the settings view"
+    },
+    "settingsCheckForUpdates": "Procurar atualizações ao abrir",
+    "@settingsCheckForUpdates": {
+        "description": "Text displayed as description for check for updates toggle",
+        "context": "Visible in the settings view"
+    },
+    "settingsGithub": "GitHub",
+    "@settingsGithub": {
+        "description": "Text displayed as description for GitHub button",
+        "context": "Visible in the settings view"
+    },
+    "settingsReportIssue": "Comunicar problema",
+    "@settingsReportIssue": {
+        "description": "Text displayed as description for report issue button",
+        "context": "Visible in the settings view"
+    },
+    "settingsLicenses": "Licenças",
+    "@settingsLicenses": {
+        "description": "Text displayed as description for licenses button",
+        "context": "Visible in the settings view"
+    },
+    "settingsVersion": "Ollama App v{version}",
+    "@settingsVersion": {
+        "description": "Text displayed as description for version",
+        "context": "Visible in the settings view",
+        "placeholders": {
+            "version": {
+                "type": "String",
+                "description": "Version number of the app"
+            }
+        }
+    }
+}
