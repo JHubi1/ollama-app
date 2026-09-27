@@ -10,6 +10,7 @@ import 'worker/desktop.dart';
 import 'worker/setter.dart';
 import 'worker/clients.dart';
 import 'worker/secure_storage.dart';
+import 'worker/theme.dart';
 
 import 'package:ollama_app/l10n/gen/app_localizations.dart';
 
@@ -17,6 +18,7 @@ import 'settings/behavior.dart';
 import 'settings/interface.dart';
 import 'settings/voice.dart';
 import 'settings/export.dart';
+import 'settings/accessibility.dart';
 import 'settings/about.dart';
 
 import 'package:dartx/dartx.dart';
@@ -34,7 +36,24 @@ Widget toggle(BuildContext context, String text, bool value,
     void Function()? onDoubleTap,
     Widget? icon,
     bool? iconAfterwards}) {
-  return InkWell(
+  return MergeSemantics(
+    child: Semantics(
+        label: text,
+        toggled: value,
+        enabled: !disabled,
+        excludeSemantics: true,
+        onTap: () {
+          if (disabled) {
+            selectionHaptic();
+            if (onDisabledTap != null) {
+              onDisabledTap();
+            }
+          } else {
+            onChanged(!value);
+          }
+        },
+        onLongPress: onLongTap,
+        child: InkWell(
     enableFeedback: false,
     splashFactory: NoSplash.splashFactory,
     highlightColor: Colors.transparent,
@@ -67,9 +86,8 @@ Widget toggle(BuildContext context, String text, bool value,
                 constraints: BoxConstraints(
                     maxWidth: constraints.maxWidth - (icon != null ? 32 : 0)),
                 child: Text(text,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(color: disabled ? Colors.grey : null)),
+                    style: TextStyle(
+                        color: disabled ? accessibleMuted(context) : null)),
               ),
               (icon != null && (iconAfterwards ?? false))
                   ? Transform.translate(
@@ -115,7 +133,7 @@ Widget toggle(BuildContext context, String text, bool value,
                         : null))
       ]),
     ),
-  );
+        )));
 }
 
 Widget title(String text, {double top = 16, double bottom = 16}) {
@@ -174,12 +192,7 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
       !description.startsWith("\n")) {
     description = " • $description";
   }
-  return AnimatedContainer(
-    duration: const Duration(milliseconds: 200),
-    padding: (context != null && desktopLayoutNotRequired(context))
-        ? const EdgeInsets.only(top: 8, bottom: 8)
-        : EdgeInsets.zero,
-    child: InkWell(
+  final InkWell inkWell = InkWell(
         enableFeedback: false,
         // disable hint that clickable, other tap functions still functional
         splashFactory: (onPressed == null) ? NoSplash.splashFactory : null,
@@ -218,7 +231,7 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                     ? ImageIcon(MemoryImage(kTransparentImage))
                     : Icon(icon,
                         color: disabled || (iconAfterwards ?? false)
-                            ? Colors.grey
+                            ? accessibleMuted(context)
                             : color)
                 : const SizedBox.shrink();
             return Row(
@@ -238,8 +251,9 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                       : const SizedBox.shrink(),
                   Expanded(child: Builder(builder: (context) {
                     Widget textWidget = Text(text,
-                        style:
-                            TextStyle(color: disabled ? Colors.grey : color));
+                        style: TextStyle(
+                            color:
+                                disabled ? accessibleMuted(context) : color));
                     if (badge != null) {
                       textWidget = Badge(
                           label: Text(badge),
@@ -282,8 +296,8 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                                       (desktopLayoutNotRequired(context) ||
                                           !onlyDesktopDescription))
                                   ? Text(description!,
-                                      style: const TextStyle(
-                                          color: Colors.grey,
+                                      style: TextStyle(
+                                          color: accessibleMuted(context),
                                           overflow: TextOverflow.ellipsis))
                                   : const SizedBox.shrink()
                             ]);
@@ -299,9 +313,10 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                                           !onlyDesktopDescription))
                                   ? Expanded(
                                       child: Text(description!,
-                                          style: const TextStyle(
-                                              color: Colors.grey,
-                                              overflow: TextOverflow.ellipsis)),
+                                          style: TextStyle(
+                                              color: accessibleMuted(context),
+                                              overflow:
+                                                  TextOverflow.ellipsis)),
                                     )
                                   : const SizedBox.shrink()
                             ]);
@@ -310,7 +325,20 @@ Widget button(String text, IconData? icon, void Function()? onPressed,
                   }))
                 ]);
           }),
-        )),
+        ),
+      );
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 200),
+    padding: (context != null && desktopLayoutNotRequired(context))
+        ? const EdgeInsets.only(top: 8, bottom: 8)
+        : EdgeInsets.zero,
+    child: Semantics(
+        button: true,
+        enabled: !disabled,
+        child: MergeSemantics(
+            child: (description == null)
+                ? Tooltip(message: text, child: inkWell)
+                : inkWell)),
   );
 }
 
@@ -644,15 +672,17 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                       child: hostLoading
                                           ? Row(
                                               children: [
-                                                const Icon(Icons.search_rounded,
-                                                    color: Colors.grey),
+                                                Icon(Icons.search_rounded,
+                                                    color: accessibleMuted(
+                                                        context)),
                                                 const SizedBox(width: 8),
                                                 Text(
                                                     AppLocalizations.of(
                                                             context)!
                                                         .settingsHostChecking,
-                                                    style: const TextStyle(
-                                                        color: Colors.grey,
+                                                    style: TextStyle(
+                                                        color: accessibleMuted(
+                                                            context),
                                                         fontFamily:
                                                             "monospace"))
                                               ],
@@ -660,23 +690,17 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                           : Row(
                                               children: [
                                                 Icon(Icons.check_rounded,
-                                                    color: Colors.green
-                                                        .harmonizeWith(
-                                                            Theme.of(context)
-                                                                .colorScheme
-                                                                .primary)),
+                                                    color: accessibleSuccess(
+                                                        context)),
                                                 const SizedBox(width: 8),
                                                 Text(
                                                     AppLocalizations.of(
                                                             context)!
                                                         .settingsHostValid,
                                                     style: TextStyle(
-                                                        color: Colors.green
-                                                            .harmonizeWith(
-                                                                Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .primary),
+                                                        color:
+                                                            accessibleSuccess(
+                                                                context),
                                                         fontFamily:
                                                             "monospace"))
                                               ],
@@ -828,6 +852,19 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                               context: context,
                               description:
                                   "\n${AppLocalizations.of(context)!.settingsDescriptionExport}"),
+                          button(
+                              AppLocalizations.of(context)!
+                                  .settingsTitleAccessibility,
+                              Icons.accessibility_new_rounded, () {
+                            selectionHaptic();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ScreenSettingsAccessibility()));
+                          },
+                              context: context,
+                              description:
+                                  "\n${AppLocalizations.of(context)!.settingsDescriptionAccessibility}"),
                           Builder(builder: (context) {
                             return button(
                                 AppLocalizations.of(context)!
@@ -915,11 +952,8 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                                           .settingsSavedAutomatically,
                                                       Icons.info_rounded,
                                                       null,
-                                                      color: Colors.grey
-                                                          .harmonizeWith(
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary)),
+                                                      color: accessibleMuted(
+                                                          context)),
                                                 )
                                               ])),
                                           verticalTitleDivider(
@@ -947,8 +981,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                                       .settingsSavedAutomatically,
                                   Icons.info_rounded,
                                   null,
-                                  color: Colors.grey.harmonizeWith(
-                                      Theme.of(context).colorScheme.primary))
+                                  color: accessibleMuted(context))
                         ]);
                       })),
                 ))));

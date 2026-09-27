@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:ollama_app/l10n/gen/app_localizations.dart';
+
 import 'main.dart';
 import 'worker/theme.dart';
 
@@ -38,18 +40,22 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    SmoothPageIndicator(
-                        controller: _pageController,
-                        count: 3,
-                        effect: ExpandingDotsEffect(
-                            activeDotColor: (Theme.of(context).brightness ==
-                                    Brightness.light)
-                                ? themeLight().colorScheme.primary
-                                : themeDark().colorScheme.primary)),
+                    ExcludeSemantics(
+                        child: SmoothPageIndicator(
+                            controller: _pageController,
+                            count: 3,
+                            effect: ExpandingDotsEffect(
+                                activeDotColor: (Theme.of(context).brightness ==
+                                        Brightness.light)
+                                    ? themeLight().colorScheme.primary
+                                    : themeDark().colorScheme.primary))),
                   ]));
             }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
+            tooltip: (page < 2)
+                ? AppLocalizations.of(context)!.tooltipWelcomeNext
+                : AppLocalizations.of(context)!.tooltipWelcomeFinish,
             onPressed: () {
               if (page < 2) {
                 _pageController.nextPage(
@@ -76,32 +82,47 @@ class _ScreenWelcomeState extends State<ScreenWelcome> {
                   },
                   children: [
                 Center(
-                    child: (Theme.of(context).brightness == Brightness.light)
-                        ? FadeInImage(
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: const AssetImage("assets/welcome/1.png"))
-                        : FadeInImage(
-                            placeholder: MemoryImage(kTransparentImage),
-                            image:
-                                const AssetImage("assets/welcome/1dark.png"))),
+                    child: Semantics(
+                        label: AppLocalizations.of(context)!
+                            .accessibilityWelcomePage1,
+                        image: true,
+                        excludeSemantics: true,
+                        child: (Theme.of(context).brightness == Brightness.light)
+                            ? FadeInImage(
+                                placeholder: MemoryImage(kTransparentImage),
+                                image: const AssetImage("assets/welcome/1.png"))
+                            : FadeInImage(
+                                placeholder: MemoryImage(kTransparentImage),
+                                image: const AssetImage(
+                                    "assets/welcome/1dark.png")))),
                 Center(
-                    child: (Theme.of(context).brightness == Brightness.light)
-                        ? FadeInImage(
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: const AssetImage("assets/welcome/2.png"))
-                        : FadeInImage(
-                            placeholder: MemoryImage(kTransparentImage),
-                            image:
-                                const AssetImage("assets/welcome/2dark.png"))),
+                    child: Semantics(
+                        label: AppLocalizations.of(context)!
+                            .accessibilityWelcomePage2,
+                        image: true,
+                        excludeSemantics: true,
+                        child: (Theme.of(context).brightness == Brightness.light)
+                            ? FadeInImage(
+                                placeholder: MemoryImage(kTransparentImage),
+                                image: const AssetImage("assets/welcome/2.png"))
+                            : FadeInImage(
+                                placeholder: MemoryImage(kTransparentImage),
+                                image: const AssetImage(
+                                    "assets/welcome/2dark.png")))),
                 Center(
-                    child: (Theme.of(context).brightness == Brightness.light)
-                        ? FadeInImage(
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: const AssetImage("assets/welcome/3.png"))
-                        : FadeInImage(
-                            placeholder: MemoryImage(kTransparentImage),
-                            image:
-                                const AssetImage("assets/welcome/3dark.png")))
+                    child: Semantics(
+                        label: AppLocalizations.of(context)!
+                            .accessibilityWelcomePage3,
+                        image: true,
+                        excludeSemantics: true,
+                        child: (Theme.of(context).brightness == Brightness.light)
+                            ? FadeInImage(
+                                placeholder: MemoryImage(kTransparentImage),
+                                image: const AssetImage("assets/welcome/3.png"))
+                            : FadeInImage(
+                                placeholder: MemoryImage(kTransparentImage),
+                                image: const AssetImage(
+                                    "assets/welcome/3dark.png"))))
               ])),
         ])));
   }
