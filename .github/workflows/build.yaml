@@ -44,6 +44,8 @@ jobs:
         run: flutter config --no-analytics
       - name: Analyzing project code
         run: flutter analyze --no-fatal-infos
+      - name: Running tests
+        run: flutter test --reporter expanded
   build-android:
     name: Building for Android
     if: ${{ github.event.inputs.buildAndroid == 'true' }}
