@@ -13,23 +13,23 @@ ColorScheme? colorSchemeDark;
 //   warning text   5.6:1 (light) / 12.1:1 (dark)  -> AA  (needs 4.5:1)
 Color accessibleMuted(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
-        ? Colors.grey.sh800
-        : Colors.grey.sh400;
+        ? Colors.grey.shade800
+        : Colors.grey.shade400;
 
 Color accessibleError(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
-        ? Colors.red.sh900
-        : Colors.red.sh300;
+        ? Colors.red.shade900
+        : Colors.red.shade300;
 
 Color accessibleSuccess(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
-        ? Colors.green.sh900
-        : Colors.green.sh300;
+        ? Colors.green.shade900
+        : Colors.green.shade300;
 
 Color accessibleWarning(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
-        ? Colors.orange.sh900
-        : Colors.orange.sh300;
+        ? Colors.orange.shade900
+        : Colors.orange.shade300;
 
 ThemeData themeModifier(ThemeData theme) {
   return theme.copyWith(
@@ -68,7 +68,7 @@ ThemeData themeLight() {
             onPrimary: Colors.white,
             secondary: Colors.white,
             onSecondary: Colors.black,
-            error: Colors.red.sh900,
+            error: Colors.red.shade900,
             onError: Colors.white,
             surface: Colors.white,
             onSurface: Colors.black)));
@@ -86,7 +86,7 @@ ThemeData themeDark() {
             onPrimary: Colors.black,
             secondary: Colors.black,
             onSecondary: Colors.white,
-            error: Colors.red.sh300,
+            error: Colors.red.shade300,
             onError: Colors.black,
             surface: Colors.black,
             onSurface: Colors.white)));

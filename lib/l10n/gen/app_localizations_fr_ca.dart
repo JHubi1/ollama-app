@@ -1,6 +1,7 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
+import 'app_localizations_fr.dart';
 
 // ignore_for_file: type=lint
 

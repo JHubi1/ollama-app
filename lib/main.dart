@@ -847,7 +847,7 @@ class _MainAppState extends State<MainApp> {
                             child: Text(
                                 "*Build Error:*\n\nuseHost: $useHost\nallowSettings: $allowSettings\n\nYou created this build? One of them must be set to true or the app is not functional!\n\nYou received this build by someone else? Please contact them and report the issue.",
                                 style: TextStyle(
-                                    color: Colors.red.sh300,
+                                    color: Colors.red.shade300,
                                     fontFamily: "monospace")))));
               });
         }
