@@ -154,5 +154,336 @@
   "settingsGithub": "GitHub",
   "settingsReportIssue": "Հաղորդել Խնդիր",
   "settingsLicenses": "Արտոնագրեր",
-  "settingsVersion": "Ollama App v{version}"
+  "settingsVersion": "Ollama App v{version}",
+  "settingsTitleAccessibility": "Հասանելիություն",
+  "@settingsTitleAccessibility": {
+    "description": "Title of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "settingsDescriptionAccessibility": "Հասանելիության հայտարարություն, ստուգման արդյունքներ և խնդիր հաղորդելու եղանակ:",
+  "@settingsDescriptionAccessibility": {
+    "description": "Description of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "accessibilityStatementTitle": "Հասանելիության հայտարարություն",
+  "@accessibilityStatementTitle": {
+    "description": "Title of the accessibility statement section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentIntro": "Ollama-ն պետք է օգտագործելի լինի բոլոր կարողություններով մարդկանց համար՝ մեր աջակցվող ամեն լեզվով: Ձայնային կառավարումը, էկրանի ընթերցողները, ստեղնաշարով նավարկությունը և բարձր կոնտրաստով պատկերումը այս հավելվածն օգտագործելու լիարժեք եղանակներ են, ոչ թե հետագա ավելացումներ:",
+  "@accessibilityCommitmentIntro": {
+    "description": "Opening commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentDetails": "Գործնականում դա նշանակում է. ամեն փոխազդեցիկ կառավարիչ ունի անուն, որը հայտարարում է էկրանի ընթերցողը (ներառյալ ձայնային ռեժիմի վիճակը), կոճակները պահպանում են առնվազն 48dp հպման թիրախ, ստեղնաշարի ֆոկուսը հետևում է միջերեսի տեսողական հերթականությանը, կարգավիճակի հաղորդագրությունները հայտարարվում են փոփոխվելիս, և միջերեսը մնում է օգտագործելի մեծ տեքստի չափսերի և և՛ բաց, և՛ մուգ թեմաների դեպքում:",
+  "@accessibilityCommitmentDetails": {
+    "description": "Detailed commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceTitle": "Համապատասխանության կարգավիճակ",
+  "@accessibilityConformanceTitle": {
+    "description": "Title of the conformance status section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceStatus": "Այս հավելվածը նախագծված է համապատասխանելու Վեբ Բովանդակության Հասանելիության Ուղեցույցներին (WCAG) 2.2 մակարդակ AA: Համապատասխանությունը երրորդ կողմի կողմից անկախ վկայագրված չէ. այն հիմնված է մեր սեփական ավտոմատ ստուգումների վրա: Որտեղ հնարավոր է, մենք գերազանցում ենք AA-ն և կիրառում ենք WCAG AAA միջոցներ, որոնք ներկայացված են ստորև:",
+  "@accessibilityConformanceStatus": {
+    "description": "Conformance status text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasuresTitle": "AA-ից բարձր (AAA միջոցներ)",
+  "@accessibilityAaaMeasuresTitle": {
+    "description": "Title of the AAA measures section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasures": "Հիմնական տեքստը օգտագործում է 21:1 կոնտրաստ երկու թեմաներում (AAA-ն պահանջում է 7:1), խոնարհված երկրորդային տեքստը՝ 10:1 կամ ավելի լավ, հաջողության և նախազգուշացումների կարգավիճակի գույները հասնում են AAA կոնտրաստի երկու թեմաներում, իսկ սխալի տեքստը մուգ թեմայում հասնում է AAA կոնտրաստի: AAA-ն լրացուցիչ պահանջում է միջոցներ, որոնք անիրագործելի են այս չափի չաթ հավելվածի համար (օրինակ՝ 7:1 կոնտրաստ բացարձակապես ամեն տեքստի վրա և ընթերցանության մակարդակի սահմանափակումներ), ուստի մենք AA-ն ընդունում ենք որպես երաշխիք, իսկ այս AAA միջոցները՝ որպես լրացումներ:",
+  "@accessibilityAaaMeasures": {
+    "description": "Text describing the applied AAA measures",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaTitle": "Հասանելիություն Օնտարիոյի հաշմանդամություն ունեցող անձանց համար ակտ (AODA)",
+  "@accessibilityAodaTitle": {
+    "description": "Title of the AODA section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaText": "Օնտարիոյի «Հասանելիություն Օնտարիոյի հաշմանդամություն ունեցող անձանց համար» ակտը (AODA) պահանջում է, որ թվային արտադրանքները հասնեն WCAG 2.0/2.1 մակարդակ AA-ին: Այս հավելվածի WCAG 2.2 մակարդակ AA նպատակը հասնում և գերազանցում է այդ բազային մակարդակին: Հասանելիության վերաբերյալ արձագանքը ողջունվում է այս էջի կապի ձևի միջոցով՝ համապատասխան AODA-ի՝ արձագանքի ուղիները հասանելի դարձնելու պահանջին:",
+  "@accessibilityAodaText": {
+    "description": "Text about AODA compliance",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeTitle": "Եվրոպական չափորոշիչներ (EN 301 549)",
+  "@accessibilityStandardsEuropeTitle": {
+    "description": "Title of the European standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeText": "Եվրոպական Միությունում ներդաշնակեցված EN 301 549 չափորոշիչը սահմանում է Եվրոպական Հասանելիության Ակտի ICT հասանելիության պահանջները, որը հղում է կատարում WCAG 2.1 մակարդակ AA-ին: Այս հավելվածի WCAG 2.2 մակարդակ AA նպատակը ծածկում է այդ պահանջները՝ աջակցելով եվրոպական հասանելիության պարտավորություններին, որոնք ուժի մեջ են մտնում 2025 թ. հունիսի 28-ից:",
+  "@accessibilityStandardsEuropeText": {
+    "description": "Text about the European standards (EN 301 549 / EAA)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsTitle": "Միացյալ Նահանգների չափորոշիչներ (ADA / Section 508)",
+  "@accessibilityStandardsUsTitle": {
+    "description": "Title of the United States standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsText": "Միացյալ Նահանգներում Հաշմանդամություն ունեցող ամերիկացիների ակտը (ADA) ընդհանուր ոչ խտրականության բազային մակարդակն է, իսկ Վերականգնման ակտի Section 508-ը պահանջում է WCAG 2.0 մակարդակ AA դաշնային տեխնոլոգիաների համար (Section 504-ը նման պարտավորություններ է տարածում ֆինանսավորվող ծրագրերի վրա): Այս հավելվածի WCAG 2.2 մակարդակ AA նպատակը հասնում և գերազանցում է այդ բազային մակարդակներին:",
+  "@accessibilityStandardsUsText": {
+    "description": "Text about the US standards (ADA / Section 508 / Section 504)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssuesTitle": "Հայտնի սահմանափակումներ",
+  "@accessibilityKnownIssuesTitle": {
+    "description": "Title of the known limitations section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssues": "Աշխատասեղանի պատուհանի վերնագրի կոճակները (նվազագույնի հասցնել, առավելագույնի հասցնել, փակել) տրամադրվում են օպերացիոն համակարգի ինտեգրման կողմից և հասանելի չեն հավելվածի էկրանի ընթերցողի ծառին: Չաթի գրադարանը պատկերում է սեփական միջերեսի փոքր մասը, որը դեռ կարող է հասանելի չլինել բոլոր լեզուներով: Ձայնային ռեժիմում պատասխանի տեքստը գունաթափվում է էկրանի եզրին մոտ, և չաթի չափազանց երկար տողերը կարող են կրճատվել էլիպսիսով, երբ համակարգային տեքստի չափը էականորեն մեծացվում է:",
+  "@accessibilityKnownIssues": {
+    "description": "Text describing the known accessibility limitations",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityLastValidated": "Ավտոմատ ստուգումները վերջին անգամ ստուգվել են Ollama App v{version} տարբերակի դեմ:",
+  "@accessibilityLastValidated": {
+    "description": "Text stating when the automated checks were last validated",
+    "context": "Visible on the accessibility page",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "description": "Version number of the app"
+      }
+    }
+  },
+  "accessibilityTestsTitle": "Ստուգման արդյունքներ",
+  "@accessibilityTestsTitle": {
+    "description": "Title of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsIntro": "Հետևյալ ավտոմատ հասանելիության ստուգումները այս հավելվածի ստուգման հավաքածուի մաս են և գործարկվում են ամեն հանձնառության ժամանակ:",
+  "@accessibilityTestsIntro": {
+    "description": "Intro text of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCheckColumn": "Ստուգում",
+  "@accessibilityTestsCheckColumn": {
+    "description": "Column header for the check name in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsStatusColumn": "Կարգավիճակ",
+  "@accessibilityTestsStatusColumn": {
+    "description": "Column header for the status in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsPass": "Հաջողված",
+  "@accessibilityTestsPass": {
+    "description": "Status label of a passing accessibility check",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCiNote": "Ամբողջական հավաքածուն (ստատիկ վերլուծություն և ավտոմատ ստուգումներ) գործարկվում է ամեն հանձնառության ժամանակ շարունակական ինտեգրման խողովակաշարում:",
+  "@accessibilityTestsCiNote": {
+    "description": "Note about where the test suite runs",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestContrast": "Տեքստի կոնտրաստը հասնում է WCAG մակարդակների բաց և մուգ թեմաներում",
+  "@accessibilityTestContrast": {
+    "description": "Name of the text contrast accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLabeledTapTarget": "Հպելի թիրախները ունեն էկրանի ընթերցողի պիտակներ",
+  "@accessibilityTestLabeledTapTarget": {
+    "description": "Name of the labeled tap target accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestAndroidTapTarget": "Հպման թիրախները առնվազն 48x48dp են (Android-ի ուղեցույց)",
+  "@accessibilityTestAndroidTapTarget": {
+    "description": "Name of the Android tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestIosTapTarget": "Հպման թիրախները առնվազն 44x44dp են (iOS-ի ուղեցույց)",
+  "@accessibilityTestIosTapTarget": {
+    "description": "Name of the iOS tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestSemanticsPresent": "Էկրանի ընթերցողի պիտակներ կան բոլոր սեփական կառավարիչների համար",
+  "@accessibilityTestSemanticsPresent": {
+    "description": "Name of the semantics presence accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestTraversalOrder": "Ստեղնաշարի ֆոկուսի հերթականությունը հետևում է տեսողական հերթականությանը",
+  "@accessibilityTestTraversalOrder": {
+    "description": "Name of the focus traversal order accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLocalesRender": "Բոլոր միջերեսի լեզուները պատկերվում են առանց սխալների",
+  "@accessibilityTestLocalesRender": {
+    "description": "Name of the per-locale rendering accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestFormValidation": "Ձևի դաշտերը հայտարարում են վավերացման սխալները",
+  "@accessibilityTestFormValidation": {
+    "description": "Name of the form validation announcement accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityContactTitle": "Հաղորդել հասանելիության խնդիր",
+  "@accessibilityContactTitle": {
+    "description": "Title of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityContactIntro": "Օգտագործեք այս ձևը՝ հասանելիության տեղեկատվություն խնդրելու, լուծում պահանջելու կամ հասանելիության խոչընդոտ հաղորդելու համար: Ձեր հաղորդումը կազմվում է հաղորդագրության մեջ, որը կարող եք ուղարկել էլ. փոստով կամ որպես հանրային խնդիր GitHub-ում:",
+  "@accessibilityContactIntro": {
+    "description": "Intro text of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormName": "Անուն (ոչ պարտադիր)",
+  "@accessibilityFormName": {
+    "description": "Label of the optional name field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmail": "Էլ. փոստ (ոչ պարտադիր)",
+  "@accessibilityFormEmail": {
+    "description": "Label of the optional email field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormAssistiveTech": "Օգտագործվող օժանդակ տեխնոլոգիա (ոչ պարտադիր)",
+  "@accessibilityFormAssistiveTech": {
+    "description": "Label of the optional assistive technology field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescription": "Նկարագրեք խնդիրը (պարտադիր)",
+  "@accessibilityFormDescription": {
+    "description": "Label of the required description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescriptionHint": "Ի՞նչ էիք փորձում անել, և ի՞նչ խանգարեց ձեզ:",
+  "@accessibilityFormDescriptionHint": {
+    "description": "Hint of the description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormErrorDescription": "Ուղարկելուց առաջ նկարագրեք խնդիրը:",
+  "@accessibilityFormErrorDescription": {
+    "description": "Validation error for an empty description in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormErrorEmail": "Մուտքագրեք վավեր էլ. փոստի հասցե կամ թողեք դաշտը դատարկ:",
+  "@accessibilityFormErrorEmail": {
+    "description": "Validation error for an invalid email in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormSendEmail": "Ուղարկել էլ. փոստով",
+  "@accessibilityFormSendEmail": {
+    "description": "Label of the send-by-email button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormSendGithub": "Բացել GitHub խնդիր",
+  "@accessibilityFormSendGithub": {
+    "description": "Label of the open-a-GitHub-issue button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmailSubject": "Հասանելիության հաղորդում (Ollama App)",
+  "@accessibilityFormEmailSubject": {
+    "description": "Subject line used for the composed accessibility report",
+    "context": "Used when composing the email or GitHub issue"
+  },
+  "accessibilityFormCopiedFallback": "Հղումը բացել չհաջողվեց: Հաղորդումը պատճենվեց սեղմատախտակին:",
+  "@accessibilityFormCopiedFallback": {
+    "description": "Snackbar shown when the report link cannot be opened and the report was copied instead",
+    "context": "Visible in the accessibility contact form"
+  },
+  "tooltipResetChat": "Վերակայել ընթացիկ չաթը",
+  "@tooltipResetChat": {
+    "description": "Tooltip for the reset chat button",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceClose": "Փակել ձայնային ռեժիմը",
+  "@tooltipVoiceClose": {
+    "description": "Tooltip for the close button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceSettings": "Բացել ձայնի կարգավորումները",
+  "@tooltipVoiceSettings": {
+    "description": "Tooltip for the settings button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceScrollToEnd": "Ոլորել մինչև վերջին տեքստը",
+  "@tooltipVoiceScrollToEnd": {
+    "description": "Tooltip for the scroll-to-end button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeNext": "Հաջորդ էջ",
+  "@tooltipWelcomeNext": {
+    "description": "Tooltip for the next button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeFinish": "Սկսել օգտագործել Ollama-ն",
+  "@tooltipWelcomeFinish": {
+    "description": "Tooltip for the finish button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbListening": "Ձայնային ռեժիմը լսում է: Սեղմեք՝ լսումը դադարեցնելու համար:",
+  "@accessibilityVoiceOrbListening": {
+    "description": "Screen-reader label for the voice orb while listening",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbSpeaking": "Պատասխանը ընթերցվում է բարձրաձայն: Սեղմեք՝ դադարեցնելու համար:",
+  "@accessibilityVoiceOrbSpeaking": {
+    "description": "Screen-reader label for the voice orb while speaking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbThinking": "AI-ն պատասխան է պատրաստում: Սեղմեք՝ չեղարկելու համար:",
+  "@accessibilityVoiceOrbThinking": {
+    "description": "Screen-reader label for the voice orb while the AI is thinking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityAppLogo": "Ollama",
+  "@accessibilityAppLogo": {
+    "description": "Screen-reader label for the app logo",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage1": "Բարի գալուստ Ollama: Այս ներածությունը ցուցադրում է երեք կարճ նկար:",
+  "@accessibilityWelcomePage1": {
+    "description": "Screen-reader description of the first welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage2": "Ներածության 2-րդ էջը 3-ից: Նկարը ցուցադրում է, թե ինչպես ընտրել մոդել և սկսել չաթել:",
+  "@accessibilityWelcomePage2": {
+    "description": "Screen-reader description of the second welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage3": "Ներածության 3-րդ էջը 3-ից: Նկարը ցուցադրում է, թե որտեղ գտնել կարգավորումները և ձայնային ռեժիմը:",
+  "@accessibilityWelcomePage3": {
+    "description": "Screen-reader description of the third welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilitySummaryConformance": "Այս հավելվածը նպատակադրում է WCAG 2.2 մակարդակ AA և կիրառում է AAA մակարդակի լրացումներ: Որոշ հնարավորություններ ունեն սահմանափակումներ, որոնք նկարագրված են ամեն բաժնի ներսում:",
+  "@accessibilitySummaryConformance": {
+    "description": "Short always-visible conformance summary at the top of the accessibility page",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStatementSummary": "Մեր պարտավորությունը, համապատասխանության կարգավիճակը և AA-ից դուրս կիրառվող միջոցները:",
+  "@accessibilitySectionStatementSummary": {
+    "description": "One-line summary under the collapsed statement section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionTestsSummary": "Ամեն կառուցման ժամանակ անցնում են 8 ավտոմատ հասանելիության ստուգումներ:",
+  "@accessibilitySectionTestsSummary": {
+    "description": "One-line summary under the collapsed test results section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStandardsSummary": "Ինչպես ենք մենք աջակցում AODA-ին, եվրոպական EN 301 549 չափորոշիչին և ԱՄՆ ADA / Section 508-ին:",
+  "@accessibilitySectionStandardsSummary": {
+    "description": "One-line summary under the collapsed standards section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionContactSummary": "Հաղորդեք հասանելիության խնդիր էլ. փոստով կամ GitHub-ում: Մենք պատասխանում ենք բոլոր հաղորդումներին:",
+  "@accessibilitySectionContactSummary": {
+    "description": "One-line summary under the collapsed contact section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelLimited": "Սահմանափակ աջակցություն",
+  "@accessibilitySupportLevelLimited": {
+    "description": "Support level label: partially meets the standard",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelCompliantWithLimitations": "Համապատասխան՝ սահմանափակումներով",
+  "@accessibilitySupportLevelCompliantWithLimitations": {
+    "description": "Support level label: meets the standard with documented limitations",
+    "context": "Used for screen readers and display"
+  }
 }

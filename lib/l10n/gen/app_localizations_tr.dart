@@ -510,4 +510,242 @@ class AppLocalizationsTr extends AppLocalizations {
   String settingsVersion(String version) {
     return 'Ollama App v$version';
   }
+
+  @override
+  String get settingsTitleAccessibility => 'Erişilebilirlik';
+
+  @override
+  String get settingsDescriptionAccessibility =>
+      'Erişilebilirlik bildirimi, test sonuçları ve sorun bildirme yolları.';
+
+  @override
+  String get accessibilityStatementTitle => 'Erişilebilirlik bildirimi';
+
+  @override
+  String get accessibilityCommitmentIntro =>
+      'Ollama, yayınladığımız her dilde, her yetenek düzeyindeki kişi tarafından kullanılabilmelidir. Sesli kontrol, ekran okuyucular, klavye ile gezinme ve yüksek kontrastlı gösterim bu uygulamanın birinci sınıf kullanım yollarıdır — sonradan düşünülmüş eklemeler değil.';
+
+  @override
+  String get accessibilityCommitmentDetails =>
+      'Uygulamada bu şöyle anlama gelir: her etkileşimli denetimin ekran okuyucuların duyurduğu bir adı vardır (sesli mod durumu dahil), düğmeler en az 48dp dokunma hedefine sahiptir, klavye odağı arayüzün görsel sırasını izler, durum mesajları değiştikçe duyurulur ve arayüz büyük metin ölçeklerinde hem açık hem de koyu temalarda kullanılabilir durumda kalır.';
+
+  @override
+  String get accessibilityConformanceTitle => 'Uyumluluk durumu';
+
+  @override
+  String get accessibilityConformanceStatus =>
+      'Bu uygulama, Web Content Accessibility Guidelines (WCAG) 2.2 Level AA ile uyumlu olacak şekilde tasarlanmıştır. Uyumluluk bağımsız bir üçüncü taraf tarafından sertifikalandırılmamıştır; kendi otomatik testlerimize dayanmaktadır. Uygun olduğu durumlarda AA\'nın ötesine geçiyor ve aşağıda listelenen WCAG AAA ölçülerini uyguluyoruz.';
+
+  @override
+  String get accessibilityAaaMeasuresTitle => 'AA\'nın ötesinde (AAA ölçüleri)';
+
+  @override
+  String get accessibilityAaaMeasures =>
+      'Ana metin her iki temada 21:1 kontrast kullanır (AAA 7:1 gerektirir), soluk ikincil metin 10:1 veya daha iyisini kullanır, başarı ve uyarı durum renkleri her iki temada AAA kontrastını karşılar ve koyu temadaki hata metni AAA kontrastını karşılar. AAA ayrıca bu boyutta bir sohbet uygulamasında pratik olmayan ölçüler gerektirir (örneğin tüm metinlerde kesinlikle 7:1 kontrast ve okuma düzeyi sınırları), bu nedenle garanti olarak AA\'yi hedefliyor ve bu AAA ölçülerini iyileştirmeler olarak ele alıyoruz.';
+
+  @override
+  String get accessibilityAodaTitle =>
+      'Accessibility for Ontarians with Disabilities Act (AODA)';
+
+  @override
+  String get accessibilityAodaText =>
+      'Ontario\'nın Accessibility for Ontarians with Disabilities Act (AODA) yasası, dijital ürünlerin WCAG 2.0/2.1 Level AA karşılamasını gerektirir. Bu uygulamanın WCAG 2.2 Level AA hedefi bu tabanı karşılar ve aşar. Erişilebilirlik geri bildirimleri, AODA\'nın geri bildirim kanallarını erişilebilir kılma gereksinimi doğrultusunda bu sayfadaki iletişim formu aracılığıyla memnuniyetle kabul edilir.';
+
+  @override
+  String get accessibilityStandardsEuropeTitle =>
+      'Avrupa standartları (EN 301 549)';
+
+  @override
+  String get accessibilityStandardsEuropeText =>
+      'Avrupa Birliği\'nde uyumlaştırılmış standart EN 301 549, Avrupa Erişilebilirlik Yasası\'nın BT erişilebilirliği gereksinimlerini tanımlar; bu yasa WCAG 2.1 Level AA\'ya atıfta bulunur. Bu uygulamanın WCAG 2.2 Level AA hedefi bu gereksinimleri kapsar ve 28 Haziran 2025\'ten itibaren geçerli olan Avrupa erişilebilirlik yükümlülüklerini destekler.';
+
+  @override
+  String get accessibilityStandardsUsTitle =>
+      'Amerika Birleşik Devletleri standartları (ADA / Section 508)';
+
+  @override
+  String get accessibilityStandardsUsText =>
+      'Amerika Birleşik Devletleri\'nde Americans with Disabilities Act (ADA) genel ayrımcılık yasağı tabanıdır ve Rehabilitation Act\'ın Section 508 maddesi federal teknoloji için WCAG 2.0 Level AA gerektirir (Section 504 benzer yükümlülükleri desteklenen programlara genişletir). Bu uygulamanın WCAG 2.2 Level AA hedefi bu tabanları karşılar ve aşar.';
+
+  @override
+  String get accessibilityKnownIssuesTitle => 'Bilinen sınırlamalar';
+
+  @override
+  String get accessibilityKnownIssues =>
+      'Masaüstü pencere başlık çubuğu düğmeleri (küçültme, büyütme, kapatma) işletim sistemi entegrasyonu tarafından sağlanır ve uygulamanın ekran okuyucu ağacından erişilemez. Sohbet kitaplığı, kendi arayüz metninin küçük bir bölümünü kendisi oluşturur; bu metin henüz tüm dillerde mevcut olmayabilir. Ses modunda yanıt metni ekranın kenarına yakın bir yerde soluklaşır ve sistem metin boyutu belirgin şekilde artırıldığında çok uzun sohbet satırları üç nokta ile kısaltılabilir.';
+
+  @override
+  String accessibilityLastValidated(String version) {
+    return 'Otomatik kontroller en son Ollama App v$version için doğrulandı.';
+  }
+
+  @override
+  String get accessibilityTestsTitle => 'Test sonuçları';
+
+  @override
+  String get accessibilityTestsIntro =>
+      'Aşağıdaki otomatik erişilebilirlik kontrolleri bu uygulamanın test paketinin parçasıdır ve her gönderide çalışır:';
+
+  @override
+  String get accessibilityTestsCheckColumn => 'Kontrol';
+
+  @override
+  String get accessibilityTestsStatusColumn => 'Durum';
+
+  @override
+  String get accessibilityTestsPass => 'Geçti';
+
+  @override
+  String get accessibilityTestsCiNote =>
+      'Tam paket (statik analiz ve otomatik testler) sürekli entegrasyon hattında her gönderide çalışır.';
+
+  @override
+  String get accessibilityTestContrast =>
+      'Metin kontrastı açık ve koyu temalarda WCAG düzeylerini karşılar';
+
+  @override
+  String get accessibilityTestLabeledTapTarget =>
+      'Dokunulabilir hedefler ekran okuyucu etiketlerine sahiptir';
+
+  @override
+  String get accessibilityTestAndroidTapTarget =>
+      'Dokunma hedefleri en az 48x48dp (Android kılavuzu)';
+
+  @override
+  String get accessibilityTestIosTapTarget =>
+      'Dokunma hedefleri en az 44x44dp (iOS kılavuzu)';
+
+  @override
+  String get accessibilityTestSemanticsPresent =>
+      'Tüm özel denetimler için ekran okuyucu etiketleri mevcuttur';
+
+  @override
+  String get accessibilityTestTraversalOrder =>
+      'Klavye odağı sırası görsel sırayı izler';
+
+  @override
+  String get accessibilityTestLocalesRender =>
+      'Tüm arayüz dilleri hatasız oluşturuluyor';
+
+  @override
+  String get accessibilityTestFormValidation =>
+      'Form alanları doğrulama hatalarını duyurur';
+
+  @override
+  String get accessibilityContactTitle => 'Erişilebilirlik sorunu bildir';
+
+  @override
+  String get accessibilityContactIntro =>
+      'Erişilebilirlik bilgisi istemek, bir çözüm talep etmek veya bir erişilebilirlik engeli bildirmek için bu formu kullanın. Bildiriniz, e-posta ile ya da GitHub üzerinde herkese açık bir sorun kaydı olarak gönderebileceğiniz bir mesaj haline getirilir.';
+
+  @override
+  String get accessibilityFormName => 'Ad (isteğe bağlı)';
+
+  @override
+  String get accessibilityFormEmail => 'E-posta (isteğe bağlı)';
+
+  @override
+  String get accessibilityFormAssistiveTech =>
+      'Kullanılan yardımcı teknoloji (isteğe bağlı)';
+
+  @override
+  String get accessibilityFormDescription => 'Sorunu açıklayın (zorunlu)';
+
+  @override
+  String get accessibilityFormDescriptionHint =>
+      'Ne yapmaya çalışıyordunuz ve ne engel oldu?';
+
+  @override
+  String get accessibilityFormErrorDescription =>
+      'Göndermeden önce lütfen sorunu açıklayın.';
+
+  @override
+  String get accessibilityFormErrorEmail =>
+      'Lütfen geçerli bir e-posta adresi girin veya alanı boş bırakın.';
+
+  @override
+  String get accessibilityFormSendEmail => 'E-posta ile gönder';
+
+  @override
+  String get accessibilityFormSendGithub => 'GitHub sorunu aç';
+
+  @override
+  String get accessibilityFormEmailSubject =>
+      'Erişilebilirlik raporu (Ollama App)';
+
+  @override
+  String get accessibilityFormCopiedFallback =>
+      'Bağlantı açılamadı. Rapor panoya kopyalandı.';
+
+  @override
+  String get tooltipResetChat => 'Mevcut sohbeti sıfırla';
+
+  @override
+  String get tooltipVoiceClose => 'Ses modunu kapat';
+
+  @override
+  String get tooltipVoiceSettings => 'Ses ayarlarını aç';
+
+  @override
+  String get tooltipVoiceScrollToEnd => 'En son metne kaydır';
+
+  @override
+  String get tooltipWelcomeNext => 'Sonraki sayfa';
+
+  @override
+  String get tooltipWelcomeFinish => 'Ollama\'yı kullanmaya başla';
+
+  @override
+  String get accessibilityVoiceOrbListening =>
+      'Ses modu dinliyor. Dinlemeyi durdurmak için dokunun.';
+
+  @override
+  String get accessibilityVoiceOrbSpeaking =>
+      'Yanıt sesli olarak okunuyor. Durdurmak için dokunun.';
+
+  @override
+  String get accessibilityVoiceOrbThinking =>
+      'Yapay zeka bir yanıt hazırlıyor. İptal etmek için dokunun.';
+
+  @override
+  String get accessibilityAppLogo => 'Ollama';
+
+  @override
+  String get accessibilityWelcomePage1 =>
+      'Ollama\'ya hoş geldiniz. Bu tanıtım üç kısa resim gösteriyor.';
+
+  @override
+  String get accessibilityWelcomePage2 =>
+      'Tanıtım sayfası 2/3. Resim bir modelin nasıl seçileceğini ve sohbete nasıl başlanacağını gösteriyor.';
+
+  @override
+  String get accessibilityWelcomePage3 =>
+      'Tanıtım sayfası 3/3. Resim ayarların ve ses modunun nerede bulunacağını gösteriyor.';
+
+  @override
+  String get accessibilitySummaryConformance =>
+      'Bu uygulama WCAG 2.2 Level AA\'yi hedefler ve AAA düzeyinde iyileştirmeler uygular. Bazı özelliklerin sınırlamaları vardır; bunlar her bölümün içinde açıklanmıştır.';
+
+  @override
+  String get accessibilitySectionStatementSummary =>
+      'Taahhüdümüz, uyumluluk durumumuz ve AA\'nın ötesinde uyguladığımız ölçüler.';
+
+  @override
+  String get accessibilitySectionTestsSummary =>
+      '8 otomatik erişilebilirlik kontrolü her derlemede geçiyor.';
+
+  @override
+  String get accessibilitySectionStandardsSummary =>
+      'AODA\'yı, Avrupa standardı EN 301 549\'u ve ABD\'nin ADA / Section 508 maddesini nasıl desteklediğimiz.';
+
+  @override
+  String get accessibilitySectionContactSummary =>
+      'Bir erişilebilirlik sorununu e-posta veya GitHub ile bildirin. Tüm bildirilere yanıt veriyoruz.';
+
+  @override
+  String get accessibilitySupportLevelLimited => 'Sınırlı destek';
+
+  @override
+  String get accessibilitySupportLevelCompliantWithLimitations =>
+      'Sınırlamalarla uyumlu';
 }

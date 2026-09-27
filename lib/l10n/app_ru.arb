@@ -154,5 +154,336 @@
   "settingsGithub": "GitHub",
   "settingsReportIssue": "Сообщить о проблеме",
   "settingsLicenses": "Лицензии",
-  "settingsVersion": "Ollama App v{version}"
+  "settingsVersion": "Ollama App v{version}",
+  "settingsTitleAccessibility": "Доступность",
+  "@settingsTitleAccessibility": {
+    "description": "Title of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "settingsDescriptionAccessibility": "Заявление о доступности, результаты тестов и способ сообщить о проблеме.",
+  "@settingsDescriptionAccessibility": {
+    "description": "Description of the accessibility settings section",
+    "context": "Visible in the settings view"
+  },
+  "accessibilityStatementTitle": "Заявление о доступности",
+  "@accessibilityStatementTitle": {
+    "description": "Title of the accessibility statement section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentIntro": "Ollama должна быть удобна для людей с любыми возможностями, на каждом языке, который мы поддерживаем. Голосовое управление, программы чтения с экрана, навигация с клавиатуры и отображение в высоком контрасте — полноправные способы работы с этим приложением, а не второстепенные дополнения.",
+  "@accessibilityCommitmentIntro": {
+    "description": "Opening commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityCommitmentDetails": "На практике это означает: каждый интерактивный элемент управления имеет имя, которое озвучивает программа чтения с экрана (включая состояние голосового режима), кнопки сохраняют минимальную зону нажатия 48dp, фокус с клавиатуры следует визуальному порядку интерфейса, сообщения о состоянии озвучиваются при их изменении, а интерфейс остаётся удобным при крупном масштабе текста и в светлой, и в тёмной темах.",
+  "@accessibilityCommitmentDetails": {
+    "description": "Detailed commitment text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceTitle": "Статус соответствия",
+  "@accessibilityConformanceTitle": {
+    "description": "Title of the conformance status section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityConformanceStatus": "Это приложение разработано с учётом требований Руководства по доступности веб-контента (WCAG) 2.2 Level AA. Соответствие не сертифицировано независимой третьей стороной; оно основано на нашем собственном автоматическом тестировании. Там, где это возможно, мы выходим за рамки AA и применяем меры уровня WCAG AAA, перечисленные ниже.",
+  "@accessibilityConformanceStatus": {
+    "description": "Conformance status text of the accessibility statement",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasuresTitle": "Превышение AA (меры AAA)",
+  "@accessibilityAaaMeasuresTitle": {
+    "description": "Title of the AAA measures section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAaaMeasures": "Основной текст использует контраст 21:1 в обеих темах (AAA требует 7:1), приглушённый вторичный текст — 10:1 или выше, цвета состояний успеха и предупреждений соответствуют контрасту AAA в обеих темах, а текст ошибок в тёмной теме соответствует контрасту AAA. AAA дополнительно требует меры, непрактичные в чат-приложении такого размера (например, контраст 7:1 для абсолютно всего текста и ограничения по уровню чтения), поэтому мы гарантируем AA, а эти меры AAA считаем дополнительными улучшениями.",
+  "@accessibilityAaaMeasures": {
+    "description": "Text describing the applied AAA measures",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaTitle": "Закон о доступности для онтарийцев с ограниченными возможностями (AODA)",
+  "@accessibilityAodaTitle": {
+    "description": "Title of the AODA section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityAodaText": "Закон Онтарио о доступности для онтарийцев с ограниченными возможностями (AODA) требует, чтобы цифровые продукты соответствовали WCAG 2.0/2.1 Level AA. Цель этого приложения — WCAG 2.2 Level AA — достигает этого базового уровня и превышает его. Отзывы о доступности приветствуются через форму обратной связи на этой странице, в соответствии с требованием AODA делать каналы обратной связи доступными.",
+  "@accessibilityAodaText": {
+    "description": "Text about AODA compliance",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeTitle": "Европейские стандарты (EN 301 549)",
+  "@accessibilityStandardsEuropeTitle": {
+    "description": "Title of the European standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsEuropeText": "В Европейском союзе гармонизированный стандарт EN 301 549 определяет требования к доступности ИКТ, установленные Европейским актом о доступности, который ссылается на WCAG 2.1 Level AA. Цель этого приложения — WCAG 2.2 Level AA — охватывает эти требования, поддерживая европейские обязательства по доступности, действующие с 28 июня 2025 г.",
+  "@accessibilityStandardsEuropeText": {
+    "description": "Text about the European standards (EN 301 549 / EAA)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsTitle": "Стандарты США (ADA / Section 508)",
+  "@accessibilityStandardsUsTitle": {
+    "description": "Title of the United States standards section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityStandardsUsText": "В Соединённых Штатах Закон об американцах с ограниченными возможностями (ADA) является общим базовым стандартом запрета дискриминации, а Section 508 Закона о реабилитации требует соответствия WCAG 2.0 Level AA для федеральных технологий (Section 504 распространяет аналогичные обязательства на финансируемые программы). Цель этого приложения — WCAG 2.2 Level AA — достигает этих базовых уровней и превышает их.",
+  "@accessibilityStandardsUsText": {
+    "description": "Text about the US standards (ADA / Section 508 / Section 504)",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssuesTitle": "Известные ограничения",
+  "@accessibilityKnownIssuesTitle": {
+    "description": "Title of the known limitations section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityKnownIssues": "Кнопки в заголовке окна настольной версии (свернуть, развернуть, закрыть) предоставляются интеграцией с операционной системой и недоступны в дереве программы чтения с экрана приложения. Библиотека чата отрисовывает небольшой объём собственного текста интерфейса, который может быть ещё не доступен на всех языках. В голосовом режиме текст ответа затухает у края экрана, а очень длинные строки чата могут обрезаться многоточием при значительном увеличении системного размера текста.",
+  "@accessibilityKnownIssues": {
+    "description": "Text describing the known accessibility limitations",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityLastValidated": "Автоматические проверки в последний раз выполнялись для Ollama App v{version}.",
+  "@accessibilityLastValidated": {
+    "description": "Text stating when the automated checks were last validated",
+    "context": "Visible on the accessibility page",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "description": "Version number of the app"
+      }
+    }
+  },
+  "accessibilityTestsTitle": "Результаты тестов",
+  "@accessibilityTestsTitle": {
+    "description": "Title of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsIntro": "Следующие автоматические проверки доступности входят в набор тестов этого приложения и выполняются при каждом коммите:",
+  "@accessibilityTestsIntro": {
+    "description": "Intro text of the test results section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCheckColumn": "Проверка",
+  "@accessibilityTestsCheckColumn": {
+    "description": "Column header for the check name in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsStatusColumn": "Статус",
+  "@accessibilityTestsStatusColumn": {
+    "description": "Column header for the status in the test results table",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsPass": "Пройдено",
+  "@accessibilityTestsPass": {
+    "description": "Status label of a passing accessibility check",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestsCiNote": "Полный набор (статический анализ и автоматические тесты) выполняется при каждом коммите в конвейере непрерывной интеграции.",
+  "@accessibilityTestsCiNote": {
+    "description": "Note about where the test suite runs",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityTestContrast": "Контраст текста соответствует уровням WCAG в светлой и тёмной темах",
+  "@accessibilityTestContrast": {
+    "description": "Name of the text contrast accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLabeledTapTarget": "Нажимаемые цели имеют подписи для программ чтения с экрана",
+  "@accessibilityTestLabeledTapTarget": {
+    "description": "Name of the labeled tap target accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestAndroidTapTarget": "Цели касания не менее 48x48dp (рекомендация Android)",
+  "@accessibilityTestAndroidTapTarget": {
+    "description": "Name of the Android tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestIosTapTarget": "Цели касания не менее 44x44dp (рекомендация iOS)",
+  "@accessibilityTestIosTapTarget": {
+    "description": "Name of the iOS tap target size accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestSemanticsPresent": "Подписи для программ чтения с экрана существуют для всех пользовательских элементов управления",
+  "@accessibilityTestSemanticsPresent": {
+    "description": "Name of the semantics presence accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestTraversalOrder": "Порядок фокуса с клавиатуры следует визуальному порядку",
+  "@accessibilityTestTraversalOrder": {
+    "description": "Name of the focus traversal order accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestLocalesRender": "Все языки интерфейса отрисовываются без ошибок",
+  "@accessibilityTestLocalesRender": {
+    "description": "Name of the per-locale rendering accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityTestFormValidation": "Поля формы озвучивают ошибки валидации",
+  "@accessibilityTestFormValidation": {
+    "description": "Name of the form validation announcement accessibility check",
+    "context": "Visible in the test results table"
+  },
+  "accessibilityContactTitle": "Сообщить о проблеме доступности",
+  "@accessibilityContactTitle": {
+    "description": "Title of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityContactIntro": "Используйте эту форму, чтобы запросить информацию о доступности, попросить решить проблему или сообщить о барьере доступности. Ваше сообщение будет сформировано в виде письма, которое можно отправить по электронной почте или как публичный issue на GitHub.",
+  "@accessibilityContactIntro": {
+    "description": "Intro text of the contact form section",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormName": "Имя (необязательно)",
+  "@accessibilityFormName": {
+    "description": "Label of the optional name field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmail": "Электронная почта (необязательно)",
+  "@accessibilityFormEmail": {
+    "description": "Label of the optional email field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormAssistiveTech": "Используемая ассистивная технология (необязательно)",
+  "@accessibilityFormAssistiveTech": {
+    "description": "Label of the optional assistive technology field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescription": "Опишите проблему (обязательно)",
+  "@accessibilityFormDescription": {
+    "description": "Label of the required description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormDescriptionHint": "Что вы пытались сделать и что вам помешало?",
+  "@accessibilityFormDescriptionHint": {
+    "description": "Hint of the description field in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormErrorDescription": "Опишите проблему перед отправкой.",
+  "@accessibilityFormErrorDescription": {
+    "description": "Validation error for an empty description in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormErrorEmail": "Введите корректный адрес электронной почты или оставьте поле пустым.",
+  "@accessibilityFormErrorEmail": {
+    "description": "Validation error for an invalid email in the accessibility contact form",
+    "context": "Visible in the accessibility contact form"
+  },
+  "accessibilityFormSendEmail": "Отправить по электронной почте",
+  "@accessibilityFormSendEmail": {
+    "description": "Label of the send-by-email button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormSendGithub": "Открыть issue на GitHub",
+  "@accessibilityFormSendGithub": {
+    "description": "Label of the open-a-GitHub-issue button in the accessibility contact form",
+    "context": "Visible on the accessibility page"
+  },
+  "accessibilityFormEmailSubject": "Отчёт о доступности (Ollama App)",
+  "@accessibilityFormEmailSubject": {
+    "description": "Subject line used for the composed accessibility report",
+    "context": "Used when composing the email or GitHub issue"
+  },
+  "accessibilityFormCopiedFallback": "Не удалось открыть ссылку. Отчёт скопирован в буфер обмена.",
+  "@accessibilityFormCopiedFallback": {
+    "description": "Snackbar shown when the report link cannot be opened and the report was copied instead",
+    "context": "Visible in the accessibility contact form"
+  },
+  "tooltipResetChat": "Сбросить текущий чат",
+  "@tooltipResetChat": {
+    "description": "Tooltip for the reset chat button",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceClose": "Закрыть голосовой режим",
+  "@tooltipVoiceClose": {
+    "description": "Tooltip for the close button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceSettings": "Открыть настройки голоса",
+  "@tooltipVoiceSettings": {
+    "description": "Tooltip for the settings button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipVoiceScrollToEnd": "Прокрутить к последнему тексту",
+  "@tooltipVoiceScrollToEnd": {
+    "description": "Tooltip for the scroll-to-end button in voice mode",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeNext": "Следующая страница",
+  "@tooltipWelcomeNext": {
+    "description": "Tooltip for the next button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "tooltipWelcomeFinish": "Начать использовать Ollama",
+  "@tooltipWelcomeFinish": {
+    "description": "Tooltip for the finish button on the welcome screen",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbListening": "Голосовой режим слушает. Нажмите, чтобы остановить прослушивание.",
+  "@accessibilityVoiceOrbListening": {
+    "description": "Screen-reader label for the voice orb while listening",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbSpeaking": "Ответ зачитывается вслух. Нажмите, чтобы остановить.",
+  "@accessibilityVoiceOrbSpeaking": {
+    "description": "Screen-reader label for the voice orb while speaking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityVoiceOrbThinking": "ИИ готовит ответ. Нажмите, чтобы отменить.",
+  "@accessibilityVoiceOrbThinking": {
+    "description": "Screen-reader label for the voice orb while the AI is thinking",
+    "context": "Used for screen readers"
+  },
+  "accessibilityAppLogo": "Ollama",
+  "@accessibilityAppLogo": {
+    "description": "Screen-reader label for the app logo",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage1": "Добро пожаловать в Ollama. Это обучение показывает три коротких изображения.",
+  "@accessibilityWelcomePage1": {
+    "description": "Screen-reader description of the first welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage2": "Страница онбординга 2 из 3. На изображении показано, как выбрать модель и начать чат.",
+  "@accessibilityWelcomePage2": {
+    "description": "Screen-reader description of the second welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilityWelcomePage3": "Страница онбординга 3 из 3. На изображении показано, где найти настройки и голосовой режим.",
+  "@accessibilityWelcomePage3": {
+    "description": "Screen-reader description of the third welcome page image",
+    "context": "Used for screen readers"
+  },
+  "accessibilitySummaryConformance": "Цель этого приложения — WCAG 2.2 Level AA, также применяются улучшения уровня AAA. Некоторые функции имеют ограничения, описанные внутри каждого раздела.",
+  "@accessibilitySummaryConformance": {
+    "description": "Short always-visible conformance summary at the top of the accessibility page",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStatementSummary": "Наше обязательство, статус соответствия и меры, которые мы применяем сверх AA.",
+  "@accessibilitySectionStatementSummary": {
+    "description": "One-line summary under the collapsed statement section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionTestsSummary": "8 автоматических проверок доступности проходят при каждой сборке.",
+  "@accessibilitySectionTestsSummary": {
+    "description": "One-line summary under the collapsed test results section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionStandardsSummary": "Как мы поддерживаем AODA, европейский стандарт EN 301 549 и ADA / Section 508 США.",
+  "@accessibilitySectionStandardsSummary": {
+    "description": "One-line summary under the collapsed standards section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySectionContactSummary": "Сообщите о проблеме доступности по электронной почте или на GitHub. Мы отвечаем на все обращения.",
+  "@accessibilitySectionContactSummary": {
+    "description": "One-line summary under the collapsed contact section",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelLimited": "Ограниченная поддержка",
+  "@accessibilitySupportLevelLimited": {
+    "description": "Support level label: partially meets the standard",
+    "context": "Used for screen readers and display"
+  },
+  "accessibilitySupportLevelCompliantWithLimitations": "Соответствует с ограничениями",
+  "@accessibilitySupportLevelCompliantWithLimitations": {
+    "description": "Support level label: meets the standard with documented limitations",
+    "context": "Used for screen readers and display"
+  }
 }
