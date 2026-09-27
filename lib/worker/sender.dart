@@ -14,8 +14,35 @@ import 'package:ollama_dart/ollama_dart.dart' as llama;
 import 'package:dartx/dartx.dart';
 import 'package:uuid/uuid.dart';
 // ignore: depend_on_referenced_packages
+import 'package:dio/dio.dart' show DioException;
+// ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 // import 'package:scroll_to_index/scroll_to_index.dart';
+
+/// Maps a chat/generation failure to one of the l10n issue types
+/// ("auth", "ratelimit", "timeout", "other") so the user gets a meaningful
+/// message instead of a generic request-failed notice.
+String classifyChatError(Object e) {
+  final String errStr = e.toString().toLowerCase();
+  int? statusCode;
+  if (e is DioException) {
+    statusCode = e.response?.statusCode;
+  }
+  if (statusCode == 401 || statusCode == 403) return "auth";
+  if (statusCode == 429) return "ratelimit";
+  if (errStr.contains("401") ||
+      errStr.contains("403") ||
+      errStr.contains("unauthorized") ||
+      errStr.contains("invalid api key") ||
+      errStr.contains("invalid token") ||
+      errStr.contains("forbidden")) {
+    return "auth";
+  }
+  if (errStr.contains("429") || errStr.contains("too many requests")) {
+    return "ratelimit";
+  }
+  return "timeout";
+}
 
 List<String> images = [];
 Future<List<llama.Message>> getHistory([String? addToSystem]) async {
@@ -300,7 +327,11 @@ Future<String> send(String value, BuildContext context, Function setState,
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:
             // ignore: use_build_context_synchronously
-            Text(AppLocalizations.of(context)!.settingsHostInvalid("timeout")),
+            Text(classifyChatError(e) == "auth"
+                // ignore: use_build_context_synchronously
+                ? AppLocalizations.of(context)!.settingsHostInvalidDetailed("auth")
+                // ignore: use_build_context_synchronously
+                : AppLocalizations.of(context)!.settingsHostInvalid(classifyChatError(e))),
         showCloseIcon: true));
     return "";
   }

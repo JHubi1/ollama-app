@@ -246,6 +246,7 @@ class AppLocalizationsIt extends AppLocalizations {
       {
         'url': 'URL invalido',
         'host': 'Host invalido',
+        'auth': 'Autenticazione fallita',
         'timeout': 'Richiesta fallita. Problema col server',
         'ratelimit': 'Troppe richieste',
         'other': 'Richiesta fallita',
@@ -265,12 +266,23 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       type,
       {
-        'url': 'L\'URL inserito non è valido. Non è un formato URL standardizzato.',
+        'url': 'L\'URL inserito non è valido. Usa un URL completo che inizi con http:// o https:// — ad esempio http://localhost:11434 per un server Ollama locale, oppure https://ollama.com per Ollama Cloud. Non aggiungere una barra finale né un percorso /api.',
+        'host': 'L\'host inserito non è valido. Non può essere raggiunto. Controlla l\'host e riprova.',
+        'auth': 'Il server ha rifiutato la richiesta (401/403). Se ti connetti a Ollama Cloud (https://ollama.com), inserisci la tua chiave API nel campo token qui sotto — puoi crearla o copiarla su https://ollama.com/keys — e salva. Se usi un server self-hosted, controlla l\'header Authorization configurato per l\'host.',
         'other': 'L\'host inserito non è valido. Non può essere raggiunto. Controlla l\'host e riprova.',
       },
     );
     return '$_temp0';
   }
+
+  @override
+  String get settingsApiTokenInvalid => 'Token API rifiutato';
+
+  @override
+  String get settingsApiTokenInvalidDetailed => 'Il token API è stato rifiutato dal server (401/403). Verifica che sia copiato esattamente come mostrato su https://ollama.com/keys — su quella pagina puoi creare una nuova chiave — e salva di nuovo. Il token deve essere impostato mentre l\'host è https://ollama.com.';
+
+  @override
+  String get settingsApiTokenVerified => 'Token API salvato e verificato';
 
   @override
   String get settingsSystemMessage => 'Messaggio di sistema';
