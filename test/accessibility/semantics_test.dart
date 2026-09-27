@@ -116,6 +116,44 @@ void main() {
     }
   });
 
+  testWidgets('semantics: Accessibility page form validates before send',
+      (WidgetTester tester) async {
+    await pumpA11y(tester, const AccessibilityBody());
+
+    final l10n = AppLocalizations.of(
+        tester.element(find.byType(AccessibilityBody)))!;
+
+    // Expand the contact section so the form is in the tree.
+    final Finder contactTile = find.byKey(const Key('a11y-section-contact'));
+    await tester.scrollUntilVisible(contactTile, 160,
+        scrollable: find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
+    await tester.tap(contactTile);
+    await tester.pumpAndSettle();
+
+    // An empty report cannot be sent: the description error appears and
+    // validation stops the send before any launcher is invoked.
+    final Finder sendEmailButton =
+        find.text(l10n.accessibilityFormSendEmail);
+    await tester.scrollUntilVisible(sendEmailButton, 160,
+        scrollable: find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
+    await tester.tap(sendEmailButton);
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.accessibilityFormErrorDescription), findsOneWidget);
+
+    // An invalid email is rejected too.
+    await tester.enterText(
+        find.widgetWithText(TextFormField, l10n.accessibilityFormEmail),
+        'not-an-email');
+    await tester.enterText(
+        find.widgetWithText(TextFormField, l10n.accessibilityFormDescription),
+        'Voice mode loses focus with a screen reader');
+    await tester.tap(sendEmailButton);
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.accessibilityFormErrorEmail), findsOneWidget);
+  });
+
   testWidgets('semantics: welcome FAB tooltip and image labels',
       (WidgetTester tester) async {
     await pumpA11y(tester, const ScreenWelcome());
