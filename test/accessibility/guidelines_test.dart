@@ -30,7 +30,7 @@ Widget _controlProbes() => ListView(children: <Widget>[
               context, 'A11y probe disabled toggle', false, (bool _) {},
               disabled: true)),
       button('A11y probe described button', Icons.help_outline_rounded, () {},
-          context: null, description: '\nA11y probe description'),
+          description: '\nA11y probe description'),
     ]);
 
 void main() {
