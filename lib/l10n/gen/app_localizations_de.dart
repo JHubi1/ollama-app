@@ -636,8 +636,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get accessibilityFormErrorEmail => 'Bitte gib eine gültige Email-Adresse ein oder lasse das Feld leer.';
 
-  @override
-  String get accessibilityFormSendEmail => 'Per email senden';
 
   @override
   String get accessibilityFormSendGithub => 'GitHub-Issue öffnen';

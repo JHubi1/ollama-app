@@ -326,7 +326,7 @@
     "description": "Title of the contact form section",
     "context": "Visible on the accessibility page"
   },
-  "accessibilityContactIntro": "Erişilebilirlik bilgisi istemek, bir çözüm talep etmek veya bir erişilebilirlik engeli bildirmek için bu formu kullanın. Bildiriniz, e-posta ile ya da GitHub üzerinde herkese açık bir sorun kaydı olarak gönderebileceğiniz bir mesaj haline getirilir.",
+  "accessibilityContactIntro": "Erişilebilirlik bilgisi istemek, bir çözüm talep etmek veya bir erişilebilirlik engeli bildirmek için bu formu kullanın. Bildiriniz, bu projenin GitHub deposunda herkese açık bir sorun kaydı olarak gönderebileceğiniz bir mesaj haline getirilir.",
   "@accessibilityContactIntro": {
     "description": "Intro text of the contact form section",
     "context": "Visible on the accessibility page"
@@ -365,11 +365,6 @@
   "@accessibilityFormErrorEmail": {
     "description": "Validation error for an invalid email in the accessibility contact form",
     "context": "Visible in the accessibility contact form"
-  },
-  "accessibilityFormSendEmail": "E-posta ile gönder",
-  "@accessibilityFormSendEmail": {
-    "description": "Label of the send-by-email button in the accessibility contact form",
-    "context": "Visible on the accessibility page"
   },
   "accessibilityFormSendGithub": "GitHub sorunu aç",
   "@accessibilityFormSendGithub": {
@@ -471,7 +466,7 @@
     "description": "One-line summary under the collapsed standards section",
     "context": "Used for screen readers and display"
   },
-  "accessibilitySectionContactSummary": "Bir erişilebilirlik sorununu e-posta veya GitHub ile bildirin. Tüm bildirilere yanıt veriyoruz.",
+  "accessibilitySectionContactSummary": "Bir erişilebilirlik sorununu GitHub üzerinden bildirin. Tüm bildirilere yanıt veriyoruz.",
   "@accessibilitySectionContactSummary": {
     "description": "One-line summary under the collapsed contact section",
     "context": "Used for screen readers and display"

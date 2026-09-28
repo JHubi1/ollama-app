@@ -327,7 +327,7 @@
     "description": "Title of the contact form section",
     "context": "Visible on the accessibility page"
   },
-  "accessibilityContactIntro": "از این فرم برای درخواست اطلاعات دسترس‌پذیری، درخواست رسیدگی، یا گزارش یک مانع دسترس‌پذیری استفاده کنید. گزارش شما در قالب پیامی ساخته می‌شود که می‌توانید با ایمیل یا به‌صورت یک issue عمومی در GitHub ارسال کنید.",
+  "accessibilityContactIntro": "از این فرم برای درخواست اطلاعات دسترس‌پذیری، درخواست رسیدگی، یا گزارش یک مانع دسترس‌پذیری استفاده کنید. گزارش شما در قالب پیامی ساخته می‌شود که می‌توانید به‌صورت یک issue عمومی در مخزن GitHub این پروژه ثبت کنید.",
   "@accessibilityContactIntro": {
     "description": "Intro text of the contact form section",
     "context": "Visible on the accessibility page"
@@ -366,11 +366,6 @@
   "@accessibilityFormErrorEmail": {
     "description": "Validation error for an invalid email in the accessibility contact form",
     "context": "Visible in the accessibility contact form"
-  },
-  "accessibilityFormSendEmail": "ارسال با ایمیل",
-  "@accessibilityFormSendEmail": {
-    "description": "Label of the send-by-email button in the accessibility contact form",
-    "context": "Visible on the accessibility page"
   },
   "accessibilityFormSendGithub": "ایجاد یک issue در GitHub",
   "@accessibilityFormSendGithub": {
@@ -473,7 +468,7 @@
     "description": "One-line summary under the collapsed standards section",
     "context": "Used for screen readers and display"
   },
-  "accessibilitySectionContactSummary": "یک مشکل دسترس‌پذیری را با ایمیل یا در GitHub گزارش کنید. به همه گزارش‌ها پاسخ می‌دهیم.",
+  "accessibilitySectionContactSummary": "یک مشکل دسترس‌پذیری را در GitHub گزارش کنید. به همه گزارش‌ها پاسخ می‌دهیم.",
   "@accessibilitySectionContactSummary": {
     "description": "One-line summary under the collapsed contact section",
     "context": "Used for screen readers and display"

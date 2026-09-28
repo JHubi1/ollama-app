@@ -326,7 +326,7 @@
       "description": "Title of the contact form section",
       "context": "Visible on the accessibility page"
     },
-  "accessibilityContactIntro": "Usa questo modulo per richiedere informazioni sull'accessibilità, chiedere una risoluzione o segnalare una barriera di accessibilità. La tua segnalazione viene composta in un messaggio che puoi inviare per email o come issue pubblica su GitHub.",
+  "accessibilityContactIntro": "Usa questo modulo per richiedere informazioni sull'accessibilità, chiedere una risoluzione o segnalare una barriera di accessibilità. La tua segnalazione viene composta in un messaggio che puoi inviare come issue pubblica sul repository GitHub di questo progetto.",
   "@accessibilityContactIntro": {
       "description": "Intro text of the contact form section",
       "context": "Visible on the accessibility page"
@@ -365,11 +365,6 @@
   "@accessibilityFormErrorEmail": {
       "description": "Validation error for an invalid email in the accessibility contact form",
       "context": "Visible in the accessibility contact form"
-    },
-  "accessibilityFormSendEmail": "Invia per email",
-  "@accessibilityFormSendEmail": {
-      "description": "Label of the send-by-email button in the accessibility contact form",
-      "context": "Visible on the accessibility page"
     },
   "accessibilityFormSendGithub": "Apri una issue su GitHub",
   "@accessibilityFormSendGithub": {
@@ -471,7 +466,7 @@
       "description": "One-line summary under the collapsed standards section",
       "context": "Used for screen readers and display"
     },
-  "accessibilitySectionContactSummary": "Segnala un problema di accessibilità via email o GitHub. Rispondiamo a tutte le segnalazioni.",
+  "accessibilitySectionContactSummary": "Segnala un problema di accessibilità su GitHub. Rispondiamo a tutte le segnalazioni.",
   "@accessibilitySectionContactSummary": {
       "description": "One-line summary under the collapsed contact section",
       "context": "Used for screen readers and display"

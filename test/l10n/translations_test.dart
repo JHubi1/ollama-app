@@ -345,7 +345,6 @@ List<_L10nString> _accessibilityStrings(AppLocalizations l) =>
       _s('accessibilityFormErrorDescription',
           l.accessibilityFormErrorDescription),
       _s('accessibilityFormErrorEmail', l.accessibilityFormErrorEmail),
-      _s('accessibilityFormSendEmail', l.accessibilityFormSendEmail),
       _s('accessibilityFormSendGithub', l.accessibilityFormSendGithub),
       _s('accessibilityFormEmailSubject', l.accessibilityFormEmailSubject),
       _s('accessibilityFormCopiedFallback',
@@ -448,9 +447,9 @@ void main() {
         final l = lookupAppLocalizations(locale);
         final strings = collectAllStrings(l);
 
-        // 220 members; settingsHostInvalid is called with 6 select arguments
-        // and settingsHostInvalidDetailed with 4, hence 228 values.
-        expect(strings.length, 228,
+        // 219 members; settingsHostInvalid is called with 6 select arguments
+        // and settingsHostInvalidDetailed with 4, hence 227 values.
+        expect(strings.length, 227,
             reason: 'member enumeration drifted from the abstract class');
 
         for (final item in strings) {

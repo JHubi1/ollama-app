@@ -997,7 +997,7 @@
         "description": "Title of the contact form section",
         "context": "Visible on the accessibility page"
     },
-    "accessibilityContactIntro": "Utilize este formulário para pedir informações de acessibilidade, solicitar uma resolução ou comunicar uma barreira de acessibilidade. O seu relatório é convertido numa mensagem que pode enviar por e-mail ou como um problema público no GitHub.",
+    "accessibilityContactIntro": "Utilize este formulário para pedir informações de acessibilidade, solicitar uma resolução ou comunicar uma barreira de acessibilidade. O seu relatório é convertido numa mensagem que pode submeter como um problema público no repositório GitHub deste projeto.",
     "@accessibilityContactIntro": {
         "description": "Intro text of the contact form section",
         "context": "Visible on the accessibility page"
@@ -1036,11 +1036,6 @@
     "@accessibilityFormErrorEmail": {
         "description": "Validation error for an invalid email in the accessibility contact form",
         "context": "Visible in the accessibility contact form"
-    },
-    "accessibilityFormSendEmail": "Enviar por e-mail",
-    "@accessibilityFormSendEmail": {
-        "description": "Label of the send-by-email button in the accessibility contact form",
-        "context": "Visible on the accessibility page"
     },
     "accessibilityFormSendGithub": "Abrir um problema no GitHub",
     "@accessibilityFormSendGithub": {
@@ -1142,7 +1137,7 @@
         "description": "One-line summary under the collapsed standards section",
         "context": "Used for screen readers and display"
     },
-    "accessibilitySectionContactSummary": "Comunique um problema de acessibilidade por e-mail ou no GitHub. Respondemos a todas as comunicações.",
+    "accessibilitySectionContactSummary": "Comunique um problema de acessibilidade no GitHub. Respondemos a todas as comunicações.",
     "@accessibilitySectionContactSummary": {
         "description": "One-line summary under the collapsed contact section",
         "context": "Used for screen readers and display"

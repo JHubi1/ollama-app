@@ -1296,7 +1296,6 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Send by email'**
-  String get accessibilityFormSendEmail;
 
   /// Label of the open-a-GitHub-issue button in the accessibility contact form
   ///

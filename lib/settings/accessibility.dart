@@ -129,23 +129,15 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
     return "$description\n\n$nameValue$email\n$assistiveTech\n\n---\nApp: Ollama App\n";
   }
 
-  Future<void> _send({required bool byEmail}) async {
+  Future<void> _send() async {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     if (!(_formKey.currentState?.validate() ?? false)) return;
     String body = _composeBody(l10n);
-    Uri uri = byEmail
-        ? Uri(
-            scheme: "mailto",
-            queryParameters: {
-              "subject": l10n.accessibilityFormEmailSubject,
-              "body": body
-            })
-        : Uri.parse("$accessibilityRepoUrl/issues/new").replace(
-            queryParameters: {
-              "title": l10n.accessibilityFormEmailSubject,
-              "body": body,
-              "labels": "accessibility"
-            });
+    Uri uri = accessibilityIssueUri(
+        l10n, _descriptionController.text.trim(),
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        assistiveTech: _assistiveTechController.text.trim());
     bool launched = false;
     try {
       if (await canLaunchUrl(uri)) {
@@ -328,30 +320,17 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
                         return null;
                       }),
                   const SizedBox(height: 24),
-                  Wrap(spacing: 16, runSpacing: 8, children: [
-                    Semantics(
-                        button: true,
-                        label: l10n.accessibilityFormSendEmail,
-                        child: FilledButton.icon(
-                            style: FilledButton.styleFrom(
-                                minimumSize: const Size(88, 48)),
-                            onPressed: () {
-                              _send(byEmail: true);
-                            },
-                            icon: const Icon(Icons.mail_outline_rounded),
-                            label: Text(l10n.accessibilityFormSendEmail))),
-                    Semantics(
-                        button: true,
-                        label: l10n.accessibilityFormSendGithub,
-                        child: FilledButton.icon(
-                            style: FilledButton.styleFrom(
-                                minimumSize: const Size(88, 48)),
-                            onPressed: () {
-                              _send(byEmail: false);
-                            },
-                            icon: const Icon(Icons.bug_report_rounded),
-                            label: Text(l10n.accessibilityFormSendGithub)))
-                  ])
+                  Semantics(
+                      button: true,
+                      label: l10n.accessibilityFormSendGithub,
+                      child: FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                              minimumSize: const Size(88, 48)),
+                          onPressed: () {
+                            _send();
+                          },
+                          icon: const Icon(Icons.bug_report_rounded),
+                          label: Text(l10n.accessibilityFormSendGithub)))
                 ]))
           ]),
       const SizedBox(height: 16)
@@ -424,4 +403,34 @@ Widget _paragraph(BuildContext context, String text) {
       child: Text(text,
           style: TextStyle(
               height: 1.4, color: Theme.of(context).colorScheme.onSurface)));
+}
+
+/// Composes the accessibility report body from the contact-form fields.
+String accessibilityReportBody(AppLocalizations l10n,
+    {required String description,
+    String name = "",
+    String email = "",
+    String assistiveTech = ""}) {
+  String nameValue =
+      name.isEmpty ? "" : "${l10n.accessibilityFormName}: $name\n";
+  return "$description\n\n$nameValue$email\n$assistiveTech\n\n---\nApp: Ollama App\n";
+}
+
+/// Builds the GitHub issue URI for an accessibility report. Public so tests
+/// can verify the submission link without launching it.
+Uri accessibilityIssueUri(AppLocalizations l10n, String description,
+    {String name = "",
+    String email = "",
+    String assistiveTech = ""}) {
+  String body = accessibilityReportBody(l10n,
+      description: description,
+      name: name,
+      email: email,
+      assistiveTech: assistiveTech);
+  return Uri.parse("$accessibilityRepoUrl/issues/new").replace(
+      queryParameters: {
+        "title": l10n.accessibilityFormEmailSubject,
+        "body": body,
+        "labels": "accessibility"
+      });
 }

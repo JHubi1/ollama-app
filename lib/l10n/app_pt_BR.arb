@@ -997,7 +997,7 @@
         "description": "Title of the contact form section",
         "context": "Visible on the accessibility page"
     },
-    "accessibilityContactIntro": "Use este formulário para solicitar informações de acessibilidade, pedir uma solução ou relatar uma barreira de acessibilidade. Seu relatório é composto em uma mensagem que você pode enviar por e-mail ou como uma issue pública no GitHub.",
+    "accessibilityContactIntro": "Use este formulário para solicitar informações de acessibilidade, pedir uma solução ou relatar uma barreira de acessibilidade. Seu relatório é composto em uma mensagem que você pode enviar como uma issue pública no repositório GitHub deste projeto.",
     "@accessibilityContactIntro": {
         "description": "Intro text of the contact form section",
         "context": "Visible on the accessibility page"
@@ -1036,11 +1036,6 @@
     "@accessibilityFormErrorEmail": {
         "description": "Validation error for an invalid email in the accessibility contact form",
         "context": "Visible in the accessibility contact form"
-    },
-    "accessibilityFormSendEmail": "Enviar por e-mail",
-    "@accessibilityFormSendEmail": {
-        "description": "Label of the send-by-email button in the accessibility contact form",
-        "context": "Visible on the accessibility page"
     },
     "accessibilityFormSendGithub": "Abrir uma issue no GitHub",
     "@accessibilityFormSendGithub": {
@@ -1142,7 +1137,7 @@
         "description": "One-line summary under the collapsed standards section",
         "context": "Used for screen readers and display"
     },
-    "accessibilitySectionContactSummary": "Relate um problema de acessibilidade por e-mail ou GitHub. Respondemos a todos os relatórios.",
+    "accessibilitySectionContactSummary": "Relate um problema de acessibilidade no GitHub. Respondemos a todos os relatórios.",
     "@accessibilitySectionContactSummary": {
         "description": "One-line summary under the collapsed contact section",
         "context": "Used for screen readers and display"
