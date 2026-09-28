@@ -173,10 +173,26 @@ void main() {
     expect(body, contains('TalkBack'));
     expect(body, contains('App: Ollama App'));
 
-    // The clipboard channel is unmocked in widget tests and would throw a
-    // MissingPluginException from Clipboard.setData, so provide the same
-    // handler the real platform would: record what the app puts on the
-    // clipboard and hand it back on read.
+    // The url_launcher and clipboard channels are unmocked in widget tests:
+    // without a handler the reply never arrives, so _send() would wait on
+    // canLaunchUrl forever and the fallback would never run. Stub the
+    // launcher to refuse the launch, and give the clipboard the handler the
+    // real platform would: record what the app puts on the clipboard and
+    // hand it back on read.
+    const MethodChannel urlLauncherChannel =
+        MethodChannel('plugins.flutter.io/url_launcher');
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        urlLauncherChannel, (MethodCall call) async {
+      switch (call.method) {
+        case 'canLaunch':
+          return false;
+        case 'launch':
+          return false;
+      }
+      return null;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(urlLauncherChannel, null));
     final Map<String, String?> clipboardStub = <String, String?>{};
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         SystemChannels.platform, (MethodCall call) async {
