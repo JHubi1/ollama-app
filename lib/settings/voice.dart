@@ -34,6 +34,15 @@ class _ScreenSettingsVoiceState extends State<ScreenSettingsVoice> {
   bool dialogMustLoad = true;
 
   Future<void> load() async {
+    // Initialization may have been skipped at startup (e.g. permissions were
+    // not granted yet); without it the language list stays empty for the
+    // whole session. initialize() is idempotent, so retry it here.
+    try {
+      if (!voiceSupported) {
+        voiceSupported = (await speech.initialize()) || voiceSupported;
+      }
+    } catch (_) {}
+
     var tmp = await speech.locales();
     languageOptionIds = tmp.map((e) => e.localeId);
     languageOptions = tmp.map((e) => e.name);

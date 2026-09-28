@@ -177,16 +177,16 @@ void main() {
     // MissingPluginException from Clipboard.setData, so provide the same
     // handler the real platform would: record what the app puts on the
     // clipboard and hand it back on read.
-    final Map<String, String?> clipboard = <String, String?>{};
+    final Map<String, String?> clipboardStub = <String, String?>{};
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         SystemChannels.platform, (MethodCall call) async {
       switch (call.method) {
         case 'Clipboard.setData':
-          clipboard[Clipboard.kTextPlain] =
+          clipboardStub[Clipboard.kTextPlain] =
               (call.arguments as Map<String, dynamic>)['text'] as String?;
           return null;
         case 'Clipboard.getData':
-          return <String, dynamic>{'text': clipboard[Clipboard.kTextPlain]};
+          return <String, dynamic>{'text': clipboardStub[Clipboard.kTextPlain]};
       }
       return null;
     });
