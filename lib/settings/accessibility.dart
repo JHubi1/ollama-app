@@ -98,11 +98,11 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
   }
 
   Future<void> _loadVersion() async {
-    String version = "1.2.0";
+    String version = "1.2.1";
     try {
       version = (await PackageInfo.fromPlatform()).version;
     } catch (_) {
-      version = "1.2.0";
+      version = "1.2.1";
     }
     if (!mounted) return;
     setState(() {
@@ -237,7 +237,7 @@ class _AccessibilityBodyState extends State<AccessibilityBody> {
             Padding(
                 padding: const EdgeInsets.only(left: 8, right: 8, top: 16),
                 child: Text(
-                    l10n.accessibilityLastValidated(_version ?? "1.2.0"),
+                    l10n.accessibilityLastValidated(_version ?? "1.2.1"),
                     style: TextStyle(color: accessibleMuted(context)))),
             Padding(
                 padding: const EdgeInsets.only(
