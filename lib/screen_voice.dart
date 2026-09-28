@@ -189,6 +189,14 @@ class _ScreenVoiceState extends State<ScreenVoice> {
     });
 
     void load() async {
+      // Same retry as the voice settings screen: without initialization the
+      // locale list stays empty, leaving nothing to select.
+      try {
+        if (!voiceSupported) {
+          voiceSupported = (await speech.initialize()) || voiceSupported;
+        }
+      } catch (_) {}
+
       var tmp = await speech.locales();
       languageOptionIds = tmp.map((e) => e.localeId);
       languageOptions = tmp.map((e) => e.name);

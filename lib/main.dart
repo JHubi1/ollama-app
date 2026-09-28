@@ -34,7 +34,6 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
@@ -155,12 +154,9 @@ class _AppState extends State<App> {
       }
 
       try {
-        if ((await Permission.bluetoothConnect.isGranted) &&
-            (await Permission.microphone.isGranted)) {
-          voiceSupported = await speech.initialize();
-        } else {
+        voiceSupported = await speech.initialize();
+        if (!voiceSupported) {
           prefs!.setBool("voiceModeEnabled", false);
-          voiceSupported = false;
         }
       } catch (_) {
         prefs!.setBool("voiceModeEnabled", false);
