@@ -663,8 +663,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accessibilityFormErrorEmail =>
       'Please enter a valid email address or leave the field empty.';
 
-  @override
-  String get accessibilityFormSendEmail => 'Send by email';
 
   @override
   String get accessibilityFormSendGithub => 'Open a GitHub issue';

@@ -636,8 +636,6 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get accessibilityFormErrorEmail => 'لطفاً یک نشانی ایمیل معتبر وارد کنید یا فیلد را خالی بگذارید.';
 
-  @override
-  String get accessibilityFormSendEmail => 'ارسال با ایمیل';
 
   @override
   String get accessibilityFormSendGithub => 'ایجاد یک issue در GitHub';

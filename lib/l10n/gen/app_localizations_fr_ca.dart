@@ -159,8 +159,6 @@ class AppLocalizationsFrCa extends AppLocalizationsFr {
   @override
   String get accessibilityFormErrorEmail => 'Veuillez entrer une adresse courriel valide ou laisser le champ vide.';
 
-  @override
-  String get accessibilityFormSendEmail => 'Envoyer par courriel';
 
   @override
   String get tooltipResetChat => 'Réinitialiser le clavardage actuel';

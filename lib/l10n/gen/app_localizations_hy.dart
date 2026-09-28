@@ -636,8 +636,6 @@ class AppLocalizationsHy extends AppLocalizations {
   @override
   String get accessibilityFormErrorEmail => 'Մուտքագրեք վավեր էլ. փոստի հասցե կամ թողեք դաշտը դատարկ:';
 
-  @override
-  String get accessibilityFormSendEmail => 'Ուղարկել էլ. փոստով';
 
   @override
   String get accessibilityFormSendGithub => 'Բացել GitHub խնդիր';

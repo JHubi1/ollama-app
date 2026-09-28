@@ -13,6 +13,7 @@
 // by `flutter analyze` rather than by pumping those screens here.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:ollama_app/l10n/gen/app_localizations.dart';
@@ -99,21 +100,16 @@ void main() {
     expect(find.text(l10n.accessibilityFormAssistiveTech), findsOneWidget);
     expect(find.text(l10n.accessibilityFormDescription), findsOneWidget);
 
-    // Both send actions are exposed as buttons with labels (matched by
+    // The send action is exposed as a button with a label (matched by
     // predicate: the ancestor chain contains several unlabeled Semantics
     // wrappers around a FilledButton.icon).
-    for (final String sendLabel in <String>[
-      l10n.accessibilityFormSendEmail,
-      l10n.accessibilityFormSendGithub,
-    ]) {
-      final Finder sendFinder = find.byWidgetPredicate(
-          (Widget widget) =>
-              widget is Semantics &&
-              widget.properties.button == true &&
-              widget.properties.label == sendLabel);
-      expect(sendFinder, findsOneWidget,
-          reason: 'send action "$sendLabel" is not an accessible button');
-    }
+    final Finder sendFinder = find.byWidgetPredicate(
+        (Widget widget) =>
+            widget is Semantics &&
+            widget.properties.button == true &&
+            widget.properties.label == l10n.accessibilityFormSendGithub);
+    expect(sendFinder, findsOneWidget,
+        reason: 'send action is not an accessible button');
   });
 
   testWidgets('semantics: Accessibility page form validates before send',
@@ -133,12 +129,12 @@ void main() {
 
     // An empty report cannot be sent: the description error appears and
     // validation stops the send before any launcher is invoked.
-    final Finder sendEmailButton =
-        find.text(l10n.accessibilityFormSendEmail);
-    await tester.scrollUntilVisible(sendEmailButton, 160,
+    final Finder sendGithubButton =
+        find.text(l10n.accessibilityFormSendGithub);
+    await tester.scrollUntilVisible(sendGithubButton, 160,
         scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
-    await tester.tap(sendEmailButton);
+    await tester.tap(sendGithubButton);
     await tester.pumpAndSettle();
     expect(find.text(l10n.accessibilityFormErrorDescription), findsOneWidget);
 
@@ -149,9 +145,59 @@ void main() {
     await tester.enterText(
         find.widgetWithText(TextFormField, l10n.accessibilityFormDescription),
         'Voice mode loses focus with a screen reader');
-    await tester.tap(sendEmailButton);
+    await tester.tap(sendGithubButton);
     await tester.pumpAndSettle();
     expect(find.text(l10n.accessibilityFormErrorEmail), findsOneWidget);
+  });
+
+  testWidgets('semantics: accessibility report builds a GitHub issue link '
+      'with a clipboard fallback', (WidgetTester tester) async {
+    await pumpA11y(tester, const AccessibilityBody());
+
+    final l10n = AppLocalizations.of(
+        tester.element(find.byType(AccessibilityBody)))!;
+
+    // The submission URI points at this project's GitHub issues, pre-filled
+    // with the subject, report body, and the accessibility label.
+    final Uri uri = accessibilityIssueUri(l10n, 'Focus is lost in voice mode',
+        name: 'Test User', email: 'user@example.com', assistiveTech: 'TalkBack');
+    expect(uri.scheme, 'https');
+    expect(uri.host, 'github.com');
+    expect(uri.path, '/Lev0n82/ollama-app/issues/new');
+    expect(uri.queryParameters['title'], l10n.accessibilityFormEmailSubject);
+    expect(uri.queryParameters['labels'], 'accessibility');
+    final String body = uri.queryParameters['body'] ?? '';
+    expect(body, contains('Focus is lost in voice mode'));
+    expect(body, contains('${l10n.accessibilityFormName}: Test User'));
+    expect(body, contains('user@example.com'));
+    expect(body, contains('TalkBack'));
+    expect(body, contains('App: Ollama App'));
+
+    // Expand the contact section and send with the launcher unmocked:
+    // canLaunchUrl throws a MissingPluginException in widget tests, so the
+    // send must fall back to copying the report and showing a snackbar.
+    final Finder contactTile = find.byKey(const Key('a11y-section-contact'));
+    await tester.scrollUntilVisible(contactTile, 160,
+        scrollable: find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
+    await tester.tap(contactTile);
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.widgetWithText(TextFormField, l10n.accessibilityFormDescription),
+        'Focus is lost in voice mode');
+    final Finder sendButton = find.text(l10n.accessibilityFormSendGithub);
+    await tester.scrollUntilVisible(sendButton, 160,
+        scrollable: find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
+    await tester.tap(sendButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.accessibilityFormCopiedFallback), findsOneWidget);
+    final ClipboardData? clipboard =
+        await Clipboard.getData(Clipboard.kTextPlain);
+    expect(clipboard?.text, contains('Focus is lost in voice mode'));
+    expect(clipboard?.text, contains('App: Ollama App'));
   });
 
   testWidgets('semantics: welcome FAB tooltip and image labels',

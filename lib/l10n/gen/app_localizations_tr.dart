@@ -663,8 +663,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get accessibilityFormErrorEmail =>
       'Lütfen geçerli bir e-posta adresi girin veya alanı boş bırakın.';
 
-  @override
-  String get accessibilityFormSendEmail => 'E-posta ile gönder';
 
   @override
   String get accessibilityFormSendGithub => 'GitHub sorunu aç';

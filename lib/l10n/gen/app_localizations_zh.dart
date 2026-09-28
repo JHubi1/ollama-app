@@ -635,8 +635,6 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get accessibilityFormErrorEmail => '请输入有效的电子邮件地址，或将该字段留空。';
 
-  @override
-  String get accessibilityFormSendEmail => '通过电子邮件发送';
 
   @override
   String get accessibilityFormSendGithub => '创建 GitHub issue';

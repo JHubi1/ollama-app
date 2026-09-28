@@ -326,7 +326,7 @@
     "description": "Title of the contact form section",
     "context": "Visible on the accessibility page"
   },
-  "accessibilityContactIntro": "使用此表单索取无障碍信息、请求解决方案，或报告无障碍使用障碍。您的报告将被编写成一条消息，您可以通过电子邮件发送，或在 GitHub 上作为公开 issue 提交。",
+  "accessibilityContactIntro": "使用此表单索取无障碍信息、请求解决方案，或报告无障碍使用障碍。您的报告将被编写成一条消息，您可以在本项目的 GitHub 仓库上作为公开 issue 提交。",
   "@accessibilityContactIntro": {
     "description": "Intro text of the contact form section",
     "context": "Visible on the accessibility page"
@@ -365,11 +365,6 @@
   "@accessibilityFormErrorEmail": {
     "description": "Validation error for an invalid email in the accessibility contact form",
     "context": "Visible in the accessibility contact form"
-  },
-  "accessibilityFormSendEmail": "通过电子邮件发送",
-  "@accessibilityFormSendEmail": {
-    "description": "Label of the send-by-email button in the accessibility contact form",
-    "context": "Visible on the accessibility page"
   },
   "accessibilityFormSendGithub": "创建 GitHub issue",
   "@accessibilityFormSendGithub": {
@@ -471,7 +466,7 @@
     "description": "One-line summary under the collapsed standards section",
     "context": "Used for screen readers and display"
   },
-  "accessibilitySectionContactSummary": "通过电子邮件或 GitHub 报告无障碍问题。我们会回复所有报告。",
+  "accessibilitySectionContactSummary": "在 GitHub 上报告无障碍问题。我们会回复所有报告。",
   "@accessibilitySectionContactSummary": {
     "description": "One-line summary under the collapsed contact section",
     "context": "Used for screen readers and display"

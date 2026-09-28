@@ -997,7 +997,7 @@
         "description": "Title of the contact form section",
         "context": "Visible on the accessibility page"
     },
-    "accessibilityContactIntro": "Use this form to request accessibility information, ask for a resolution, or report an accessibility barrier. Your report is composed into a message that you can send by email or as a public issue on GitHub.",
+    "accessibilityContactIntro": "Use this form to request accessibility information, ask for a resolution, or report an accessibility barrier. Your report is composed into a message that you can submit as a public issue on this project's GitHub repository.",
     "@accessibilityContactIntro": {
         "description": "Intro text of the contact form section",
         "context": "Visible on the accessibility page"
@@ -1036,11 +1036,6 @@
     "@accessibilityFormErrorEmail": {
         "description": "Validation error for an invalid email in the accessibility contact form",
         "context": "Visible in the accessibility contact form"
-    },
-    "accessibilityFormSendEmail": "Send by email",
-    "@accessibilityFormSendEmail": {
-        "description": "Label of the send-by-email button in the accessibility contact form",
-        "context": "Visible on the accessibility page"
     },
     "accessibilityFormSendGithub": "Open a GitHub issue",
     "@accessibilityFormSendGithub": {
@@ -1142,7 +1137,7 @@
         "description": "One-line summary under the collapsed standards section",
         "context": "Used for screen readers and display"
     },
-    "accessibilitySectionContactSummary": "Report an accessibility issue by email or GitHub. We respond to all reports.",
+    "accessibilitySectionContactSummary": "Report an accessibility issue on GitHub. We respond to all reports.",
     "@accessibilitySectionContactSummary": {
         "description": "One-line summary under the collapsed contact section",
         "context": "Used for screen readers and display"
