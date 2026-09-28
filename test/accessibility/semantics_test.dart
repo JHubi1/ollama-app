@@ -173,6 +173,26 @@ void main() {
     expect(body, contains('TalkBack'));
     expect(body, contains('App: Ollama App'));
 
+    // The clipboard channel is unmocked in widget tests and would throw a
+    // MissingPluginException from Clipboard.setData, so provide the same
+    // handler the real platform would: record what the app puts on the
+    // clipboard and hand it back on read.
+    final Map<String, String?> clipboard = <String, String?>{};
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform, (MethodCall call) async {
+      switch (call.method) {
+        case 'Clipboard.setData':
+          clipboard[Clipboard.kTextPlain] =
+              (call.arguments as Map<String, dynamic>)['text'] as String?;
+          return null;
+        case 'Clipboard.getData':
+          return <String, dynamic>{'text': clipboard[Clipboard.kTextPlain]};
+      }
+      return null;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, null));
+
     // Expand the contact section and send with the launcher unmocked:
     // canLaunchUrl throws a MissingPluginException in widget tests, so the
     // send must fall back to copying the report and showing a snackbar.
