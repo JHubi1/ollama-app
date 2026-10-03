@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class MeasureSize extends SingleChildRenderObjectWidget {
+class ChildSize extends SingleChildRenderObjectWidget {
   final void Function(Size size) onChange;
-  const MeasureSize({super.key, required this.onChange, required super.child});
+  const ChildSize({super.key, required this.onChange, required super.child});
 
   @override
   RenderObject createRenderObject(BuildContext context) =>

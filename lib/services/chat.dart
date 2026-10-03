@@ -19,7 +19,7 @@ import 'preferences.dart';
 
 enum MessageSender { user, assistant }
 
-abstract class Message extends ChangeNotifier {
+sealed class Message extends ChangeNotifier {
   final String id;
 
   final MessageSender sender;
@@ -412,8 +412,7 @@ class Chat extends ChangeNotifier {
             ),
           );
           images.clear();
-        case final ImageMessage message
-            when message.sender == MessageSender.user:
+        case final ImageMessage message:
           images.add(message);
       }
     }

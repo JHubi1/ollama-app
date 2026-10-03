@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:dynamic_system_colors/dynamic_system_colors.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide RouteSettings;
 
@@ -10,7 +10,7 @@ import '../main.dart';
 import '../main.gr.dart';
 import '../services/services.dart';
 import '../widgets/alpha_beta.dart';
-import '../widgets/child_size_notifier.dart';
+import '../widgets/child_size.dart';
 import '../widgets/sized_circular_progress_indicator.dart';
 import '../widgets/two_state_widget.dart';
 
@@ -260,6 +260,9 @@ class _SettingsOverviewHostInputState extends State<SettingsOverviewHostInput> {
     final colorScheme = ColorScheme.of(context);
     final appLocalizations = AppLocalizations.of(context);
 
+    final breakpoint = Breakpoint.of(context);
+    final embeddedNavigation = breakpoint.panesRecommended >= 2;
+
     final errorStyle = _error != null;
     final errorTitle = _error?.title(context);
     final errorDescription = _error?.description(context);
@@ -320,6 +323,9 @@ class _SettingsOverviewHostInputState extends State<SettingsOverviewHostInput> {
           onSubmitted: (_) => _submit(),
           enabled: !_loading && !useHost,
           keyboardType: TextInputType.url,
+          autocorrect: false,
+          enableSuggestions: false,
+          textCapitalization: TextCapitalization.none,
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
@@ -354,13 +360,31 @@ class _SettingsOverviewHostInputState extends State<SettingsOverviewHostInput> {
                     padding: const EdgeInsetsDirectional.only(start: 4),
                     child: IconButton(
                       onPressed: () {
-                        showModalBottomSheet(
+                        showDialog(
                           context: context,
-                          useRootNavigator: true,
-                          clipBehavior: Clip.antiAlias,
-                          isScrollControlled: true,
-                          builder: (_) =>
-                              const SettingsOverviewHostHeadersInputMobileSheet(),
+                          builder: (_) => Dialog(
+                            alignment: !embeddedNavigation
+                                ? AlignmentDirectional.bottomCenter
+                                : AlignmentDirectional.topStart,
+                            constraints: const BoxConstraints(
+                              minWidth: 280,
+                              maxWidth: 360,
+                            ),
+                            insetPadding: const EdgeInsets.all(12),
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.all(
+                                  breakpoint.spacing,
+                                ),
+                                child: const SettingsOverviewHostHeadersInput(
+                                  padding: EdgeInsetsDirectional.only(
+                                    bottom: 8,
+                                  ),
+                                  autoFocus: true,
+                                ),
+                              ),
+                            ),
+                          ),
                         );
                       },
                       tooltip: appLocalizations.tooltipAddHostHeaders,
@@ -391,59 +415,14 @@ class _SettingsOverviewHostInputState extends State<SettingsOverviewHostInput> {
   }
 }
 
-class SettingsOverviewHostHeadersInputMobileSheet extends StatefulWidget {
-  const SettingsOverviewHostHeadersInputMobileSheet({super.key});
-
-  @override
-  State<SettingsOverviewHostHeadersInputMobileSheet> createState() =>
-      _SettingsOverviewHostHeadersInputMobileSheetState();
-}
-
-class _SettingsOverviewHostHeadersInputMobileSheetState
-    extends State<SettingsOverviewHostHeadersInputMobileSheet> {
-  double? _childHeight;
-
-  @override
-  Widget build(BuildContext context) {
-    final breakpoint = Breakpoint.of(context);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final maxExtend = ((_childHeight ?? 0) / constraints.maxHeight).clamp(
-          0.0,
-          1.0,
-        );
-
-        final initialChildSize = maxExtend.clamp(0.05, 0.85);
-        final minChildSize = 0.05.clamp(0.05, initialChildSize);
-        final maxChildSize = 0.85.clamp(initialChildSize, 0.85);
-
-        return DraggableScrollableSheet(
-          initialChildSize: initialChildSize,
-          minChildSize: minChildSize,
-          maxChildSize: maxChildSize,
-          expand: false,
-          builder: (context, scrollController) => SingleChildScrollView(
-            controller: scrollController,
-            child: MeasureSize(
-              onChange: (size) {
-                _childHeight = size.height;
-                if (mounted) setState(() {});
-              },
-              child: Padding(
-                padding: EdgeInsetsDirectional.all(breakpoint.spacing),
-                child: const SettingsOverviewHostHeadersInput(),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
 class SettingsOverviewHostHeadersInput extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
-  const SettingsOverviewHostHeadersInput({super.key, this.padding});
+  final bool autoFocus;
+  const SettingsOverviewHostHeadersInput({
+    super.key,
+    this.padding,
+    this.autoFocus = false,
+  });
 
   @override
   State<SettingsOverviewHostHeadersInput> createState() =>
@@ -500,6 +479,7 @@ class _SettingsOverviewHostHeadersInputState
                   index: index,
                   headerKey: key,
                   headerValue: oldValue ?? "",
+                  autoFocus: widget.autoFocus,
                   onChanged: (_, _) {},
                 ),
               ),
@@ -517,8 +497,6 @@ class _SettingsOverviewHostHeadersInputState
         }
       }
     }
-
-    if (mounted) setState(() {});
   }
 
   @override
@@ -536,6 +514,7 @@ class _SettingsOverviewHostHeadersInputState
             index: index,
             headerKey: header?.key ?? "",
             headerValue: header?.value ?? "",
+            autoFocus: widget.autoFocus,
             onChanged: (key, value) {
               final headers = _headers.entries.toList();
               final currentElement = headers.elementAtOrNull(index);
@@ -553,6 +532,7 @@ class _SettingsOverviewHostHeadersInputState
                         index: index,
                         headerKey: currentElement.key,
                         headerValue: currentElement.value,
+                        autoFocus: widget.autoFocus,
                         onChanged: (_, _) {},
                       ),
                     ),
@@ -586,6 +566,7 @@ class SettingsOverviewHostHeadersInputTile extends StatefulWidget {
   final int index;
   final String headerKey;
   final String headerValue;
+  final bool autoFocus;
   final void Function(String? key, String? value) onChanged;
 
   const SettingsOverviewHostHeadersInputTile({
@@ -593,6 +574,7 @@ class SettingsOverviewHostHeadersInputTile extends StatefulWidget {
     required this.index,
     required this.headerKey,
     required this.headerValue,
+    this.autoFocus = false,
     required this.onChanged,
   });
 
@@ -733,6 +715,13 @@ class _SettingsOverviewHostHeadersInputTileState
     final isLast = widget.index == Preferences.instance.hostHeaders.length;
     final isDummy = widget.headerKey.isEmpty && widget.headerValue.isEmpty;
 
+    final icon = isDummy
+        ? const Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.add))
+        : IconButton(
+            onPressed: () => widget.onChanged(null, null),
+            icon: const Icon(Icons.close),
+          );
+
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -746,7 +735,7 @@ class _SettingsOverviewHostHeadersInputTileState
             child: TextField(
               controller: _keyController,
               focusNode: _keyFocusNode,
-              autofocus: false,
+              autofocus: isLast && widget.autoFocus,
               textInputAction: TextInputAction.next,
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
@@ -775,18 +764,10 @@ class _SettingsOverviewHostHeadersInputTileState
             decoration: InputDecoration(
               label: Text(appLocalizations.settingsHostHeaderHeaderValue),
               hintText: "Bearer XXX",
+              suffixIcon: icon,
             ),
           ),
         ),
-        isDummy
-            ? const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.add),
-              )
-            : IconButton(
-                onPressed: () => widget.onChanged(null, null),
-                icon: const Icon(Icons.close),
-              ),
       ],
     );
   }

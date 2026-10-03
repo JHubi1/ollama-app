@@ -4,10 +4,9 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dartx/dartx.dart';
-import 'package:dynamic_system_colors/dynamic_system_colors.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide RouteSettings;
-// import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_web_plugins/url_strategy.dart' show usePathUrlStrategy;
 import 'package:intl/date_symbol_data_local.dart';
@@ -180,7 +179,7 @@ class _AppState extends State<App> {
   }
 
   void onUpdate() {
-      if (mounted) setState(() {});
+    if (mounted) setState(() {});
   }
 
   void onChatUpdate() {

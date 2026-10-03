@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:dynamic_system_colors/dynamic_system_colors.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -958,15 +958,16 @@ final class Markdown {
             final title = node.attributes["title"]?.trim();
             var src = node.attributes["src"];
 
-            void imageScreen(String src) => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => _MarkdownImageScreen(
-                  src: src,
-                  imageErrorBuilder: _imageErrorBuilder,
-                  title: title,
-                ),
-              ),
-            );
+            void imageScreen(String src) =>
+                Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(
+                    builder: (context) => _MarkdownImageScreen(
+                      src: src,
+                      imageErrorBuilder: _imageErrorBuilder,
+                      title: title,
+                    ),
+                  ),
+                );
 
             if (src != null) {
               src = payload.resolveUri(src).toString();
@@ -1857,7 +1858,8 @@ class _MarkdownFootnoteModalState extends State<_MarkdownFootnoteModal> {
         child: InkWell(
           onTap: () async {
             await launchUrl(urlModeUrl!, mode: LaunchMode.inAppBrowserView);
-            if (context.mounted) Navigator.of(context).pop();
+            if (context.mounted)
+              Navigator.of(context, rootNavigator: true).pop();
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,

@@ -222,12 +222,12 @@ class ModelManager extends ChangeNotifier {
     notifyListeners();
 
     if (fetchCapabilitiesInBackground) {
-      compute((_) async {
+      () async {
         for (var model in _instance.models) {
           await model.updateData().catchError((_) {});
           notifyListeners();
         }
-      }, null);
+      }();
     }
   }
 }

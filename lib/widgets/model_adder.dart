@@ -516,7 +516,7 @@ class _ModelAdderState extends State<ModelAdder> {
       child: Dialog(
         alignment: alignment,
         constraints: constraints,
-        insetPadding: const EdgeInsets.all(12), // 24
+        insetPadding: const EdgeInsets.all(12), 
         child: AnimatedSize(
           duration: ExpressiveCurves.expressiveSpatial.normalDuration,
           curve: ExpressiveCurves.expressiveSpatial.normal,

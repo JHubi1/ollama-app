@@ -107,9 +107,7 @@ class _ThemeBuilderState extends State<ThemeBuilder> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => Preferences.instance.addListener(onChange),
-    );
+    Preferences.instance.addListener(onChange);
   }
 
   @override
@@ -119,7 +117,9 @@ class _ThemeBuilderState extends State<ThemeBuilder> {
   }
 
   void onChange() {
-    if (mounted) setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override

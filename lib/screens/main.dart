@@ -10,6 +10,7 @@ import '../main.dart';
 import '../main.gr.dart';
 import '../services/services.dart';
 import '../widgets/model_selector.dart';
+import '../widgets/safe_area_presence.dart';
 import '../widgets/two_state_widget.dart';
 import 'chat.dart';
 import 'settings.dart';
@@ -2097,16 +2098,31 @@ class _ScreenMainState extends State<ScreenMain>
               color: colorScheme.surfaceContainerHigh,
             );
 
-            return AnimatedContainer(
-              duration: ExpressiveCurves.standardSpatial.fastDuration,
-              curve: ExpressiveCurves.standardEffects.fast,
-              decoration: breakpoint.panesRecommended >= 2
-                  ? BoxDecoration(
-                      borderRadius: radius,
-                      border: Border(top: border, left: border, right: border),
-                    )
-                  : const BoxDecoration(),
-              child: const ClipRRect(borderRadius: radius, child: AutoRouter()),
+            return SafeArea(
+              top: false,
+              left: false,
+              right: false,
+              child: SafeAreaPresence(
+                hasSafeAreaPadding: MediaQuery.paddingOf(context).bottom > 0,
+                child: AnimatedContainer(
+                  duration: ExpressiveCurves.standardSpatial.fastDuration,
+                  curve: ExpressiveCurves.standardEffects.fast,
+                  decoration: breakpoint.panesRecommended >= 2
+                      ? BoxDecoration(
+                          borderRadius: radius,
+                          border: Border(
+                            top: border,
+                            left: border,
+                            right: border,
+                          ),
+                        )
+                      : const BoxDecoration(),
+                  child: const ClipRRect(
+                    borderRadius: radius,
+                    child: AutoRouter(),
+                  ),
+                ),
+              ),
             );
           },
         ),
@@ -2194,6 +2210,30 @@ class _ScreenMainState extends State<ScreenMain>
 
     return Scaffold(
       backgroundColor: adaptedSurface,
+      // TODO: add proper drawer
+      drawer: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 2,
+        children: [
+          FilledButton(
+            onPressed: () => ChatManager.instance.currentChat = null,
+            child: const Text("/* Chat */"),
+          ),
+          FilledButton(
+            onPressed: () => context.router.push(const RouteSettings()),
+            child: const Text("/* Settings */"),
+          ),
+          const Divider(),
+          ...ChatManager.instance.chats.map(
+            (c) => FilledButton(
+              onPressed: () => ChatManager.instance.currentChat = c,
+              child: Text('"${c.title}"'),
+            ),
+          ),
+        ],
+      ),
+      endDrawerEnableOpenDragGesture: false,
       endDrawer: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
         child: DecoratedBox(
@@ -2204,12 +2244,21 @@ class _ScreenMainState extends State<ScreenMain>
               bottomStart: Radius.circular(16),
             ),
           ),
-          child: ChatDetails(
-            onClose: () {
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-              }
-            },
+          child: SafeArea(
+            left: false,
+            right: false,
+            child: SafeAreaPresence(
+              hasSafeAreaPadding:
+                  MediaQuery.paddingOf(context).top > 0 ||
+                  MediaQuery.paddingOf(context).bottom > 0,
+              child: ChatDetails(
+                onClose: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ),
           ),
         ),
       ),
