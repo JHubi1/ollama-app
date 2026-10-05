@@ -556,7 +556,7 @@ abstract class AppLocalizations {
   /// Text displayed when the host is invalid
   ///
   /// In en, this message translates to:
-  /// **'Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request Failed. Server issues} ratelimit{Too many requests} other{Request Failed}}'**
+  /// **'Issue: {type, select, url{Invalid URL} host{Invalid Host} auth{Authentication failed} timeout{Request Failed. Server issues} ratelimit{Too many requests} other{Request Failed}}'**
   String settingsHostInvalid(String type);
 
   /// Text displayed as description for host header input
@@ -574,8 +574,26 @@ abstract class AppLocalizations {
   /// Text displayed when the host is invalid
   ///
   /// In en, this message translates to:
-  /// **'{type, select, url{The URL you entered is invalid. It isn\'t an a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}'**
+  /// **'{type, select, url{The URL you entered is invalid. Use a full URL starting with http:// or https:// — for example http://localhost:11434 for a local Ollama server, or https://ollama.com for Ollama Cloud. Do not add a trailing slash or an /api path.} host{The host you entered is invalid. It cannot be reached. Please check the host and try again.} auth{The server rejected the request (401/403). If you connect to Ollama Cloud (https://ollama.com), enter your API key in the token field below — you can create or copy it at https://ollama.com/keys — and save it. If you use a self-hosted server, check the Authorization header configured for the host.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}'**
   String settingsHostInvalidDetailed(String type);
+
+  /// Text displayed when the Ollama Cloud API token is rejected by the server
+  ///
+  /// In en, this message translates to:
+  /// **'API token rejected'**
+  String get settingsApiTokenInvalid;
+
+  /// Detailed instructions shown when the Ollama Cloud API token is rejected
+  ///
+  /// In en, this message translates to:
+  /// **'The API token was rejected by the server (401/403). Check that it is copied exactly as shown at https://ollama.com/keys — a new key can be created on that page — and save it again. The token must be set while the host is https://ollama.com.'**
+  String get settingsApiTokenInvalidDetailed;
+
+  /// Text displayed when the API token was accepted by the server
+  ///
+  /// In en, this message translates to:
+  /// **'API token saved and verified'**
+  String get settingsApiTokenVerified;
 
   /// Text displayed as description for system message input
   ///

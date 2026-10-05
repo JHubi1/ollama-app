@@ -393,14 +393,14 @@
         "description": "Text displayed when the host is being checked",
         "context": "Visible in the settings view"
     },
-    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} timeout{Request Failed. Server issues} ratelimit{Too many requests} other{Request Failed}}",
+    "settingsHostInvalid": "Issue: {type, select, url{Invalid URL} host{Invalid Host} auth{Authentication failed} timeout{Request Failed. Server issues} ratelimit{Too many requests} other{Request Failed}}",
     "@settingsHostInvalid": {
         "description": "Text displayed when the host is invalid",
         "context": "Visible in the settings view",
         "placeholders": {
             "type": {
                 "type": "String",
-                "description": "Type of the issue, either 'url', 'host', 'timeout', 'ratelimit' or 'other' (preferably 'host')"
+                "description": "Type of the issue, either 'url', 'host', 'auth', 'timeout', 'ratelimit' or 'other' (preferably 'host')"
             }
         }
     },
@@ -414,14 +414,57 @@
         "description": "Text displayed when the host header is invalid",
         "context": "Visible in the settings view"
     },
-    "settingsHostInvalidDetailed": "{type, select, url{The URL you entered is invalid. It isn't an a standardized URL format.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}",
+    "settingsHostInvalidDetailed": "{type, select, url{The URL you entered is invalid. Use a full URL starting with http:// or https:// — for example http://localhost:11434 for a local Ollama server, or https://ollama.com for Ollama Cloud. Do not add a trailing slash or an /api path.} host{The host you entered is invalid. It cannot be reached. Please check the host and try again.} auth{The server rejected the request (401/403). If you connect to Ollama Cloud (https://ollama.com), enter your API key in the token field below — you can create or copy it at https://ollama.com/keys — and save it. If you use a self-hosted server, check the Authorization header configured for the host.} other{The host you entered is invalid. It cannot be reached. Please check the host and try again.}}",
     "@settingsHostInvalidDetailed": {
         "description": "Text displayed when the host is invalid",
         "context": "Visible in the settings view",
         "placeholders": {
             "type": {
                 "type": "String",
-                "description": "Type of the issue, either 'url' or 'other' (preferably 'host')"
+                "description": "Type of the issue, either 'url', 'host', 'auth' or 'other' (preferably 'host')"
+            }
+        }
+    },
+    "settingsApiTokenInvalid": "API token rejected",
+    "@settingsApiTokenInvalid": {
+        "description": "Text displayed when the Ollama Cloud API token is rejected by the server",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiTokenInvalidDetailed": "The API token was rejected by the server (401/403). Check that it is copied exactly as shown at https://ollama.com/keys — a new key can be created on that page — and save it again. The token must be set while the host is https://ollama.com.",
+    "@settingsApiTokenInvalidDetailed": {
+        "description": "Detailed instructions shown when the Ollama Cloud API token is rejected",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiTokenVerified": "API token saved and verified",
+    "@settingsApiTokenVerified": {
+        "description": "Text displayed when the API token was accepted by the server",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiToken": "Ollama Cloud API Token",
+    "@settingsApiToken": {
+        "description": "Label of the Ollama Cloud API token input field",
+        "context": "Visible in the settings view"
+    },
+    "settingsApiTokenHint": "Paste token from ollama.com",
+    "@settingsApiTokenHint": {
+        "description": "Hint of the Ollama Cloud API token input field",
+        "context": "Visible in the settings view"
+    },
+    "tooltipShowToken": "Show token",
+    "@tooltipShowToken": {
+        "description": "Tooltip displayed for the button that reveals the API token"
+    },
+    "tooltipHideToken": "Hide token",
+    "@tooltipHideToken": {
+        "description": "Tooltip displayed for the button that hides the API token"
+    },
+    "voiceLanguageInstruction": "You must write in the following language: {language}!",
+    "@voiceLanguageInstruction": {
+        "description": "System instruction telling the model to answer in the selected voice mode language",
+        "placeholders": {
+            "language": {
+                "type": "String",
+                "description": "The voice mode language identifier, e.g. en_US"
             }
         }
     },
